@@ -1,5 +1,15 @@
-export const formatDataAsTable = (data: object, highlightNonZeroes=false, plusNonZeroes=false) => {
+const replaceBooleans = (data: object) => {
     const entries = Object.entries(data);
+    for (const entry of entries) {
+        if(typeof entry[1] === "boolean") {
+            entry[1] = entry[1] ? "true" : "false"
+        }
+    }
+    return entries;
+}
+
+export const formatDataAsTable = (data: object, highlightNonZeroes=false, plusNonZeroes=false) => {
+    const entries = replaceBooleans(data);
 
     return (
         <table className="table">
@@ -15,4 +25,8 @@ export const formatDataAsTable = (data: object, highlightNonZeroes=false, plusNo
             </tbody>
         </table>
     )
+}
+
+export const removeWhiteSpaceAndConvertToLowerCase = (s: string) => {
+    return s.replace(/\s/g, '').toLowerCase();
 }

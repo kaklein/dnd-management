@@ -1,10 +1,11 @@
 import {AbilityScores} from "./AbilityScores";
-import {Resources} from "./Resources";
+import {UsableResources} from "./usableResources";
 import {Weapon} from "./Weapon";
 import {Spell} from "./Spell";
 import {Ability} from "../enum/Ability";
 import {Equipment} from "./Equipment";
 import {Feature} from "./Feature";
+import {UsableResources} from "./usableResources/UsableResources";
 
 export interface PlayerCharacter {
     name: { firstName: string, lastName: string };
@@ -23,17 +24,15 @@ export interface PlayerCharacter {
     initiative: number;
     speed: number;
     equipment: Equipment[];
-    resources: Resources;
+    usableResources: UsableResources;
     weapons: Weapon[];
-    spellCasting?: {
-        ability: Ability;
-        saveDC?: number;
-        attackBonus?: number;
-        spells: Spell[];
-    };
+    spells?: Spell[];
     features: Feature[];
     imagePaths: {
         avatar: string;
         other?: string;
-    }
+    };
+    extras?: string[];
+    languages: string[];
+    proficiencies: string[];
 }

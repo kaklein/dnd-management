@@ -30,3 +30,27 @@ img {
     margin-left: auto;
     margin-right: auto;
 }
+
+.toggle {
+    margin: 10px;
+    width: fit-content;
+}
+
+.toggle-label {
+    margin-right: 10px;
+}
+
+.icon {
+    width: 40px;
+    border-radius: 8px;
+}
+
+.btn-text {
+    text-decoration: none;
+    color: white;
+}
+
+.btn {
+    margin: 20px;
+    float: right;
+}

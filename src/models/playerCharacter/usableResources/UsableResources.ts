@@ -1,6 +1,6 @@
 import {SpellSlot} from "./SpellSlot";
 
-export interface Resources {
+export interface UsableResources {
     hitPoints: {
         max: number;
         current: number;
@@ -18,4 +18,5 @@ export interface Resources {
     };
     spellSlots?: SpellSlot[],
     gold: number;
+    inspiration: number;
 }

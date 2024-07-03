@@ -3,11 +3,13 @@
  * - All ability scores/main stats that don't change (or rarely change, e.g. level)
  */
 import Navbar from "../components/Navbar";
-import { OsoniaSilverhand as pc } from "../data/playerCharacters/OsoniaSilverhand";
 import AbilityCard from "../components/cards/AbilityCard";
 import {AbilityScores} from "../models/playerCharacter/AbilityScores";
 import Card from "../components/cards/Card";
 import CardSetHorizontal from "../components/cards/CardSetHorizontal";
+
+import { OsoniaSilverhand as pc } from "../data/playerCharacters/OsoniaSilverhand";
+import Footer from "../components/Footer";
 
 function Stats() {
     const removeBaseStatsFromAbilityObject = (abilityObject: {score: number, modifier: number, [key: string]: number;}) => {
@@ -62,6 +64,8 @@ function Stats() {
 
             {/* Ability Scores */}
             { mapAbilityScoreCards(pc.abilityScores) }
+
+            <Footer/>
         </>
     )
 }

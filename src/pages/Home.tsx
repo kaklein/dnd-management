@@ -8,6 +8,7 @@ Will contain:
 import Navbar from "../components/Navbar";
 import { OsoniaSilverhand as pc } from "../data/playerCharacters/OsoniaSilverhand";
 import ImageCard from "../components/cards/ImageCard";
+import Footer from "../components/Footer";
 
 function Home() {
     const pcImagePath = `../src/assets/images/${pc.name.firstName.toLowerCase()}_${pc.name.lastName.toLowerCase()}.png`;
@@ -18,8 +19,9 @@ function Home() {
         subclass: pc.subclass,
         race: pc.race,
         background: pc.background,
-        level: pc.level,
         alignment: pc.alignment,
+        level: pc.level,
+        ...(pc.xp && {XP: pc.xp}),
         ['Player Name']: pc.playerName,
     };
 
@@ -27,6 +29,7 @@ function Home() {
         <>
             <Navbar/>
             <ImageCard title={pcFullName} description={pcDescription} imagePath={pcImagePath} data={listCardObject}/>
+            <Footer/>
         </>
     )
 }

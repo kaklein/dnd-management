@@ -1,12 +1,17 @@
 import {DamageType} from "../enum/DamageType";
+import {RestType} from "../enum/RestType";
+import {Ability} from "../enum/Ability";
 
 export interface Spell {
     name: string;
     description: string;
     level: SpellLevel;
+    spellCastingAbility: Ability;
     damageType?: DamageType;
     damage?: string;
-    refresh?: 'shortRest' | 'longRest';
+    refresh?: RestType;
+    saveDC?: number;
+    attackBonus?: number;
 }
 
 export enum SpellLevel {
