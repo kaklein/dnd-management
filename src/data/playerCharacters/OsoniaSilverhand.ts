@@ -8,35 +8,7 @@ import {Resources} from "../../models/playerCharacter/resources/Resources";
 import {Weapon} from "../../models/playerCharacter/Weapon";
 import {Feature} from "../../models/playerCharacter/Feature";
 
-export const OsoniaSilverhand: PlayerCharacter = {
-    name: { firstName: 'Osonia', lastName: 'Silverhand'},
-    playerName: 'Katie',
-    class: 'Fighter',
-    race: 'High Elf',
-    alignment: 'Neutral Good',
-    background: 'Blacksmith',
-    level: 3,
-    xp: undefined,
-    abilityScores: abilityScores,
-    armorClass: 16,
-    initiative: 3,
-    speed: 30,
-    equipment: equipment,
-    resources: resources,
-    weapons: weapons,
-    spellCasting: {
-        ability: Ability.INT,
-        spells: spells
-    },
-    features: features,
-    imagePaths: {
-        avatar: 'osonia_silverhand.png'
-    }
-}
-
 const abilityScores: AbilityScores = {
-    proficiencyBonus: 2,
-    passiveWisdom: 12,
     strength: {
         score: 14,
         modifier: 2,
@@ -46,7 +18,10 @@ const abilityScores: AbilityScores = {
     dexterity: {
         score: 18,
         modifier: 3,
-        acrobatics: 5
+        savingThrows: 0,
+        acrobatics: 5,
+        sleightOfHand: 0,
+        stealth: 0
     },
     constitution: {
         score: 14,
@@ -56,17 +31,31 @@ const abilityScores: AbilityScores = {
     intelligence: {
         score: 14,
         modifier: 1,
+        savingThrows: 0,
         arcana: 3,
-        investigation: 3
+        history: 0,
+        investigation: 3,
+        nature: 0,
+        religion: 0
     },
     wisdom: {
         score: 11,
         modifier: 0,
-        perception: 2
+        savingThrows: 0,
+        animalHandling: 0,
+        insight: 0,
+        medicine: 0,
+        perception: 2,
+        survival: 0
     },
     charisma: {
         score: 11,
-        modifier: 0
+        modifier: 0,
+        savingThrows: 0,
+        deception: 0,
+        intimidation: 0,
+        performance: 0,
+        persuasion: 0
     }
 };
 
@@ -220,3 +209,32 @@ const features: Feature[] = [
         source: 'Elf'
     }
 ];
+
+export const OsoniaSilverhand: PlayerCharacter = {
+    name: { firstName: 'Osonia', lastName: 'Silverhand'},
+    playerName: 'Katie',
+    class: 'Fighter',
+    subclass: 'Rune Knight',
+    race: 'High Elf',
+    alignment: 'Neutral Good',
+    background: 'Blacksmith',
+    level: 3,
+    xp: undefined,
+    abilityScores: abilityScores,
+    proficiencyBonus: 2,
+    passiveWisdom: 12,
+    armorClass: 16,
+    initiative: 3,
+    speed: 30,
+    equipment: equipment,
+    resources: resources,
+    weapons: weapons,
+    spellCasting: {
+        ability: Ability.INT,
+        spells: spells
+    },
+    features: features,
+    imagePaths: {
+        avatar: 'osonia_silverhand.png'
+    }
+}

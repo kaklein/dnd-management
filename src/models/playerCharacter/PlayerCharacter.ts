@@ -10,12 +10,15 @@ export interface PlayerCharacter {
     name: { firstName: string, lastName: string };
     playerName: string;
     class: string;
+    subclass: string;
     race: string;
     alignment: string;
     background: string;
     level: number;
     xp: number | undefined;
     abilityScores: AbilityScores;
+    proficiencyBonus: number,
+    passiveWisdom: number,
     armorClass: number;
     initiative: number;
     speed: number;
