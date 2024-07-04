@@ -4,7 +4,7 @@ export interface UsableResources {
     hitPoints: {
         max: number;
         current: number;
-        temporary?: number;
+        temporary: number;
     };
     hitDice: {
         type: 'd6' | 'd8' | 'd10' | 'd12';

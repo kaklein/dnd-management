@@ -12,6 +12,4 @@ function Card ({children}: Props) {
     )
 }
 
-
-
 export default Card;

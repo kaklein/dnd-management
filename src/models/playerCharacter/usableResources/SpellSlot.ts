@@ -1,5 +1,7 @@
+import {SpellLevel} from "../Spell";
+
 export interface SpellSlot {
-    level: number;
+    level: SpellLevel;
     max: number;
     current: number;
 }

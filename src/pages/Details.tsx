@@ -9,12 +9,13 @@ import Card from "../components/cards/Card";
 import { OsoniaSilverhand as pc } from "../data/playerCharacters/OsoniaSilverhand";
 import Refresh from "../components/Refresh";
 import {Spell} from "../models/playerCharacter/Spell";
-import {formatDataAsTable} from "../components/utils";
+import {formatDataAsTable, removeWhiteSpaceAndConvertToLowerCase} from "../components/utils";
 
 const mapSpells = (spells: Spell[]) => {
     return (
         spells.map(spell => (
             <Card>
+                <a id={removeWhiteSpaceAndConvertToLowerCase(spell.name)}></a>
                 <h3>{spell.name.toUpperCase()}</h3>
 
                 <p><b>Description: </b>{spell.description}</p>
@@ -26,15 +27,15 @@ const mapSpells = (spells: Spell[]) => {
                 }
 
                 {spell.saveDC &&
-                    <p><i>Save DC: {spell.saveDC}</i></p>
+                    <p><b>Spell Save DC: </b>{spell.saveDC}</p>
                 }
 
                 {spell.attackBonus &&
-                    <p><i>Attack bonus: +{spell.attackBonus}</i></p>
+                    <p><b>Attack bonus: </b>+{spell.attackBonus}</p>
                 }
 
                 {spell.spellCastingAbility &&
-                    <p><i>Spellcasting ability: {spell.spellCastingAbility}</i></p>
+                    <p><b>Spellcasting ability: </b>{spell.spellCastingAbility}</p>
                 }
 
                 {spell.refresh &&
@@ -59,10 +60,12 @@ function Details() {
                 {
                     pc.features.map(feature => (
                         <Card>
+                            <a id={removeWhiteSpaceAndConvertToLowerCase(feature.name)}></a>
                             <h3>{feature.name.toUpperCase()}</h3>
                             <p><b>Description: </b>{feature.description}</p>
                             <p><b>Source: </b>{feature.source}</p>
-                            {feature.refresh && <Refresh refreshRestType={feature.refresh}/>}
+                            { feature.damage && <p><b>Damage: </b>{feature.damage} {feature.damageType}</p>}
+                            { feature.saveDC && <p><b>Spell Save DC: </b>{feature.saveDC}</p>}
                         </Card>
                     ))
                 }
@@ -73,6 +76,7 @@ function Details() {
                 {
                     pc.weapons.map(weapon => (
                         <Card>
+                            <a id={removeWhiteSpaceAndConvertToLowerCase(weapon.name)}></a>
                             <h3>{weapon.name}</h3>
                             {formatDataAsTable(weapon)}
                         </Card>
