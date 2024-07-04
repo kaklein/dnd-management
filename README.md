@@ -1,30 +1,21 @@
-# React + TypeScript + Vite
+# DND Management
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## Why
+I created this project as a way to teach myself web development with React.
+After starting my first actual DND campaign (as opposed to playing hours of BG3 by myself),
+I quickly realized I need a way to track my resources, character info, and notes about the campaign.
+Instead of finding one of the many existing tools out there, I decided it's the perfect excuse to learn React and dabble in more front-end work which is a nice change of pace for me.
 
-Currently, two official plugins are available:
+## Features
+* Home page with an overview of my character
+* Stats page with my character's base stats and abilities
+* Tracker page with changeable inputs to help track changes in HP, uses of spell slots and limited abilities, etc.
+* Details page with the full descriptions of any of my character's abilities for reference
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Future
+* Back the app with a database so that updated tracker info can actually be saved and loaded from session to session
+* Add a notes page for important notes taken during sessions. TBD whether I want a page to actually take notes on vs. writing them in Google docs and uploading to my database for cleaner display later.
 
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
-
-- Configure the top-level `parserOptions` property like this:
-
-```js
-export default {
-  // other rules...
-  parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-    project: ['./tsconfig.json', './tsconfig.node.json'],
-    tsconfigRootDir: __dirname,
-  },
-}
-```
-
-- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
-- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
+## Technology
+* TypeScript
+* React/HTML/CSS
