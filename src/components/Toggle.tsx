@@ -15,7 +15,8 @@ function Toggle({ label, count, defaultPosition="unchecked" }: Props) {
             <p className="toggle-label">{label}</p>
             <div>
             {
-                [...Array(count)].map((i) =>
+                // @ts-ignore: placeholder var e needs to be there but is intentionally unused
+                [...Array(count)].map((e, i) =>
                     <div className="form-check form-check-inline" key={`${formattedLabel}-toggle-${i}`}>
                         <input className="form-check-input" type="checkbox" id={`${formattedLabel}-checkbox-${i}`} value={`${formattedLabel}-option-${i}`} defaultChecked={checked}/>
                     </div>

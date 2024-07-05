@@ -5,8 +5,7 @@ import Footer from "../components/Footer";
 import { doc, getDoc } from "firebase/firestore";
 import { collection, query, where, getDocs } from 'firebase/firestore';
 import { db } from '../firebase';
-import { formatDataAsTable } from "../components/utils";
-const config = require('../data/config.json');
+import * as config from '../data/config.json';
 
 function Home() {
     const loadData = () => {
@@ -60,10 +59,7 @@ function Home() {
     return (
         <>
             <Navbar/>
-            <p>Please Work :)</p>
-            <div>
-                {formatDataAsTable(data)}
-            </div>
+            <p>{JSON.stringify(data)}</p>
             <ImageCard title={pcFullName} description={pcDescription} imagePath={pcImagePath} data={listCardObject}/>
             <Footer/>
         </>
