@@ -9,8 +9,6 @@ interface Props {
 }
 
 function AbilityCard({ abilityName, score, modifier, data }: Props) {
-    console.log('Score: ' + score);
-    console.log('Modifier: ' + modifier);
     return (
         <Card>
             <h1>{abilityName}</h1>

@@ -1,10 +1,3 @@
-/**
-Will contain:
-- Character image
-- Character name
-- Basic info (race, class, subclass, etc.)
-- Brief description
- */
 import Navbar from "../components/Navbar";
 import { OsoniaSilverhand as pc } from "../data/playerCharacters/OsoniaSilverhand";
 import ImageCard from "../components/cards/ImageCard";

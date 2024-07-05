@@ -1,7 +1,3 @@
-/**
- * Will contain:
- * - All ability scores/main stats that don't change (or rarely change, e.g. level)
- */
 import Navbar from "../components/Navbar";
 import AbilityCard from "../components/cards/AbilityCard";
 import {AbilityScores} from "../models/playerCharacter/AbilityScores";

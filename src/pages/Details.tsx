@@ -1,7 +1,3 @@
-/**
- * Will contain:
- * - Detailed descriptions of all features/spells/etc.
- */
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import Card from "../components/cards/Card";

@@ -1,9 +1,3 @@
-/**
- * Will contain:
- * - All dynamic fields that may change during a session.
- * - E.g. HP, spells slots, features used per long/short rest, etc.
- */
-
 import Navbar from "../components/Navbar";
 import Toggle from "../components/Toggle";
 import Card from "../components/cards/Card";
@@ -34,7 +28,7 @@ function Tracker() {
                 <form>
                     <input type="number" id="hit-points" defaultValue={hitPoints} min="0" max={rs.hitPoints.max} onChange={ evt => setHitPoints(Number(evt.target.value))}/> / {rs.hitPoints.max}
                     <br/>
-                    <label for="temp-hit-points">Temporary Hit Points</label>
+                    <label htmlFor="temp-hit-points">Temporary Hit Points</label>
                     <br/>
                     <input type="number" id="temp-hit-points" min="0" max="99" defaultValue={tempHitPoints} onChange={ evt => setTempHitPoints(Number(evt.target.value))}/>
                 </form>
@@ -48,11 +42,11 @@ function Tracker() {
                 </Card>
             }
 
-            {rs.spellSlots?.length > 0 &&
+            {rs.spellSlots &&
                 <Card>
                     <h3>Spell Slots</h3>
                     {
-                        rs.spellSlots!.map(spellSlot => (
+                        rs.spellSlots?.map(spellSlot => (
                             <Card>
                                 <h3>{spellSlot.level}</h3>
                                 <Toggle label="Slots" count={spellSlot.max} defaultPosition="unchecked"/>
