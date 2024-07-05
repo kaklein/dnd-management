@@ -27,7 +27,7 @@ function Home() {
 
                 // Get ability scores
                 console.log('getting ability scores.');
-                const asQuery = query(collection(db, "abilityScores"), where("pcId", "==", PC_ID));
+                const asQuery = query(collection(db, "abilityScores"), where("pcId", "==", config.pcId));
                 const asQuerySnapshot = await getDocs(asQuery);
                 asQuerySnapshot.forEach((doc) => {
                     console.log(doc.id, " => ", doc.data());
