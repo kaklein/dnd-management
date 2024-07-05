@@ -2,8 +2,6 @@ import Navbar from "../components/Navbar";
 import { OsoniaSilverhand as pc } from "../data/playerCharacters/OsoniaSilverhand";
 import ImageCard from "../components/cards/ImageCard";
 import Footer from "../components/Footer";
-import { doc, getDoc } from "firebase/firestore";
-import { collection, query, where, getDocs } from 'firebase/firestore';
 import { db } from '../firebase';
 import * as config from '../data/config.json';
 
@@ -14,10 +12,10 @@ function Home() {
             try {
                 console.log('Getting base character details.');
                 // Get base character details
-                const docRef = doc(db, "pcBaseDetails", config.pcId);
-                const docSnap = await getDoc(docRef);
-
-                if (docSnap.exists()) {
+                // const docRef = doc(db, "pcBaseDetails", config.pcId);
+                const docRef = db.collection('pcBaseDetails').doc(config.pcId);
+                const docSnap = await docRef.get();
+                if (docSnap.data()) {
                     console.log("Document data:", docSnap.data());
                 } else {
                     console.log("No such document!");
@@ -26,14 +24,14 @@ function Home() {
 
                 // Get ability scores
                 console.log('getting ability scores.');
-                const asQuery = query(collection(db, "abilityScores"), where("pcId", "==", config.pcId));
-                const asQuerySnapshot = await getDocs(asQuery);
-                asQuerySnapshot.forEach((doc) => {
+                const queryRef = db.collection('abilityScores').where("pcId", "==", config.pcId);
+                const querySnapshot = await queryRef.get();
+                querySnapshot.forEach((doc) => {
                     console.log(doc.id, " => ", doc.data());
                 });
 
                 // Format
-                return {...docSnap.data, ...asQuerySnapshot}
+                return {...docSnap.data, ...querySnapshot}
             } catch (e) {
                 throw Error(JSON.stringify(e));
             }
