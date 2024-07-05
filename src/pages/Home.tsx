@@ -60,6 +60,7 @@ function Home() {
     return (
         <>
             <Navbar/>
+            <p>Please Work :)</p>
             <div>
                 {formatDataAsTable(data)}
             </div>
