@@ -7,6 +7,7 @@ import Details from "./pages/Details";
 import { doc, getDoc } from "firebase/firestore";
 import { collection, query, where, getDocs } from 'firebase/firestore';
 import { db } from './firebase';
+import { useEffect } from 'react';
 
 
 // Hardcoding specific PC id for now since it will mainly be used for a single character.
@@ -14,27 +15,28 @@ import { db } from './firebase';
 const PC_ID="kvneaiw2pulEBICGf6Dm";
 
 function App() {
-    const getPCData = async (pcId: string) => {
-        // Get base character details
-        const docRef = doc(db, "pcBaseDetails", pcId);
-        const docSnap = await getDoc(docRef);
-    
-        if (docSnap.exists()) {
-            console.log("Document data:", docSnap.data());
-        } else {
-            console.log("No such document!");
-            return;
-        }
-    
-        // Get ability scores
-        const asQuery = query(collection(db, "abilityScores"), where("pcId", "==", pcId));
-        const asQuerySnapshot = await getDocs(asQuery);
-        asQuerySnapshot.forEach((doc) => {
-            console.log(doc.id, " => ", doc.data());
-        });
-    }
-    // Load data
-    getPCData(PC_ID);
+    useEffect(() => {
+        const getPCData = async () => {
+            // Get base character details
+            const docRef = doc(db, "pcBaseDetails", PC_ID);
+            const docSnap = await getDoc(docRef);
+
+            if (docSnap.exists()) {
+                console.log("Document data:", docSnap.data());
+            } else {
+                console.log("No such document!");
+                return;
+            }
+
+            // Get ability scores
+            const asQuery = query(collection(db, "abilityScores"), where("pcId", "==", PC_ID));
+            const asQuerySnapshot = await getDocs(asQuery);
+            asQuerySnapshot.forEach((doc) => {
+                console.log(doc.id, " => ", doc.data());
+            });
+        };
+        getPCData();
+    }, []);
 
     // Load pages
     return (
