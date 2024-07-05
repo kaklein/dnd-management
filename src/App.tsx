@@ -37,13 +37,13 @@ function App() {
                 asQuerySnapshot.forEach((doc) => {
                     console.log(doc.id, " => ", doc.data());
                 });
-            } catch (error) {
-                console.log('Error getting PC data: ' + error);
+            } catch (e) {
+                throw Error(JSON.stringify(e));
             }
         };
-        getPCData();
+        return getPCData();
     };
-    loadData();
+    const data = loadData();
 
     // Load pages
     return (
@@ -51,7 +51,7 @@ function App() {
             <BrowserRouter>
                 <Routes>
                     <Route index element={<Home/>}/>
-                    <Route path="/home" element={<Home/>}/>
+                    <Route path="/home" element={<Home data={data}/>}/>
                     <Route path="/stats" element={<Stats/>}/>
                     <Route path="/tracker" element={<Tracker/>}/>
                     <Route path="/details" element={<Details/>}/>

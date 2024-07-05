@@ -3,7 +3,7 @@ import { OsoniaSilverhand as pc } from "../data/playerCharacters/OsoniaSilverhan
 import ImageCard from "../components/cards/ImageCard";
 import Footer from "../components/Footer";
 
-function Home() {
+function Home(data: any) {
     const pcImagePath = `../src/assets/images/${pc.name.firstName.toLowerCase()}_${pc.name.lastName.toLowerCase()}.png`;
     const pcFullName = `${pc.name.firstName} ${pc.name.lastName}`
     const pcDescription = 'The blacksmith fighter who just wants to help people by getting as strong as possible.';
@@ -21,6 +21,7 @@ function Home() {
     return (
         <>
             <Navbar/>
+            <p>{JSON.stringify(data)}</p>
             <ImageCard title={pcFullName} description={pcDescription} imagePath={pcImagePath} data={listCardObject}/>
             <Footer/>
         </>
