@@ -10,6 +10,7 @@ import {UsableResources} from "../../models/playerCharacter/usableResources/Usab
 import {RestType} from "../../models/enum/RestType";
 
 const abilityScores: AbilityScores = {
+    pcId: '6d40e673-3a6e-428c-913d-800c9ec21631',
     strength: {
         score: 14,
         modifier: 2,
@@ -232,42 +233,46 @@ const features: Feature[] = [
 ];
 
 export const OsoniaSilverhand: PlayerCharacter = {
-    name: { firstName: 'Osonia', lastName: 'Silverhand'},
-    playerName: 'Katie',
-    class: 'Fighter',
-    subclass: 'Rune Knight',
-    race: 'High Elf',
-    alignment: 'Neutral Good',
-    background: 'Blacksmith',
-    level: 3,
-    xp: undefined,
+    baseDetails: {
+        pcId: '6d40e673-3a6e-428c-913d-800c9ec21631',
+        name: { firstName: 'Osonia', lastName: 'Silverhand'},
+        playerName: 'Katie',
+        class: 'Fighter',
+        subclass: 'Rune Knight',
+        race: 'High Elf',
+        alignment: 'Neutral Good',
+        background: 'Blacksmith',
+        level: 3,
+        xp: undefined,
+        proficiencyBonus: 2,
+        passiveWisdom: 12,
+        armorClass: 16,
+        initiative: 3,
+        speed: 30,
+        equipment: equipment, // from sep. col
+        usableResources: resources, // from sep. col
+        weapons: weapons, // from sep. col
+        spells: spells, // from sep. col
+        features: features, // from sep. col
+        imagePaths: {
+            avatar: 'osonia_silverhand.png'
+        }, // from sep. col
+        extras: [
+            'RUNE KNIGHT: If a rune requires a saving throw, your Rune Magic save DC equals 8 + your proficiency bonus + your Constitution modifier.',
+            'RUNE KNIGHT: Whenever you finish a long rest, you can touch a number of objects equal to the number of runes you know, and you inscribe a different rune onto each of the objects. To be eligible, an object must be a weapon, a suit of armor, a shield, a piece of jewelry, or something else you can wear or hold in a hand. Your rune remains on an object until you finish a long rest, and an object can bear only one of your runes at a time.'
+        ],
+        languages: [
+            'Common',
+            'Elvish',
+            'Dwarvish',
+            'Gnomish',
+            'Divine Script'
+        ],
+        proficiencies: [
+            "Smith's tools",
+            "Jeweler's tools"
+        ]
+    },
     abilityScores: abilityScores, // from sep. col
-    proficiencyBonus: 2,
-    passiveWisdom: 12,
-    armorClass: 16,
-    initiative: 3,
-    speed: 30,
-    equipment: equipment, // from sep. col
-    usableResources: resources, // from sep. col
-    weapons: weapons, // from sep. col
-    spells: spells, // from sep. col
-    features: features, // from sep. col
-    imagePaths: {
-        avatar: 'osonia_silverhand.png'
-    }, // from sep. col
-    extras: [
-        'RUNE KNIGHT: If a rune requires a saving throw, your Rune Magic save DC equals 8 + your proficiency bonus + your Constitution modifier.',
-        'RUNE KNIGHT: Whenever you finish a long rest, you can touch a number of objects equal to the number of runes you know, and you inscribe a different rune onto each of the objects. To be eligible, an object must be a weapon, a suit of armor, a shield, a piece of jewelry, or something else you can wear or hold in a hand. Your rune remains on an object until you finish a long rest, and an object can bear only one of your runes at a time.'
-    ],
-    languages: [
-        'Common',
-        'Elvish',
-        'Dwarvish',
-        'Gnomish',
-        'Divine Script'
-    ],
-    proficiencies: [
-        "Smith's tools",
-        "Jeweler's tools"
-    ]
+    
 }

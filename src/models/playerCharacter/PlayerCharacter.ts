@@ -6,7 +6,14 @@ import {Feature} from "./Feature";
 import {UsableResources} from "./usableResources/UsableResources";
 
 export interface PlayerCharacter {
+    baseDetails: BaseDetails;
+    abilityScores: AbilityScores;
+}
+
+export interface BaseDetails {
+    pcId: string;
     name: { firstName: string, lastName: string };
+    description?: string;
     playerName: string;
     class: string;
     subclass: string;
@@ -15,7 +22,6 @@ export interface PlayerCharacter {
     background: string;
     level: number;
     xp: number | undefined;
-    abilityScores: AbilityScores;
     proficiencyBonus: number,
     passiveWisdom: number,
     armorClass: number;
