@@ -1,4 +1,4 @@
-import { DocumentData, Firestore, QueryDocumentSnapshot } from "firebase/firestore"
+import { DocumentData, Firestore } from "firebase/firestore"
 import { collection, query, where, getDocs } from "firebase/firestore";
 
 export const buildWhereClauses = (query: {[key: string]: string | number | object}) => {

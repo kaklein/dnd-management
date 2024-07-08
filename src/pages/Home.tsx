@@ -27,7 +27,7 @@ function Home() {
     return (
         <>
             <Navbar/>
-            <ImageCard title={pcFullName} description={pcData.baseDetails.description} imagePath={pcImagePath} data={listCardObject}/>
+            <ImageCard title={pcFullName} description={pcData.baseDetails.description ?? ''} imagePath={pcImagePath} data={listCardObject}/>
             <Footer/>
         </>
     )
