@@ -16,7 +16,7 @@ export interface UsableResources {
         successes: number;
         failures: number;
     };
-    spellSlots?: SpellSlot[],
     gold: number;
     inspiration: number;
+    spellSlots?: SpellSlot[],
 }

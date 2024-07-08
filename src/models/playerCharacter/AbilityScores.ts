@@ -1,4 +1,5 @@
 export interface AbilityScores {
+    pcId?: string;
     strength: {
         score: number;
         modifier: number;

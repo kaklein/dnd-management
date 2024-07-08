@@ -1,69 +1,33 @@
 import Navbar from "../components/Navbar";
-import { OsoniaSilverhand as pc } from "../data/playerCharacters/OsoniaSilverhand";
 import ImageCard from "../components/cards/ImageCard";
 import Footer from "../components/Footer";
-import { doc, getDoc } from "firebase/firestore";
-import { collection, query, where, getDocs } from 'firebase/firestore';
-import { db } from '../firebase';
-import { formatDataAsTable } from "../components/utils";
-const config = require('../data/config.json');
+import { loadData } from "../services/firestore/loadData";
+import { useEffect, useState } from "react";
+import { EmptyPC } from "../data/playerCharacters/EmptyPC";
 
 function Home() {
-    const loadData = () => {
-        console.log('Loading data');
-        const getPCData = async () => {
-            try {
-                console.log('Getting base character details.');
-                // Get base character details
-                const docRef = doc(db, "pcBaseDetails", config.pcId);
-                const docSnap = await getDoc(docRef);
+    const [pcData, setPcData] = useState(EmptyPC);
+    useEffect(() => {
+        loadData().then(data => setPcData(data));
+    }, []);
 
-                if (docSnap.exists()) {
-                    console.log("Document data:", docSnap.data());
-                } else {
-                    console.log("No such document!");
-                    return {};
-                }
-
-                // Get ability scores
-                console.log('getting ability scores.');
-                const asQuery = query(collection(db, "abilityScores"), where("pcId", "==", PC_ID));
-                const asQuerySnapshot = await getDocs(asQuery);
-                asQuerySnapshot.forEach((doc) => {
-                    console.log(doc.id, " => ", doc.data());
-                });
-
-                // Format
-                return {...docSnap.data, ...asQuerySnapshot}
-            } catch (e) {
-                throw Error(JSON.stringify(e));
-            }
-        };
-        return getPCData();
-    };
-    const data = loadData();
-
-    const pcImagePath = `../src/assets/images/${pc.name.firstName.toLowerCase()}_${pc.name.lastName.toLowerCase()}.png`;
-    const pcFullName = `${pc.name.firstName} ${pc.name.lastName}`
-    const pcDescription = 'The blacksmith fighter who just wants to help people by getting as strong as possible.';
+    const pcImagePath = `../src/assets/images/${pcData.baseDetails.name.firstName.toLowerCase()}_${pcData.baseDetails.name.lastName.toLowerCase()}.png`;
+    const pcFullName = `${pcData.baseDetails.name.firstName} ${pcData.baseDetails.name.lastName}`
     const listCardObject = {
-        class: pc.class,
-        subclass: pc.subclass,
-        race: pc.race,
-        background: pc.background,
-        alignment: pc.alignment,
-        level: pc.level,
-        ...(pc.xp && {XP: pc.xp}),
-        ['Player Name']: pc.playerName,
+        class: pcData.baseDetails.class,
+        subclass: pcData.baseDetails.subclass,
+        race: pcData.baseDetails.race,
+        background: pcData.baseDetails.background,
+        alignment: pcData.baseDetails.alignment,
+        level: pcData.baseDetails.level,
+        ...(pcData.baseDetails.xp && {XP: pcData.baseDetails.xp}),
+        ['Player Name']: pcData.baseDetails.playerName,
     };
 
     return (
         <>
             <Navbar/>
-            <div>
-                {formatDataAsTable(data)}
-            </div>
-            <ImageCard title={pcFullName} description={pcDescription} imagePath={pcImagePath} data={listCardObject}/>
+            <ImageCard title={pcFullName} description={pcData.baseDetails.description ?? ''} imagePath={pcImagePath} data={listCardObject}/>
             <Footer/>
         </>
     )

@@ -4,19 +4,24 @@ import Card from "../components/cards/Card";
 import Refresh from "../components/Refresh";
 import Footer from "../components/Footer";
 
-import { OsoniaSilverhand as pc } from "../data/playerCharacters/OsoniaSilverhand";
-import { useState} from "react";
+import { useEffect, useState} from "react";
 import {removeWhiteSpaceAndConvertToLowerCase} from "../components/utils";
 import { HashLink as Link } from 'react-router-hash-link';
+import { loadData } from "../services/firestore/loadData";
+import { EmptyPC } from "../data/playerCharacters/EmptyPC";
 
 function Tracker() {
-    const rs = pc.usableResources;
-    const limitedUseFeatures = pc.features.filter(feature => feature.maxUses);
+    const [pcData, setPcData] = useState(EmptyPC);
+    useEffect(() => {
+        loadData().then(data => setPcData(data));
+    }, []);
+
+    const limitedUseFeatures = pcData.baseDetails.features.filter(feature => feature.maxUses);
 
     // State variables
-    const [hitPoints, setHitPoints] = useState(rs.hitPoints.current);
-    const [tempHitPoints, setTempHitPoints] = useState(rs.hitPoints.temporary);
-    const [gold, setGold] = useState(rs.gold);
+    const [hitPoints, setHitPoints] = useState(pcData.baseDetails.usableResources.hitPoints.current);
+    const [tempHitPoints, setTempHitPoints] = useState(pcData.baseDetails.usableResources.hitPoints.temporary);
+    const [gold, setGold] = useState(pcData.baseDetails.usableResources.gold);
 
     return (
         <>
@@ -26,7 +31,7 @@ function Tracker() {
             <Card>
                 <h3>Hit Points</h3>
                 <form>
-                    <input type="number" id="hit-points" defaultValue={hitPoints} min="0" max={rs.hitPoints.max} onChange={ evt => setHitPoints(Number(evt.target.value))}/> / {rs.hitPoints.max}
+                    <input type="number" id="hit-points" defaultValue={hitPoints} min="0" max={pcData.baseDetails.usableResources.hitPoints.max} onChange={ evt => setHitPoints(Number(evt.target.value))}/> / {pcData.baseDetails.usableResources.hitPoints.max}
                     <br/>
                     <label htmlFor="temp-hit-points">Temporary Hit Points</label>
                     <br/>
@@ -35,18 +40,18 @@ function Tracker() {
             </Card>
 
             {
-                rs.inspiration > 0 &&
+                pcData.baseDetails.usableResources.inspiration > 0 &&
                 <Card>
                     <h3>Inspiration</h3>
-                    <h4>{rs.inspiration}</h4>
+                    <h4>{pcData.baseDetails.usableResources.inspiration}</h4>
                 </Card>
             }
 
-            {rs.spellSlots &&
+            {pcData.baseDetails.usableResources.spellSlots &&
                 <Card>
                     <h3>Spell Slots</h3>
                     {
-                        rs.spellSlots?.map(spellSlot => (
+                        pcData.baseDetails.usableResources.spellSlots?.map(spellSlot => (
                             <Card>
                                 <h3>{spellSlot.level}</h3>
                                 <Toggle label="Slots" count={spellSlot.max} defaultPosition="unchecked"/>
@@ -55,7 +60,7 @@ function Tracker() {
                     }
                     <h4>Available Spells</h4>
                     {
-                        pc.spells!.map(spell => (
+                        pcData.baseDetails.spells!.map(spell => (
                             <p>{spell.level}: <Link to={'/details#' + removeWhiteSpaceAndConvertToLowerCase(spell.name)}>{spell.name}</Link></p>
                         ))
                     }
@@ -66,7 +71,7 @@ function Tracker() {
             <Card>
                 <h3>Weapons</h3>
                 {
-                    pc.weapons.map(weapon => (
+                    pcData.baseDetails.weapons.map(weapon => (
                         <Card>
                             <Link to={'/details#' + removeWhiteSpaceAndConvertToLowerCase(weapon.name)}><h4>{weapon.name} ({weapon.type})</h4></Link>
                             <h3>{weapon.damage} {weapon.damageType.toLowerCase()}</h3>
@@ -90,14 +95,14 @@ function Tracker() {
 
             <Card>
                 <h3>Hit Dice</h3>
-                <p>{rs.hitDice.type}</p>
-                <Toggle label="Uses" count={rs.hitDice.max} defaultPosition="unchecked"/>
+                <p>{pcData.baseDetails.usableResources.hitDice.type}</p>
+                <Toggle label="Uses" count={pcData.baseDetails.usableResources.hitDice.max} defaultPosition="unchecked"/>
             </Card>
 
             <Card>
                 <h3>Death Saves</h3>
-                <Toggle label="Successes" count={rs.deathSaves.max} defaultPosition="unchecked"/>
-                <Toggle label="Failures" count={rs.deathSaves.max} defaultPosition="unchecked"/>
+                <Toggle label="Successes" count={pcData.baseDetails.usableResources.deathSaves.max} defaultPosition="unchecked"/>
+                <Toggle label="Failures" count={pcData.baseDetails.usableResources.deathSaves.max} defaultPosition="unchecked"/>
             </Card>
 
             <Card>

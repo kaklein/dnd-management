@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<coverage generated="1720472820894" clover="3.2.0">
+  <project timestamp="1720472820894" name="All files">
+    <metrics statements="23" coveredstatements="9" conditionals="2" coveredconditionals="0" methods="6" coveredmethods="1" elements="31" coveredelements="10" complexity="0" loc="23" ncloc="23" packages="1" files="1" classes="1"/>
+    <file name="read.ts" path="/Users/katieklein/Desktop/practiceProjects/react/dnd-management/src/services/firestore/read.ts">
+      <metrics statements="23" coveredstatements="9" conditionals="2" coveredconditionals="0" methods="6" coveredmethods="1"/>
+      <line num="2" count="1" type="stmt"/>
+      <line num="4" count="1" type="stmt"/>
+      <line num="5" count="2" type="stmt"/>
+      <line num="6" count="2" type="stmt"/>
+      <line num="7" count="2" type="stmt"/>
+      <line num="8" count="3" type="stmt"/>
+      <line num="10" count="2" type="stmt"/>
+      <line num="13" count="1" type="stmt"/>
+      <line num="14" count="0" type="stmt"/>
+      <line num="15" count="0" type="stmt"/>
+      <line num="16" count="0" type="stmt"/>
+      <line num="17" count="0" type="stmt"/>
+      <line num="18" count="0" type="stmt"/>
+      <line num="19" count="0" type="stmt"/>
+      <line num="20" count="0" type="stmt"/>
+      <line num="22" count="0" type="stmt"/>
+      <line num="25" count="1" type="stmt"/>
+      <line num="26" count="0" type="stmt"/>
+      <line num="27" count="0" type="cond" truecount="0" falsecount="1"/>
+      <line num="28" count="0" type="stmt"/>
+      <line num="31" count="0" type="cond" truecount="0" falsecount="1"/>
+      <line num="32" count="0" type="stmt"/>
+      <line num="35" count="0" type="stmt"/>
+    </file>
+  </project>
+</coverage>

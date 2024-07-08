@@ -2,12 +2,14 @@ import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import Card from "../components/cards/Card";
 
-import { OsoniaSilverhand as pc } from "../data/playerCharacters/OsoniaSilverhand";
 import Refresh from "../components/Refresh";
 import {Spell} from "../models/playerCharacter/Spell";
 import {formatDataAsTable, removeWhiteSpaceAndConvertToLowerCase} from "../components/utils";
+import { useEffect, useState } from "react";
+import { loadData } from "../services/firestore/loadData";
+import { EmptyPC } from "../data/playerCharacters/EmptyPC";
 
-const mapSpells = (spells: Spell[]) => {
+const mapSpells = (spells: Spell[]) => {    
     return (
         spells.map(spell => (
             <Card>
@@ -43,6 +45,11 @@ const mapSpells = (spells: Spell[]) => {
 }
 
 function Details() {
+    const [pcData, setPcData] = useState(EmptyPC);
+    useEffect(() => {
+        loadData().then(data => setPcData(data));
+    }, []);
+
     return (
         <>
             <Navbar/>
@@ -51,10 +58,10 @@ function Details() {
 
             <Card>
                 <h3>Spells & Abilities</h3>
-                {pc.spells && mapSpells(pc.spells)}
+                {pcData.baseDetails.spells && mapSpells(pcData.baseDetails.spells)}
 
                 {
-                    pc.features.map(feature => (
+                    pcData.baseDetails.features.map(feature => (
                         <Card>
                             <a id={removeWhiteSpaceAndConvertToLowerCase(feature.name)}></a>
                             <h3>{feature.name.toUpperCase()}</h3>
@@ -70,7 +77,7 @@ function Details() {
             <Card>
                 <h3>Weapons</h3>
                 {
-                    pc.weapons.map(weapon => (
+                    pcData.baseDetails.weapons.map(weapon => (
                         <Card>
                             <a id={removeWhiteSpaceAndConvertToLowerCase(weapon.name)}></a>
                             <h3>{weapon.name}</h3>
@@ -83,7 +90,7 @@ function Details() {
             <Card>
                 <h3>Equipment</h3>
                 {
-                    pc.equipment.map(item =>
+                    pcData.baseDetails.equipment.map(item =>
                         <Card>
                             <p>{item.type}</p>
                             {item.description && <p><i>{item.description}</i></p>}
@@ -95,7 +102,7 @@ function Details() {
             <Card>
                 <h3>Languages</h3>
                 {
-                    pc.languages.map(language => (
+                    pcData.baseDetails.languages.map(language => (
                         <p>{language}</p>
                     ))
                 }
@@ -104,7 +111,7 @@ function Details() {
             <Card>
                 <h3>Proficiencies</h3>
                 {
-                    pc.proficiencies.map(proficiency => (
+                    pcData.baseDetails.proficiencies.map(proficiency => (
                         <p>{proficiency}</p>
                     ))
                 }
@@ -112,8 +119,8 @@ function Details() {
 
             <Card>
                 <h3>Other Notes</h3>
-                {pc.extras &&
-                    pc.extras.map(extra => (
+                {pcData.baseDetails.extras &&
+                    pcData.baseDetails.extras.map(extra => (
                         <Card>
                             <p>{extra}</p>
                         </Card>
