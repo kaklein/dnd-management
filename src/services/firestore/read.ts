@@ -12,11 +12,9 @@ export const buildWhereClauses = (query: {[key: string]: string | number | objec
 
 export const readData = async (db: Firestore, collectionName: string, queryFilter: {[key: string]: string | number | object}): Promise<DocumentData[]> => {
   const baseDetailsQ = query(collection(db, collectionName), ...buildWhereClauses(queryFilter));
-  console.log(baseDetailsQ);
   const baseDetailsSnapshot = await getDocs(baseDetailsQ);
   const docs: DocumentData[] = [];
   baseDetailsSnapshot.forEach((doc) => {
-      console.log(doc.id);
       docs.push(doc.data());
   });
   return docs;

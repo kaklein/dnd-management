@@ -11,7 +11,7 @@ function Refresh({refreshRestType}: Props) {
         <div>
             <p>Refresh</p>
             <figure>
-                <img className="icon" src={`@images/icons/${imageFileName}`} alt={`${refreshRestType} rest icon`}/>
+                <img className="icon" src={`/images/icons/${imageFileName}`} alt={`${refreshRestType} rest icon`}/>
                 <figcaption>{refreshRestType.toLowerCase()} rest</figcaption>
             </figure>
         </div>

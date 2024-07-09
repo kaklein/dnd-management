@@ -18,9 +18,6 @@
       "@data/*":[
         "./data/*"
       ],
-      "@images/*":[
-        "./images/*"
-      ],
       "@models/*":[
         "./models/*"
       ],
@@ -47,5 +44,5 @@
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true
   },
-  "include": ["src"]
+  "include": ["src", "public/icons"]
 }

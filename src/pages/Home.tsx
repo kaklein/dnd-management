@@ -11,7 +11,7 @@ function Home() {
         loadData().then(data => setPcData(data));
     }, []);
 
-    const pcImagePath = `@images/playerCharacters/${pcData.baseDetails.name.firstName.toLowerCase()}_${pcData.baseDetails.name.lastName.toLowerCase()}.png`;
+    const pcImagePath = `/images/playerCharacters/${pcData.baseDetails.name.firstName.toLowerCase()}_${pcData.baseDetails.name.lastName.toLowerCase()}.png`;
     const pcFullName = `${pcData.baseDetails.name.firstName} ${pcData.baseDetails.name.lastName}`
     const listCardObject = {
         class: pcData.baseDetails.class,

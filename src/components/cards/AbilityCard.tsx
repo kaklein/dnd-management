@@ -1,4 +1,4 @@
-import Card from "./Card";
+import Card from "@components/cards/Card";
 import { formatDataAsTable } from "@components/utils";
 
 interface Props {
