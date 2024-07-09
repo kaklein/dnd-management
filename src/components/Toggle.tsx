@@ -1,4 +1,4 @@
-import {removeWhiteSpaceAndConvertToLowerCase} from "./utils";
+import { removeWhiteSpaceAndConvertToLowerCase } from "@components/utils";
 
 interface Props {
     label: string;

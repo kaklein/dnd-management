@@ -1,5 +1,5 @@
-import { formatDataAsTable } from "../utils";
-import Card from "./Card";
+import { formatDataAsTable } from "@components/utils";
+import Card from "@components/cards/Card";
 
 interface Props {
     title: string;

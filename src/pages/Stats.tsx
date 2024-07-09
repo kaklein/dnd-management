@@ -1,13 +1,12 @@
-import Navbar from "../components/Navbar";
-import AbilityCard from "../components/cards/AbilityCard";
-import {AbilityScores} from "../models/playerCharacter/AbilityScores";
-import Card from "../components/cards/Card";
-import CardSetHorizontal from "../components/cards/CardSetHorizontal";
-import { loadData } from "../services/firestore/loadData";
+import Navbar from "@components/Navbar";
+import Footer from "@components/Footer";
+import AbilityCard from "@components/cards/AbilityCard";
+import Card from "@components/cards/Card";
+import CardSetHorizontal from "@components/cards/CardSetHorizontal";
+import { loadData } from "@services/firestore/loadData";
 import { useEffect, useState } from "react";
-import { EmptyPC } from "../data/playerCharacters/EmptyPC";
-
-import Footer from "../components/Footer";
+import { EmptyPC } from "@data/playerCharacters/EmptyPC";
+import { AbilityScores } from "@models/playerCharacter/AbilityScores";
 
 function Stats() {
     const [pcData, setPcData] = useState(EmptyPC);

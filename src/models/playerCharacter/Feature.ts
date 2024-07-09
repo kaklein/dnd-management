@@ -1,5 +1,5 @@
-import {RestType} from "../enum/RestType";
-import {DamageType} from "../enum/DamageType";
+import { RestType } from "@models/enum/RestType";
+import { DamageType } from "@models/enum/DamageType";
 
 export interface Feature {
     name: string;

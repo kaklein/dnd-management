@@ -9,6 +9,26 @@
     "skipLibCheck": true,
     "esModuleInterop": true,
 
+    /* Paths */
+    "baseUrl" : "./src",
+    "paths": {
+      "@components/*":[
+        "./components/*"
+      ],
+      "@data/*":[
+        "./data/*"
+      ],
+      "@models/*":[
+        "./models/*"
+      ],
+      "@pages/*":[
+        "./pages/*"
+      ],
+      "@services/*":[
+        "./services/*"
+      ]      
+    },
+
     /* Bundler mode */
     "moduleResolution": "bundler",
     "allowImportingTsExtensions": true,
@@ -24,5 +44,5 @@
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true
   },
-  "include": ["src"]
+  "include": ["src", "public/icons"]
 }

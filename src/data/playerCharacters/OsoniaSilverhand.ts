@@ -1,13 +1,13 @@
-import {PlayerCharacter} from "../../models/playerCharacter/PlayerCharacter";
-import {DamageType} from "../../models/enum/DamageType";
-import {Ability} from "../../models/enum/Ability";
-import {Spell, SpellLevel} from "../../models/playerCharacter/Spell";
-import {AbilityScores} from "../../models/playerCharacter/AbilityScores";
-import {Equipment} from "../../models/playerCharacter/Equipment";
-import {Weapon} from "../../models/playerCharacter/Weapon";
-import {Feature} from "../../models/playerCharacter/Feature";
-import {UsableResources} from "../../models/playerCharacter/usableResources/UsableResources";
-import {RestType} from "../../models/enum/RestType";
+import { PlayerCharacter } from "@models/playerCharacter/PlayerCharacter";
+import { DamageType } from "@models/enum/DamageType";
+import { Ability } from "@models/enum/Ability";
+import { Spell, SpellLevel } from "@models/playerCharacter/Spell";
+import { AbilityScores } from "@models/playerCharacter/AbilityScores";
+import { Equipment } from "@models/playerCharacter/Equipment";
+import { Weapon } from "@models/playerCharacter/Weapon";
+import { Feature } from "@models/playerCharacter/Feature";
+import { UsableResources } from "@models/playerCharacter/usableResources/UsableResources";
+import { RestType } from "@models/enum/RestType";
 
 const abilityScores: AbilityScores = {
     pcId: '6d40e673-3a6e-428c-913d-800c9ec21631',

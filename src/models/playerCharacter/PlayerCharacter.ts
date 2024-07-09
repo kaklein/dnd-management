@@ -1,9 +1,9 @@
-import {AbilityScores} from "./AbilityScores";
-import {Weapon} from "./Weapon";
-import {Spell} from "./Spell";
-import {Equipment} from "./Equipment";
-import {Feature} from "./Feature";
-import {UsableResources} from "./usableResources/UsableResources";
+import { AbilityScores } from "@models/playerCharacter/AbilityScores";
+import { Weapon } from "@models/playerCharacter/Weapon";
+import { Spell } from "@models/playerCharacter/Spell";
+import { Equipment } from "@models/playerCharacter/Equipment";
+import { Feature } from "@models/playerCharacter/Feature";
+import { UsableResources } from "@models/playerCharacter/usableResources/UsableResources";
 
 export interface PlayerCharacter {
     baseDetails: BaseDetails;

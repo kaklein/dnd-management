@@ -1,14 +1,13 @@
-import Navbar from "../components/Navbar";
-import Toggle from "../components/Toggle";
-import Card from "../components/cards/Card";
-import Refresh from "../components/Refresh";
-import Footer from "../components/Footer";
-
+import Navbar from "@components/Navbar";
+import Toggle from "@components/Toggle";
+import Card from "@components/cards/Card";
+import Refresh from "@components/Refresh";
+import Footer from "@components/Footer";
+import { removeWhiteSpaceAndConvertToLowerCase } from "@components/utils";
 import { useEffect, useState} from "react";
-import {removeWhiteSpaceAndConvertToLowerCase} from "../components/utils";
 import { HashLink as Link } from 'react-router-hash-link';
-import { loadData } from "../services/firestore/loadData";
-import { EmptyPC } from "../data/playerCharacters/EmptyPC";
+import { loadData } from "@services/firestore/loadData";
+import { EmptyPC } from "@data/playerCharacters/EmptyPC";
 
 function Tracker() {
     const [pcData, setPcData] = useState(EmptyPC);

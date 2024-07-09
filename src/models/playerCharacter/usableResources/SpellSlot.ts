@@ -1,4 +1,4 @@
-import {SpellLevel} from "../Spell";
+import { SpellLevel } from "@models/playerCharacter/Spell";
 
 export interface SpellSlot {
     level: SpellLevel;
