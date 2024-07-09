@@ -1,9 +1,9 @@
-import Navbar from "../components/Navbar";
-import ImageCard from "../components/cards/ImageCard";
-import Footer from "../components/Footer";
-import { loadData } from "../services/firestore/loadData";
+import Navbar from "@components/Navbar";
+import ImageCard from "@components/cards/ImageCard";
+import Footer from "@components/Footer";
+import { loadData } from "@services/firestore/loadData";
 import { useEffect, useState } from "react";
-import { EmptyPC } from "../data/playerCharacters/EmptyPC";
+import { EmptyPC } from "@data/playerCharacters/EmptyPC";
 
 function Home() {
     const [pcData, setPcData] = useState(EmptyPC);
@@ -11,7 +11,7 @@ function Home() {
         loadData().then(data => setPcData(data));
     }, []);
 
-    const pcImagePath = `../src/images/playerCharacters/${pcData.baseDetails.name.firstName.toLowerCase()}_${pcData.baseDetails.name.lastName.toLowerCase()}.png`;
+    const pcImagePath = `@images/playerCharacters/${pcData.baseDetails.name.firstName.toLowerCase()}_${pcData.baseDetails.name.lastName.toLowerCase()}.png`;
     const pcFullName = `${pcData.baseDetails.name.firstName} ${pcData.baseDetails.name.lastName}`
     const listCardObject = {
         class: pcData.baseDetails.class,

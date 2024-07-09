@@ -1,6 +1,6 @@
-import {DamageType} from "../enum/DamageType";
-import {RestType} from "../enum/RestType";
-import {Ability} from "../enum/Ability";
+import { DamageType } from "@models/enum/DamageType";
+import { RestType } from "@models/enum/RestType";
+import { Ability } from "@models/enum/Ability";
 
 export interface Spell {
     name: string;

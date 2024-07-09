@@ -9,6 +9,29 @@
     "skipLibCheck": true,
     "esModuleInterop": true,
 
+    /* Paths */
+    "baseUrl" : "./src",
+    "paths": {
+      "@components/*":[
+        "./components/*"
+      ],
+      "@data/*":[
+        "./data/*"
+      ],
+      "@images/*":[
+        "./images/*"
+      ],
+      "@models/*":[
+        "./models/*"
+      ],
+      "@pages/*":[
+        "./pages/*"
+      ],
+      "@services/*":[
+        "./services/*"
+      ]      
+    },
+
     /* Bundler mode */
     "moduleResolution": "bundler",
     "allowImportingTsExtensions": true,

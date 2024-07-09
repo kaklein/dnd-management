@@ -1,8 +1,8 @@
 import { db } from '../../firebase';
-import * as config from '../../data/config.json';
-import { readSingleItem } from './read';
-import { BaseDetails, PlayerCharacter } from '../../models/playerCharacter/PlayerCharacter';
-import { AbilityScores } from '../../models/playerCharacter/AbilityScores';
+import * as config from '@data/config.json';
+import { readSingleItem } from '@services/firestore/read';
+import { BaseDetails, PlayerCharacter } from '@models/playerCharacter/PlayerCharacter';
+import { AbilityScores } from '@models/playerCharacter/AbilityScores';
 
 export const loadData = async (): Promise<PlayerCharacter> => {
   console.log('Loading data');

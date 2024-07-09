@@ -1,5 +1,5 @@
 import Card from "./Card";
-import {formatDataAsTable} from "../utils";
+import { formatDataAsTable } from "@components/utils";
 
 interface Props {
     abilityName: string;

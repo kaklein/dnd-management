@@ -1,4 +1,4 @@
-import {DamageType} from "../enum/DamageType";
+import { DamageType } from "@models/enum/DamageType";
 
 export interface Weapon {
     name: string;

@@ -1,4 +1,4 @@
-import {SpellSlot} from "./SpellSlot";
+import { SpellSlot } from "@models/playerCharacter/usableResources/SpellSlot";
 
 export interface UsableResources {
     hitPoints: {

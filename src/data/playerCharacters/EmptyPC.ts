@@ -1,6 +1,6 @@
-import { AbilityScores } from "../../models/playerCharacter/AbilityScores"
-import { PlayerCharacter } from "../../models/playerCharacter/PlayerCharacter"
-import { UsableResources } from "../../models/playerCharacter/usableResources/UsableResources"
+import { AbilityScores } from "@models/playerCharacter/AbilityScores"
+import { PlayerCharacter } from "@models/playerCharacter/PlayerCharacter"
+import { UsableResources } from "@models/playerCharacter/usableResources/UsableResources"
 
 const emptyAbilityScores: AbilityScores = {
   pcId: 'empty',

@@ -1,13 +1,12 @@
-import Navbar from "../components/Navbar";
-import Footer from "../components/Footer";
-import Card from "../components/cards/Card";
-
-import Refresh from "../components/Refresh";
-import {Spell} from "../models/playerCharacter/Spell";
-import {formatDataAsTable, removeWhiteSpaceAndConvertToLowerCase} from "../components/utils";
+import Navbar from "@components/Navbar";
+import Footer from "@components/Footer";
+import Card from "@components/cards/Card";
+import Refresh from "@components/Refresh";
+import { formatDataAsTable, removeWhiteSpaceAndConvertToLowerCase } from "@components/utils";
 import { useEffect, useState } from "react";
-import { loadData } from "../services/firestore/loadData";
-import { EmptyPC } from "../data/playerCharacters/EmptyPC";
+import { loadData } from "@services/firestore/loadData";
+import { Spell } from "@models/playerCharacter/Spell";
+import { EmptyPC } from "@data/playerCharacters/EmptyPC";
 
 const mapSpells = (spells: Spell[]) => {    
     return (
