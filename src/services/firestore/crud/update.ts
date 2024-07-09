@@ -1,7 +1,7 @@
 import { Firestore, updateDoc, doc } from "firebase/firestore";
 import { readSingleItem } from "@services/firestore/crud/read";
 
-export const updateDataByPcId = async (db: Firestore, collectionName: string, pcId: string, update: {[key: string]: string | number | object}): boolean => {
+export const updateDataByPcId = async (db: Firestore, collectionName: string, pcId: string, update: {[key: string]: string | number | object}): Promise<boolean> => {
   console.log('Preparing to update data');
   // Find correct doc
   const originalDoc = await readSingleItem(db, collectionName, {pcId: pcId});
