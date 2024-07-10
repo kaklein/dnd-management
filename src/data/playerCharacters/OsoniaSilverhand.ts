@@ -91,8 +91,8 @@ const resources: UsableResources = {
     },
     deathSaves: {
         max: 3,
-        successes: 0,
-        failures: 0
+        successesRemaining: 3,
+        failuresRemaining: 3
     },
     gold: 135,
     inspiration: 0

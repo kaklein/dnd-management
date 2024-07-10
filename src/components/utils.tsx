@@ -30,3 +30,17 @@ export const formatDataAsTable = (data: object, highlightNonZeroes=false, plusNo
 export const removeWhiteSpaceAndConvertToLowerCase = (s: string) => {
     return s.replace(/\s/g, '').toLowerCase();
 }
+
+export const formatFormData = (formData: any) => {
+    return { 
+        'usableResources.hitPoints.current': Number(formData.hitPointsCurrent),
+        'usableResources.hitPoints.temporary': Number(formData.hitPointsTemporary),
+        'usableResources.hitDice.current': Number(formData.hitDiceCurrent),
+        'usableResources.deathSaves.successesRemaining': Number(formData.deathSavesSuccesses),
+        'usableResources.deathSaves.failuresRemaining': Number(formData.deathSavesFailures),
+        'usableResources.gold': Number(formData.gold),
+        'usableResources.inspiration': Number(formData.inspiration),
+        // spell slots - separate collection?
+        // features - separate collection?
+    };
+}

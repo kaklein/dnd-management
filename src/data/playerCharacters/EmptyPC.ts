@@ -62,13 +62,13 @@ const emptyUsableResources: UsableResources = {
   },
   hitDice: {
     type: 'd6',
-    max: 0,
-    current: 0
+    max: 3,
+    current: 3
   },
   deathSaves: {
     max: 3,
-    successes: 0,
-    failures: 0
+    successesRemaining: 3,
+    failuresRemaining: 3
   },
   gold: 0,
   inspiration: 0

@@ -13,8 +13,8 @@ export interface UsableResources {
     };
     deathSaves: {
         max: 3;
-        successes: number;
-        failures: number;
+        successesRemaining: number;
+        failuresRemaining: number;
     };
     gold: number;
     inspiration: number;
