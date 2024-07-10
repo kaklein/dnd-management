@@ -1,16 +1,16 @@
 import Navbar from "@components/Navbar";
-import Toggle from "@components/Toggle";
 import Card from "@components/cards/Card";
 import Refresh from "@components/Refresh";
 import Footer from "@components/Footer";
-import { formatFormData, removeWhiteSpaceAndConvertToLowerCase } from "@components/utils";
+import { buildFeatureCurrentUsesKey, buildSpellSlotsCurrentKey, formatBaseDetailsUpdates, formatFeaturesUpdates, formatSpellSlotsUpdates, getFeatureFormData, getSpellSlotFormData, removeWhiteSpaceAndConvertToLowerCase } from "@components/utils";
 import { useState} from "react";
 import { HashLink as Link } from 'react-router-hash-link';
-import { updateDataByPcId } from "@services/firestore/crud/update";
+import { updateById, updateDataByPcId } from "@services/firestore/crud/update";
 import { db } from "../firebase";
 import ItemUseToggle from "@components/ItemUseToggle";
 import { PlayerCharacter } from "@models/playerCharacter/PlayerCharacter";
 import { QueryClient } from "@tanstack/react-query";
+import Alert from "@components/Alert";
 
 interface Props {
     pcData: PlayerCharacter;
@@ -18,7 +18,15 @@ interface Props {
 }
 
 function Tracker({pcData, queryClient}: Props) {
-    const limitedUseFeatures = pcData.baseDetails.features.filter(feature => feature.maxUses);
+    const [showSuccessAlert, setShowSuccessAlert] = useState(false);
+    const triggerSuccessAlert = () => {
+        setShowSuccessAlert(true);
+        setTimeout(() => {
+            setShowSuccessAlert(false);
+        }, 2000);
+    }
+    
+    const limitedUseFeatures = pcData.features.filter(feature => feature.data.maxUses);
 
     const defaultFormData = {
         hitPointsCurrent: pcData.baseDetails.usableResources.hitPoints.current,
@@ -28,28 +36,29 @@ function Tracker({pcData, queryClient}: Props) {
         deathSavesFailures: pcData.baseDetails.usableResources.deathSaves.failuresRemaining,
         gold: pcData.baseDetails.usableResources.gold,
         inspiration: pcData.baseDetails.usableResources.inspiration,
-        // spellSlotsL1: pcData.baseDetails.usableResources.spellSlots?.filter(spell => spell.level == SpellLevel.L1)[0].current,
-        // spellSlotsL2: pcData.baseDetails.usableResources.spellSlots?.filter(spell => spell.level == SpellLevel.L2)[0].current,
-        // spellSlotsL3: pcData.baseDetails.usableResources.spellSlots?.filter(spell => spell.level == SpellLevel.L3)[0].current,
-        // spellSlotsL4: pcData.baseDetails.usableResources.spellSlots?.filter(spell => spell.level == SpellLevel.L4)[0].current,
-        // spellSlotsL5: pcData.baseDetails.usableResources.spellSlots?.filter(spell => spell.level == SpellLevel.L5)[0].current,
-        // features: limitedUseFeatures.map(feature => ({
-        //     name: feature.name,
-        //     currentUses: feature.currentUses
-        // }))
+        ...getSpellSlotFormData(pcData.spellSlots ?? []),
+        ...getFeatureFormData(limitedUseFeatures)
     }
     const [formData, setFormData] = useState(defaultFormData);
 
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = event.target;
-        setFormData((prevFormData) => ({...prevFormData, [name]: value}));
+        setFormData((prevFormData: any) => ({...prevFormData, [name]: value}));
     }
 
     const handleSubmit = async (event: any) => {
         event.preventDefault();
-        const updates = formatFormData(formData);
-        await updateDataByPcId(db, 'pcBaseDetails', pcData.baseDetails.pcId, updates);
+        const baseDetailsUpdates = formatBaseDetailsUpdates(formData);
+        const featuresUpdates = formatFeaturesUpdates(formData);
+        const spellSlotsUpdate = formatSpellSlotsUpdates(formData);
+
+        await Promise.all([
+            updateDataByPcId(db, 'pcBaseDetails', pcData.baseDetails.pcId, baseDetailsUpdates),
+            ...featuresUpdates.map(f => updateById('features', f.docId, f.updates)),
+            ...spellSlotsUpdate.map(s => updateById('spellSlots', s.docId, s.updates))
+        ]).then();
         queryClient.invalidateQueries();
+        triggerSuccessAlert();
     }
 
     return (
@@ -61,6 +70,7 @@ function Tracker({pcData, queryClient}: Props) {
             <form onSubmit={handleSubmit}>
                 <div>
                     <button type="submit" id="tracker-save-button" className="btn btn-success">Save</button>
+                    {showSuccessAlert && <Alert alertText="Save successful." className="successful-alert" iconFile="/images/icons/success-icon.png"/>}
                     <Card>
                         <h3>Hit Points</h3>
                         <input
@@ -90,6 +100,8 @@ function Tracker({pcData, queryClient}: Props) {
                         <label htmlFor="inspiration">Inspiration</label>
                         <input
                             type="number"
+                            min="0"
+                            max="10"
                             id="inspiration"
                             name="inspiration"
                             value={formData.inspiration}
@@ -97,27 +109,30 @@ function Tracker({pcData, queryClient}: Props) {
                         />
                     </Card>
 
-                    {pcData.baseDetails.usableResources.spellSlots &&
-                        <Card>
-                            <h3>Spell Slots</h3>
-                            {
-                                pcData.baseDetails.usableResources.spellSlots?.map(spellSlot => (
-                                    <Card>
-                                        <h3>{spellSlot.level}</h3>
-                                        <Toggle label="Slots" count={spellSlot.max} defaultPosition="unchecked"/>
-                                    </Card>
-                                ))
-                            }
-                            <h4>Available Spells</h4>
-                            {
-                                pcData.baseDetails.spells!.map(spell => (
-                                    <p>{spell.level}: <Link to={'/details#' + removeWhiteSpaceAndConvertToLowerCase(spell.name)}>{spell.name}</Link></p>
-                                ))
-                            }
-                        </Card>
-                    }
-
-
+                    <Card>
+                        <h3>Spell Slots</h3>
+                        {
+                            pcData.spellSlots?.map(spellSlot => (
+                                <Card>
+                                    <h3>{spellSlot.data.level}</h3>
+                                    <ItemUseToggle
+                                        itemLabel={removeWhiteSpaceAndConvertToLowerCase(spellSlot.data.level)}
+                                        formDataName={buildSpellSlotsCurrentKey(spellSlot)}
+                                        maxUses={spellSlot.data.max}
+                                        currentUses={spellSlot.data.current}
+                                        onChange={handleChange}
+                                    />
+                                </Card>
+                            ))
+                        }
+                        <h4>Available Spells</h4>
+                        {
+                            pcData.baseDetails.spells!.map(spell => (
+                                <p>{spell.level}: <Link to={'/details#' + removeWhiteSpaceAndConvertToLowerCase(spell.name)}>{spell.name}</Link></p>
+                            ))
+                        }
+                    </Card>
+                
                     <Card>
                         <h3>Weapons</h3>
                         {
@@ -135,9 +150,15 @@ function Tracker({pcData, queryClient}: Props) {
                         {
                             limitedUseFeatures.map(feature => (
                                 <Card>
-                                    <Link to={'/details#' + removeWhiteSpaceAndConvertToLowerCase(feature.name)}><h4>{feature.name}</h4></Link>
-                                    <Toggle label="Uses" count={feature.maxUses!}/>
-                                    <Refresh refreshRestType={feature.refresh!}/>
+                                    <Link to={'/details#' + removeWhiteSpaceAndConvertToLowerCase(feature.data.name)}><h4>{feature.data.name}</h4></Link>
+                                    <ItemUseToggle
+                                        itemLabel={removeWhiteSpaceAndConvertToLowerCase(feature.data.name)}
+                                        formDataName={buildFeatureCurrentUsesKey(feature)}
+                                        maxUses={feature.data.maxUses!}
+                                        currentUses={formData[buildFeatureCurrentUsesKey(feature)]}
+                                        onChange={handleChange}
+                                    />
+                                    <Refresh refreshRestType={feature.data.refresh!}/>
                                 </Card>
                             ))
                         }

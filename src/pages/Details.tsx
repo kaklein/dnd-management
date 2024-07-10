@@ -57,14 +57,14 @@ function Details({pcData}: Props) {
                 {pcData.baseDetails.spells && mapSpells(pcData.baseDetails.spells)}
 
                 {
-                    pcData.baseDetails.features.map(feature => (
+                    pcData.features.map(feature => (
                         <Card>
-                            <a id={removeWhiteSpaceAndConvertToLowerCase(feature.name)}></a>
-                            <h3>{feature.name.toUpperCase()}</h3>
-                            <p><b>Description: </b>{feature.description}</p>
-                            <p><b>Source: </b>{feature.source}</p>
-                            { feature.damage && <p><b>Damage: </b>{feature.damage} {feature.damageType}</p>}
-                            { feature.saveDC && <p><b>Spell Save DC: </b>{feature.saveDC}</p>}
+                            <a id={removeWhiteSpaceAndConvertToLowerCase(feature.data.name)}></a>
+                            <h3>{feature.data.name.toUpperCase()}</h3>
+                            <p><b>Description: </b>{feature.data.description}</p>
+                            <p><b>Source: </b>{feature.data.source}</p>
+                            { feature.data.damage && <p><b>Damage: </b>{feature.data.damage} {feature.data.damageType}</p>}
+                            { feature.data.saveDC && <p><b>Spell Save DC: </b>{feature.data.saveDC}</p>}
                         </Card>
                     ))
                 }

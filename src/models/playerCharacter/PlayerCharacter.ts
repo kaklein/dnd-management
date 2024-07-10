@@ -4,10 +4,13 @@ import { Spell } from "@models/playerCharacter/Spell";
 import { Equipment } from "@models/playerCharacter/Equipment";
 import { Feature } from "@models/playerCharacter/Feature";
 import { UsableResources } from "@models/playerCharacter/usableResources/UsableResources";
+import { SpellSlot } from "./usableResources/SpellSlot";
 
 export interface PlayerCharacter {
     baseDetails: BaseDetails;
     abilityScores: AbilityScores;
+    features: Feature[];
+    spellSlots?: SpellSlot[];
 }
 
 export interface BaseDetails {
@@ -31,7 +34,6 @@ export interface BaseDetails {
     usableResources: UsableResources;
     weapons: Weapon[];
     spells?: Spell[];
-    features: Feature[];
     imagePaths: {
         avatar: string;
         other?: string;

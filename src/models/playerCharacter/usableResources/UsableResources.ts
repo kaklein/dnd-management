@@ -1,5 +1,3 @@
-import { SpellSlot } from "@models/playerCharacter/usableResources/SpellSlot";
-
 export interface UsableResources {
     hitPoints: {
         max: number;
@@ -18,5 +16,4 @@ export interface UsableResources {
     };
     gold: number;
     inspiration: number;
-    spellSlots?: SpellSlot[],
 }

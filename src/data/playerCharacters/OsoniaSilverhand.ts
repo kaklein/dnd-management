@@ -142,93 +142,129 @@ const spells: Spell[] = [
 
 const features: Feature[] = [
     {
-        name: "Giant's Might",
-        description: `
-            At 3rd level, you have learned how to imbue yourself with the might of giants. As a bonus action, you magically gain the following benefits, which last for 1 minute:
-            If you are smaller than Large, you become Large, along with anything you are wearing. If you lack the room to become Large, your size doesn't change.
-            You have advantage on Strength checks and Strength saving throws.
-            Once on each of your turns, one of your attacks with a weapon or an unarmed strike can deal an extra 1d6 damage to a target on a hit.
-            You can use this feature a number of times equal to your proficiency bonus, and you regain all expended uses of it when you finish a long rest.`,
-        source: 'Rune Knight',
-        maxUses: 2,
-        currentUses: 2,
-        refresh: RestType.LONG
+        id: '00000',
+        data: {
+            pcId: '6d40e673-3a6e-428c-913d-800c9ec21631',
+            name: "Giant's Might",
+            description: `
+                At 3rd level, you have learned how to imbue yourself with the might of giants. As a bonus action, you magically gain the following benefits, which last for 1 minute:
+                If you are smaller than Large, you become Large, along with anything you are wearing. If you lack the room to become Large, your size doesn't change.
+                You have advantage on Strength checks and Strength saving throws.
+                Once on each of your turns, one of your attacks with a weapon or an unarmed strike can deal an extra 1d6 damage to a target on a hit.
+                You can use this feature a number of times equal to your proficiency bonus, and you regain all expended uses of it when you finish a long rest.`,
+            source: 'Rune Knight',
+            maxUses: 2,
+            currentUses: 2,
+            refresh: RestType.LONG
+        } 
     },
     {
-        name: 'Fire Rune',
-        description: `
-            This rune's magic channels the masterful craftsmanship of great smiths. While wearing or carrying an object inscribed with this rune, your proficiency bonus is doubled for any ability check you make that uses your proficiency with a tool.
-            In addition, when you hit a creature with an attack using a weapon, you can invoke the rune to summon fiery shackles: the target takes an extra 2d6 fire damage, and it must succeed on a Strength saving throw or be restrained for 1 minute.
-            While restrained by the shackles, the target takes 2d6 fire damage at the start of each of its turns. The target can repeat the saving throw at the end of each of its turns, banishing the shackles on a success. Once you invoke this rune, you can't do so again until you finish a short or long rest.`,
-        source: 'Rune Knight',
-        maxUses: 1,
-        currentUses: 1,
-        refresh: RestType.SHORT,
-        saveDC: 8 + 2 + abilityScores.constitution.modifier
+        id: '11111',
+        data: { 
+            pcId: '6d40e673-3a6e-428c-913d-800c9ec21631',
+            name: 'Fire Rune',
+            description: `
+                This rune's magic channels the masterful craftsmanship of great smiths. While wearing or carrying an object inscribed with this rune, your proficiency bonus is doubled for any ability check you make that uses your proficiency with a tool.
+                In addition, when you hit a creature with an attack using a weapon, you can invoke the rune to summon fiery shackles: the target takes an extra 2d6 fire damage, and it must succeed on a Strength saving throw or be restrained for 1 minute.
+                While restrained by the shackles, the target takes 2d6 fire damage at the start of each of its turns. The target can repeat the saving throw at the end of each of its turns, banishing the shackles on a success. Once you invoke this rune, you can't do so again until you finish a short or long rest.`,
+            source: 'Rune Knight',
+            maxUses: 1,
+            currentUses: 1,
+            refresh: RestType.SHORT,
+            saveDC: 8 + 2 + abilityScores.constitution.modifier
+        }
     },
     {
-        name: 'Cloud Rune',
-        description: `
-            This rune emulates the deceptive magic used by some cloud giants. While wearing or carrying an object inscribed with this rune, you have advantage on Dexterity (Sleight of Hand) checks and Charisma (Deception) checks.
-            In addition, when you or a creature you can see within 30 feet of you is hit by an attack roll, you can use your reaction to invoke the rune and choose a different creature within 30 feet of you, other than the attacker.
-            The chosen creature becomes the target of the attack, using the same roll. This magic can transfer the attack's effects regardless of the attack's range. Once you invoke this rune, you can't do so again until you finish a short or long rest.`,
-        source: 'Rune Knight',
-        maxUses: 1,
-        currentUses: 1,
-        refresh: RestType.SHORT
+        id: '22222',
+        data: {
+            pcId: '6d40e673-3a6e-428c-913d-800c9ec21631',
+            name: 'Cloud Rune',
+            description: `
+                This rune emulates the deceptive magic used by some cloud giants. While wearing or carrying an object inscribed with this rune, you have advantage on Dexterity (Sleight of Hand) checks and Charisma (Deception) checks.
+                In addition, when you or a creature you can see within 30 feet of you is hit by an attack roll, you can use your reaction to invoke the rune and choose a different creature within 30 feet of you, other than the attacker.
+                The chosen creature becomes the target of the attack, using the same roll. This magic can transfer the attack's effects regardless of the attack's range. Once you invoke this rune, you can't do so again until you finish a short or long rest.`,
+            source: 'Rune Knight',
+            maxUses: 1,
+            currentUses: 1,
+            refresh: RestType.SHORT
+        }
     },
     {
-        name: 'Heat Metal',
-        description: `
-            Casting Time: 1 action.
-            Range: 60 feet.
-            Components: V, S, M (a piece of iron and a flame).
-            Duration: Concentration, up to 1 minute.
-            Choose a manufactured metal object, such as a metal weapon or a suit of heavy or medium metal armor, that you can see within range. You cause the object to glow red-hot.
-            Any creature in physical contact with the object takes 2d8 fire damage when you cast the spell. Until the spell ends, you can use a bonus action on each of your subsequent turns to cause this damage again.
-            If a creature is holding or wearing the object and takes the damage from it, the creature must succeed on a Constitution saving throw or drop the object if it can. If it doesn't drop the object, it has disadvantage on attack rolls and ability checks until the start of your next turn.`,
-        source: weapons[0].name,
-        maxUses: 1,
-        currentUses: 1,
-        refresh: RestType.LONG,
-        saveDC: 8 + 2 + abilityScores.intelligence.modifier
+        id: '33333',
+        data: {
+            pcId: '6d40e673-3a6e-428c-913d-800c9ec21631',
+            name: 'Heat Metal',
+            description: `
+                Casting Time: 1 action.
+                Range: 60 feet.
+                Components: V, S, M (a piece of iron and a flame).
+                Duration: Concentration, up to 1 minute.
+                Choose a manufactured metal object, such as a metal weapon or a suit of heavy or medium metal armor, that you can see within range. You cause the object to glow red-hot.
+                Any creature in physical contact with the object takes 2d8 fire damage when you cast the spell. Until the spell ends, you can use a bonus action on each of your subsequent turns to cause this damage again.
+                If a creature is holding or wearing the object and takes the damage from it, the creature must succeed on a Constitution saving throw or drop the object if it can. If it doesn't drop the object, it has disadvantage on attack rolls and ability checks until the start of your next turn.`,
+            source: weapons[0].name,
+            maxUses: 1,
+            currentUses: 1,
+            refresh: RestType.LONG,
+            saveDC: 8 + 2 + abilityScores.intelligence.modifier
+        }
     },
     {
-        name: 'Action Surge',
-        description: `
-            Starting at 2nd level, you can push yourself beyond your normal limits for a moment. On your turn, you can take one additional action.
-            Once you use this feature, you must finish a short or long rest before you can use it again. Starting at 17th level, you can use it twice before a rest, but only once on the same turn.`,
-        source: 'Fighter',
-        maxUses: 1,
-        currentUses: 1,
-        refresh: RestType.SHORT
+        id: '44444',
+        data: {
+            pcId: '6d40e673-3a6e-428c-913d-800c9ec21631',
+            name: 'Action Surge',
+            description: `
+                Starting at 2nd level, you can push yourself beyond your normal limits for a moment. On your turn, you can take one additional action.
+                Once you use this feature, you must finish a short or long rest before you can use it again. Starting at 17th level, you can use it twice before a rest, but only once on the same turn.`,
+            source: 'Fighter',
+            maxUses: 1,
+            currentUses: 1,
+            refresh: RestType.SHORT
+        }
     },
     {
-        name: 'Second Wind',
-        description: `
-            You have a limited well of stamina that you can draw on to protect yourself from harm. On your turn, you can use a bonus action to regain hit points equal to 1d10 + your fighter level.
-            Once you use this feature, you must finish a short or long rest before you can use it again.`,
-        source: 'Fighter',
-        maxUses: 1,
-        currentUses: 1,
-        refresh: RestType.SHORT
+        id: '55555',
+        data: {
+            pcId: '6d40e673-3a6e-428c-913d-800c9ec21631',
+            name: 'Second Wind',
+            description: `
+                You have a limited well of stamina that you can draw on to protect yourself from harm. On your turn, you can use a bonus action to regain hit points equal to 1d10 + your fighter level.
+                Once you use this feature, you must finish a short or long rest before you can use it again.`,
+            source: 'Fighter',
+            maxUses: 1,
+            currentUses: 1,
+            refresh: RestType.SHORT
+        }
     },
     {
-        name: 'Two-Weapon Fighting',
-        description: 'When you engage in two-weapon fighting, you can add your ability modifier to the damage of the second attack.',
-        source: 'Fighter'
+        id: '66666',
+        data: {
+            pcId: '6d40e673-3a6e-428c-913d-800c9ec21631',
+            name: 'Two-Weapon Fighting',
+            description: 'When you engage in two-weapon fighting, you can add your ability modifier to the damage of the second attack.',
+            source: 'Fighter'
+        }
     },
     {
-        name: 'Darkvision',
-        description: `
-            Accustomed to twilit forests and the night sky, you have superior vision in dark and dim conditions. You can see in dim light within 60 feet of you as if it were bright light, and in darkness as if it were dim light.
-            You can't discern color in darkness, only shades of gray.`,
-        source: 'Elf'
+        id: '77777',
+        data: {
+            pcId: '6d40e673-3a6e-428c-913d-800c9ec21631',
+            name: 'Darkvision',
+            description: `
+                Accustomed to twilit forests and the night sky, you have superior vision in dark and dim conditions. You can see in dim light within 60 feet of you as if it were bright light, and in darkness as if it were dim light.
+                You can't discern color in darkness, only shades of gray.`,
+            source: 'Elf'
+        }
     },
     {
-        name: 'Fey Ancestry',
-        description: "You have advantage on saving throws against being charmed, and magic can't put you to sleep.",
-        source: 'Elf'
+        id: '88888',
+        data: {
+            pcId: '6d40e673-3a6e-428c-913d-800c9ec21631',
+            name: 'Fey Ancestry',
+            description: "You have advantage on saving throws against being charmed, and magic can't put you to sleep.",
+            source: 'Elf'
+        }
     }
 ];
 
@@ -249,14 +285,13 @@ export const OsoniaSilverhand: PlayerCharacter = {
         armorClass: 16,
         initiative: 3,
         speed: 30,
-        equipment: equipment, // from sep. col
-        usableResources: resources, // from sep. col
-        weapons: weapons, // from sep. col
-        spells: spells, // from sep. col
-        features: features, // from sep. col
+        equipment: equipment,
+        usableResources: resources,
+        weapons: weapons,
+        spells: spells,
         imagePaths: {
             avatar: 'osonia_silverhand.png'
-        }, // from sep. col
+        },
         extras: [
             'RUNE KNIGHT: If a rune requires a saving throw, your Rune Magic save DC equals 8 + your proficiency bonus + your Constitution modifier.',
             'RUNE KNIGHT: Whenever you finish a long rest, you can touch a number of objects equal to the number of runes you know, and you inscribe a different rune onto each of the objects. To be eligible, an object must be a weapon, a suit of armor, a shield, a piece of jewelry, or something else you can wear or hold in a hand. Your rune remains on an object until you finish a long rest, and an object can bear only one of your runes at a time.'
@@ -273,6 +308,6 @@ export const OsoniaSilverhand: PlayerCharacter = {
             "Jeweler's tools"
         ]
     },
-    abilityScores: abilityScores, // from sep. col
-    
+    abilityScores: abilityScores,
+    features: features    
 }
