@@ -3,17 +3,14 @@ import Footer from "@components/Footer";
 import AbilityCard from "@components/cards/AbilityCard";
 import Card from "@components/cards/Card";
 import CardSetHorizontal from "@components/cards/CardSetHorizontal";
-import { loadData } from "@services/firestore/loadData";
-import { useEffect, useState } from "react";
-import { EmptyPC } from "@data/playerCharacters/EmptyPC";
 import { AbilityScores } from "@models/playerCharacter/AbilityScores";
+import { PlayerCharacter } from "@models/playerCharacter/PlayerCharacter";
 
-function Stats() {
-    const [pcData, setPcData] = useState(EmptyPC);
-    useEffect(() => {
-        loadData().then(data => setPcData(data));
-    }, []);
+interface Props {
+    pcData: PlayerCharacter;
+}
 
+function Stats({pcData}: Props) {
     const removeBaseStatsFromAbilityObject = (abilityObject: {score: number, modifier: number, [key: string]: number;}) => {
         const strippedObj = JSON.parse(JSON.stringify(abilityObject));
         delete strippedObj.score;
@@ -21,7 +18,6 @@ function Stats() {
         return strippedObj;
     }
 
-    //TODO: put abilities in set order
     const mapAbilityScoreCards = (abilityScores: AbilityScores) => {
         return (
             <>

@@ -4,20 +4,20 @@ import Card from "@components/cards/Card";
 import Refresh from "@components/Refresh";
 import Footer from "@components/Footer";
 import { formatFormData, removeWhiteSpaceAndConvertToLowerCase } from "@components/utils";
-import { useEffect, useState} from "react";
+import { useState} from "react";
 import { HashLink as Link } from 'react-router-hash-link';
-import { loadData } from "@services/firestore/loadData";
-import { EmptyPC } from "@data/playerCharacters/EmptyPC";
 import { updateDataByPcId } from "@services/firestore/crud/update";
 import { db } from "../firebase";
 import ItemUseToggle from "@components/ItemUseToggle";
+import { PlayerCharacter } from "@models/playerCharacter/PlayerCharacter";
+import { QueryClient } from "@tanstack/react-query";
 
-function Tracker() {
-    const [pcData, setPcData] = useState(EmptyPC);
-    useEffect(() => {
-        loadData().then(data => setPcData(data));
-    }, []);
+interface Props {
+    pcData: PlayerCharacter;
+    queryClient: QueryClient;
+}
 
+function Tracker({pcData, queryClient}: Props) {
     const limitedUseFeatures = pcData.baseDetails.features.filter(feature => feature.maxUses);
 
     const defaultFormData = {
@@ -48,8 +48,8 @@ function Tracker() {
     const handleSubmit = async (event: any) => {
         event.preventDefault();
         const updates = formatFormData(formData);
-        alert(JSON.stringify(updates));
-        // await updateDataByPcId(db, 'pcBaseDetails', pcData.baseDetails.pcId, updates);
+        await updateDataByPcId(db, 'pcBaseDetails', pcData.baseDetails.pcId, updates);
+        queryClient.invalidateQueries();
     }
 
     return (

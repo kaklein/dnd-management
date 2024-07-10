@@ -1,16 +1,13 @@
 import Navbar from "@components/Navbar";
 import ImageCard from "@components/cards/ImageCard";
 import Footer from "@components/Footer";
-import { loadData } from "@services/firestore/loadData";
-import { useEffect, useState } from "react";
-import { EmptyPC } from "@data/playerCharacters/EmptyPC";
+import { PlayerCharacter } from "@models/playerCharacter/PlayerCharacter";
 
-function Home() {
-    const [pcData, setPcData] = useState(EmptyPC);
-    useEffect(() => {
-        loadData().then(data => setPcData(data));
-    }, []);
+interface Props {
+    pcData: PlayerCharacter
+}
 
+function Home({pcData}: Props) {
     const pcImagePath = `/images/playerCharacters/${pcData.baseDetails.name.firstName.toLowerCase()}_${pcData.baseDetails.name.lastName.toLowerCase()}.png`;
     const pcFullName = `${pcData.baseDetails.name.firstName} ${pcData.baseDetails.name.lastName}`
     const listCardObject = {

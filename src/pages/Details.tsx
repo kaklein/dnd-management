@@ -3,10 +3,12 @@ import Footer from "@components/Footer";
 import Card from "@components/cards/Card";
 import Refresh from "@components/Refresh";
 import { formatDataAsTable, removeWhiteSpaceAndConvertToLowerCase } from "@components/utils";
-import { useEffect, useState } from "react";
-import { loadData } from "@services/firestore/loadData";
 import { Spell } from "@models/playerCharacter/Spell";
-import { EmptyPC } from "@data/playerCharacters/EmptyPC";
+import { PlayerCharacter } from "@models/playerCharacter/PlayerCharacter";
+
+interface Props {
+    pcData: PlayerCharacter;
+}
 
 const mapSpells = (spells: Spell[]) => {    
     return (
@@ -43,12 +45,7 @@ const mapSpells = (spells: Spell[]) => {
     )
 }
 
-function Details() {
-    const [pcData, setPcData] = useState(EmptyPC);
-    useEffect(() => {
-        loadData().then(data => setPcData(data));
-    }, []);
-
+function Details({pcData}: Props) {
     return (
         <>
             <Navbar/>
