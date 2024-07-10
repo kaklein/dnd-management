@@ -10,17 +10,17 @@ export const buildWhereClauses = (query: {[key: string]: string | number | objec
   return queries;
 }
 
-export const readData = async (db: Firestore, collectionName: string, queryFilter: {[key: string]: string | number | object}): Promise<DocumentData[]> => {
+export const readData = async (db: Firestore, collectionName: string, queryFilter: {[key: string]: string | number | object}): Promise<{id: string, data: DocumentData}[]> => {
   const baseDetailsQ = query(collection(db, collectionName), ...buildWhereClauses(queryFilter));
   const baseDetailsSnapshot = await getDocs(baseDetailsQ);
-  const docs: DocumentData[] = [];
+  const docs: {id: string, data: DocumentData}[] = [];
   baseDetailsSnapshot.forEach((doc) => {
-      docs.push(doc.data());
+      docs.push({id: doc.id, data: doc.data()});
   });
   return docs;
 }
 
-export const readSingleItem = async (db: Firestore, collectionName: string, queryFilter: {[key: string]: string | number | object}): Promise<DocumentData> => {
+export const readSingleItem = async (db: Firestore, collectionName: string, queryFilter: {[key: string]: string | number | object}): Promise<{id: string, data: DocumentData}> => {
   const queryResult = await readData(db, collectionName, queryFilter);
   if (queryResult.length < 1) {
     throw Error(`No matching document found for query: ${queryFilter}`);
