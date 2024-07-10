@@ -9,7 +9,6 @@
     max-width: 800px;
     padding: 10px;
     text-align: center;
-    position: fixed;
     z-index: 1;
 }
 
@@ -34,12 +33,16 @@ img {
 }
 
 .toggle {
-    margin: 10px;
+    margin: auto;
     width: fit-content;
 }
 
 .toggle-label {
     margin-right: 10px;
+}
+
+.toggle-check {
+    zoom: 3;
 }
 
 .icon {
@@ -83,4 +86,56 @@ img {
 
 .successful-alert {
     background-color: #99e0b9;
+}
+
+.page-title {
+    background-color: #200859;
+    color: white;
+    padding: 10px;
+}
+
+.card-set-horizontal {
+    width: 500px;
+    margin: auto;
+}
+
+.ability-card {
+    margin: auto;
+    width: fit-content;
+}
+
+.ability-card-header {
+    font-size: x-large;
+    font-weight: bold;
+    color: #200859;
+}
+
+.ability-card-sub-header {
+    font-size: large;
+}
+
+.ability-scores {
+    width: 220px;
+    margin: auto;
+    border: 1px solid lightgray;
+    border-radius: 5px;
+    padding: 5px;
+}
+
+.ability-proficiencies {
+    width: 220px;
+    margin: auto;
+}
+
+.number-input {
+    zoom: 2;
+    text-align: center;
+    border-radius: 5px;
+    border: 1px solid lightgray;
+    width: fit-content;
+    margin: auto;
+}
+
+.hp-total {
+    font-size: xx-large;
 }

@@ -65,7 +65,7 @@ function Tracker({pcData, queryClient}: Props) {
         <>
             <Navbar/>
 
-            <h1>Tracker</h1>
+            <h1 className="page-title">Tracker</h1>
 
             <form onSubmit={handleSubmit}>
                 <div>
@@ -73,7 +73,9 @@ function Tracker({pcData, queryClient}: Props) {
                     {showSuccessAlert && <Alert alertText="Save successful." className="successful-alert" iconFile="/images/icons/success-icon.png"/>}
                     <Card>
                         <h3>Hit Points</h3>
-                        <input
+                        <div className="inline">
+                            <input
+                            className="number-input"
                             type="number" 
                             id="hitPointsCurrent" 
                             name="hitPointsCurrent" 
@@ -81,11 +83,14 @@ function Tracker({pcData, queryClient}: Props) {
                             min="0" 
                             max={pcData.baseDetails.usableResources.hitPoints.max} 
                             onChange={handleChange}
-                        /> / {pcData.baseDetails.usableResources.hitPoints.max}                        
+                            /> 
+                            <p className="inline hp-total">&nbsp; / {pcData.baseDetails.usableResources.hitPoints.max}</p>
+                        </div>              
                         <br/>
                         <label htmlFor="hitPointsTemporary">Temporary Hit Points</label>
                         <br/>
                         <input
+                            className="number-input"
                             type="number"
                             id="hitPointsTemporary"
                             name="hitPointsTemporary"
@@ -99,6 +104,7 @@ function Tracker({pcData, queryClient}: Props) {
                     <Card>
                         <label htmlFor="inspiration">Inspiration</label>
                         <input
+                            className="number-input"
                             type="number"
                             min="0"
                             max="10"
@@ -199,9 +205,12 @@ function Tracker({pcData, queryClient}: Props) {
                     <Card>
                         <h3>Gold</h3>
                         <input
+                            className="number-input"
                             type="number"
                             id="gold"
                             name="gold"
+                            min="0"
+                            max="99999"
                             value={formData.gold}
                             onChange={handleChange}
                         />

@@ -64,7 +64,14 @@ function Stats({pcData}: Props) {
     return (
         <>
             <Navbar/>
-            <h1>Stats</h1>
+            <h1 className="page-title">Stats</h1>
+
+            {/* Ability Scores */}
+            { 
+                mapAbilityScoreCards(pcData.abilityScores) 
+            }
+
+            <br/>
 
             <CardSetHorizontal>
                 <Card>
@@ -91,11 +98,6 @@ function Stats({pcData}: Props) {
                     <h3>{pcData.baseDetails.passiveWisdom}</h3>
                 </Card>
             </CardSetHorizontal>
-
-            {/* Ability Scores */}
-            { 
-                mapAbilityScoreCards(pcData.abilityScores) 
-            }
 
             <Footer/>
         </>

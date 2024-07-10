@@ -50,7 +50,7 @@ function Details({pcData}: Props) {
         <>
             <Navbar/>
 
-            <h1>Details</h1>
+            <h1 className="page-title">Details</h1>
 
             <Card>
                 <h3>Spells & Abilities</h3>
