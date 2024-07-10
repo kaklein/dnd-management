@@ -6,7 +6,7 @@ interface Props {
 
 function CardSetHorizontal({children}: Props) {
     return (
-        <div className="d-flex flex-row">
+        <div className="d-flex flex-row card-set-horizontal">
             {children}
         </div>
     )

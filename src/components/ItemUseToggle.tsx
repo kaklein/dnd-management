@@ -44,7 +44,7 @@ function ItemUseToggle({ formDataName, itemLabel, maxUses, currentUses, onChange
           {
               // @ts-ignore: placeholder var e needs to be there to allow index access but is unused
               [...Array(maxUses)].map((e, i) =>
-                  <div className="form-check form-check-inline" key={`${formattedLabel}-toggle-${i}`}>
+                  <div className="form-check form-check-inline toggle-check" key={`${formattedLabel}-toggle-${i}`}>
                       <input 
                           className="form-check-input" 
                           type="checkbox" 

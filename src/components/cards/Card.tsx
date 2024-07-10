@@ -6,7 +6,7 @@ interface Props {
 
 function Card ({children}: Props) {
     return (
-        <div className="card" style={{width: "90%"}}>
+        <div className="card" style={{width: "100%"}}>
             {children}
         </div>
     )
