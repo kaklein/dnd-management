@@ -5,16 +5,61 @@ import Stats from "./pages/Stats";
 import Tracker from "./pages/Tracker";
 import Details from "./pages/Details";
 
+import { QueryClient, QueryClientProvider, useQuery } from '@tanstack/react-query'
+import { loadData } from '@services/firestore/loadData';
+import Card from '@components/cards/Card';
+
+const queryClient = new QueryClient();
+
 function App() {
+    return (
+        <QueryClientProvider client={queryClient}>
+            <MainApp/>
+        </QueryClientProvider>
+
+    )
+}
+
+function MainApp() {
+    const { isLoading, error, data } = useQuery({
+        queryKey: ['pcData'],
+        queryFn: () =>
+          loadData().then(),
+    });
+
+    if (isLoading) return (
+        <>
+            <Card>
+                <h3>Loading...</h3>
+            </Card>
+        </>
+    )
+
+    if (error) return (
+        <>
+            <Card>
+                <h3>Error loading data: {error.message}</h3>
+            </Card>
+        </>
+    )
+    
+    if(!data) return (
+        <>
+            <Card>
+                <h3>No data found :(</h3>
+            </Card>
+        </>
+    )
+
     return (
         <>
             <BrowserRouter>
                 <Routes>
-                    <Route index element={<Home/>}/>
-                    <Route path="/home" element={<Home/>}/>
-                    <Route path="/stats" element={<Stats/>}/>
-                    <Route path="/tracker" element={<Tracker/>}/>
-                    <Route path="/details" element={<Details/>}/>
+                    <Route index element={<Home pcData={data}/>}/>
+                    <Route path="/home" element={<Home pcData={data}/>}/>
+                    <Route path="/stats" element={<Stats pcData={data}/>}/>
+                    <Route path="/tracker" element={<Tracker pcData={data} queryClient={queryClient}/>}/>
+                    <Route path="/details" element={<Details pcData={data}/>}/>
                 </Routes>
             </BrowserRouter>
         </>

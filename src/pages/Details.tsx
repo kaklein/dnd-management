@@ -3,10 +3,12 @@ import Footer from "@components/Footer";
 import Card from "@components/cards/Card";
 import Refresh from "@components/Refresh";
 import { formatDataAsTable, removeWhiteSpaceAndConvertToLowerCase } from "@components/utils";
-import { useEffect, useState } from "react";
-import { loadData } from "@services/firestore/loadData";
 import { Spell } from "@models/playerCharacter/Spell";
-import { EmptyPC } from "@data/playerCharacters/EmptyPC";
+import { PlayerCharacter } from "@models/playerCharacter/PlayerCharacter";
+
+interface Props {
+    pcData: PlayerCharacter;
+}
 
 const mapSpells = (spells: Spell[]) => {    
     return (
@@ -43,12 +45,7 @@ const mapSpells = (spells: Spell[]) => {
     )
 }
 
-function Details() {
-    const [pcData, setPcData] = useState(EmptyPC);
-    useEffect(() => {
-        loadData().then(data => setPcData(data));
-    }, []);
-
+function Details({pcData}: Props) {
     return (
         <>
             <Navbar/>
@@ -60,14 +57,14 @@ function Details() {
                 {pcData.baseDetails.spells && mapSpells(pcData.baseDetails.spells)}
 
                 {
-                    pcData.baseDetails.features.map(feature => (
+                    pcData.features.map(feature => (
                         <Card>
-                            <a id={removeWhiteSpaceAndConvertToLowerCase(feature.name)}></a>
-                            <h3>{feature.name.toUpperCase()}</h3>
-                            <p><b>Description: </b>{feature.description}</p>
-                            <p><b>Source: </b>{feature.source}</p>
-                            { feature.damage && <p><b>Damage: </b>{feature.damage} {feature.damageType}</p>}
-                            { feature.saveDC && <p><b>Spell Save DC: </b>{feature.saveDC}</p>}
+                            <a id={removeWhiteSpaceAndConvertToLowerCase(feature.data.name)}></a>
+                            <h3>{feature.data.name.toUpperCase()}</h3>
+                            <p><b>Description: </b>{feature.data.description}</p>
+                            <p><b>Source: </b>{feature.data.source}</p>
+                            { feature.data.damage && <p><b>Damage: </b>{feature.data.damage} {feature.data.damageType}</p>}
+                            { feature.data.saveDC && <p><b>Spell Save DC: </b>{feature.data.saveDC}</p>}
                         </Card>
                     ))
                 }
