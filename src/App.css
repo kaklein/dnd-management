@@ -139,3 +139,12 @@ img {
 .hp-total {
     font-size: xx-large;
 }
+
+.text-link {
+    text-decoration: none;
+    color: #200859;
+    width: fit-content;
+    margin: auto;
+    padding-left: 5px;
+    padding-right: 5px;
+}
