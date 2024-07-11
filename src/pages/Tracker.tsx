@@ -6,11 +6,11 @@ import { buildFeatureCurrentUsesKey, buildSpellSlotsCurrentKey, formatBaseDetail
 import { useState} from "react";
 import { HashLink as Link } from 'react-router-hash-link';
 import { updateById, updateDataByPcId } from "@services/firestore/crud/update";
-import { db } from "../firebase";
 import ItemUseToggle from "@components/ItemUseToggle";
 import { PlayerCharacter } from "@models/playerCharacter/PlayerCharacter";
 import { QueryClient } from "@tanstack/react-query";
 import Alert from "@components/Alert";
+import { CollectionName } from "@services/firestore/enum/CollectionName";
 
 interface Props {
     pcData: PlayerCharacter;
@@ -53,9 +53,9 @@ function Tracker({pcData, queryClient}: Props) {
         const spellSlotsUpdate = formatSpellSlotsUpdates(formData);
 
         await Promise.all([
-            updateDataByPcId(db, 'pcBaseDetails', pcData.baseDetails.pcId, baseDetailsUpdates),
-            ...featuresUpdates.map(f => updateById('features', f.docId, f.updates)),
-            ...spellSlotsUpdate.map(s => updateById('spellSlots', s.docId, s.updates))
+            updateDataByPcId(CollectionName.PC_BASE_DETAILS, pcData.baseDetails.pcId, baseDetailsUpdates),
+            ...featuresUpdates.map(f => updateById(CollectionName.FEATURES, f.docId, f.updates)),
+            ...spellSlotsUpdate.map(s => updateById(CollectionName.SPELL_SLOTS, s.docId, s.updates))
         ]).then();
         queryClient.invalidateQueries();
         triggerSuccessAlert();
