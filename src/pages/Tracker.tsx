@@ -134,7 +134,7 @@ function Tracker({pcData, queryClient}: Props) {
                         <h4>Available Spells</h4>
                         {
                             pcData.baseDetails.spells!.map(spell => (
-                                <p>{spell.level}: <Link to={'/details#' + removeWhiteSpaceAndConvertToLowerCase(spell.name)}>{spell.name}</Link></p>
+                                <p>{spell.level}: <Link className="text-link" to={'/details#' + removeWhiteSpaceAndConvertToLowerCase(spell.name)}>{spell.name}</Link></p>
                             ))
                         }
                     </Card>
@@ -144,7 +144,7 @@ function Tracker({pcData, queryClient}: Props) {
                         {
                             pcData.baseDetails.weapons.map(weapon => (
                                 <Card>
-                                    <Link to={'/details#' + removeWhiteSpaceAndConvertToLowerCase(weapon.name)}><h4>{weapon.name} ({weapon.type})</h4></Link>
+                                    <Link className="text-link" to={'/details#' + removeWhiteSpaceAndConvertToLowerCase(weapon.name)}><h4>{weapon.name} ({weapon.type})</h4></Link>
                                     <h3>{weapon.damage} {weapon.damageType.toLowerCase()}</h3>
                                 </Card>
                             ))
@@ -156,7 +156,7 @@ function Tracker({pcData, queryClient}: Props) {
                         {
                             limitedUseFeatures.map(feature => (
                                 <Card>
-                                    <Link to={'/details#' + removeWhiteSpaceAndConvertToLowerCase(feature.data.name)}><h4>{feature.data.name}</h4></Link>
+                                    <Link className="text-link" to={'/details#' + removeWhiteSpaceAndConvertToLowerCase(feature.data.name)}><h4>{feature.data.name}</h4></Link>
                                     <ItemUseToggle
                                         itemLabel={removeWhiteSpaceAndConvertToLowerCase(feature.data.name)}
                                         formDataName={buildFeatureCurrentUsesKey(feature)}
