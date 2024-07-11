@@ -7,9 +7,8 @@ import { getFirestore } from 'firebase/firestore';
 // https://firebase.google.com/docs/web/setup#available-libraries
 
 // Your web app's Firebase configuration
-// TODO - move to CI/CD variables?
 const firebaseConfig = {
-  apiKey: "AIzaSyD3nk7-G4Oj-v0CMiGPs5Ag9P_rpSiaNzk",
+  apiKey: process.env.FIREBASE_API_KEY,
   authDomain: "dnd-management-347a9.firebaseapp.com",
   projectId: "dnd-management-347a9",
   storageBucket: "dnd-management-347a9.appspot.com",

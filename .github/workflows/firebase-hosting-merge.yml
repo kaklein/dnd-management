@@ -2,6 +2,8 @@
 # https://github.com/firebase/firebase-tools
 
 name: Deploy to Firebase Hosting on merge
+env:
+  FIREBASE_API_KEY: ${{ secrets.FIREBASE_API_KEY }}
 on:
   push:
     branches:
@@ -17,4 +19,4 @@ jobs:
           repoToken: ${{ secrets.GITHUB_TOKEN }}
           firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_DND_MANAGEMENT_347A9 }}
           channelId: live
-          projectId: dnd-management-347a9
+          projectId: dnd-management-347a9        
