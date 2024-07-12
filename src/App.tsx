@@ -79,8 +79,6 @@ function MainApp() {
                     </>
                     }   
                 </Routes>
-
-     
             </BrowserRouter>
         </>
     )
