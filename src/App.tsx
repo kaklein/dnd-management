@@ -62,22 +62,25 @@ function MainApp() {
     return (
         <>
             <BrowserRouter>
-            { !loggedIn &&
                 <Routes>
                     <Route index element={<IndexRouter loggedIn={loggedIn}/>}/>
+                    { !loggedIn &&
+                    <>
                     <Route path="/login" element={<Login/>}/>
                     <Route path="/signup" element={<SignUp/>}/>
-                </Routes>
-            }
-            { loggedIn &&
-                <Routes>                       
-                    <Route index element={<IndexRouter loggedIn={loggedIn} pcData={data!}/>}/>
+                    </>
+                    }
+                    { loggedIn &&
+                    <>
                     <Route path="/home" element={<Home pcData={data!}/>}/>
                     <Route path="/stats" element={<Stats pcData={data!}/>}/>
                     <Route path="/tracker" element={<Tracker pcData={data!} queryClient={queryClient}/>}/>
                     <Route path="/details" element={<Details pcData={data!}/>}/>
+                    </>
+                    }   
                 </Routes>
-            }        
+
+     
             </BrowserRouter>
         </>
     )
