@@ -82,6 +82,8 @@ function MainApp() {
                     <Route path="/stats" element={<Stats pcData={data}/>}/>
                     <Route path="/tracker" element={<Tracker pcData={data} queryClient={queryClient}/>}/>
                     <Route path="/details" element={<Details pcData={data}/>}/>
+                    <Route path="/login" element={<Login/>}/>
+                    <Route path="/signup" element={<SignUp/>}/>
                 </Routes>
             </BrowserRouter>
         </>
