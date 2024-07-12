@@ -1,10 +1,11 @@
-import { Firestore, updateDoc, doc } from "firebase/firestore";
+import { updateDoc, doc } from "firebase/firestore";
 import { readSingleItem } from "@services/firestore/crud/read";
 import { db } from "../../../firebase";
+import { CollectionName } from "../enum/CollectionName";
 
-export const updateDataByPcId = async (db: Firestore, collectionName: string, pcId: string, update: {[key: string]: string | number | object}): Promise<boolean> => {
+export const updateDataByPcId = async (collectionName: CollectionName, pcId: string, update: {[key: string]: string | number | object}): Promise<boolean> => {
   // Find correct doc
-  const originalDoc = await readSingleItem(db, collectionName, {pcId: pcId});
+  const originalDoc = await readSingleItem(collectionName, {pcId: pcId});
 
   // Update it
   try {
@@ -16,7 +17,7 @@ export const updateDataByPcId = async (db: Firestore, collectionName: string, pc
   }
 }
 
-export const updateById = async (collectionName: string, docId: string, update: {[key: string]: string |  number | object}) => {
+export const updateById = async (collectionName: CollectionName, docId: string, update: {[key: string]: string |  number | object}) => {
   try {
     await updateDoc(doc(db, collectionName, docId), update);
     return true;

@@ -62,11 +62,14 @@ img {
 
 #tracker-save-button {
     position: fixed;
-    top: 10px;
+    top: 60px;
     right: 5px;
     width: fit-content;
     text-align: center;
     z-index: 5;
+    padding-left: 20px;
+    padding-right: 20px;
+    box-shadow: 3px 3px 3px gray;
 }
 
 .inline {
@@ -75,7 +78,7 @@ img {
 
 .alert-div {
     position: fixed;
-    top: 80px;
+    top: 130px;
     right: 25px;
     text-align: center;
     z-index: 5;
@@ -88,10 +91,23 @@ img {
     background-color: #99e0b9;
 }
 
-.page-title {
+.page-header-bar {
     background-color: #200859;
+    display: inline-block;
+    width: 100%;
     color: white;
-    padding: 10px;
+    padding-top: 15px;
+    padding-bottom: 15px;
+}
+
+.page-header-pc-name {
+    font-style: italic;
+    font-size: large;
+    padding: 10px 0;
+}
+
+.page-header-page-name {
+    font-size: xx-large;
 }
 
 .card-set-horizontal {
@@ -147,4 +163,39 @@ img {
     margin: auto;
     padding-left: 5px;
     padding-right: 5px;
+}
+
+/* Login Form */
+.login-form {
+    width: fit-content;
+    margin: auto;
+}
+
+.form-label, .form-input {
+    margin: 10px;
+    padding: 10px;
+
+}
+
+.form-label {
+    text-align: right;
+    width: 150px;
+    font-weight: bold;
+}
+
+.form-input {
+    width: 300px;
+    text-align: left;
+    border: 1px solid darkgray;
+    border-radius: 10px;
+}
+
+#login-submit-button {
+    padding-left: 20px;
+    padding-right: 20px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    width: fit-content;
+    margin: auto;
+    text-align: center;
 }

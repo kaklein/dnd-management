@@ -2,6 +2,7 @@ import Navbar from "@components/Navbar";
 import ImageCard from "@components/cards/ImageCard";
 import Footer from "@components/Footer";
 import { PlayerCharacter } from "@models/playerCharacter/PlayerCharacter";
+import PageHeaderBar from "@components/PageHeaderBar";
 
 interface Props {
     pcData: PlayerCharacter
@@ -24,6 +25,10 @@ function Home({pcData}: Props) {
     return (
         <>
             <Navbar/>
+            <PageHeaderBar 
+                pcName={`${pcData.baseDetails.name.firstName} ${pcData.baseDetails.name.lastName}`}
+                pageName="Overview"
+            />
             <ImageCard title={pcFullName} description={pcData.baseDetails.description ?? ''} imagePath={pcImagePath} data={listCardObject}/>
             <Footer/>
         </>

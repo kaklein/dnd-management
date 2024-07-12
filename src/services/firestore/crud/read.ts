@@ -1,5 +1,7 @@
-import { DocumentData, Firestore } from "firebase/firestore"
+import { db } from "../../../firebase";
+import { DocumentData } from "firebase/firestore"
 import { collection, query, where, getDocs } from "firebase/firestore";
+import { CollectionName } from "../enum/CollectionName";
 
 export const buildWhereClauses = (query: {[key: string]: string | number | object}) => {
   const entries = Object.entries(query);
@@ -10,7 +12,7 @@ export const buildWhereClauses = (query: {[key: string]: string | number | objec
   return queries;
 }
 
-export const readData = async (db: Firestore, collectionName: string, queryFilter: {[key: string]: string | number | object}): Promise<{id: string, data: DocumentData}[]> => {
+export const readData = async (collectionName: CollectionName, queryFilter: {[key: string]: string | number | object}): Promise<{id: string, data: DocumentData}[]> => {
   const baseDetailsQ = query(collection(db, collectionName), ...buildWhereClauses(queryFilter));
   const baseDetailsSnapshot = await getDocs(baseDetailsQ);
   const docs: {id: string, data: DocumentData}[] = [];
@@ -20,8 +22,8 @@ export const readData = async (db: Firestore, collectionName: string, queryFilte
   return docs;
 }
 
-export const readSingleItem = async (db: Firestore, collectionName: string, queryFilter: {[key: string]: string | number | object}): Promise<{id: string, data: DocumentData}> => {
-  const queryResult = await readData(db, collectionName, queryFilter);
+export const readSingleItem = async (collectionName: CollectionName, queryFilter: {[key: string]: string | number | object}): Promise<{id: string, data: DocumentData}> => {
+  const queryResult = await readData(collectionName, queryFilter);
   if (queryResult.length < 1) {
     throw Error(`No matching document found for query: ${queryFilter}`);
   }
