@@ -1,4 +1,6 @@
+import { auth } from "../firebase";
 import { NavLink } from "react-router-dom";
+import { logoutUser } from "@services/firebaseAuth/logoutUser";
 
 function Navbar () {
     return (
@@ -25,6 +27,14 @@ function Navbar () {
                             </li>
                         </ul>
                     </div>
+                    <span className="navbar-text">
+                        Logged in{auth.currentUser?.displayName && ` as ${auth.currentUser?.displayName}` }
+                    </span>
+                    <span className="navbar-text">
+                        {auth.currentUser &&
+                            <a className="logout-button" href="/" onClick={() => logoutUser()}>Log Out</a>
+                        }
+                    </span>
                 </div>
             </nav>
         </>

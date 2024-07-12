@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "20": "^1.0.0",
+    "@firebase/auth": "^1.7.5",
     "@tanstack/react-query": "^5.50.1",
     "bootstrap": "^5.3.3",
     "events": "^3.3.0",
