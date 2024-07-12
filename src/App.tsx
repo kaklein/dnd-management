@@ -34,22 +34,7 @@ function MainApp() {
         enabled: !!loggedIn
     });
 
-    if(!loggedIn) {
-        console.log('not logged in.');
-        return (
-            <>
-            <BrowserRouter>
-                <Routes>
-                    <Route index element={<Login/>}/>
-                    <Route path="/login" element={<Login/>}/>
-                    <Route path="/signup" element={<SignUp/>}/>
-                </Routes>
-            </BrowserRouter>
-        </>
-        )
-    }
-
-    if (loggedIn && isLoading) return (
+    if (isLoading) return (
         <>
             <Card>
                 <h3>Loading...</h3>
@@ -65,7 +50,7 @@ function MainApp() {
         </>
     )
     
-    if(!data) return (
+    if (loggedIn && !data) return (
         <>
             <Card>
                 <h3>No data found :(</h3>
@@ -76,15 +61,22 @@ function MainApp() {
     return (
         <>
             <BrowserRouter>
+            { !loggedIn &&
                 <Routes>
-                    <Route index element={<Home pcData={data}/>}/>
-                    <Route path="/home" element={<Home pcData={data}/>}/>
-                    <Route path="/stats" element={<Stats pcData={data}/>}/>
-                    <Route path="/tracker" element={<Tracker pcData={data} queryClient={queryClient}/>}/>
-                    <Route path="/details" element={<Details pcData={data}/>}/>
+                    <Route index element={<Login/>}/>
                     <Route path="/login" element={<Login/>}/>
                     <Route path="/signup" element={<SignUp/>}/>
                 </Routes>
+            }
+            { loggedIn &&
+                <Routes>                       
+                    <Route index element={<Home pcData={data!}/>}/>
+                    <Route path="/home" element={<Home pcData={data!}/>}/>
+                    <Route path="/stats" element={<Stats pcData={data!}/>}/>
+                    <Route path="/tracker" element={<Tracker pcData={data!} queryClient={queryClient}/>}/>
+                    <Route path="/details" element={<Details pcData={data!}/>}/>
+                </Routes>
+            }        
             </BrowserRouter>
         </>
     )
