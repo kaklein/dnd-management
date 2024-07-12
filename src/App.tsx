@@ -11,6 +11,7 @@ import Card from '@components/cards/Card';
 import Login from '@pages/Login';
 import SignUp from '@pages/SignUp';
 import useFirebaseAuthentication from '@services/firebaseAuth/utils';
+import IndexRouter from '@pages/IndexRouter';
 
 const queryClient = new QueryClient();
 
@@ -63,14 +64,14 @@ function MainApp() {
             <BrowserRouter>
             { !loggedIn &&
                 <Routes>
-                    <Route index element={<Login/>}/>
+                    <Route index element={<IndexRouter loggedIn={loggedIn}/>}/>
                     <Route path="/login" element={<Login/>}/>
                     <Route path="/signup" element={<SignUp/>}/>
                 </Routes>
             }
             { loggedIn &&
                 <Routes>                       
-                    <Route index element={<Home pcData={data!}/>}/>
+                    <Route index element={<IndexRouter loggedIn={loggedIn} pcData={data!}/>}/>
                     <Route path="/home" element={<Home pcData={data!}/>}/>
                     <Route path="/stats" element={<Stats pcData={data!}/>}/>
                     <Route path="/tracker" element={<Tracker pcData={data!} queryClient={queryClient}/>}/>
