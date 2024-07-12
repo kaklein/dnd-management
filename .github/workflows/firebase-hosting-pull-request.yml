@@ -14,6 +14,7 @@ jobs:
     env:
       REACT_APP_FIREBASE_API_KEY: "AIzaSyD3nk7-G4Oj-v0CMiGPs5Ag9P_rpSiaNzk"
     steps:
+      - run: echo "api key $REACT_APP_FIREBASE_API_KEY"
       - uses: actions/checkout@v4
       - run: npm ci && npm run build
       - uses: FirebaseExtended/action-hosting-deploy@v0
