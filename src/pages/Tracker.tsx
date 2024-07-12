@@ -11,6 +11,7 @@ import { PlayerCharacter } from "@models/playerCharacter/PlayerCharacter";
 import { QueryClient } from "@tanstack/react-query";
 import Alert from "@components/Alert";
 import { CollectionName } from "@services/firestore/enum/CollectionName";
+import PageHeaderBar from "@components/PageHeaderBar";
 
 interface Props {
     pcData: PlayerCharacter;
@@ -65,7 +66,10 @@ function Tracker({pcData, queryClient}: Props) {
         <>
             <Navbar/>
 
-            <h1 className="page-title">Tracker</h1>
+            <PageHeaderBar 
+                pcName={`${pcData.baseDetails.name.firstName} ${pcData.baseDetails.name.lastName}`}
+                pageName="Tracker"
+            />
 
             <form onSubmit={handleSubmit}>
                 <div>

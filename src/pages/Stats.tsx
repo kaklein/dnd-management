@@ -5,6 +5,7 @@ import Card from "@components/cards/Card";
 import CardSetHorizontal from "@components/cards/CardSetHorizontal";
 import { AbilityScores } from "@models/playerCharacter/AbilityScores";
 import { PlayerCharacter } from "@models/playerCharacter/PlayerCharacter";
+import PageHeaderBar from "@components/PageHeaderBar";
 
 interface Props {
     pcData: PlayerCharacter;
@@ -64,7 +65,11 @@ function Stats({pcData}: Props) {
     return (
         <>
             <Navbar/>
-            <h1 className="page-title">Stats</h1>
+            
+            <PageHeaderBar 
+                pcName={`${pcData.baseDetails.name.firstName} ${pcData.baseDetails.name.lastName}`}
+                pageName="Stats"
+            />
 
             {/* Ability Scores */}
             { 

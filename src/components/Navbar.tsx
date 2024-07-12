@@ -32,7 +32,7 @@ function Navbar () {
                     </span>
                     <span className="navbar-text">
                         {auth.currentUser &&
-                            <a className="logout-button" href="/" onClick={() => logoutUser()}>Log Out</a>
+                            <a className="btn btn-secondary" href="/" onClick={() => logoutUser()}>Log Out</a>
                         }
                     </span>
                 </div>

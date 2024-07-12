@@ -29,9 +29,9 @@ function MainApp() {
     
     /* Load data before displaying pages */
     const { isLoading, error, data } = useQuery({
-        queryKey: ['pcData'],
-        queryFn: () =>
-          loadData().then(),
+        queryKey: ['pcData', loggedIn],
+        queryFn: loadData,
+        enabled: !!loggedIn
     });
 
     if(!loggedIn) {

@@ -1,4 +1,5 @@
 import Card from "@components/cards/Card";
+import PageHeaderBar from "@components/PageHeaderBar";
 import { loginUser } from "@services/firebaseAuth/loginUser";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -29,7 +30,9 @@ function Login () {
 
   return (
     <>
-      <h1 className="page-title">Log In</h1>
+      <PageHeaderBar 
+          pageName="Log In"
+      />
       <Card>
         <form  onSubmit={handleSubmit} className="login-form">
           <div className="form-field">

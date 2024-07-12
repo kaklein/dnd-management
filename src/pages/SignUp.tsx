@@ -1,4 +1,5 @@
 import Card from "@components/cards/Card";
+import PageHeaderBar from "@components/PageHeaderBar";
 import { createUser } from "@services/firebaseAuth/createUser";
 import { sendVerification } from "@services/firebaseAuth/sendVerification";
 import { setDisplayName } from "@services/firebaseAuth/setDisplayName";
@@ -43,7 +44,9 @@ function SignUp () {
 
   return (
     <>
-      <h1 className="page-title">Sign Up</h1>
+      <PageHeaderBar 
+        pageName="Sign Up"
+      />
       <Card>
         <form  onSubmit={handleSubmit} className="login-form">
           <div className="form-field">

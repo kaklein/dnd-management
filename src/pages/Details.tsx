@@ -5,6 +5,7 @@ import Refresh from "@components/Refresh";
 import { formatDataAsTable, removeWhiteSpaceAndConvertToLowerCase } from "@components/utils";
 import { Spell } from "@models/playerCharacter/Spell";
 import { PlayerCharacter } from "@models/playerCharacter/PlayerCharacter";
+import PageHeaderBar from "@components/PageHeaderBar";
 
 interface Props {
     pcData: PlayerCharacter;
@@ -50,7 +51,10 @@ function Details({pcData}: Props) {
         <>
             <Navbar/>
 
-            <h1 className="page-title">Details</h1>
+            <PageHeaderBar 
+                pcName={`${pcData.baseDetails.name.firstName} ${pcData.baseDetails.name.lastName}`}
+                pageName="Details"
+            />
 
             <Card>
                 <h3>Spells & Abilities</h3>
