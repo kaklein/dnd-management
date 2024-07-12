@@ -123,22 +123,22 @@ function Tracker({pcData, queryClient}: Props) {
                         <h3>Spell Slots</h3>
                         {
                             pcData.spellSlots?.map(spellSlot => (
-                                <Card>
+                                <Card key={spellSlot.id}>
                                     <h3>{spellSlot.data.level}</h3>
                                     <ItemUseToggle
                                         itemLabel={removeWhiteSpaceAndConvertToLowerCase(spellSlot.data.level)}
                                         formDataName={buildSpellSlotsCurrentKey(spellSlot)}
                                         maxUses={spellSlot.data.max}
                                         currentUses={spellSlot.data.current}
-                                        onChange={handleChange}
+                                        onChange={handleChange} 
                                     />
                                 </Card>
                             ))
                         }
                         <h4>Available Spells</h4>
                         {
-                            pcData.baseDetails.spells!.map(spell => (
-                                <p>{spell.level}: <Link className="text-link" to={'/details#' + removeWhiteSpaceAndConvertToLowerCase(spell.name)}>{spell.name}</Link></p>
+                            pcData.baseDetails.spells!.map((spell, i) => (
+                                <p key={i}>{spell.level}: <Link className="text-link" to={'/details#' + removeWhiteSpaceAndConvertToLowerCase(spell.name)}>{spell.name}</Link></p>
                             ))
                         }
                     </Card>
@@ -146,8 +146,8 @@ function Tracker({pcData, queryClient}: Props) {
                     <Card>
                         <h3>Weapons</h3>
                         {
-                            pcData.baseDetails.weapons.map(weapon => (
-                                <Card>
+                            pcData.baseDetails.weapons.map((weapon, i) => (
+                                <Card key={i}>
                                     <Link className="text-link" to={'/details#' + removeWhiteSpaceAndConvertToLowerCase(weapon.name)}><h4>{weapon.name} ({weapon.type})</h4></Link>
                                     <h3>{weapon.damage} {weapon.damageType.toLowerCase()}</h3>
                                 </Card>
@@ -159,7 +159,7 @@ function Tracker({pcData, queryClient}: Props) {
                         <h3>Abilities</h3>
                         {
                             limitedUseFeatures.map(feature => (
-                                <Card>
+                                <Card key={feature.id}>
                                     <Link className="text-link" to={'/details#' + removeWhiteSpaceAndConvertToLowerCase(feature.data.name)}><h4>{feature.data.name}</h4></Link>
                                     <ItemUseToggle
                                         itemLabel={removeWhiteSpaceAndConvertToLowerCase(feature.data.name)}

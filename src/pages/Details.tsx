@@ -13,8 +13,8 @@ interface Props {
 
 const mapSpells = (spells: Spell[]) => {    
     return (
-        spells.map(spell => (
-            <Card>
+        spells.map((spell, i) => (
+            <Card key={i}>
                 <a id={removeWhiteSpaceAndConvertToLowerCase(spell.name)}></a>
                 <h3>{spell.name.toUpperCase()}</h3>
 
@@ -62,7 +62,7 @@ function Details({pcData}: Props) {
 
                 {
                     pcData.features.map(feature => (
-                        <Card>
+                        <Card key={feature.id}>
                             <a id={removeWhiteSpaceAndConvertToLowerCase(feature.data.name)}></a>
                             <h3>{feature.data.name.toUpperCase()}</h3>
                             <p><b>Description: </b>{feature.data.description}</p>
@@ -77,8 +77,8 @@ function Details({pcData}: Props) {
             <Card>
                 <h3>Weapons</h3>
                 {
-                    pcData.baseDetails.weapons.map(weapon => (
-                        <Card>
+                    pcData.baseDetails.weapons.map((weapon, i) => (
+                        <Card key={i}>
                             <a id={removeWhiteSpaceAndConvertToLowerCase(weapon.name)}></a>
                             <h3>{weapon.name}</h3>
                             {formatDataAsTable(weapon)}
@@ -90,8 +90,8 @@ function Details({pcData}: Props) {
             <Card>
                 <h3>Equipment</h3>
                 {
-                    pcData.baseDetails.equipment.map(item =>
-                        <Card>
+                    pcData.baseDetails.equipment.map((item, i) =>
+                        <Card key={i}>
                             <p>{item.type}</p>
                             {item.description && <p><i>{item.description}</i></p>}
                         </Card>
@@ -102,8 +102,8 @@ function Details({pcData}: Props) {
             <Card>
                 <h3>Languages</h3>
                 {
-                    pcData.baseDetails.languages.map(language => (
-                        <p>{language}</p>
+                    pcData.baseDetails.languages.map((language, i) => (
+                        <p key={i}>{language}</p>
                     ))
                 }
             </Card>
@@ -111,8 +111,8 @@ function Details({pcData}: Props) {
             <Card>
                 <h3>Proficiencies</h3>
                 {
-                    pcData.baseDetails.proficiencies.map(proficiency => (
-                        <p>{proficiency}</p>
+                    pcData.baseDetails.proficiencies.map((proficiency, i) => (
+                        <p key={i}>{proficiency}</p>
                     ))
                 }
             </Card>
@@ -120,8 +120,8 @@ function Details({pcData}: Props) {
             <Card>
                 <h3>Other Notes</h3>
                 {pcData.baseDetails.extras &&
-                    pcData.baseDetails.extras.map(extra => (
-                        <Card>
+                    pcData.baseDetails.extras.map((extra, i) => (
+                        <Card key={i}>
                             <p>{extra}</p>
                         </Card>
                     ))

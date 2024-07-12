@@ -5,6 +5,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 function Login () {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     email: '',
     password: ''
@@ -24,7 +25,6 @@ function Login () {
     if(!loggedIn) {
       alert(`Dang it, we couldn't log you in :(`);
     }
-    const navigate = useNavigate();
     navigate('/');
   }
 

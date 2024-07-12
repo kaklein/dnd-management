@@ -18,8 +18,8 @@ export const formatDataAsTable = (data: object, highlightNonZeroes=false, plusNo
         <table className="table">
             <tbody>
                 {
-                    entries.map((entry) => (
-                        <tr className={highlightNonZeroes && entry[1] > 0 ? 'table-success' : 'table'}>
+                    entries.map((entry, i) => (
+                        <tr className={highlightNonZeroes && entry[1] > 0 ? 'table-success' : 'table'} key={i}>
                             <td>{ entry[0].toUpperCase() + ':' }</td>
                             <td>{ (entry [1] > 0 && plusNonZeroes) && '+'}{entry[1]}</td>
                         </tr>
