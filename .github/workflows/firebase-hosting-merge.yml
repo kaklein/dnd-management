@@ -2,8 +2,6 @@
 # https://github.com/firebase/firebase-tools
 
 name: Deploy to Firebase Hosting on merge
-env:
-  FIREBASE_API_KEY: ${{ secrets.FIREBASE_API_KEY }}
 on:
   push:
     branches:
