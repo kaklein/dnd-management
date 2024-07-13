@@ -11,7 +11,6 @@ import Card from '@components/cards/Card';
 import Login from '@pages/Login';
 import SignUp from '@pages/SignUp';
 import useFirebaseAuthentication from '@services/firebaseAuth/utils';
-import IndexRouter from '@pages/IndexRouter';
 
 const queryClient = new QueryClient();
 
@@ -35,6 +34,18 @@ function MainApp() {
         enabled: !!loggedIn
     });
 
+    if (!loggedIn) {
+        return (
+            <BrowserRouter>
+                <Routes>
+                    <Route index element={<Login/>}/>
+                    <Route path="/login" element={<Login/>}/>
+                    <Route path="/signup" element={<SignUp/>}/>
+                </Routes>
+            </BrowserRouter>
+        )
+    }
+
     if (isLoading) return (
         <>
             <Card>
@@ -51,7 +62,7 @@ function MainApp() {
         </>
     )
     
-    if (loggedIn && !data) return (
+    if (!data) return (
         <>
             <Card>
                 <h3>No data found :(</h3>
@@ -60,27 +71,15 @@ function MainApp() {
     )
 
     return (
-        <>
-            <BrowserRouter>
-                <Routes>
-                    <Route index element={<IndexRouter loggedIn={loggedIn}/>}/>
-                    { !loggedIn &&
-                    <>
-                    <Route path="/login" element={<Login/>}/>
-                    <Route path="/signup" element={<SignUp/>}/>
-                    </>
-                    }
-                    { loggedIn &&
-                    <>
-                    <Route path="/home" element={<Home pcData={data!}/>}/>
-                    <Route path="/stats" element={<Stats pcData={data!}/>}/>
-                    <Route path="/tracker" element={<Tracker pcData={data!} queryClient={queryClient}/>}/>
-                    <Route path="/details" element={<Details pcData={data!}/>}/>
-                    </>
-                    }   
-                </Routes>
-            </BrowserRouter>
-        </>
+        <BrowserRouter>
+            <Routes>
+                <Route index element={<Home pcData={data}/>}/>
+                <Route path="/home" element={<Home pcData={data}/>}/>
+                <Route path="/stats" element={<Stats pcData={data}/>}/>
+                <Route path="/tracker" element={<Tracker pcData={data} queryClient={queryClient}/>}/>
+                <Route path="/details" element={<Details pcData={data}/>}/>  
+            </Routes>
+        </BrowserRouter>
     )
 }
 
