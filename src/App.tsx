@@ -34,10 +34,8 @@ function MainApp() {
         enabled: !!loggedIn
     });
 
-    if(!loggedIn) {
-        console.log('not logged in.');
+    if (!loggedIn) {
         return (
-            <>
             <BrowserRouter>
                 <Routes>
                     <Route index element={<Login/>}/>
@@ -45,7 +43,6 @@ function MainApp() {
                     <Route path="/signup" element={<SignUp/>}/>
                 </Routes>
             </BrowserRouter>
-        </>
         )
     }
 
@@ -65,7 +62,7 @@ function MainApp() {
         </>
     )
     
-    if(!data) return (
+    if (!data) return (
         <>
             <Card>
                 <h3>No data found :(</h3>
@@ -74,17 +71,15 @@ function MainApp() {
     )
 
     return (
-        <>
-            <BrowserRouter>
-                <Routes>
-                    <Route index element={<Home pcData={data}/>}/>
-                    <Route path="/home" element={<Home pcData={data}/>}/>
-                    <Route path="/stats" element={<Stats pcData={data}/>}/>
-                    <Route path="/tracker" element={<Tracker pcData={data} queryClient={queryClient}/>}/>
-                    <Route path="/details" element={<Details pcData={data}/>}/>
-                </Routes>
-            </BrowserRouter>
-        </>
+        <BrowserRouter>
+            <Routes>
+                <Route index element={<Home pcData={data}/>}/>
+                <Route path="/home" element={<Home pcData={data}/>}/>
+                <Route path="/stats" element={<Stats pcData={data}/>}/>
+                <Route path="/tracker" element={<Tracker pcData={data} queryClient={queryClient}/>}/>
+                <Route path="/details" element={<Details pcData={data}/>}/>  
+            </Routes>
+        </BrowserRouter>
     )
 }
 

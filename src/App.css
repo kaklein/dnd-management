@@ -174,12 +174,11 @@ img {
 .form-label, .form-input {
     margin: 10px;
     padding: 10px;
-
 }
 
 .form-label {
     text-align: right;
-    width: 150px;
+    width: 200px;
     font-weight: bold;
 }
 

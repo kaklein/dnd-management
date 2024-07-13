@@ -53,11 +53,17 @@ function Tracker({pcData, queryClient}: Props) {
         const featuresUpdates = formatFeaturesUpdates(formData);
         const spellSlotsUpdate = formatSpellSlotsUpdates(formData);
 
-        await Promise.all([
-            updateDataByPcId(CollectionName.PC_BASE_DETAILS, pcData.baseDetails.pcId, baseDetailsUpdates),
-            ...featuresUpdates.map(f => updateById(CollectionName.FEATURES, f.docId, f.updates)),
-            ...spellSlotsUpdate.map(s => updateById(CollectionName.SPELL_SLOTS, s.docId, s.updates))
-        ]).then();
+        try {
+            await Promise.all([
+                updateDataByPcId(CollectionName.PC_BASE_DETAILS, pcData.baseDetails.pcId, baseDetailsUpdates),
+                ...featuresUpdates.map(f => updateById(CollectionName.FEATURES, f.docId, f.updates)),
+                ...spellSlotsUpdate.map(s => updateById(CollectionName.SPELL_SLOTS, s.docId, s.updates))
+            ]).then();
+        } catch (e: any) {
+            console.error(e);
+            alert('We encountered an error saving your changes. Please refresh the page and try again.');
+            return;
+        }
         queryClient.invalidateQueries();
         triggerSuccessAlert();
     }
