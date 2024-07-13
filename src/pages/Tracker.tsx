@@ -12,6 +12,8 @@ import { QueryClient } from "@tanstack/react-query";
 import Alert from "@components/Alert";
 import { CollectionName } from "@services/firestore/enum/CollectionName";
 import PageHeaderBar from "@components/PageHeaderBar";
+import { determineAttackBonus } from "./utils";
+import { formatDataAsTable } from "@components/utils";
 
 interface Props {
     pcData: PlayerCharacter;
@@ -125,7 +127,11 @@ function Tracker({pcData, queryClient}: Props) {
                         />
                     </Card>
 
-                    <Card>
+                    { (
+                        (pcData.spellSlots && pcData.spellSlots.length > 0) ||
+                        (pcData.baseDetails.spells && pcData.baseDetails.spells.length > 0)
+                    ) &&
+                        <Card>
                         <h3>Spell Slots</h3>
                         {
                             pcData.spellSlots?.map(spellSlot => (
@@ -148,6 +154,7 @@ function Tracker({pcData, queryClient}: Props) {
                             ))
                         }
                     </Card>
+                    }
                 
                     <Card>
                         <h3>Weapons</h3>
@@ -155,7 +162,12 @@ function Tracker({pcData, queryClient}: Props) {
                             pcData.baseDetails.weapons.map((weapon, i) => (
                                 <Card key={i}>
                                     <Link className="text-link" to={'/details#' + removeWhiteSpaceAndConvertToLowerCase(weapon.name)}><h4>{weapon.name} ({weapon.type})</h4></Link>
-                                    <h3>{weapon.damage} {weapon.damageType.toLowerCase()}</h3>
+                                    {
+                                        formatDataAsTable({
+                                            ['Attack Bonus']: `+${determineAttackBonus(weapon, pcData)}`,
+                                            Damage: `${weapon.damage} ${weapon.damageType.toLowerCase()}`
+                                        })
+                                    }
                                 </Card>
                             ))
                         }

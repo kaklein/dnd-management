@@ -15,9 +15,17 @@ export const loadData = async (): Promise<PlayerCharacter> => {
 
   // Get features
   const features = (await readData(CollectionName.FEATURES, {pcId: baseDetails.pcId})) as Feature[];
+  features.sort((a, b) =>  { 
+    if (a.id < b.id) return -1;
+    return 1;
+   });
 
   // Get spell slots
   const spellSlots = (await readData(CollectionName.SPELL_SLOTS, {pcId: baseDetails.pcId})) as SpellSlot[];
+  spellSlots.sort((a, b) => {
+    if (a.data.level < b.data.level) return -1;
+    return 1;
+  });
   
   // Format
   return { baseDetails, abilityScores, features, spellSlots };

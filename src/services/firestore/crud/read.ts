@@ -1,6 +1,5 @@
 import { db } from "../../../firebase";
-import { DocumentData } from "firebase/firestore"
-import { collection, query, where, getDocs } from "firebase/firestore";
+import { collection, query, where, getDocs, DocumentData } from "firebase/firestore";
 import { CollectionName } from "../enum/CollectionName";
 
 export const buildWhereClauses = (query: {[key: string]: string | number | object}) => {
