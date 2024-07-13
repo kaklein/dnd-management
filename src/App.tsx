@@ -46,7 +46,7 @@ function MainApp() {
         )
     }
 
-    if (isLoading) return (
+    if (loggedIn && isLoading) return (
         <>
             <Card>
                 <h3>Loading...</h3>
