@@ -111,13 +111,12 @@ img {
 }
 
 .card-set-horizontal {
-    width: 500px;
     margin: auto;
 }
 
 .ability-card {
     margin: auto;
-    width: fit-content;
+    width: 350px;
 }
 
 .ability-card-header {
@@ -131,16 +130,16 @@ img {
 }
 
 .ability-scores {
-    width: 220px;
-    margin: auto;
+    width: fit-content;
     border: 1px solid lightgray;
     border-radius: 5px;
     padding: 5px;
+    float: left;
 }
 
 .ability-proficiencies {
-    width: 220px;
-    margin: auto;
+    width: fit-content;
+    float: right;
 }
 
 .number-input {

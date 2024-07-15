@@ -6,19 +6,14 @@ import CardSetHorizontal from "@components/cards/CardSetHorizontal";
 import { AbilityScores } from "@models/playerCharacter/AbilityScores";
 import { PlayerCharacter } from "@models/playerCharacter/PlayerCharacter";
 import PageHeaderBar from "@components/PageHeaderBar";
+import { orderAbilityCardElements } from "@components/utils";
+import { Ability } from "@models/enum/Ability";
 
 interface Props {
     pcData: PlayerCharacter;
 }
 
 function Stats({pcData}: Props) {
-    const removeBaseStatsFromAbilityObject = (abilityObject: {score: number, modifier: number, [key: string]: number;}) => {
-        const strippedObj = JSON.parse(JSON.stringify(abilityObject));
-        delete strippedObj.score;
-        delete strippedObj.modifier;
-        return strippedObj;
-    }
-
     const mapAbilityScoreCards = (abilityScores: AbilityScores) => {
         return (
             <>
@@ -26,37 +21,37 @@ function Stats({pcData}: Props) {
                     abilityName="STRENGTH"
                     score={abilityScores.strength.score}
                     modifier={abilityScores.strength.modifier}
-                    data={removeBaseStatsFromAbilityObject(abilityScores.strength)}
+                    data={orderAbilityCardElements(abilityScores, Ability.STR)}
                 />
                 <AbilityCard
                     abilityName="DEXTERITY"
                     score={abilityScores.dexterity.score}
                     modifier={abilityScores.dexterity.modifier}
-                    data={removeBaseStatsFromAbilityObject(abilityScores.dexterity)}
+                    data={orderAbilityCardElements(abilityScores, Ability.DEX)}
                 /> 
                 <AbilityCard
                     abilityName="CONSTITUTION"
                     score={abilityScores.constitution.score}
                     modifier={abilityScores.constitution.modifier}
-                    data={removeBaseStatsFromAbilityObject(abilityScores.constitution)}
+                    data={orderAbilityCardElements(abilityScores, Ability.CON)}
                 />
                 <AbilityCard
                     abilityName="INTELLIGENCE"
                     score={abilityScores.intelligence.score}
                     modifier={abilityScores.intelligence.modifier}
-                    data={removeBaseStatsFromAbilityObject(abilityScores.intelligence)}
+                    data={orderAbilityCardElements(abilityScores, Ability.INT)}
                 />
                 <AbilityCard
                     abilityName="WISDOM"
                     score={abilityScores.wisdom.score}
                     modifier={abilityScores.wisdom.modifier}
-                    data={removeBaseStatsFromAbilityObject(abilityScores.wisdom)}
+                    data={orderAbilityCardElements(abilityScores, Ability.WIS)}
                 />
                 <AbilityCard
                     abilityName="CHARISMA"
                     score={abilityScores.charisma.score}
                     modifier={abilityScores.charisma.modifier}
-                    data={removeBaseStatsFromAbilityObject(abilityScores.charisma)}
+                    data={orderAbilityCardElements(abilityScores, Ability.CHA)}
                 />               
             </>
         );
@@ -80,26 +75,23 @@ function Stats({pcData}: Props) {
 
             <CardSetHorizontal>
                 <Card>
-                    <h3>AC</h3>
+                    <h4>AC</h4>
                     <h3>{pcData.baseDetails.armorClass}</h3>
                 </Card>
                 <Card>
-                    <h3>Initiative</h3>
+                    <h4>Initiative</h4>
                     <h3>+{pcData.baseDetails.initiative}</h3>
                 </Card>
                 <Card>
-                    <h3>Speed</h3>
-                    <h3>{pcData.baseDetails.speed}</h3>
-                </Card>
-            </CardSetHorizontal>
-
-            <CardSetHorizontal>
-                <Card>
-                    <h3>Proficiency Bonus</h3>
+                    <h4>Proficiency Bonus</h4>
                     <h3>+{pcData.baseDetails.proficiencyBonus}</h3>
                 </Card>
                 <Card>
-                    <h3>Passive Wisdom</h3>
+                    <h4>Speed</h4>
+                    <h3>{pcData.baseDetails.speed}</h3>
+                </Card>
+                <Card>
+                    <h4>Passive Wisdom</h4>
                     <h3>{pcData.baseDetails.passiveWisdom}</h3>
                 </Card>
             </CardSetHorizontal>
