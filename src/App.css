@@ -197,3 +197,16 @@ img {
     margin: auto;
     text-align: center;
 }
+
+.update-form-field {
+    width: fit-content;
+    margin: auto;
+    border: 1px solid red;
+    border-radius: 10px;
+    margin: 10px;
+    padding: 5px;
+}
+
+.long-text-input {
+    width: 500px;
+}

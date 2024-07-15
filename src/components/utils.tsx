@@ -1,8 +1,10 @@
 import { Ability } from "@models/enum/Ability";
 import { AbilityScores } from "@models/playerCharacter/AbilityScores";
 import { Feature } from "@models/playerCharacter/Feature";
+import { PlayerCharacter } from "@models/playerCharacter/PlayerCharacter";
 import { SpellSlot } from "@models/playerCharacter/usableResources/SpellSlot";
 import { Weapon } from "@models/playerCharacter/Weapon";
+import { determineAttackBonus } from "@pages/utils";
 
 const replaceBooleans = (data: object) => {
     const entries = Object.entries(data);
@@ -102,11 +104,11 @@ export const formatSpellSlotsUpdates = (formData: any): {docId: string, updates:
 }
 
 
-export const orderWeaponElements = (weapon: Weapon) => {
+export const orderAndFormatWeaponElements = (weapon: Weapon, pcData: PlayerCharacter) => {
     return {
         name: weapon.name,
         type: weapon.type,
-        damage: weapon.damage,
+        damage: `${weapon.damage} + ${determineAttackBonus(weapon, pcData)}`,
         ['damage type']: weapon.damageType,
         ['modifier property']: weapon.modifierProperty.toLowerCase(),
         magic: weapon.magic,
@@ -165,4 +167,8 @@ export const orderAbilityCardElements = (abilityScores: AbilityScores, ability: 
             }
         }
     }
+}
+
+export const capitalize = (s: string) => {
+    return (`${s.substring(0,1).toUpperCase()}${s.substring(1)}`)
 }

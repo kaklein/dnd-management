@@ -181,8 +181,8 @@ function Tracker({pcData, queryClient}: Props) {
                                     <Link className="text-link" to={'/details#' + removeWhiteSpaceAndConvertToLowerCase(weapon.name)}><h4>{weapon.name} ({weapon.type})</h4></Link>
                                     {
                                         formatDataAsTable({
-                                            ['Attack Bonus']: `+${determineAttackBonus(weapon, pcData)}`,
-                                            Damage: `${weapon.damage} ${weapon.damageType.toLowerCase()}`
+                                            ['Attack Bonus']: `+${determineAttackBonus(weapon, pcData) + pcData.baseDetails.proficiencyBonus}`,
+                                            Damage: `${weapon.damage} + ${determineAttackBonus(weapon, pcData)} ${weapon.damageType.toLowerCase()}`
                                         })
                                     }
                                 </Card>

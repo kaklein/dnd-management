@@ -2,7 +2,7 @@ import Navbar from "@components/Navbar";
 import Footer from "@components/Footer";
 import Card from "@components/cards/Card";
 import Refresh from "@components/Refresh";
-import { formatDataAsTable, orderWeaponElements, removeWhiteSpaceAndConvertToLowerCase } from "@components/utils";
+import { formatDataAsTable, orderAndFormatWeaponElements, removeWhiteSpaceAndConvertToLowerCase } from "@components/utils";
 import { Spell } from "@models/playerCharacter/Spell";
 import { PlayerCharacter } from "@models/playerCharacter/PlayerCharacter";
 import PageHeaderBar from "@components/PageHeaderBar";
@@ -81,7 +81,7 @@ function Details({pcData}: Props) {
                         <Card key={i}>
                             <a id={removeWhiteSpaceAndConvertToLowerCase(weapon.name)}></a>
                             <h3>{weapon.name}</h3>
-                            {formatDataAsTable(orderWeaponElements(weapon))}
+                            {formatDataAsTable(orderAndFormatWeaponElements(weapon, pcData))}
                         </Card>
                     ))
                 }

@@ -25,6 +25,9 @@ function Navbar () {
                             <li className="nav-item">
                                 <h3><NavLink className="nav-link" to="/details">Details</NavLink></h3>
                             </li>
+                            <li className="nav-item">
+                                <h3><NavLink className="nav-link" to="/update">Update</NavLink></h3>
+                            </li>
                         </ul>
                     </div>
                     <span className="navbar-text">

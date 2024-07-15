@@ -19,5 +19,5 @@ export const determineAttackBonus = (weapon: Weapon, pcData: PlayerCharacter) =>
       break;
     }
   }
-  return pcData.baseDetails.proficiencyBonus + weaponModifier;
+  return weaponModifier;
 }
