@@ -7,7 +7,8 @@ import {
     buildSpellSlotsCurrentKey, 
     formatBaseDetailsUpdates, 
     formatFeaturesUpdates, 
-    formatSpellSlotsUpdates, 
+    formatSpellSlotsUpdates,
+    formatDataAsTable,
     getFeatureFormData, 
     getSpellSlotFormData, 
     removeWhiteSpaceAndConvertToLowerCase 
@@ -22,7 +23,6 @@ import Alert from "@components/Alert";
 import { CollectionName } from "@services/firestore/enum/CollectionName";
 import PageHeaderBar from "@components/PageHeaderBar";
 import { determineAttackBonus } from "./utils";
-import { formatDataAsTable } from "@components/utils";
 
 interface Props {
     pcData: PlayerCharacter;
