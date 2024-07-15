@@ -1,3 +1,5 @@
+import { Ability } from "@models/enum/Ability";
+import { AbilityScores } from "@models/playerCharacter/AbilityScores";
 import { Feature } from "@models/playerCharacter/Feature";
 import { SpellSlot } from "@models/playerCharacter/usableResources/SpellSlot";
 import { Weapon } from "@models/playerCharacter/Weapon";
@@ -109,5 +111,58 @@ export const orderWeaponElements = (weapon: Weapon) => {
         ['modifier property']: weapon.modifierProperty.toLowerCase(),
         magic: weapon.magic,
         description: weapon.description
+    }
+}
+
+export const orderAbilityCardElements = (abilityScores: AbilityScores, ability: Ability) => {
+    switch (ability) {
+        case Ability.STR: {
+            return {
+                ['Saving Throws']: abilityScores.strength.savingThrows,
+                athletics: abilityScores.strength.athletics
+            }
+        }
+        case Ability.DEX: {
+            return {
+                ['Saving Throws']: abilityScores.dexterity.savingThrows,
+                acrobatics: abilityScores.dexterity.acrobatics,
+                ['Sleight of Hand']: abilityScores.dexterity.sleightOfHand,
+                stealth: abilityScores.dexterity.stealth
+            }
+        }
+        case Ability.CON: {
+            return {
+                ['Saving Throws']: abilityScores.constitution.savingThrows,
+            }
+        }
+        case Ability.INT: {
+            return {
+                ['Saving Throws']: abilityScores.intelligence.savingThrows,
+                arcana: abilityScores.intelligence.arcana,
+                history: abilityScores.intelligence.history,
+                investigation: abilityScores.intelligence.investigation,
+                nature: abilityScores.intelligence.nature,
+                religion: abilityScores.intelligence.religion
+            }
+        }
+        case Ability.WIS: {
+            return {
+                ['Saving Throws']: abilityScores.wisdom.savingThrows,
+                ['Animal Handling']: abilityScores.wisdom.animalHandling,
+                insight: abilityScores.wisdom.insight,
+                medicine: abilityScores.wisdom.medicine,
+                perception: abilityScores.wisdom.perception,
+                survival: abilityScores.wisdom.survival
+            }
+        }
+        case Ability.CHA: {
+            return {
+                ['Saving Throws']: abilityScores.charisma.savingThrows,
+                deception: abilityScores.charisma.deception,
+                intimidation: abilityScores.charisma.intimidation,
+                performance: abilityScores.charisma.performance,
+                persuasion: abilityScores.charisma.persuasion
+            }
+        }
     }
 }
