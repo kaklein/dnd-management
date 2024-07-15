@@ -1,8 +1,8 @@
 export enum Ability {
-    'STR' = 'Strength',
-    'DEX' = 'Dexterity',
-    'CON' = 'Constitution',
-    'INT' = 'Intelligence',
-    'WIS' = 'Wisdom',
-    'CHA' = 'Charisma'
+    'STR' = 'strength',
+    'DEX' = 'dexterity',
+    'CON' = 'constitution',
+    'INT' = 'intelligence',
+    'WIS' = 'wisdom',
+    'CHA' = 'charisma'
 }
