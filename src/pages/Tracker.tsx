@@ -2,7 +2,17 @@ import Navbar from "@components/Navbar";
 import Card from "@components/cards/Card";
 import Refresh from "@components/Refresh";
 import Footer from "@components/Footer";
-import { buildFeatureCurrentUsesKey, buildSpellSlotsCurrentKey, formatBaseDetailsUpdates, formatFeaturesUpdates, formatSpellSlotsUpdates, getFeatureFormData, getSpellSlotFormData, removeWhiteSpaceAndConvertToLowerCase } from "@components/utils";
+import { 
+    buildFeatureCurrentUsesKey, 
+    buildSpellSlotsCurrentKey, 
+    formatBaseDetailsUpdates, 
+    formatFeaturesUpdates, 
+    formatSpellSlotsUpdates,
+    formatDataAsTable,
+    getFeatureFormData, 
+    getSpellSlotFormData, 
+    removeWhiteSpaceAndConvertToLowerCase 
+} from "@components/utils";
 import { useState} from "react";
 import { HashLink as Link } from 'react-router-hash-link';
 import { updateById, updateDataByPcId } from "@services/firestore/crud/update";
@@ -12,6 +22,7 @@ import { QueryClient } from "@tanstack/react-query";
 import Alert from "@components/Alert";
 import { CollectionName } from "@services/firestore/enum/CollectionName";
 import PageHeaderBar from "@components/PageHeaderBar";
+import { determineAttackBonus } from "./utils";
 
 interface Props {
     pcData: PlayerCharacter;
@@ -125,29 +136,42 @@ function Tracker({pcData, queryClient}: Props) {
                         />
                     </Card>
 
-                    <Card>
-                        <h3>Spell Slots</h3>
-                        {
-                            pcData.spellSlots?.map(spellSlot => (
-                                <Card key={spellSlot.id}>
-                                    <h3>{spellSlot.data.level}</h3>
-                                    <ItemUseToggle
-                                        itemLabel={removeWhiteSpaceAndConvertToLowerCase(spellSlot.data.level)}
-                                        formDataName={buildSpellSlotsCurrentKey(spellSlot)}
-                                        maxUses={spellSlot.data.max}
-                                        currentUses={spellSlot.data.current}
-                                        onChange={handleChange} 
-                                    />
-                                </Card>
-                            ))
-                        }
-                        <h4>Available Spells</h4>
-                        {
-                            pcData.baseDetails.spells!.map((spell, i) => (
-                                <p key={i}>{spell.level}: <Link className="text-link" to={'/details#' + removeWhiteSpaceAndConvertToLowerCase(spell.name)}>{spell.name}</Link></p>
-                            ))
-                        }
-                    </Card>
+                    {
+                        (pcData.spellSlots && pcData.spellSlots.length > 0) &&
+                        <Card>
+                            <h3>Spell Slots</h3>
+                            {
+                                pcData.spellSlots?.map(spellSlot => (
+                                    <Card key={spellSlot.id}>
+                                        <h3>{spellSlot.data.level}</h3>
+                                        <ItemUseToggle
+                                            itemLabel={removeWhiteSpaceAndConvertToLowerCase(spellSlot.data.level)}
+                                            formDataName={buildSpellSlotsCurrentKey(spellSlot)}
+                                            maxUses={spellSlot.data.max}
+                                            currentUses={spellSlot.data.current}
+                                            onChange={handleChange} 
+                                        />
+                                    </Card>
+                                ))
+                            }
+                        </Card>
+                    }   
+
+                    {
+                        (pcData.baseDetails.spells && pcData.baseDetails.spells.length > 0)  &&
+                        <Card>
+                            <h3>Available Spells</h3>
+                            {
+                                pcData.baseDetails.spells!.map((spell, i) => (
+                                    <p key={i}>
+                                        {spell.level}: 
+                                        <Link className="text-link" to={'/details#' + removeWhiteSpaceAndConvertToLowerCase(spell.name)}>{spell.name}</Link>
+                                         | Attack Bonus +{pcData.abilityScores[spell.spellCastingAbility].modifier + pcData.baseDetails.proficiencyBonus}
+                                    </p>
+                                ))
+                            }
+                        </Card>
+                    }
                 
                     <Card>
                         <h3>Weapons</h3>
@@ -155,7 +179,12 @@ function Tracker({pcData, queryClient}: Props) {
                             pcData.baseDetails.weapons.map((weapon, i) => (
                                 <Card key={i}>
                                     <Link className="text-link" to={'/details#' + removeWhiteSpaceAndConvertToLowerCase(weapon.name)}><h4>{weapon.name} ({weapon.type})</h4></Link>
-                                    <h3>{weapon.damage} {weapon.damageType.toLowerCase()}</h3>
+                                    {
+                                        formatDataAsTable({
+                                            ['Attack Bonus']: `+${determineAttackBonus(weapon, pcData)}`,
+                                            Damage: `${weapon.damage} ${weapon.damageType.toLowerCase()}`
+                                        })
+                                    }
                                 </Card>
                             ))
                         }

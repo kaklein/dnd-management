@@ -1,5 +1,6 @@
 import { Feature } from "@models/playerCharacter/Feature";
 import { SpellSlot } from "@models/playerCharacter/usableResources/SpellSlot";
+import { Weapon } from "@models/playerCharacter/Weapon";
 
 const replaceBooleans = (data: object) => {
     const entries = Object.entries(data);
@@ -96,4 +97,17 @@ export const formatSpellSlotsUpdates = (formData: any): {docId: string, updates:
         })
     }
     return updates;
+}
+
+
+export const orderWeaponElements = (weapon: Weapon) => {
+    return {
+        name: weapon.name,
+        type: weapon.type,
+        damage: weapon.damage,
+        ['damage type']: weapon.damageType,
+        ['modifier property']: weapon.modifierProperty.toLowerCase(),
+        magic: weapon.magic,
+        description: weapon.description
+    }
 }

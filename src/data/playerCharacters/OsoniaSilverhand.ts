@@ -8,6 +8,7 @@ import { Weapon } from "@models/playerCharacter/Weapon";
 import { Feature } from "@models/playerCharacter/Feature";
 import { UsableResources } from "@models/playerCharacter/usableResources/UsableResources";
 import { RestType } from "@models/enum/RestType";
+import { WeaponModifierProperty } from "@models/enum/WeaponModifierProperty";
 
 const abilityScores: AbilityScores = {
     pcId: '6d40e673-3a6e-428c-913d-800c9ec21631',
@@ -104,6 +105,7 @@ const weapons: Weapon[] = [
         type: 'shortsword',
         damage: '1d6 + 5',
         damageType: DamageType.PIERCING,
+        modifierProperty: WeaponModifierProperty.FINESSE,
         magic: true,
         description: 'A beautifully crafted sword with an orange-red gem at the center of the cross-guard. Grants the spell Heat Metal once per long rest.'
     },
@@ -112,6 +114,7 @@ const weapons: Weapon[] = [
         type: 'scimitar',
         damage: '1d6 + 5',
         damageType: DamageType.SLASHING,
+        modifierProperty: WeaponModifierProperty.FINESSE,
         magic: false
     },
     {
@@ -119,6 +122,7 @@ const weapons: Weapon[] = [
         type: 'Light crossbow',
         damage: '1d8 + 5',
         damageType: DamageType.PIERCING,
+        modifierProperty: WeaponModifierProperty.RANGED,
         magic: false
     }
 ];

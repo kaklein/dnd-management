@@ -85,7 +85,7 @@ function Stats({pcData}: Props) {
                 </Card>
                 <Card>
                     <h3>Initiative</h3>
-                    <h3>{pcData.baseDetails.initiative}</h3>
+                    <h3>+{pcData.baseDetails.initiative}</h3>
                 </Card>
                 <Card>
                     <h3>Speed</h3>
@@ -96,7 +96,7 @@ function Stats({pcData}: Props) {
             <CardSetHorizontal>
                 <Card>
                     <h3>Proficiency Bonus</h3>
-                    <h3>{pcData.baseDetails.proficiencyBonus}</h3>
+                    <h3>+{pcData.baseDetails.proficiencyBonus}</h3>
                 </Card>
                 <Card>
                     <h3>Passive Wisdom</h3>
