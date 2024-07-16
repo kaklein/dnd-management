@@ -1,7 +1,6 @@
 import Navbar from "@components/Navbar";
 import Footer from "@components/Footer";
 import Card from "@components/cards/Card";
-import Refresh from "@components/Refresh";
 import { formatDataAsTable, orderAndFormatWeaponElements, removeWhiteSpaceAndConvertToLowerCase } from "@components/utils";
 import { Spell } from "@models/playerCharacter/Spell";
 import { PlayerCharacter } from "@models/playerCharacter/PlayerCharacter";
@@ -36,10 +35,6 @@ const mapSpells = (spells: Spell[]) => {
 
                 {spell.spellCastingAbility &&
                     <p><b>Spellcasting ability: </b>{spell.spellCastingAbility}</p>
-                }
-
-                {spell.refresh &&
-                    <Refresh refreshRestType={spell.refresh}/>
                 }
             </Card>
         ))
