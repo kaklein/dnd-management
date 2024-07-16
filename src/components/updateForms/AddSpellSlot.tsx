@@ -1,3 +1,4 @@
+import FormSelect from "@components/FormSelect";
 import { SpellLevel } from "@models/playerCharacter/Spell";
 import { useState } from "react";
 
@@ -23,19 +24,21 @@ function AddSpellSlot ({handleChange, handleSubmit, formData, setFormData}: Prop
     {
       showForm &&
       <form onSubmit={(event) => {handleSubmit(event, formData)}}>
-      <div className="update-form-field">
-            <label className="form-label" htmlFor="level">Spell Level</label>
-            <select
-              className="form-input"
-              id="level"
-              name="level"
-              onChange={(event) => handleChange(event, setFormData)}
-            >
-              {Object.values(SpellLevel).filter(level => level !== SpellLevel.CANTRIP).sort().map((option, i) => (
-                <option value={option} key={i}>{option.toUpperCase()}</option>
-              ))}
-            </select>
-          </div>
+        <div className="update-form-field">
+          <label className="form-label" htmlFor="level">Spell Level</label>
+          <FormSelect
+            handleChange={handleChange}
+            setFormData={setFormData}
+            name="level"
+            options={
+              Object.values(SpellLevel).filter(level => level !== SpellLevel.CANTRIP).sort().map((option) => ({
+                text: option.toUpperCase(),
+                value: option
+              }))
+            }
+            required
+          />
+        </div>
         <div className="update-form-field">
           <label className="form-label" htmlFor="max">Total Number of Slots</label>
           <p>
@@ -56,7 +59,7 @@ function AddSpellSlot ({handleChange, handleSubmit, formData, setFormData}: Prop
         </div>
         <button type="submit">Add</button>
       </form>
-      }
+    }
     </div>
   )
 }

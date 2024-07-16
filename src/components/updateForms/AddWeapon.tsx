@@ -1,3 +1,4 @@
+import FormSelect from "@components/FormSelect";
 import { DamageType } from "@models/enum/DamageType"
 import { WeaponModifierProperty } from "@models/enum/WeaponModifierProperty"
 import { useState } from "react";
@@ -65,16 +66,18 @@ function AddWeapon ({handleChange, handleSubmit, formData, setFormData}: Props) 
       </div>
       <div className="update-form-field">
         <label className="form-label" htmlFor="damageType">Damage Type</label>
-        <select
-          className="form-input"
-          id="damageType"
+        <FormSelect
+          handleChange={handleChange}
+          setFormData={setFormData}
           name="damageType"
-          onChange={(event) => handleChange(event, setFormData)}
-        >
-          {Object.values(DamageType).sort().map((option, i) => (
-            <option value={option} key={i}>{option.toUpperCase()}</option>
-          ))}
-        </select>
+          options={
+            Object.values(DamageType).sort().map((option) => ({
+              text: option.toUpperCase(),
+              value: option
+            }))
+          }
+          required
+        />
       </div>
       <div className="update-form-field">
         <label className="form-label" htmlFor="modifierProperty">Weapon Range</label>
@@ -83,16 +86,18 @@ function AddWeapon ({handleChange, handleSubmit, formData, setFormData}: Props) 
           Select <b>Finesse</b> if it is a finesse weapon. 
           Otherwise, select <b>Melee</b> or <b>Ranged</b> as applies to the weapon.
         </p>
-        <select
-          className="form-input"
-          id="modifierProperty"
+        <FormSelect
+          handleChange={handleChange}
+          setFormData={setFormData}
           name="modifierProperty"
-          onChange={(event) => handleChange(event, setFormData)}
-        >
-          {Object.values(WeaponModifierProperty).sort().map((option, i) => (
-            <option value={option} key={i}>{option}</option>
-          ))}
-        </select>
+          options={
+            Object.values(WeaponModifierProperty).sort().map((option) => ({
+              text: option.toUpperCase(),
+              value: option
+            }))
+          }
+          required
+        />
       </div>
       <div className="update-form-field">
         <label className="form-label" htmlFor="magic">Is this weapon magic?</label>
@@ -126,7 +131,6 @@ function AddWeapon ({handleChange, handleSubmit, formData, setFormData}: Props) 
           value={formData.description}
         />
       </div>
-      
       
       <button type="submit">Add</button>
     </form>

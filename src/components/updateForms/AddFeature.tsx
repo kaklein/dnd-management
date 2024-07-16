@@ -1,3 +1,4 @@
+import FormSelect from "@components/FormSelect";
 import { DamageType } from "@models/enum/DamageType";
 import { RestType } from "@models/enum/RestType";
 import { useState } from "react";
@@ -14,17 +15,31 @@ function AddFeature ({handleChange, handleSubmit, formData, setFormData}: Props)
   
   const [showLimitedUseFields, setShowLimitedUseFields] = useState(false);
   const handleLimitedUseCheckboxChange = () => {
-    setShowLimitedUseFields(!showLimitedUseFields);
+    const newVal = !showLimitedUseFields;
+    setShowLimitedUseFields(newVal);
+    if (!newVal) {
+      handleChange({target: {name: 'damage', value: ''}}, setFormData);
+      handleChange({target: {name: 'damageType', value: ''}}, setFormData);
+    }
   };
 
   const [showDamageFields, setShowDamageFields] = useState(false);
   const handleDamageCheckboxChange = () => {
-    setShowDamageFields(!showDamageFields);
+    const newVal = !showDamageFields;
+    setShowDamageFields(newVal);
+    if (!newVal) {
+      handleChange({target: {name: 'maxUses', value: ''}}, setFormData);
+      handleChange({target: {name: 'refresh', value: ''}}, setFormData);
+    }
   }
 
   const [showSaveDCField, setShowSaveDCField] = useState(false);
   const handleSavDcCheckboxChange = () => {
-    setShowSaveDCField(!showSaveDCField);
+    const newVal = !showSaveDCField;
+    setShowSaveDCField(newVal);
+    if (!newVal) {
+      handleChange({target: {name: 'saveDC', value: ''}}, setFormData);
+    }
   }
   
   return (
@@ -102,21 +117,23 @@ function AddFeature ({handleChange, handleSubmit, formData, setFormData}: Props)
                 name="maxUses"
                 onChange={(event) => {handleChange(event, setFormData)}}
                 value={formData.maxUses}
-                required
+                required={showLimitedUseFields}
               />
             </div>
             <div className="update-form-field">
               <label className="form-label" htmlFor="refresh">Refresh after</label>
-              <select
-                className="form-input"
-                id="refresh"
+              <FormSelect
+                handleChange={handleChange}
+                setFormData={setFormData}
                 name="refresh"
-                onChange={(event) => handleChange(event, setFormData)}
-              >
-                {Object.values(RestType).sort().map((option, i) => (
-                  <option value={option} key={i}>{option.toUpperCase()} REST</option>
-                ))}
-              </select>
+                options={
+                  Object.values(RestType).sort().map((option) => ({
+                    text: option.toUpperCase() + ' REST',
+                    value: option
+                  }))
+                }
+                required={showLimitedUseFields}
+              />
             </div>
           </>
           }         
@@ -144,21 +161,23 @@ function AddFeature ({handleChange, handleSubmit, formData, setFormData}: Props)
                 placeholder="1d6"
                 onChange={(event) => {handleChange(event, setFormData)}}
                 value={formData.damage}
-                required
+                required={showDamageFields}
               />
             </div>
             <div className="update-form-field">
               <label className="form-label" htmlFor="damageType">Damage Type</label>
-              <select
-                className="form-input"
-                id="damageType"
+              <FormSelect
+                handleChange={handleChange}
+                setFormData={setFormData}
                 name="damageType"
-                onChange={(event) => handleChange(event, setFormData)}
-              >
-                {Object.values(DamageType).sort().map((option, i) => (
-                  <option value={option} key={i}>{option.toUpperCase()}</option>
-                ))}
-              </select>
+                options={
+                  Object.values(DamageType).sort().map((option) => ({
+                    text: option.toUpperCase(),
+                    value: option
+                  }))
+                }
+                required={showDamageFields}
+              />
             </div>
           </>
           }

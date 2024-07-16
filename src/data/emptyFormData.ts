@@ -1,16 +1,12 @@
-import { Ability } from "@models/enum/Ability";
-import { DamageType } from "@models/enum/DamageType";
 import { UpdateType } from "@models/enum/service/UpdateType";
-import { WeaponModifierProperty } from "@models/enum/WeaponModifierProperty";
-import { SpellLevel } from "@models/playerCharacter/Spell";
 
 export const defaultWeaponFormData = {
   updateType: UpdateType.WEAPONS,
   name: '',
   type: '',
   damage: '',
-  damageType: DamageType.ACID,
-  modifierProperty: WeaponModifierProperty.FINESSE,
+  damageType: '',
+  modifierProperty: '',
   magic: "false",
   description: ''
 };
@@ -19,15 +15,15 @@ export const defaultSpellFormData = {
   updateType: UpdateType.SPELLS,
   name: '',
   description: '',
-  level: SpellLevel.CANTRIP,
-  spellCastingAbility: Ability.CHA,
+  level: '',
+  spellCastingAbility: '',
   damageType: '',
-  damage: DamageType.ACID
+  damage: ''
 };
 
 export const defaultSpellSlotFormData = {
   updateType: UpdateType.SPELL_SLOTS,
-  level: SpellLevel.L1,
+  level: '',
   max: ''
 }
 

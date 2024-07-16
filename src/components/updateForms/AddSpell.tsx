@@ -1,3 +1,4 @@
+import FormSelect from "@components/FormSelect";
 import { Ability } from "@models/enum/Ability";
 import { DamageType } from "@models/enum/DamageType";
 import { SpellLevel } from "@models/playerCharacter/Spell";
@@ -12,6 +13,16 @@ interface Props {
 
 function AddSpell ({handleChange, handleSubmit, formData, setFormData}: Props) {
   const [showForm, setShowForm] = useState(false);
+
+  const [showDamageFields, setShowDamageFields] = useState(false);
+  const handleDamageCheckboxChange = () => {
+    const newVal = !showDamageFields;
+    setShowDamageFields(newVal);
+    if (!newVal) {
+      handleChange({target: {name: 'damage', value: ''}}, setFormData);
+      handleChange({target: {name: 'damageType', value: ''}}, setFormData);
+    }
+  }
   
   return (
     <div>
@@ -55,56 +66,79 @@ function AddSpell ({handleChange, handleSubmit, formData, setFormData}: Props) {
         </div>
         <div className="update-form-field">
           <label className="form-label" htmlFor="level">Spell Level</label>
-          <select
-            className="form-input"
-            id="level"
+          <FormSelect
+            handleChange={handleChange}
+            setFormData={setFormData}
             name="level"
-            onChange={(event) => handleChange(event, setFormData)}
-          >
-            {Object.values(SpellLevel).sort().map((option, i) => (
-              <option value={option} key={i}>{option.toUpperCase()}</option>
-            ))}
-          </select>
-        </div>
-        <div className="update-form-field">
-          <label className="form-label" htmlFor="spellCastingAbility">Spellcasting Ability</label>
-          <select
-            className="form-input"
-            id="spellCastingAbility"
-            name="spellCastingAbility"
-            onChange={(event) => handleChange(event, setFormData)}
-          >
-            {Object.values(Ability).sort().map((option, i) => (
-              <option value={option} key={i}>{option}</option>
-            ))}
-          </select>
-        </div>
-        <div className="update-form-field">
-          <label className="form-label" htmlFor="damage">Damage</label>
-          <input
-            className="form-input"
-            type="text"
-            id="damage"
-            name="damage"
-            placeholder="1d6"
-            onChange={(event) => {handleChange(event, setFormData)}}
-            value={formData.damage}
+            options={
+              Object.values(SpellLevel).sort().map((option) => ({
+                text: option.toUpperCase(),
+                value: option
+              }))
+            }
             required
           />
         </div>
         <div className="update-form-field">
-          <label className="form-label" htmlFor="damageType">Damage Type</label>
-          <select
-            className="form-input"
-            id="damageType"
-            name="damageType"
-            onChange={(event) => handleChange(event, setFormData)}
-          >
-            {Object.values(DamageType).sort().map((option, i) => (
-              <option value={option} key={i}>{option.toUpperCase()}</option>
-            ))}
-          </select>
-        </div>    
+          <label className="form-label" htmlFor="spellCastingAbility">Spellcasting Ability</label>
+          <FormSelect
+            handleChange={handleChange}
+            setFormData={setFormData}
+            name="spellCastingAbility"
+            options={
+              Object.values(Ability).sort().map((option) => ({
+                text: option.toUpperCase(),
+                value: option
+              }))
+            }
+            required
+          />
+        </div>
+
+        <div>
+          <p>Does this spell deal damage?</p>
+          <label htmlFor="damageCheckBox">Yes</label>
+          <input
+            id="damageCheckbox"
+            type="checkbox"
+            checked={showDamageFields}
+            onChange={handleDamageCheckboxChange}
+          />
+
+          { showDamageFields &&
+          <>
+            <div className="update-form-field">
+            <label className="form-label" htmlFor="damage">Damage</label>
+            <input
+              className="form-input"
+              type="text"
+              id="damage"
+              name="damage"
+              placeholder="1d6"
+              onChange={(event) => {handleChange(event, setFormData)}}
+              value={formData.damage}
+              required
+            />
+            </div>
+            <div className="update-form-field">
+              <label className="form-label" htmlFor="damageType">Damage Type</label>
+              <FormSelect
+                handleChange={handleChange}
+                setFormData={setFormData}
+                name="damageType"
+                options={
+                  Object.values(DamageType).sort().map((option) => ({
+                    text: option.toUpperCase(),
+                    value: option
+                  }))
+                }
+                required
+              />
+            </div> 
+          </>
+          }
+        </div>
+           
         <button type="submit">Add</button>
       </form>
     }
