@@ -11,6 +11,7 @@ import Card from '@components/cards/Card';
 import Login from '@pages/Login';
 import SignUp from '@pages/SignUp';
 import useFirebaseAuthentication from '@services/firebaseAuth/utils';
+import Update from '@pages/Update';
 
 const queryClient = new QueryClient();
 
@@ -77,7 +78,8 @@ function MainApp() {
                 <Route path="/home" element={<Home pcData={data}/>}/>
                 <Route path="/stats" element={<Stats pcData={data}/>}/>
                 <Route path="/tracker" element={<Tracker pcData={data} queryClient={queryClient}/>}/>
-                <Route path="/details" element={<Details pcData={data}/>}/>  
+                <Route path="/details" element={<Details pcData={data}/>}/>
+                <Route path="/update" element={<Update pcData={data} queryClient={queryClient}/>}/>
             </Routes>
         </BrowserRouter>
     )

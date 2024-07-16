@@ -38,7 +38,7 @@ export interface BaseDetails {
         avatar: string;
         other?: string;
     };
-    extras?: string[];
+    notes?: string[];
     languages: string[];
     proficiencies: string[];
 }

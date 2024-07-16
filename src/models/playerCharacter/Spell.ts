@@ -1,5 +1,4 @@
 import { DamageType } from "@models/enum/DamageType";
-import { RestType } from "@models/enum/RestType";
 import { Ability } from "@models/enum/Ability";
 
 export interface Spell {
@@ -9,7 +8,6 @@ export interface Spell {
     spellCastingAbility: Ability;
     damageType?: DamageType;
     damage?: string;
-    refresh?: RestType;
     saveDC?: number;
     attackBonus?: number;
 }

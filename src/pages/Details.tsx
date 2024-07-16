@@ -1,8 +1,7 @@
 import Navbar from "@components/Navbar";
 import Footer from "@components/Footer";
 import Card from "@components/cards/Card";
-import Refresh from "@components/Refresh";
-import { formatDataAsTable, orderWeaponElements, removeWhiteSpaceAndConvertToLowerCase } from "@components/utils";
+import { formatDataAsTable, orderAndFormatWeaponElements, removeWhiteSpaceAndConvertToLowerCase } from "@components/utils";
 import { Spell } from "@models/playerCharacter/Spell";
 import { PlayerCharacter } from "@models/playerCharacter/PlayerCharacter";
 import PageHeaderBar from "@components/PageHeaderBar";
@@ -36,10 +35,6 @@ const mapSpells = (spells: Spell[]) => {
 
                 {spell.spellCastingAbility &&
                     <p><b>Spellcasting ability: </b>{spell.spellCastingAbility}</p>
-                }
-
-                {spell.refresh &&
-                    <Refresh refreshRestType={spell.refresh}/>
                 }
             </Card>
         ))
@@ -81,7 +76,7 @@ function Details({pcData}: Props) {
                         <Card key={i}>
                             <a id={removeWhiteSpaceAndConvertToLowerCase(weapon.name)}></a>
                             <h3>{weapon.name}</h3>
-                            {formatDataAsTable(orderWeaponElements(weapon))}
+                            {formatDataAsTable(orderAndFormatWeaponElements(weapon, pcData))}
                         </Card>
                     ))
                 }
@@ -118,11 +113,11 @@ function Details({pcData}: Props) {
             </Card>
 
             <Card>
-                <h3>Other Notes</h3>
-                {pcData.baseDetails.extras &&
-                    pcData.baseDetails.extras.map((extra, i) => (
+                <h3>Notes</h3>
+                {pcData.baseDetails.notes &&
+                    pcData.baseDetails.notes.map((note, i) => (
                         <Card key={i}>
-                            <p>{extra}</p>
+                            <p>{note}</p>
                         </Card>
                     ))
                 }
