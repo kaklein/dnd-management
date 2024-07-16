@@ -57,7 +57,13 @@ function Update ({pcData, queryClient}: Props) {
     clearedFormData: any
   ) => {
     event.preventDefault();
-    await transformAndUpdate(pcData.baseDetails.pcId, data);
+    try{
+      await transformAndUpdate(pcData.baseDetails.pcId, data);
+    } catch (e) {
+      console.error(e);
+      alert (`Update failed. Please refresh the page and try again.`);
+      return;
+    }
     clearForm(clearedFormData);
     queryClient.invalidateQueries();
     triggerSuccessAlert();
@@ -75,7 +81,7 @@ function Update ({pcData, queryClient}: Props) {
       <hr/>
 
       <h3>Add Items</h3>
-      {showSuccessAlert && <Alert alertText="Save successful." className="successful-alert" iconFile="/images/icons/success-icon.png"/>}
+      {showSuccessAlert && <Alert alertText="Changes saved." className="successful-alert" iconFile="/images/icons/success-icon.png"/>}
 
       <Card>
         <AddWeapon
