@@ -36,7 +36,7 @@ function Tracker({pcData, queryClient}: Props) {
         setTimeout(() => {
             setShowSuccessAlert(false);
         }, 2000);
-    }
+    };
     
     const limitedUseFeatures = pcData.features.filter(feature => feature.data.maxUses);
 

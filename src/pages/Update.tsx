@@ -3,58 +3,53 @@ import Footer from "@components/Footer";
 import Navbar from "@components/Navbar";
 import PageHeaderBar from "@components/PageHeaderBar";
 import { PlayerCharacter } from "@models/playerCharacter/PlayerCharacter";
-import { SpellLevel } from "@models/playerCharacter/Spell";
 import { useState } from "react";
-import { DamageType } from "@models/enum/DamageType";
-import { WeaponModifierProperty } from "@models/enum/WeaponModifierProperty";
-import { Link } from "react-router-dom";
 import AddWeapon from "@components/updateForms/AddWeapon";
 import AddSpell from "@components/updateForms/AddSpell";
 import AddSpellSlot from "@components/updateForms/AddSpellSlot";
 import AddFeature from "@components/updateForms/AddFeature";
 import AddItemToArrayField from "@components/updateForms/AddItemToArrayField";
+import UpdatePC from "@components/updateForms/UpdatePC";
+import AddEquipment from "@components/updateForms/AddEquipment";
+import { defaultEquipmentFormData, defaultFeatureFormData, defaultSpellFormData, defaultSpellSlotFormData, defaultWeaponFormData } from "@data/emptyFormData";
+import { UpdateType } from "@models/enum/service/UpdateType";
+import { transformAndUpdate } from "@services/firestore/updateData";
+import { QueryClient } from "@tanstack/react-query";
+import Alert from "@components/Alert";
 
 interface Props {
   pcData: PlayerCharacter;
+  queryClient: QueryClient;
 }
 
-function Update ({pcData}: Props) {
-  const [weaponFormData, setWeaponFormData] = useState({
-    weaponName: '',
-    weaponType: '',
-    weaponDamage: '',
-    weaponDamageType: '',
-    weaponModifierProperty: '',
-    weaponMagic: "false",
-    weaponDescription: ''
+function Update ({pcData, queryClient}: Props) {
+  const [showSuccessAlert, setShowSuccessAlert] = useState(false);
+  const triggerSuccessAlert = () => {
+      setShowSuccessAlert(true);
+      setTimeout(() => {
+          setShowSuccessAlert(false);
+      }, 2000);
+  };
+
+  // Form Data
+  const [weaponFormData, setWeaponFormData] = useState(defaultWeaponFormData);
+  const [spellFormData, setSpellFormData] = useState(defaultSpellFormData);
+  const [spellSlotFormData, setSpellSlotFormData] = useState(defaultSpellSlotFormData);
+  const [featureFormData, setFeatureFormData] = useState(defaultFeatureFormData);
+  const [equipmentFormData, setEquipmentFormData] = useState(defaultEquipmentFormData);
+  const [proficiencyFormData, setProficiencyFormData] = useState({ 
+    updateType: UpdateType.PROFICIENCIES, proficiency: ''
   });
-  const [spellFormData, setSpellFormData] = useState({
-    spellName: '',
-    spellDescription: '',
-    spellLevel: '',
-    spellSpellCastingAbility: '',
-    spellDamageType: '',
-    spellDamage: ''
+  const [languageFormData, setLanguageFormData] = useState({ 
+    updateType: UpdateType.LANGUAGES, language: ''
   });
-  const [spellSlotFormData, setSpellSlotFormData] = useState({
-    spellSlotLevel: '',
-    spellSlotMax: '',
-  });
-  const [featureFormData, setFeatureFormData] = useState({
-    featureName: '',
-    featureDescription: '',
-    featureSource: '',
-    featureMaxUses: '',
-    featureRefresh: '',
-    featureDamage: '',
-    featureDamageType: '',
-    featureSaveDC: ''
-  });
-  const [proficiencyFormData, setProficiencyFormData] = useState({
-    proficiency: ''
-  });
-  const [languageFormData, setLanguageFormData] = useState({
-    language: ''
+  const [pcFormData, setPcFormData] = useState({
+    updateType: UpdateType.BASE_DETAILS,
+    level: pcData.baseDetails.level,
+    armorClass: pcData.baseDetails.armorClass,
+    hitPointMaximum: pcData.baseDetails.usableResources.hitPoints.max,
+    hitDice: pcData.baseDetails.usableResources.hitDice.max,
+    proficiencyBonus: pcData.baseDetails.proficiencyBonus
   });
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>, setFunction: (prevFormData: any) => void) => {
@@ -65,6 +60,9 @@ function Update ({pcData}: Props) {
   const handleSubmit = async (event: React.ChangeEvent<HTMLInputElement>, data: any) => {
     event.preventDefault();
     console.log('Submitting data: ' + JSON.stringify(data));
+    await transformAndUpdate(pcData.baseDetails.pcId, data);
+    queryClient.invalidateQueries();
+    triggerSuccessAlert();
   }
 
   return (
@@ -73,19 +71,20 @@ function Update ({pcData}: Props) {
             
       <PageHeaderBar 
           pcName={`${pcData.baseDetails.name.firstName} ${pcData.baseDetails.name.lastName}`}
-          pageName="Update"
+          pageName="Add Items and Make Updates"
       />
 
       <hr/>
 
       <h3>Add Items</h3>
-      
+      {showSuccessAlert && <Alert alertText="Save successful." className="successful-alert" iconFile="/images/icons/success-icon.png"/>}
+
       <Card>
         <AddWeapon
           handleChange={handleChange}
           handleSubmit={handleSubmit}
-          weaponFormData={weaponFormData}
-          setWeaponFormData={setWeaponFormData}
+          formData={weaponFormData}
+          setFormData={setWeaponFormData}
         />
       </Card>
 
@@ -93,8 +92,8 @@ function Update ({pcData}: Props) {
         <AddSpell
           handleChange={handleChange}
           handleSubmit={handleSubmit}
-          spellFormData={spellFormData}
-          setSpellFormData={setSpellFormData}
+          formData={spellFormData}
+          setFormData={setSpellFormData}
         />
       </Card>
 
@@ -102,8 +101,8 @@ function Update ({pcData}: Props) {
       <AddSpellSlot
           handleChange={handleChange}
           handleSubmit={handleSubmit}
-          spellSlotFormData={spellSlotFormData}
-          setSpellSlotFormData={setSpellSlotFormData}
+          formData={spellSlotFormData}
+          setFormData={setSpellSlotFormData}
         />
       </Card>
 
@@ -111,8 +110,8 @@ function Update ({pcData}: Props) {
         <AddFeature
             handleChange={handleChange}
             handleSubmit={handleSubmit}
-            featureFormData={featureFormData}
-            setFeatureFormData={setFeatureFormData}
+            formData={featureFormData}
+            setFormData={setFeatureFormData}
         />
       </Card>
 
@@ -136,19 +135,29 @@ function Update ({pcData}: Props) {
         />
       </Card>
 
+      <Card>
+        <AddEquipment
+            handleChange={handleChange}
+            handleSubmit={handleSubmit}
+            formData={equipmentFormData}
+            setFormData={setEquipmentFormData}
+        />
+      </Card>
+
       <hr/>
 
-      <h3>Update PC</h3>
+      <h3>Update Character</h3>
 
       <Card>
-          <ul>
-            <li>Level</li>
-            <li>AC</li>
-            <li>Hit Point Maximum</li>
-            <li>Hit Dice</li>
-            <li>Proficiency Bonus</li>
-          </ul>
+        <UpdatePC
+          pcData={pcData}
+          handleChange={handleChange}
+          handleSubmit={handleSubmit}
+          formData={pcFormData}
+          setFormData={setPcFormData}
+        />
       </Card>
+      
 
       <Footer/>
     </>

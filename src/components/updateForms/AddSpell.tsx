@@ -6,11 +6,11 @@ import { useState } from "react";
 interface Props {
   handleChange: (event: any, setFunction: (prevFormData: any) => void) => void;
   handleSubmit: (event: any, data: any) => void;
-  spellFormData: any;
-  setSpellFormData: (data: any) => void;
+  formData: any;
+  setFormData: (data: any) => void;
 }
 
-function AddSpell ({handleChange, handleSubmit, spellFormData, setSpellFormData}: Props) {
+function AddSpell ({handleChange, handleSubmit, formData, setFormData}: Props) {
   const [showForm, setShowForm] = useState(false);
   
   return (
@@ -24,21 +24,21 @@ function AddSpell ({handleChange, handleSubmit, spellFormData, setSpellFormData}
     </button>
     {
       showForm &&
-      <form onSubmit={(event) => {handleSubmit(event, spellFormData)}}>
+      <form onSubmit={(event) => {handleSubmit(event, formData)}}>
         <div className="update-form-field">
-          <label className="form-label" htmlFor="spellName">Name</label>
+          <label className="form-label" htmlFor="name">Name</label>
           <input
             className="form-input"
             type="text"
-            id="spellName"
-            name="spellName"
-            onChange={(event) => {handleChange(event, setSpellFormData)}}
-            value={spellFormData.spellName}
+            id="name"
+            name="name"
+            onChange={(event) => {handleChange(event, setFormData)}}
+            value={formData.name}
             required
           />
         </div>
         <div className="update-form-field">
-          <label className="form-label" htmlFor="spellDescription">Description</label>
+          <label className="form-label" htmlFor="description">Description</label>
           <p>
             Copy/paste the full spell description from your source, including Casting Time, 
             Range, Target, Components, Duration, Classes, and Description.
@@ -46,20 +46,20 @@ function AddSpell ({handleChange, handleSubmit, spellFormData, setSpellFormData}
           <input
             className="form-input"
             type="text"
-            id="spellDescription"
-            name="spellDescription"
-            onChange={(event) => {handleChange(event, setSpellFormData)}}
-            value={spellFormData.spellDescription}
+            id="description"
+            name="description"
+            onChange={(event) => {handleChange(event, setFormData)}}
+            value={formData.description}
             required
           />
         </div>
         <div className="update-form-field">
-          <label className="form-label" htmlFor="spellLevel">Spell Level</label>
+          <label className="form-label" htmlFor="level">Spell Level</label>
           <select
             className="form-input"
-            id="spellLevel"
-            name="spellLevel"
-            onChange={(event) => handleChange(event, setSpellFormData)}
+            id="level"
+            name="level"
+            onChange={(event) => handleChange(event, setFormData)}
           >
             {Object.values(SpellLevel).sort().map((option, i) => (
               <option value={option} key={i}>{option.toUpperCase()}</option>
@@ -67,12 +67,12 @@ function AddSpell ({handleChange, handleSubmit, spellFormData, setSpellFormData}
           </select>
         </div>
         <div className="update-form-field">
-          <label className="form-label" htmlFor="spellSpellCastingAbility">Spellcasting Ability</label>
+          <label className="form-label" htmlFor="spellCastingAbility">Spellcasting Ability</label>
           <select
             className="form-input"
-            id="spellSpellCastingAbility"
-            name="spellSpellCastingAbility"
-            onChange={(event) => handleChange(event, setSpellFormData)}
+            id="spellCastingAbility"
+            name="spellCastingAbility"
+            onChange={(event) => handleChange(event, setFormData)}
           >
             {Object.values(Ability).sort().map((option, i) => (
               <option value={option} key={i}>{option}</option>
@@ -80,25 +80,25 @@ function AddSpell ({handleChange, handleSubmit, spellFormData, setSpellFormData}
           </select>
         </div>
         <div className="update-form-field">
-          <label className="form-label" htmlFor="spellDamage">Damage</label>
+          <label className="form-label" htmlFor="damage">Damage</label>
           <input
             className="form-input"
             type="text"
-            id="spellDamage"
-            name="spellDamage"
+            id="damage"
+            name="damage"
             placeholder="1d6"
-            onChange={(event) => {handleChange(event, setSpellFormData)}}
-            value={spellFormData.spellDamage}
+            onChange={(event) => {handleChange(event, setFormData)}}
+            value={formData.damage}
             required
           />
         </div>
         <div className="update-form-field">
-          <label className="form-label" htmlFor="spellDamageType">Damage Type</label>
+          <label className="form-label" htmlFor="damageType">Damage Type</label>
           <select
             className="form-input"
-            id="spellDamageType"
-            name="spellDamageType"
-            onChange={(event) => handleChange(event, setSpellFormData)}
+            id="damageType"
+            name="damageType"
+            onChange={(event) => handleChange(event, setFormData)}
           >
             {Object.values(DamageType).sort().map((option, i) => (
               <option value={option} key={i}>{option.toUpperCase()}</option>

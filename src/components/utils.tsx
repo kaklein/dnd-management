@@ -112,7 +112,7 @@ export const orderAndFormatWeaponElements = (weapon: Weapon, pcData: PlayerChara
         ['damage type']: weapon.damageType,
         ['modifier property']: weapon.modifierProperty.toLowerCase(),
         magic: weapon.magic,
-        description: weapon.description
+        ...(weapon.description  && {description: weapon.description})
     }
 }
 

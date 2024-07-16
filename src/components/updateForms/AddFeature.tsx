@@ -5,11 +5,11 @@ import { useState } from "react";
 interface Props {
   handleChange: (event: any, setFunction: (prevFormData: any) => void) => void;
   handleSubmit: (event: any, data: any) => void;
-  featureFormData: any;
-  setFeatureFormData: (data: any) => void;
+  formData: any;
+  setFormData: (data: any) => void;
 }
 
-function AddFeature ({handleChange, handleSubmit, featureFormData, setFeatureFormData}: Props) {
+function AddFeature ({handleChange, handleSubmit, formData, setFormData}: Props) {
   const [showForm, setShowForm] = useState(false);
   
   const [showLimitedUseFields, setShowLimitedUseFields] = useState(false);
@@ -38,43 +38,43 @@ function AddFeature ({handleChange, handleSubmit, featureFormData, setFeatureFor
     </button>
     {
       showForm &&
-      <form onSubmit={(event) => {handleSubmit(event, featureFormData)}}>
+      <form onSubmit={(event) => {handleSubmit(event, formData)}}>
         <div className="update-form-field">
-          <label className="form-label" htmlFor="featureName">Name</label>
+          <label className="form-label" htmlFor="name">Name</label>
           <input
             className="form-input"
             type="text"
-            id="featureName"
-            name="featureName"
-            onChange={(event) => {handleChange(event, setFeatureFormData)}}
-            value={featureFormData.featureName}
+            id="name"
+            name="name"
+            onChange={(event) => {handleChange(event, setFormData)}}
+            value={formData.name}
             required
           />
         </div>
         <div className="update-form-field">
-          <label className="form-label" htmlFor="featureDescription">Description</label>
+          <label className="form-label" htmlFor="description">Description</label>
           <input
             className="form-input"
             type="text"
-            id="featureDescription"
-            name="featureDescription"
-            onChange={(event) => {handleChange(event, setFeatureFormData)}}
-            value={featureFormData.featureDescription}
+            id="description"
+            name="description"
+            onChange={(event) => {handleChange(event, setFormData)}}
+            value={formData.description}
             required
           />
         </div>
         <div className="update-form-field">
-          <label className="form-label" htmlFor="featureSource">Source</label>
+          <label className="form-label" htmlFor="source">Source</label>
           <p>
             The reason you have this feature, e.g. 'Fighter' or 'Elf'
           </p>
           <input
             className="form-input"
             type="text"
-            id="featureSource"
-            name="featureSource"
-            onChange={(event) => {handleChange(event, setFeatureFormData)}}
-            value={featureFormData.featureSource}
+            id="source"
+            name="source"
+            onChange={(event) => {handleChange(event, setFormData)}}
+            value={formData.source}
             required
           />
         </div>
@@ -92,26 +92,26 @@ function AddFeature ({handleChange, handleSubmit, featureFormData, setFeatureFor
           { showLimitedUseFields &&
           <>
             <div className="update-form-field">
-              <label className="form-label" htmlFor="featureMaxUses">Number of uses</label>
+              <label className="form-label" htmlFor="maxUses">Number of uses</label>
               <input
                 className="form-input"
                 type="number"
                 min="1"
                 max="99"
-                id="featureMaxUses"
-                name="featureMaxUses"
-                onChange={(event) => {handleChange(event, setFeatureFormData)}}
-                value={featureFormData.featureMaxUses}
+                id="maxUses"
+                name="maxUses"
+                onChange={(event) => {handleChange(event, setFormData)}}
+                value={formData.maxUses}
                 required
               />
             </div>
             <div className="update-form-field">
-              <label className="form-label" htmlFor="featureRefresh">Refresh after</label>
+              <label className="form-label" htmlFor="refresh">Refresh after</label>
               <select
                 className="form-input"
-                id="featureRefresh"
-                name="featureRefresh"
-                onChange={(event) => handleChange(event, setFeatureFormData)}
+                id="refresh"
+                name="refresh"
+                onChange={(event) => handleChange(event, setFormData)}
               >
                 {Object.values(RestType).sort().map((option, i) => (
                   <option value={option} key={i}>{option.toUpperCase()} REST</option>
@@ -135,25 +135,25 @@ function AddFeature ({handleChange, handleSubmit, featureFormData, setFeatureFor
           { showDamageFields &&
           <>
             <div className="update-form-field">
-              <label className="form-label" htmlFor="featureDamage">Damage</label>
+              <label className="form-label" htmlFor="damage">Damage</label>
               <input
                 className="form-input"
                 type="text"
-                id="featureDamage"
-                name="featureDamage"
+                id="damage"
+                name="damage"
                 placeholder="1d6"
-                onChange={(event) => {handleChange(event, setFeatureFormData)}}
-                value={featureFormData.featureDamage}
+                onChange={(event) => {handleChange(event, setFormData)}}
+                value={formData.damage}
                 required
               />
             </div>
             <div className="update-form-field">
-              <label className="form-label" htmlFor="featureDamageType">Damage Type</label>
+              <label className="form-label" htmlFor="damageType">Damage Type</label>
               <select
                 className="form-input"
-                id="featureDamageType"
-                name="featureDamageType"
-                onChange={(event) => handleChange(event, setFeatureFormData)}
+                id="damageType"
+                name="damageType"
+                onChange={(event) => handleChange(event, setFormData)}
               >
                 {Object.values(DamageType).sort().map((option, i) => (
                   <option value={option} key={i}>{option.toUpperCase()}</option>
@@ -177,16 +177,16 @@ function AddFeature ({handleChange, handleSubmit, featureFormData, setFeatureFor
           { showSaveDCField &&
           <>
             <div className="update-form-field">
-              <label className="form-label" htmlFor="featureSaveDC">Save DC</label>
+              <label className="form-label" htmlFor="saveDC">Save DC</label>
               <input
                 className="form-input"
                 type="number"
                 min="1"
                 max="99"
-                id="featureSaveDC"
-                name="featureSaveDC"
-                onChange={(event) => {handleChange(event, setFeatureFormData)}}
-                value={featureFormData.featureSaveDC}
+                id="saveDC"
+                name="saveDC"
+                onChange={(event) => {handleChange(event, setFormData)}}
+                value={formData.saveDC}
               />
             </div>
           </>
