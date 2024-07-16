@@ -1,4 +1,5 @@
 import FormSelect from "@components/FormSelect";
+import { defaultWeaponFormData } from "@data/emptyFormData";
 import { DamageType } from "@models/enum/DamageType"
 import { WeaponModifierProperty } from "@models/enum/WeaponModifierProperty"
 import { useState } from "react";
@@ -6,7 +7,12 @@ import { Link } from "react-router-dom"
 
 interface Props {
   handleChange: (event: any, setFunction: (prevFormData: any) => void) => void;
-  handleSubmit: (event: any, data: any) => void;
+  handleSubmit: (
+    event: any, 
+    data: any, 
+    clearForm: (data: any) => void,
+    clearedFormData: any
+  ) => void;
   formData: any;
   setFormData: (data: any) => void;
 }
@@ -25,7 +31,7 @@ function AddWeapon ({handleChange, handleSubmit, formData, setFormData}: Props) 
     </button>
     {
       showForm &&
-      <form onSubmit={(event) => {handleSubmit(event, formData)}}>
+      <form onSubmit={(event) => {handleSubmit(event, formData, setFormData, defaultWeaponFormData)}}>
       <div className="update-form-field">
         <label className="form-label" htmlFor="name">Weapon Name</label>
         <input
@@ -67,6 +73,7 @@ function AddWeapon ({handleChange, handleSubmit, formData, setFormData}: Props) 
       <div className="update-form-field">
         <label className="form-label" htmlFor="damageType">Damage Type</label>
         <FormSelect
+          value={formData.damageType}
           handleChange={handleChange}
           setFormData={setFormData}
           name="damageType"
@@ -87,6 +94,7 @@ function AddWeapon ({handleChange, handleSubmit, formData, setFormData}: Props) 
           Otherwise, select <b>Melee</b> or <b>Ranged</b> as applies to the weapon.
         </p>
         <FormSelect
+          value={formData.modifierProperty}
           handleChange={handleChange}
           setFormData={setFormData}
           name="modifierProperty"

@@ -1,4 +1,5 @@
 import FormSelect from "@components/FormSelect";
+import { defaultSpellFormData } from "@data/emptyFormData";
 import { Ability } from "@models/enum/Ability";
 import { DamageType } from "@models/enum/DamageType";
 import { SpellLevel } from "@models/playerCharacter/Spell";
@@ -6,8 +7,12 @@ import { useState } from "react";
 
 interface Props {
   handleChange: (event: any, setFunction: (prevFormData: any) => void) => void;
-  handleSubmit: (event: any, data: any) => void;
-  formData: any;
+  handleSubmit: (
+    event: any, 
+    data: any, 
+    clearForm: (data: any) => void,
+    clearedFormData: any
+  ) => void;  formData: any;
   setFormData: (data: any) => void;
 }
 
@@ -35,7 +40,7 @@ function AddSpell ({handleChange, handleSubmit, formData, setFormData}: Props) {
     </button>
     {
       showForm &&
-      <form onSubmit={(event) => {handleSubmit(event, formData)}}>
+      <form onSubmit={(event) => {handleSubmit(event, formData, setFormData, defaultSpellFormData)}}>
         <div className="update-form-field">
           <label className="form-label" htmlFor="name">Name</label>
           <input
@@ -67,6 +72,7 @@ function AddSpell ({handleChange, handleSubmit, formData, setFormData}: Props) {
         <div className="update-form-field">
           <label className="form-label" htmlFor="level">Spell Level</label>
           <FormSelect
+            value={formData.level}
             handleChange={handleChange}
             setFormData={setFormData}
             name="level"
@@ -82,6 +88,7 @@ function AddSpell ({handleChange, handleSubmit, formData, setFormData}: Props) {
         <div className="update-form-field">
           <label className="form-label" htmlFor="spellCastingAbility">Spellcasting Ability</label>
           <FormSelect
+            value={formData.spellCastingAbility}
             handleChange={handleChange}
             setFormData={setFormData}
             name="spellCastingAbility"
@@ -123,6 +130,7 @@ function AddSpell ({handleChange, handleSubmit, formData, setFormData}: Props) {
             <div className="update-form-field">
               <label className="form-label" htmlFor="damageType">Damage Type</label>
               <FormSelect
+                value={formData.damageType}
                 handleChange={handleChange}
                 setFormData={setFormData}
                 name="damageType"

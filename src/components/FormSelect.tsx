@@ -1,4 +1,5 @@
 interface Props {
+  value: any;
   handleChange: (event: any, setFunction: (prevFormData: any) => void) => void;
   setFormData: (data: any) => void;
   name: string;
@@ -6,14 +7,16 @@ interface Props {
   required?: boolean;
 }
 
-function FormSelect ({handleChange, setFormData, name, options, required=false}: Props) {
+function FormSelect ({value, handleChange, setFormData, name, options, required=false}: Props) {
+ 
   return (
     <select
       className="form-input"
       id={name}
       name={name}
-      onChange={(event) => handleChange(event, setFormData)}
+      onChange={(event) => {handleChange(event, setFormData)}}
       required={required}
+      value={value}
     >
       <option value="" key="blank-option">-- Select --</option>
       {options.map((option, i) => (

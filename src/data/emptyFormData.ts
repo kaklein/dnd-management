@@ -1,4 +1,5 @@
 import { UpdateType } from "@models/enum/service/UpdateType";
+import { PlayerCharacter } from "@models/playerCharacter/PlayerCharacter";
 
 export const defaultWeaponFormData = {
   updateType: UpdateType.WEAPONS,
@@ -44,3 +45,24 @@ export const defaultEquipmentFormData = {
   type: '',
   description: ''
 };
+
+export const defaultProficiencyFormData = {
+  updateType: UpdateType.PROFICIENCIES,
+  proficiency: ''
+}
+
+export const defaultLanguageFormData = { 
+  updateType: UpdateType.LANGUAGES,
+  language: ''
+}
+
+export const buildDefaultPCFormData = (pcData: PlayerCharacter) => {
+  return {
+    updateType: UpdateType.BASE_DETAILS,
+    level: pcData.baseDetails.level,
+    armorClass: pcData.baseDetails.armorClass,
+    hitPointMaximum: pcData.baseDetails.usableResources.hitPoints.max,
+    hitDice: pcData.baseDetails.usableResources.hitDice.max,
+    proficiencyBonus: pcData.baseDetails.proficiencyBonus
+  }
+}

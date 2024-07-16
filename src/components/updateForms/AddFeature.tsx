@@ -1,12 +1,17 @@
 import FormSelect from "@components/FormSelect";
+import { defaultFeatureFormData } from "@data/emptyFormData";
 import { DamageType } from "@models/enum/DamageType";
 import { RestType } from "@models/enum/RestType";
 import { useState } from "react";
 
 interface Props {
   handleChange: (event: any, setFunction: (prevFormData: any) => void) => void;
-  handleSubmit: (event: any, data: any) => void;
-  formData: any;
+  handleSubmit: (
+    event: any, 
+    data: any, 
+    clearForm: (data: any) => void,
+    clearedFormData: any
+  ) => void;  formData: any;
   setFormData: (data: any) => void;
 }
 
@@ -53,7 +58,7 @@ function AddFeature ({handleChange, handleSubmit, formData, setFormData}: Props)
     </button>
     {
       showForm &&
-      <form onSubmit={(event) => {handleSubmit(event, formData)}}>
+      <form onSubmit={(event) => {handleSubmit(event, formData, setFormData, defaultFeatureFormData)}}>
         <div className="update-form-field">
           <label className="form-label" htmlFor="name">Name</label>
           <input
@@ -123,6 +128,7 @@ function AddFeature ({handleChange, handleSubmit, formData, setFormData}: Props)
             <div className="update-form-field">
               <label className="form-label" htmlFor="refresh">Refresh after</label>
               <FormSelect
+                value={formData.refresh}
                 handleChange={handleChange}
                 setFormData={setFormData}
                 name="refresh"
@@ -167,6 +173,7 @@ function AddFeature ({handleChange, handleSubmit, formData, setFormData}: Props)
             <div className="update-form-field">
               <label className="form-label" htmlFor="damageType">Damage Type</label>
               <FormSelect
+                value={formData.damageType}
                 handleChange={handleChange}
                 setFormData={setFormData}
                 name="damageType"

@@ -4,8 +4,12 @@ import { useState } from "react";
 interface Props {
   pcData: PlayerCharacter;
   handleChange: (event: any, setFunction: (prevFormData: any) => void) => void;
-  handleSubmit: (event: any, data: any) => void;
-  formData: any;
+  handleSubmit: (
+    event: any, 
+    data: any, 
+    clearForm: (data: any) => void,
+    clearedFormData: any
+  ) => void;  formData: any;
   setFormData: (data: any) => void;
 }
 
@@ -21,7 +25,7 @@ function UpdatePC ({pcData, handleChange, handleSubmit, formData, setFormData}: 
         {locked ? 'Unlock' : 'Lock'}
       </button>
       <form onSubmit={(event) => {
-        handleSubmit(event, formData)
+        handleSubmit(event, formData, setFormData, formData);
         setLocked(true);
       }}>
         <div className="update-form-field">

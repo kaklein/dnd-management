@@ -1,9 +1,14 @@
+import { defaultEquipmentFormData } from "@data/emptyFormData";
 import { useState } from "react";
 
 interface Props {
   handleChange: (event: any, setFunction: (prevFormData: any) => void) => void;
-  handleSubmit: (event: any, data: any) => void;
-  formData: any;
+  handleSubmit: (
+    event: any, 
+    data: any, 
+    clearForm: (data: any) => void,
+    clearedFormData: any
+  ) => void;  formData: any;
   setFormData: (data: any) => void;
 }
 
@@ -21,7 +26,7 @@ function AddEquipment ({handleChange, handleSubmit, formData, setFormData}: Prop
     </button>
     {
       showForm &&
-      <form onSubmit={(event) => {handleSubmit(event, formData)}}>
+      <form onSubmit={(event) => {handleSubmit(event, formData, setFormData, defaultEquipmentFormData)}}>
         <div className="update-form-field">
           <label className="form-label" htmlFor="type">Type</label>
           <input

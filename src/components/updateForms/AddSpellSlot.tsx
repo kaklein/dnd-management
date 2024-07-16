@@ -1,11 +1,16 @@
 import FormSelect from "@components/FormSelect";
+import { defaultSpellSlotFormData } from "@data/emptyFormData";
 import { SpellLevel } from "@models/playerCharacter/Spell";
 import { useState } from "react";
 
 interface Props {
   handleChange: (event: any, setFunction: (prevFormData: any) => void) => void;
-  handleSubmit: (event: any, data: any) => void;
-  formData: any;
+  handleSubmit: (
+    event: any, 
+    data: any, 
+    clearForm: (data: any) => void,
+    clearedFormData: any
+  ) => void;  formData: any;
   setFormData: (data: any) => void;
 }
 
@@ -23,10 +28,11 @@ function AddSpellSlot ({handleChange, handleSubmit, formData, setFormData}: Prop
     </button>
     {
       showForm &&
-      <form onSubmit={(event) => {handleSubmit(event, formData)}}>
+      <form onSubmit={(event) => {handleSubmit(event, formData, setFormData, defaultSpellSlotFormData)}}>
         <div className="update-form-field">
           <label className="form-label" htmlFor="level">Spell Level</label>
           <FormSelect
+            value={formData.level}
             handleChange={handleChange}
             setFormData={setFormData}
             name="level"

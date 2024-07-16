@@ -11,7 +11,7 @@ import AddFeature from "@components/updateForms/AddFeature";
 import AddItemToArrayField from "@components/updateForms/AddItemToArrayField";
 import UpdatePC from "@components/updateForms/UpdatePC";
 import AddEquipment from "@components/updateForms/AddEquipment";
-import { defaultEquipmentFormData, defaultFeatureFormData, defaultSpellFormData, defaultSpellSlotFormData, defaultWeaponFormData } from "@data/emptyFormData";
+import { buildDefaultPCFormData, defaultEquipmentFormData, defaultFeatureFormData, defaultLanguageFormData, defaultProficiencyFormData, defaultSpellFormData, defaultSpellSlotFormData, defaultWeaponFormData } from "@data/emptyFormData";
 import { UpdateType } from "@models/enum/service/UpdateType";
 import { transformAndUpdate } from "@services/firestore/updateData";
 import { QueryClient } from "@tanstack/react-query";
@@ -37,30 +37,27 @@ function Update ({pcData, queryClient}: Props) {
   const [spellSlotFormData, setSpellSlotFormData] = useState(defaultSpellSlotFormData);
   const [featureFormData, setFeatureFormData] = useState(defaultFeatureFormData);
   const [equipmentFormData, setEquipmentFormData] = useState(defaultEquipmentFormData);
-  const [proficiencyFormData, setProficiencyFormData] = useState({ 
-    updateType: UpdateType.PROFICIENCIES, proficiency: ''
-  });
-  const [languageFormData, setLanguageFormData] = useState({ 
-    updateType: UpdateType.LANGUAGES, language: ''
-  });
-  const [pcFormData, setPcFormData] = useState({
-    updateType: UpdateType.BASE_DETAILS,
-    level: pcData.baseDetails.level,
-    armorClass: pcData.baseDetails.armorClass,
-    hitPointMaximum: pcData.baseDetails.usableResources.hitPoints.max,
-    hitDice: pcData.baseDetails.usableResources.hitDice.max,
-    proficiencyBonus: pcData.baseDetails.proficiencyBonus
-  });
+  const [proficiencyFormData, setProficiencyFormData] = useState(defaultProficiencyFormData);
+  const [languageFormData, setLanguageFormData] = useState(defaultLanguageFormData);
+  const [pcFormData, setPcFormData] = useState(buildDefaultPCFormData(pcData));
 
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>, setFunction: (prevFormData: any) => void) => {
+  const handleChange = (
+    event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>, 
+    setFunction: (prevFormData: any) => void
+  ) => {
     const { name, value } = event.target;
     setFunction((prevFormData: any) => ({...prevFormData, [name]: value}));
   };
 
-  const handleSubmit = async (event: React.ChangeEvent<HTMLInputElement>, data: any) => {
+  const handleSubmit = async (
+    event: React.ChangeEvent<HTMLInputElement>, 
+    data: {updateType: UpdateType, [key: string]: any},
+    clearForm: (data: any) => void,
+    clearedFormData: any
+  ) => {
     event.preventDefault();
-    console.log('Submitting data: ' + JSON.stringify(data));
     await transformAndUpdate(pcData.baseDetails.pcId, data);
+    clearForm(clearedFormData);
     queryClient.invalidateQueries();
     triggerSuccessAlert();
   }
@@ -122,6 +119,7 @@ function Update ({pcData, queryClient}: Props) {
             handleSubmit={handleSubmit}
             formData={proficiencyFormData}
             setFormData={setProficiencyFormData}
+            defaultFormData={defaultProficiencyFormData}
         />
       </Card>
 
@@ -132,6 +130,7 @@ function Update ({pcData, queryClient}: Props) {
             handleSubmit={handleSubmit}
             formData={languageFormData}
             setFormData={setLanguageFormData}
+            defaultFormData={defaultLanguageFormData}
         />
       </Card>
 

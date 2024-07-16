@@ -6,10 +6,8 @@ export const transformAndUpdate = async (pcId: string, data: any) => {
   const transformedUpdates = transformFormDataForUpdate(pcId, data);
   console.log(transformedUpdates);
   if (transformedUpdates.create) {
-    console.log('Going to create doc...');
     await createDoc(transformedUpdates.collectionName, transformedUpdates.create.dataObject);
   } else if (transformedUpdates.update) {
-    console.log('Going to update doc...');
     await updateDataByPcId(
       transformedUpdates.collectionName, 
       transformedUpdates.update.pcId, 
