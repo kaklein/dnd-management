@@ -3,6 +3,7 @@ import { useState } from "react";
 
 interface Props {
   fieldName: string;
+  description?: string;
   handleChange: (event: any, setFunction: (prevFormData: any) => void) => void;
   handleSubmit: (
     event: any, 
@@ -14,7 +15,7 @@ interface Props {
   defaultFormData: any;
 }
 
-function AddItemToArrayField ({fieldName, handleChange, handleSubmit, formData, setFormData, defaultFormData}: Props) {
+function AddItemToArrayField ({fieldName, handleChange, handleSubmit, formData, setFormData, defaultFormData, description=""}: Props) {
   const [showForm, setShowForm] = useState(false);
 
   return (
@@ -26,6 +27,10 @@ function AddItemToArrayField ({fieldName, handleChange, handleSubmit, formData, 
       onClick={() => setShowForm(!showForm)}>
         {showForm ? '-' : '+'}
     </button>
+    {
+      (showForm && description) &&
+      <p>{description}</p>
+    }
     {
       showForm &&
       <form onSubmit={(event) => {handleSubmit(event, formData, setFormData, defaultFormData)}}>

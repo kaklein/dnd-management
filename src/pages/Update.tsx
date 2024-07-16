@@ -11,7 +11,7 @@ import AddFeature from "@components/updateForms/AddFeature";
 import AddItemToArrayField from "@components/updateForms/AddItemToArrayField";
 import UpdatePC from "@components/updateForms/UpdatePC";
 import AddEquipment from "@components/updateForms/AddEquipment";
-import { buildDefaultPCFormData, defaultEquipmentFormData, defaultFeatureFormData, defaultLanguageFormData, defaultProficiencyFormData, defaultSpellFormData, defaultSpellSlotFormData, defaultWeaponFormData } from "@data/emptyFormData";
+import { buildDefaultPCFormData, defaultEquipmentFormData, defaultFeatureFormData, defaultLanguageFormData, defaultNoteFormData, defaultProficiencyFormData, defaultSpellFormData, defaultSpellSlotFormData, defaultWeaponFormData } from "@data/emptyFormData";
 import { UpdateType } from "@models/enum/service/UpdateType";
 import { transformAndUpdate } from "@services/firestore/updateData";
 import { QueryClient } from "@tanstack/react-query";
@@ -39,6 +39,7 @@ function Update ({pcData, queryClient}: Props) {
   const [equipmentFormData, setEquipmentFormData] = useState(defaultEquipmentFormData);
   const [proficiencyFormData, setProficiencyFormData] = useState(defaultProficiencyFormData);
   const [languageFormData, setLanguageFormData] = useState(defaultLanguageFormData);
+  const [noteFormData, setNoteFormData] = useState(defaultNoteFormData);
   const [pcFormData, setPcFormData] = useState(buildDefaultPCFormData(pcData));
 
   const handleChange = (
@@ -95,7 +96,7 @@ function Update ({pcData, queryClient}: Props) {
       </Card>
 
       <Card>
-      <AddSpellSlot
+        <AddSpellSlot
           handleChange={handleChange}
           handleSubmit={handleSubmit}
           formData={spellSlotFormData}
@@ -105,41 +106,53 @@ function Update ({pcData, queryClient}: Props) {
 
       <Card>
         <AddFeature
-            handleChange={handleChange}
-            handleSubmit={handleSubmit}
-            formData={featureFormData}
-            setFormData={setFeatureFormData}
-        />
-      </Card>
-
-      <Card>
-        <AddItemToArrayField
-            fieldName="proficiency"
-            handleChange={handleChange}
-            handleSubmit={handleSubmit}
-            formData={proficiencyFormData}
-            setFormData={setProficiencyFormData}
-            defaultFormData={defaultProficiencyFormData}
-        />
-      </Card>
-
-      <Card>
-        <AddItemToArrayField
-            fieldName="language"
-            handleChange={handleChange}
-            handleSubmit={handleSubmit}
-            formData={languageFormData}
-            setFormData={setLanguageFormData}
-            defaultFormData={defaultLanguageFormData}
+          handleChange={handleChange}
+          handleSubmit={handleSubmit}
+          formData={featureFormData}
+          setFormData={setFeatureFormData}
         />
       </Card>
 
       <Card>
         <AddEquipment
-            handleChange={handleChange}
-            handleSubmit={handleSubmit}
-            formData={equipmentFormData}
-            setFormData={setEquipmentFormData}
+          handleChange={handleChange}
+          handleSubmit={handleSubmit}
+          formData={equipmentFormData}
+          setFormData={setEquipmentFormData}
+        />
+      </Card>
+
+      <Card>
+        <AddItemToArrayField
+          fieldName="proficiency"
+          handleChange={handleChange}
+          handleSubmit={handleSubmit}
+          formData={proficiencyFormData}
+          setFormData={setProficiencyFormData}
+          defaultFormData={defaultProficiencyFormData}
+        />
+      </Card>
+
+      <Card>
+        <AddItemToArrayField
+          fieldName="language"
+          handleChange={handleChange}
+          handleSubmit={handleSubmit}
+          formData={languageFormData}
+          setFormData={setLanguageFormData}
+          defaultFormData={defaultLanguageFormData}
+        />
+      </Card>
+
+      <Card>
+        <AddItemToArrayField
+          fieldName="note"
+          description="Add a miscellaneous note or fact about your character that you want to be able to easily reference. Notes are displayed at the bottom of the Details page."
+          handleChange={handleChange}
+          handleSubmit={handleSubmit}
+          formData={noteFormData}
+          setFormData={setNoteFormData}
+          defaultFormData={defaultNoteFormData}
         />
       </Card>
 

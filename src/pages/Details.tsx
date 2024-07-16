@@ -118,11 +118,11 @@ function Details({pcData}: Props) {
             </Card>
 
             <Card>
-                <h3>Other Notes</h3>
-                {pcData.baseDetails.extras &&
-                    pcData.baseDetails.extras.map((extra, i) => (
+                <h3>Notes</h3>
+                {pcData.baseDetails.notes &&
+                    pcData.baseDetails.notes.map((note, i) => (
                         <Card key={i}>
-                            <p>{extra}</p>
+                            <p>{note}</p>
                         </Card>
                     ))
                 }

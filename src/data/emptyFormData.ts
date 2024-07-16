@@ -56,6 +56,11 @@ export const defaultLanguageFormData = {
   language: ''
 }
 
+export const defaultNoteFormData = {
+  updateType: UpdateType.NOTES,
+  note: ''
+}
+
 export const buildDefaultPCFormData = (pcData: PlayerCharacter) => {
   return {
     updateType: UpdateType.BASE_DETAILS,

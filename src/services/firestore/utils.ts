@@ -1,6 +1,6 @@
 import { UpdateType } from "@models/enum/service/UpdateType"
 import { CollectionName } from "./enum/CollectionName"
-import { arrayRemove, arrayUnion } from "firebase/firestore"
+import { arrayRemove, arrayUnion, collection } from "firebase/firestore"
 import { Weapon } from "@models/playerCharacter/Weapon";
 import { DamageType } from "@models/enum/DamageType";
 import { WeaponModifierProperty } from "@models/enum/WeaponModifierProperty";
@@ -82,6 +82,15 @@ export const transformFormDataForUpdate = (pcId: string, data: {updateType: Upda
         update: {
           pcId: pcId,
           updateObject: buildAddToArrayUpdate('languages', updates.language)
+        }
+      }
+    }
+    case UpdateType.NOTES: {
+      return {
+        collectionName: CollectionName.PC_BASE_DETAILS,
+        update: {
+          pcId: pcId,
+          updateObject: buildAddToArrayUpdate('notes', updates.note)
         }
       }
     }
