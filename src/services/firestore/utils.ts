@@ -1,6 +1,6 @@
 import { UpdateType } from "@models/enum/service/UpdateType"
 import { CollectionName } from "./enum/CollectionName"
-import { arrayRemove, arrayUnion, collection } from "firebase/firestore"
+import { arrayRemove, arrayUnion } from "firebase/firestore"
 import { Weapon } from "@models/playerCharacter/Weapon";
 import { DamageType } from "@models/enum/DamageType";
 import { WeaponModifierProperty } from "@models/enum/WeaponModifierProperty";
