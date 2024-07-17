@@ -1,17 +1,18 @@
 import './App.css'
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import Home from "./pages/Home";
-import Stats from "./pages/Stats";
-import Tracker from "./pages/Tracker";
-import Details from "./pages/Details";
+import Home from "./pages/authenticated/Home";
+import Stats from "./pages/authenticated/Stats";
+import Tracker from "./pages/authenticated/Tracker";
+import Details from "./pages/authenticated/Details";
 
 import { QueryClient, QueryClientProvider, useQuery } from '@tanstack/react-query'
 import { loadData } from '@services/firestore/loadData';
 import Card from '@components/cards/Card';
-import Login from '@pages/Login';
-import SignUp from '@pages/SignUp';
+import Login from '@pages/unauthenticated/Login';
+import SignUp from '@pages/unauthenticated/SignUp';
 import useFirebaseAuthentication from '@services/firebaseAuth/utils';
-import Update from '@pages/Update';
+import Update from '@pages/authenticated/Update';
+import PasswordReset from '@pages/unauthenticated/PasswordReset';
 
 const queryClient = new QueryClient();
 
@@ -42,6 +43,7 @@ function MainApp() {
                     <Route index element={<Login/>}/>
                     <Route path="/login" element={<Login/>}/>
                     <Route path="/signup" element={<SignUp/>}/>
+                    <Route path="/password-reset" element={<PasswordReset/>}/>
                 </Routes>
             </BrowserRouter>
         )
