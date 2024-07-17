@@ -10,6 +10,7 @@ export interface Spell {
     damage?: string;
     saveDC?: number;
     attackBonus?: number;
+    sourceUrl?: string;
 }
 
 export enum SpellLevel {

@@ -218,6 +218,21 @@ function AddFeature ({handleChange, handleSubmit, formData, setFormData}: Props)
           </>
           }
         </div>
+        
+        <div className="update-form-field">
+          <label className="form-label" htmlFor="sourceUrl">Source URL (Optional)</label>
+          <p>
+            Link to full details of this feature, e.g. a wikidot page.
+          </p>
+          <input
+            className="form-input"
+            type="text"
+            id="sourceUrl"
+            name="sourceUrl"
+            onChange={(event) => {handleChange(event, setFormData)}}
+            value={formData.sourceUrl}
+          />
+        </div>
 
         <button type="submit">Add</button>
       </form>
