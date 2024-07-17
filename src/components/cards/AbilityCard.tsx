@@ -1,15 +1,23 @@
 import Card from "@components/cards/Card";
-import { formatDataAsTable } from "@components/utils";
 import CardSetHorizontal from "./CardSetHorizontal";
 
 interface Props {
     abilityName: string;
     score: number;
     modifier: number;
-    data: object;
+    skills: {
+        name: string,
+        proficient: boolean;
+    }[];
+    proficiencyBonus: number;
 }
 
-function AbilityCard({ abilityName, score, modifier, data }: Props) {
+const getSkillModifier = (proficient: boolean, modifier: number, proficiencyBonus: number) => {
+    const skillModifier = proficient ? modifier + proficiencyBonus : modifier;
+    return skillModifier > 0 ? `+${String(skillModifier)}` : String(skillModifier);
+};
+
+function AbilityCard({ abilityName, score, modifier, proficiencyBonus, skills }: Props) {
     return (
         <div className="ability-card">
             <Card>
@@ -25,7 +33,19 @@ function AbilityCard({ abilityName, score, modifier, data }: Props) {
                             <h1>{modifier > 0 && '+'}{modifier}</h1>
                         </div>
                         <div className="ability-proficiencies">
-                            {formatDataAsTable(data, true, true)} 
+                        <table className="table">
+                            <tbody>
+                                {
+                                    skills.map((skill, i) => (
+                                        <tr className={skill.proficient ? 'table-success' : 'table'} key={i}>
+                                            <td><input type="checkbox" checked={skill.proficient} disabled/></td>
+                                            <td>{ skill.name.toUpperCase() + ':' }</td>
+                                            <td>{ getSkillModifier(skill.proficient, modifier, proficiencyBonus) }</td>
+                                        </tr>
+                                    ))
+                                }
+                            </tbody>
+                        </table>
                         </div>
                     </>
                 </CardSetHorizontal>
