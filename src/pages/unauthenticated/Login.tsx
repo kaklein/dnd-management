@@ -48,8 +48,14 @@ function Login () {
           </div>
         </form>
         <hr/>
-        <p>New user?</p>
-        <a className="reroute-button" href="/signup">Sign Up</a>
+        <div>
+          <p>New user?</p>
+          <a className="reroute-button" href="/signup">Sign Up</a>
+
+          <p>Forgot password?</p>
+          <a className="reset-password-button" href="/password-reset">Reset Password</a>
+        </div>
+
       </Card>
     </>
   )

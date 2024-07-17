@@ -22,7 +22,7 @@ import { QueryClient } from "@tanstack/react-query";
 import Alert from "@components/Alert";
 import { CollectionName } from "@services/firestore/enum/CollectionName";
 import PageHeaderBar from "@components/PageHeaderBar";
-import { determineAttackBonus } from "./utils";
+import { determineAttackBonus } from "../utils";
 
 interface Props {
     pcData: PlayerCharacter;
