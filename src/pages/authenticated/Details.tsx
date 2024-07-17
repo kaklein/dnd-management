@@ -36,6 +36,10 @@ const mapSpells = (spells: Spell[]) => {
                 {spell.spellCastingAbility &&
                     <p><b>Spellcasting ability: </b>{spell.spellCastingAbility}</p>
                 }
+
+                {spell.sourceUrl &&
+                    <p><b>Source URL: </b><a href={spell.sourceUrl} target="_blank">{spell.sourceUrl}</a></p>
+                }
             </Card>
         ))
     )
@@ -51,11 +55,19 @@ function Details({pcData}: Props) {
                 pageName="Details"
             />
 
-            <Card>
-                <h3>Spells & Abilities</h3>
-                {pcData.baseDetails.spells && mapSpells(pcData.baseDetails.spells)}
+            {
+                pcData.baseDetails.spells &&
+                <Card>
+                    <h3>Spells</h3>
+                    {mapSpells(pcData.baseDetails.spells)}
+                </Card>
+            }
 
-                {
+            {
+                (pcData.features && pcData.features.length > 0) &&
+                <Card>
+                    <h3>Features</h3>
+                    {
                     pcData.features.map(feature => (
                         <Card key={feature.id}>
                             <a id={removeWhiteSpaceAndConvertToLowerCase(feature.data.name)}></a>
@@ -64,10 +76,12 @@ function Details({pcData}: Props) {
                             <p><b>Source: </b>{feature.data.source}</p>
                             { feature.data.damage && <p><b>Damage: </b>{feature.data.damage} {feature.data.damageType}</p>}
                             { feature.data.saveDC && <p><b>Spell Save DC: </b>{feature.data.saveDC}</p>}
+                            { feature.data.sourceUrl && <p><b>Source URL: </b><a href={feature.data.sourceUrl} target="_blank">{feature.data.sourceUrl}</a></p>}
                         </Card>
                     ))
-                }
-            </Card>
+                    }
+                </Card>
+            }
 
             <Card>
                 <h3>Weapons</h3>

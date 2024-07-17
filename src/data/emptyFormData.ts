@@ -19,7 +19,8 @@ export const defaultSpellFormData = {
   level: '',
   spellCastingAbility: '',
   damageType: '',
-  damage: ''
+  damage: '',
+  sourceUrl: ''
 };
 
 export const defaultSpellSlotFormData = {
@@ -37,7 +38,8 @@ export const defaultFeatureFormData = {
   refresh: '',
   damage: '',
   damageType: '',
-  saveDC: ''
+  saveDC: '',
+  sourceUrl: ''
 };
 
 export const defaultEquipmentFormData = {

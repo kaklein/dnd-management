@@ -58,6 +58,7 @@ export const transformFormDataForUpdate = (pcId: string, data: {updateType: Upda
         ...(updates.damage && {damage: String(updates.damage)}),
         ...(updates.saveDC && {saveDC: Number(updates.saveDC)}),
         ...(updates.attackBonus && {attackBonus: Number(updates.attackBonus)}),
+        ...(updates.sourceUrl && {sourceUrl: String(updates.sourceUrl)})
       }
       return {
         collectionName: CollectionName.PC_BASE_DETAILS,
@@ -134,6 +135,7 @@ export const transformFormDataForUpdate = (pcId: string, data: {updateType: Upda
           ...(updates.damage && {damage: String(updates.damage)}),
           ...(updates.damageType && {damageType: String(updates.damageType) as DamageType}),
           ...(updates.saveDC && {saveDC: Number(updates.saveDC)}),
+          ...(updates.sourceUrl && {sourceUrl: String(updates.sourceUrl)})
         }
       }
       return {

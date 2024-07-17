@@ -14,6 +14,7 @@ export interface Feature {
         damage?: string;
         damageType?: DamageType;
         saveDC?: number;
+        sourceUrl?: string;
     }
    
 }
