@@ -116,55 +116,139 @@ export const orderAndFormatWeaponElements = (weapon: Weapon, pcData: PlayerChara
     }
 }
 
+export const getPassiveWisdom = (wisdomModifier: number, perceptionProficiency: boolean, proficiencyBonus: number) => {
+    const mod = perceptionProficiency ? wisdomModifier + proficiencyBonus : wisdomModifier;
+    return 10 + mod;
+}
+
 export const orderAbilityCardElements = (abilityScores: AbilityScores, ability: Ability) => {
+    let a;
     switch (ability) {
         case Ability.STR: {
-            return {
-                ['Saving Throws']: abilityScores.strength.savingThrows,
-                athletics: abilityScores.strength.athletics
-            }
+            a = abilityScores.strength;           
+            return [
+                {
+                    name: 'Saving Throws',
+                    proficient: a.savingThrows.proficient
+                },
+                {
+                    name: 'Athletics',
+                    proficient: a.athletics.proficient
+                }
+            ]
         }
         case Ability.DEX: {
-            return {
-                ['Saving Throws']: abilityScores.dexterity.savingThrows,
-                acrobatics: abilityScores.dexterity.acrobatics,
-                ['Sleight of Hand']: abilityScores.dexterity.sleightOfHand,
-                stealth: abilityScores.dexterity.stealth
-            }
+            a = abilityScores.dexterity;
+            return [
+                {
+                    name: 'Saving Throws',
+                    proficient: a.savingThrows.proficient
+                },
+                {
+                    name: 'Acrobatics',
+                    proficient: a.acrobatics.proficient
+                },
+                {
+                    name: 'Sleight of Hand',
+                    proficient: a.sleightOfHand.proficient
+                },
+                {
+                    name: 'Stealth',
+                    proficient: a.stealth.proficient
+                }
+            ]
         }
         case Ability.CON: {
-            return {
-                ['Saving Throws']: abilityScores.constitution.savingThrows,
-            }
+            a = abilityScores.constitution;
+            return [
+                {
+                    name: 'Saving Throws',
+                    proficient: a .savingThrows.proficient
+                }
+            ]
         }
         case Ability.INT: {
-            return {
-                ['Saving Throws']: abilityScores.intelligence.savingThrows,
-                arcana: abilityScores.intelligence.arcana,
-                history: abilityScores.intelligence.history,
-                investigation: abilityScores.intelligence.investigation,
-                nature: abilityScores.intelligence.nature,
-                religion: abilityScores.intelligence.religion
-            }
+            a = abilityScores.intelligence;
+            return [
+                {
+                    name: 'Saving Throws',
+                    proficient: a.savingThrows.proficient
+                },
+                {
+                    name: 'Arcana',
+                    proficient: a.arcana.proficient
+                },
+                {
+                    name: 'History',
+                    proficient: a.history.proficient
+                },
+                {
+                    name: 'Investigation',
+                    proficient: a.investigation.proficient
+                },
+                {
+                    name: 'Nature',
+                    proficient: a.nature.proficient
+                },
+                {
+                    name: 'Religion',
+                    proficient: a.religion.proficient
+                }
+            ]
         }
         case Ability.WIS: {
-            return {
-                ['Saving Throws']: abilityScores.wisdom.savingThrows,
-                ['Animal Handling']: abilityScores.wisdom.animalHandling,
-                insight: abilityScores.wisdom.insight,
-                medicine: abilityScores.wisdom.medicine,
-                perception: abilityScores.wisdom.perception,
-                survival: abilityScores.wisdom.survival
-            }
+            a = abilityScores.wisdom;
+            return [
+                {
+                    name: 'Saving Throws',
+                    proficient: a.savingThrows.proficient
+                },
+                {
+                    name: 'Animal Handling',
+                    proficient: a.animalHandling.proficient
+                },
+                {
+                    name: 'Insight',
+                    proficient: a.insight.proficient
+                },
+                {
+                    name: 'Medicine',
+                    proficient: a.medicine.proficient
+                },
+                {
+                    name: 'Perception',
+                    proficient: a.perception.proficient
+                },
+                {
+                    name: 'Survival',
+                    proficient: a.survival.proficient
+                }
+            ]
         }
         case Ability.CHA: {
-            return {
-                ['Saving Throws']: abilityScores.charisma.savingThrows,
-                deception: abilityScores.charisma.deception,
-                intimidation: abilityScores.charisma.intimidation,
-                performance: abilityScores.charisma.performance,
-                persuasion: abilityScores.charisma.persuasion
-            }
+            a = abilityScores.charisma;
+            return [
+                {
+                    name: 'Saving Throws',
+                    proficient: a.savingThrows.proficient
+                },
+                {
+                    name: 'Deception',
+                    proficient: a.deception.proficient
+                },
+                {
+                    name: 'Intimidation',
+                    proficient: a.intimidation.proficient
+                },
+                {
+                    name: 'Performance',
+                    proficient: a.performance.proficient
+                },
+                {
+                    name: 'Persuasion',
+                    proficient: a.persuasion.proficient
+                }
+            ]
         }
     }
 }

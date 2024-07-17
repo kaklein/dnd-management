@@ -26,9 +26,7 @@ export interface BaseDetails {
     level: number;
     xp: number | undefined;
     proficiencyBonus: number,
-    passiveWisdom: number,
     armorClass: number;
-    initiative: number;
     speed: number;
     equipment: Equipment[];
     usableResources: UsableResources;
