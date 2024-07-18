@@ -2,7 +2,9 @@ import { db } from "../../../firebase";
 import { collection, query, where, getDocs, DocumentData } from "firebase/firestore";
 import { CollectionName } from "../enum/CollectionName";
 
-export const buildWhereClauses = (query: {[key: string]: string | number | object}) => {
+export const buildWhereClauses = (query?: {[key: string]: string | number | object}) => {
+  if(!query) return [];
+  
   const entries = Object.entries(query);
   const queries = [];
   for (const entry of entries) {
@@ -11,7 +13,7 @@ export const buildWhereClauses = (query: {[key: string]: string | number | objec
   return queries;
 }
 
-export const readData = async (collectionName: CollectionName, queryFilter: {[key: string]: string | number | object}): Promise<{id: string, data: DocumentData}[]> => {
+export const readData = async (collectionName: CollectionName, queryFilter?: {[key: string]: string | number | object}): Promise<{id: string, data: DocumentData}[]> => {
   const baseDetailsQ = query(collection(db, collectionName), ...buildWhereClauses(queryFilter));
   const baseDetailsSnapshot = await getDocs(baseDetailsQ);
   const docs: {id: string, data: DocumentData}[] = [];

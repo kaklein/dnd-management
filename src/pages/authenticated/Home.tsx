@@ -1,38 +1,55 @@
 import Navbar from "@components/Navbar";
-import ImageCard from "@components/cards/ImageCard";
 import Footer from "@components/Footer";
-import { PlayerCharacter } from "@models/playerCharacter/PlayerCharacter";
 import PageHeaderBar from "@components/PageHeaderBar";
+import { UserRole } from "@services/firestore/enum/UserRole";
+import { readData } from "@services/firestore/crud/read";
+import { CollectionName } from "@services/firestore/enum/CollectionName";
+import { getAuth } from "@firebase/auth";
+import { BaseDetails } from "@models/playerCharacter/PlayerCharacter";
+import { useNavigate } from "react-router-dom";
 
 interface Props {
-    pcData: PlayerCharacter
+  pcList: BaseDetails[];
+  selectedPcId?: string;
+  setSelectedPcId: (pcId: string) => void;
 }
 
-function Home({pcData}: Props) {
-    const pcImagePath = `/images/playerCharacters/${pcData.baseDetails.name.firstName.toLowerCase()}_${pcData.baseDetails.name.lastName.toLowerCase()}.png`;
-    const pcFullName = `${pcData.baseDetails.name.firstName} ${pcData.baseDetails.name.lastName}`
-    const listCardObject = {
-        class: pcData.baseDetails.class,
-        subclass: pcData.baseDetails.subclass,
-        race: pcData.baseDetails.race,
-        background: pcData.baseDetails.background,
-        alignment: pcData.baseDetails.alignment,
-        level: pcData.baseDetails.level,
-        ...(pcData.baseDetails.xp && {XP: pcData.baseDetails.xp}),
-        ['Player Name']: pcData.baseDetails.playerName,
-    };
 
-    return (
-        <>
-            <Navbar/>
-            <PageHeaderBar 
-                pcName={`${pcData.baseDetails.name.firstName} ${pcData.baseDetails.name.lastName}`}
-                pageName="Overview"
-            />
-            <ImageCard title={pcFullName} description={pcData.baseDetails.description ?? ''} imagePath={pcImagePath} data={listCardObject}/>
-            <Footer/>
-        </>
-    )
+const handleClick = (pcId: string, navigate: (route: string) => void, setSelectedPcId: (pcId: string) => void) => {
+  console.log('Clicked ' + pcId);
+  setSelectedPcId(pcId);
+  navigate('/');
+}
+
+function Home({ selectedPcId, pcList, setSelectedPcId }: Props) {
+  const navigate = useNavigate();
+
+  const currentUser = getAuth().currentUser;
+  if(!currentUser) throw Error('No current user found.');
+  const uid = currentUser.uid;
+
+  return (
+    <>
+      {selectedPcId &&
+        <Navbar/>
+      }
+        <PageHeaderBar 
+            pageName="Home"
+        />
+
+        <p>Logged in as user with uid ${uid}</p>
+
+        {
+          pcList.map((pc) => (
+            <h3 key={pc.pcId}><a onClick={() => handleClick(pc.pcId, navigate, setSelectedPcId)}>{pc.name.firstName} {pc.name.lastName}</a></h3>
+          ))
+        }
+
+
+
+        <Footer/>
+    </>
+  )
 }
 
 export default Home;
