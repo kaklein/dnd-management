@@ -201,7 +201,125 @@ img {
 .update-form-field {
     width: 100%;
     margin: auto;
-    border-bottom: 1px solid lightgray;
-    margin: 10px;
-    padding: 5px;
 }
+
+.update-form-label {
+    margin-left: 10px;
+    margin-right: 10px;
+    margin-top: 7px;
+    width: fit-content;
+    font-weight: bold;
+    display: block;
+    text-align: left;
+}
+
+.update-form-input {
+    margin-left: 10px;
+    margin-right: 10px;
+    margin-bottom: 7px;
+    padding: 5px;
+    width: 300px;
+    text-align: left;
+    border-radius: 10px;
+    border: 1px solid darkgray;
+    display: block;
+}
+
+.update-form-description {
+    display: block;
+    text-align: left;
+    margin-left: 10px;
+    margin-right: 10px;
+    margin-bottom: 0px;
+    font-style: italic;
+}
+
+.update-form-conditional {
+    margin-left: 5px;
+    margin-right: 5px;
+    width: 100%;
+    padding: 5px;
+    display: block;
+    text-align: left;
+}
+
+.update-form-conditional p {
+    font-weight: bold;
+    margin-bottom: 0px;
+}
+
+.update-form-conditional label {
+    display: inline-block;
+    margin-right: 5px;
+}
+
+.update-form-conditional input {
+    display: inline-block;
+    margin-left: 5px;
+}
+
+.update-form-section-header {
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 20px;
+    text-align: center;
+    font-size: x-large;
+    font-weight: bold;
+    color: white;
+    background-color: #200859;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 2px 2px lightgray;
+}
+
+.update-form-header {
+    font-size: x-large;
+    font-weight: bold;
+    text-align: left;
+    background-color: #200859;
+    color: white;
+    border-radius: 5px;
+    box-shadow: 2px 2px lightgray;
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+.update-form-header-title {
+    padding-top: 20px;
+}
+
+.expand-collapse-btn {
+    width: 80%;
+}
+
+.update-form-submit-btn {
+    margin: 30px;
+    background-color: #0ecaf0;
+    border: 1px solid lightgray;
+    border-radius: 5px;
+    padding: 5px;
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+.update-form-submit-btn:hover {
+    background-color: #4ed4ef;
+}
+
+.form-radio-input {
+    margin-right: 0px;
+}
+
+.form-radio-label {
+    text-align: left;
+    margin: 5px;
+}
+
+.form-lock {
+    width: 100%;
+}
+
+.update-pc-form {
+    width: 100%;
+}
+

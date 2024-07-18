@@ -4,6 +4,7 @@ import { DamageType } from "@models/enum/DamageType"
 import { WeaponModifierProperty } from "@models/enum/WeaponModifierProperty"
 import { useState } from "react";
 import { Link } from "react-router-dom"
+import FormHeader from "./FormHeader";
 
 interface Props {
   handleChange: (event: any, setFunction: (prevFormData: any) => void) => void;
@@ -22,20 +23,19 @@ function AddWeapon ({handleChange, handleSubmit, formData, setFormData}: Props) 
   
   return (
     <div>
-    <h4>Add New Weapon</h4>
-    <button
-      className="btn btn-primary"
-      type="button"
-      onClick={() => setShowForm(!showForm)}>
-        {showForm ? '-' : '+'}
-    </button>
+      <FormHeader
+        formTitle="Add New Weapon"
+        onClick={() => setShowForm(!showForm)}
+        showForm={showForm}
+      />
+    
     {
       showForm &&
       <form onSubmit={(event) => {handleSubmit(event, formData, setFormData, defaultWeaponFormData)}}>
       <div className="update-form-field">
-        <label className="form-label" htmlFor="name">Weapon Name</label>
+        <label className="update-form-label" htmlFor="name">Weapon Name</label>
         <input
-          className="form-input"
+          className="update-form-input"
           type="text"
           id="name"
           name="name"
@@ -45,10 +45,10 @@ function AddWeapon ({handleChange, handleSubmit, formData, setFormData}: Props) 
         />
       </div>
       <div className="update-form-field">
-        <label className="form-label" htmlFor="type">Type</label>
-        <p>"dagger", "quarterstaff", "shortbow", etc. See all possible weapon types listed <Link to="http://dnd5e.wikidot.com/weapons" target="_blank">here</Link>.</p>
+        <label className="update-form-label" htmlFor="type">Type</label>
+        <p className="update-form-description">"dagger", "quarterstaff", "shortbow", etc. See all possible weapon types listed <Link to="http://dnd5e.wikidot.com/weapons" target="_blank">here</Link>.</p>
         <input
-          className="form-input"
+          className="update-form-input"
           type="text"
           id="type"
           name="type"
@@ -58,9 +58,9 @@ function AddWeapon ({handleChange, handleSubmit, formData, setFormData}: Props) 
         />
       </div>
       <div className="update-form-field">
-        <label className="form-label" htmlFor="damage">Base Damage</label>
+        <label className="update-form-label" htmlFor="damage">Base Damage</label>
         <input
-          className="form-input"
+          className="update-form-input"
           type="text"
           id="damage"
           name="damage"
@@ -71,8 +71,9 @@ function AddWeapon ({handleChange, handleSubmit, formData, setFormData}: Props) 
         />
       </div>
       <div className="update-form-field">
-        <label className="form-label" htmlFor="damageType">Damage Type</label>
+        <label className="update-form-label" htmlFor="damageType">Damage Type</label>
         <FormSelect
+          className="update-form-input"
           value={formData.damageType}
           handleChange={handleChange}
           setFormData={setFormData}
@@ -87,13 +88,14 @@ function AddWeapon ({handleChange, handleSubmit, formData, setFormData}: Props) 
         />
       </div>
       <div className="update-form-field">
-        <label className="form-label" htmlFor="modifierProperty">Weapon Range</label>
-        <p>
+        <label className="update-form-label" htmlFor="modifierProperty">Weapon Range</label>
+        <p className="update-form-description">
           This will be used to determine the attack bonus modifier for the weapon.
           Select <b>Finesse</b> if it is a finesse weapon. 
           Otherwise, select <b>Melee</b> or <b>Ranged</b> as applies to the weapon.
         </p>
         <FormSelect
+          className="update-form-input"
           value={formData.modifierProperty}
           handleChange={handleChange}
           setFormData={setFormData}
@@ -108,31 +110,40 @@ function AddWeapon ({handleChange, handleSubmit, formData, setFormData}: Props) 
         />
       </div>
       <div className="update-form-field">
-        <label className="form-label" htmlFor="magic">Is this weapon magic?</label>
-        <input
-          type="radio"
-          id="No"
-          name="magic"
-          value="false"
-          checked={formData.magic === "false"}
-          onChange={(event) => handleChange(event, setFormData)}
-        />
-        <label htmlFor="magic">No</label>
-        <input
-          type="radio"
-          id="Yes"
-          name="magic"
-          value="true"
-          checked={formData.magic === "true"}
-          onChange={(event) => handleChange(event, setFormData)}
-        />
-        <label htmlFor="magic">Yes</label>
+        <label className="update-form-label" htmlFor="magic">Is this weapon magic?</label>
+        <div className="container-fluid">
+          <div className="row">
+            <div className="col-auto">
+              <input
+                className="form-radio-input"
+                type="radio"
+                id="No"
+                name="magic"
+                value="false"
+                checked={formData.magic === "false"}
+                onChange={(event) => handleChange(event, setFormData)}
+              />
+              <label className="form-radio-label" htmlFor="No">No</label>
+            </div>
+            <div className="col-auto">
+              <input
+                className="form-radio-input"
+                type="radio"
+                id="Yes"
+                name="magic"
+                value="true"
+                checked={formData.magic === "true"}
+                onChange={(event) => handleChange(event, setFormData)}
+              />
+              <label className="form-radio-label" htmlFor="Yes">Yes</label>
+            </div>
+          </div>
+        </div> 
       </div>
       <div className="update-form-field">
-        <label className="form-label" htmlFor="description">Description (Optional)</label>
-        <input
-          className="form-input long-text-input"
-          type="text"
+        <label className="update-form-label" htmlFor="description">Description (Optional)</label>
+        <textarea
+          className="update-form-input long-text-input"
           id="description"
           name="description"
           onChange={(event) => {handleChange(event, setFormData)}}
@@ -140,7 +151,7 @@ function AddWeapon ({handleChange, handleSubmit, formData, setFormData}: Props) 
         />
       </div>
       
-      <button type="submit">Add</button>
+      <button className="update-form-submit-btn" type="submit">Submit Weapon</button>
     </form>
     }
     </div>

@@ -1,5 +1,6 @@
 import { defaultEquipmentFormData } from "@data/emptyFormData";
 import { useState } from "react";
+import FormHeader from "./FormHeader";
 
 interface Props {
   handleChange: (event: any, setFunction: (prevFormData: any) => void) => void;
@@ -17,20 +18,19 @@ function AddEquipment ({handleChange, handleSubmit, formData, setFormData}: Prop
   
   return (
     <div>
-    <h4>Add Equipment</h4>
-    <button
-      className="btn btn-primary"
-      type="button"
-      onClick={() => setShowForm(!showForm)}>
-        {showForm ? '-' : '+'}
-    </button>
+      <FormHeader
+        formTitle="Add Equipment"
+        onClick={() => setShowForm(!showForm)}
+        showForm={showForm}
+      />
+    
     {
       showForm &&
       <form onSubmit={(event) => {handleSubmit(event, formData, setFormData, defaultEquipmentFormData)}}>
         <div className="update-form-field">
-          <label className="form-label" htmlFor="type">Type</label>
+          <label className="update-form-label" htmlFor="type">Type</label>
           <input
-            className="form-input"
+            className="update-form-input"
             type="text"
             id="type"
             name="type"
@@ -40,9 +40,9 @@ function AddEquipment ({handleChange, handleSubmit, formData, setFormData}: Prop
           />
         </div>
         <div className="update-form-field">
-          <label className="form-label" htmlFor="description">Description (Optional)</label>
+          <label className="update-form-label" htmlFor="description">Description (Optional)</label>
           <input
-            className="form-input"
+            className="update-form-input"
             type="text"
             id="description"
             name="description"
@@ -51,7 +51,7 @@ function AddEquipment ({handleChange, handleSubmit, formData, setFormData}: Prop
           />
         </div>
           
-        <button type="submit">Add</button>
+        <button className="update-form-submit-btn" type="submit">Submit Equipment</button>
       </form>
     }
     </div>

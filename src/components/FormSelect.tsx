@@ -5,13 +5,14 @@ interface Props {
   name: string;
   options: { text: string, value: string }[];
   required?: boolean;
+  className?: string;
 }
 
-function FormSelect ({value, handleChange, setFormData, name, options, required=false}: Props) {
+function FormSelect ({value, handleChange, setFormData, name, options, required=false, className="form-input"}: Props) {
  
   return (
     <select
-      className="form-input"
+      className={className}
       id={name}
       name={name}
       onChange={(event) => {handleChange(event, setFormData)}}

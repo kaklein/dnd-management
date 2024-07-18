@@ -1,5 +1,6 @@
 import { capitalize } from "@components/utils";
 import { useState } from "react";
+import FormHeader from "./FormHeader";
 
 interface Props {
   fieldName: string;
@@ -13,41 +14,56 @@ interface Props {
   ) => void;  formData: any;
   setFormData: (data: any) => void;
   defaultFormData: any;
+  useTextArea?: boolean;
 }
 
-function AddItemToArrayField ({fieldName, handleChange, handleSubmit, formData, setFormData, defaultFormData, description=""}: Props) {
+function AddItemToArrayField ({fieldName, handleChange, handleSubmit, formData, setFormData, defaultFormData, description="", useTextArea=false}: Props) {
   const [showForm, setShowForm] = useState(false);
 
   return (
     <div>
-    <h4>Add New {capitalize(fieldName)}</h4>
-    <button
-      className="btn btn-primary"
-      type="button"
-      onClick={() => setShowForm(!showForm)}>
-        {showForm ? '-' : '+'}
-    </button>
+      <FormHeader
+        formTitle={`Add New ${capitalize(fieldName)}`}
+        onClick={() => setShowForm(!showForm)}
+        showForm={showForm}
+      />
+    
     {
       (showForm && description) &&
-      <p>{description}</p>
+      <p className="update-form-description">{description}</p>
     }
     {
       showForm &&
       <form onSubmit={(event) => {handleSubmit(event, formData, setFormData, defaultFormData)}}>
         <div className="update-form-field">
-          <label className="form-label" htmlFor={fieldName}>{capitalize(fieldName)}</label>
-          <input
-            className="form-input"
-            type="text"
-            id={fieldName}
-            name={fieldName}
-            onChange={(event) => {handleChange(event, setFormData)}}
-            value={formData[fieldName]}
-            required
-          />
+          <label className="update-form-label" htmlFor={fieldName}>{capitalize(fieldName)}</label>
+          {
+            !useTextArea &&
+            <input
+              className="update-form-input"
+              type="text"
+              id={fieldName}
+              name={fieldName}
+              onChange={(event) => {handleChange(event, setFormData)}}
+              value={formData[fieldName]}
+              required
+            />
+          }
+          {
+            useTextArea &&
+            <textarea
+              className="update-form-input"
+              id={fieldName}
+              name={fieldName}
+              onChange={(event) => {handleChange(event, setFormData)}}
+              value={formData[fieldName]}
+              required
+            />
+          }
+          
         </div>
         
-        <button type="submit">Add</button>
+        <button className="update-form-submit-btn" type="submit">Submit {capitalize(fieldName)}</button>
       </form>
     }
     </div>
