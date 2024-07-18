@@ -18,20 +18,29 @@ function UpdatePC ({pcData, handleChange, handleSubmit, formData, setFormData}: 
 
   return (
     <div>
-      <button
-        className="btn btn-danger"
-        onClick={() => {setLocked(!locked)}}
-      >
-        {locked ? 'Unlock' : 'Lock'}
-      </button>
-      <form onSubmit={(event) => {
+      <div className="update-form-section-header">
+        <h3>Update Character</h3>
+      </div>
+      
+      <div className="form-lock">
+        <button
+          className="btn btn-danger"
+          onClick={() => {setLocked(!locked)}}
+        >
+          {locked ? 'Unlock' : 'Lock'}
+        </button>
+      </div>
+
+      <br/>
+
+      <form className="update-pc-form" onSubmit={(event) => {
         handleSubmit(event, formData, setFormData, formData);
         setLocked(true);
       }}>
         <div className="update-form-field">
-          <label className="form-label" htmlFor="armorClass">Armor Class</label>
+          <label className="update-form-label" htmlFor="armorClass">Armor Class</label>
           <input
-            className="form-input"
+            className="update-form-input"
             type="number"
             min="1"
             max="99"
@@ -43,9 +52,9 @@ function UpdatePC ({pcData, handleChange, handleSubmit, formData, setFormData}: 
           />
         </div>
         <div className="update-form-field">
-          <label className="form-label" htmlFor="level">Level</label>
+          <label className="update-form-label" htmlFor="level">Level</label>
           <input
-            className="form-input"
+            className="update-form-input"
             type="number"
             min="1"
             max="20"
@@ -57,9 +66,9 @@ function UpdatePC ({pcData, handleChange, handleSubmit, formData, setFormData}: 
           />
         </div>
         <div className="update-form-field">
-          <label className="form-label" htmlFor="proficiencyBonus">Proficiency Bonus</label>
+          <label className="update-form-label" htmlFor="proficiencyBonus">Proficiency Bonus</label>
           <input
-            className="form-input"
+            className="update-form-input"
             type="number"
             min="1"
             max="20"
@@ -71,9 +80,9 @@ function UpdatePC ({pcData, handleChange, handleSubmit, formData, setFormData}: 
           />
         </div>
         <div className="update-form-field">
-          <label className="form-label" htmlFor="hitPointMaximum">Max Hit Points</label>
+          <label className="update-form-label" htmlFor="hitPointMaximum">Max Hit Points</label>
           <input
-            className="form-input"
+            className="update-form-input"
             type="number"
             min="1"
             max="999"
@@ -85,9 +94,9 @@ function UpdatePC ({pcData, handleChange, handleSubmit, formData, setFormData}: 
           />
         </div>
         <div className="update-form-field">
-          <label className="form-label" htmlFor="hitDice">Hit Dice ({pcData.baseDetails.usableResources.hitDice.type})</label>
+          <label className="update-form-label" htmlFor="hitDice">Hit Dice ({pcData.baseDetails.usableResources.hitDice.type})</label>
           <input
-            className="form-input"
+            className="update-form-input"
             type="number"
             min="1"
             max="99"
@@ -98,8 +107,8 @@ function UpdatePC ({pcData, handleChange, handleSubmit, formData, setFormData}: 
             disabled={locked}
           />
         </div>
-        <button type="submit">Save Changes</button>
-      </form>
+        <button className="update-form-submit-btn" type="submit" disabled={locked}>Save Changes</button>
+      </form>      
     </div>
   )
 }

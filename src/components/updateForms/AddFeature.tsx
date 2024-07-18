@@ -3,6 +3,7 @@ import { defaultFeatureFormData } from "@data/emptyFormData";
 import { DamageType } from "@models/enum/DamageType";
 import { RestType } from "@models/enum/RestType";
 import { useState } from "react";
+import FormHeader from "./FormHeader";
 
 interface Props {
   handleChange: (event: any, setFunction: (prevFormData: any) => void) => void;
@@ -49,20 +50,19 @@ function AddFeature ({handleChange, handleSubmit, formData, setFormData}: Props)
   
   return (
     <div>
-    <h4>Add New Feature</h4>
-    <button
-      className="btn btn-primary"
-      type="button"
-      onClick={() => setShowForm(!showForm)}>
-        {showForm ? '-' : '+'}
-    </button>
+      <FormHeader
+        formTitle="Add New Feature"
+        onClick={() => setShowForm(!showForm)}
+        showForm={showForm}
+      />
+    
     {
       showForm &&
       <form onSubmit={(event) => {handleSubmit(event, formData, setFormData, defaultFeatureFormData)}}>
         <div className="update-form-field">
-          <label className="form-label" htmlFor="name">Name</label>
+          <label className="update-form-label" htmlFor="name">Name</label>
           <input
-            className="form-input"
+            className="update-form-input"
             type="text"
             id="name"
             name="name"
@@ -72,24 +72,23 @@ function AddFeature ({handleChange, handleSubmit, formData, setFormData}: Props)
           />
         </div>
         <div className="update-form-field">
-          <label className="form-label" htmlFor="description">Description</label>
-          <input
-            className="form-input"
-            type="text"
+          <label className="update-form-label" htmlFor="description">Description</label>
+          <textarea
+            className="update-form-input"
             id="description"
             name="description"
             onChange={(event) => {handleChange(event, setFormData)}}
             value={formData.description}
             required
-          />
+          />          
         </div>
         <div className="update-form-field">
-          <label className="form-label" htmlFor="source">Source</label>
-          <p>
+          <label className="update-form-label" htmlFor="source">Source</label>
+          <p className="update-form-description">
             The reason you have this feature, e.g. 'Fighter' or 'Elf'
           </p>
           <input
-            className="form-input"
+            className="update-form-input"
             type="text"
             id="source"
             name="source"
@@ -100,21 +99,23 @@ function AddFeature ({handleChange, handleSubmit, formData, setFormData}: Props)
         </div>
 
         <div>
-          <p>Are there a limited number of uses for this feature?</p>
-          <label htmlFor="limitedUseCheckbox">Yes</label>
-          <input
-            id="limitedUseCheckbox"
-            type="checkbox"
-            checked={showLimitedUseFields}
-            onChange={handleLimitedUseCheckboxChange}
-          />
+          <div className="update-form-conditional">
+            <p>Are there a limited number of uses for this feature?</p>
+            <label htmlFor="limitedUseCheckbox">Yes</label>
+            <input
+              id="limitedUseCheckbox"
+              type="checkbox"
+              checked={showLimitedUseFields}
+              onChange={handleLimitedUseCheckboxChange}
+            />
+          </div>
 
           { showLimitedUseFields &&
           <>
             <div className="update-form-field">
-              <label className="form-label" htmlFor="maxUses">Number of uses</label>
+              <label className="update-form-label" htmlFor="maxUses">Number of uses</label>
               <input
-                className="form-input"
+                className="update-form-input"
                 type="number"
                 min="1"
                 max="99"
@@ -126,8 +127,9 @@ function AddFeature ({handleChange, handleSubmit, formData, setFormData}: Props)
               />
             </div>
             <div className="update-form-field">
-              <label className="form-label" htmlFor="refresh">Refresh after</label>
+              <label className="update-form-label" htmlFor="refresh">Refresh after</label>
               <FormSelect
+                className="update-form-input"
                 value={formData.refresh}
                 handleChange={handleChange}
                 setFormData={setFormData}
@@ -146,21 +148,23 @@ function AddFeature ({handleChange, handleSubmit, formData, setFormData}: Props)
         </div>
 
         <div>
-          <p>Does this feature deal damage?</p>
-          <label htmlFor="damageCheckbox">Yes</label>
-          <input
-            id="damageCheckbox"
-            type="checkbox"
-            checked={showDamageFields}
-            onChange={handleDamageCheckboxChange}
-          />
+          <div className="update-form-conditional">
+            <p>Does this feature deal damage?</p>
+            <label htmlFor="damageCheckbox">Yes</label>
+            <input
+              id="damageCheckbox"
+              type="checkbox"
+              checked={showDamageFields}
+              onChange={handleDamageCheckboxChange}
+            />
+          </div>
 
           { showDamageFields &&
           <>
             <div className="update-form-field">
-              <label className="form-label" htmlFor="damage">Damage</label>
+              <label className="update-form-label" htmlFor="damage">Damage</label>
               <input
-                className="form-input"
+                className="update-form-input"
                 type="text"
                 id="damage"
                 name="damage"
@@ -171,8 +175,9 @@ function AddFeature ({handleChange, handleSubmit, formData, setFormData}: Props)
               />
             </div>
             <div className="update-form-field">
-              <label className="form-label" htmlFor="damageType">Damage Type</label>
+              <label className="update-form-label" htmlFor="damageType">Damage Type</label>
               <FormSelect
+                className="update-form-input"
                 value={formData.damageType}
                 handleChange={handleChange}
                 setFormData={setFormData}
@@ -191,21 +196,23 @@ function AddFeature ({handleChange, handleSubmit, formData, setFormData}: Props)
         </div>
 
         <div>
-          <p>Is there a save DC for this feature?</p>
-          <label htmlFor="saveDcCheckbox">Yes</label>
-          <input
-            id="saveDcCheckbox"
-            type="checkbox"
-            checked={showSaveDCField}
-            onChange={handleSavDcCheckboxChange}
-          />
-
+          <div className="update-form-conditional">
+            <p>Is there a save DC for this feature?</p>
+            <label htmlFor="saveDcCheckbox">Yes</label>
+            <input
+              id="saveDcCheckbox"
+              type="checkbox"
+              checked={showSaveDCField}
+              onChange={handleSavDcCheckboxChange}
+            />
+          </div>
+          
           { showSaveDCField &&
           <>
             <div className="update-form-field">
-              <label className="form-label" htmlFor="saveDC">Save DC</label>
+              <label className="update-form-label" htmlFor="saveDC">Save DC</label>
               <input
-                className="form-input"
+                className="update-form-input"
                 type="number"
                 min="1"
                 max="99"
@@ -220,12 +227,12 @@ function AddFeature ({handleChange, handleSubmit, formData, setFormData}: Props)
         </div>
         
         <div className="update-form-field">
-          <label className="form-label" htmlFor="sourceUrl">Source URL (Optional)</label>
-          <p>
+          <label className="update-form-label" htmlFor="sourceUrl">Source URL (Optional)</label>
+          <p className="update-form-description">
             Link to full details of this feature, e.g. a wikidot page.
           </p>
           <input
-            className="form-input"
+            className="update-form-input"
             type="text"
             id="sourceUrl"
             name="sourceUrl"
@@ -234,7 +241,7 @@ function AddFeature ({handleChange, handleSubmit, formData, setFormData}: Props)
           />
         </div>
 
-        <button type="submit">Add</button>
+        <button className="update-form-submit-btn" type="submit">Submit Feature</button>
       </form>
     }
     </div>

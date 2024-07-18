@@ -2,6 +2,7 @@ import FormSelect from "@components/FormSelect";
 import { defaultSpellSlotFormData } from "@data/emptyFormData";
 import { SpellLevel } from "@models/playerCharacter/Spell";
 import { useState } from "react";
+import FormHeader from "./FormHeader";
 
 interface Props {
   handleChange: (event: any, setFunction: (prevFormData: any) => void) => void;
@@ -19,19 +20,19 @@ function AddSpellSlot ({handleChange, handleSubmit, formData, setFormData}: Prop
   
   return (
     <div>
-    <h4>Add Spell Slot</h4>
-    <button
-      className="btn btn-primary"
-      type="button"
-      onClick={() => setShowForm(!showForm)}>
-        {showForm ? '-' : '+'}
-    </button>
+      <FormHeader
+        formTitle="Add Spell Slot"
+        onClick={() => setShowForm(!showForm)}
+        showForm={showForm}
+      />
+    
     {
       showForm &&
       <form onSubmit={(event) => {handleSubmit(event, formData, setFormData, defaultSpellSlotFormData)}}>
         <div className="update-form-field">
-          <label className="form-label" htmlFor="level">Spell Level</label>
+          <label className="update-form-label" htmlFor="level">Spell Level</label>
           <FormSelect
+            className="update-form-input"
             value={formData.level}
             handleChange={handleChange}
             setFormData={setFormData}
@@ -46,13 +47,13 @@ function AddSpellSlot ({handleChange, handleSubmit, formData, setFormData}: Prop
           />
         </div>
         <div className="update-form-field">
-          <label className="form-label" htmlFor="max">Total Number of Slots</label>
-          <p>
+          <label className="update-form-label" htmlFor="max">Total Number of Slots</label>
+          <p className="update-form-description">
             Enter the TOTAL number of slots for this spell level. For example, if you previously 
             had two Level 1 spell slots and are gaining one more, enter 3.
           </p>
           <input
-            className="form-input"
+            className="update-form-input"
             type="number"
             min="1"
             max="4"
@@ -63,7 +64,7 @@ function AddSpellSlot ({handleChange, handleSubmit, formData, setFormData}: Prop
             required
           />
         </div>
-        <button type="submit">Add</button>
+        <button className="update-form-submit-btn" type="submit">Submit Spell Slot Update</button>
       </form>
     }
     </div>

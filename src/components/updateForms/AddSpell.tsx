@@ -4,6 +4,7 @@ import { Ability } from "@models/enum/Ability";
 import { DamageType } from "@models/enum/DamageType";
 import { SpellLevel } from "@models/playerCharacter/Spell";
 import { useState } from "react";
+import FormHeader from "./FormHeader";
 
 interface Props {
   handleChange: (event: any, setFunction: (prevFormData: any) => void) => void;
@@ -31,20 +32,19 @@ function AddSpell ({handleChange, handleSubmit, formData, setFormData}: Props) {
   
   return (
     <div>
-    <h4>Add New Spell</h4>
-    <button
-      className="btn btn-primary"
-      type="button"
-      onClick={() => setShowForm(!showForm)}>
-        {showForm ? '-' : '+'}
-    </button>
+      <FormHeader
+        formTitle="Add New Spell"
+        onClick={() => setShowForm(!showForm)}
+        showForm={showForm}
+      />
+    
     {
       showForm &&
       <form onSubmit={(event) => {handleSubmit(event, formData, setFormData, defaultSpellFormData)}}>
         <div className="update-form-field">
-          <label className="form-label" htmlFor="name">Name</label>
+          <label className="update-form-label" htmlFor="name">Name</label>
           <input
-            className="form-input"
+            className="update-form-input"
             type="text"
             id="name"
             name="name"
@@ -54,14 +54,13 @@ function AddSpell ({handleChange, handleSubmit, formData, setFormData}: Props) {
           />
         </div>
         <div className="update-form-field">
-          <label className="form-label" htmlFor="description">Description</label>
-          <p>
+          <label className="update-form-label" htmlFor="description">Description</label>
+          <p className="update-form-description">
             Copy/paste the full spell description from your source, including Casting Time, 
             Range, Target, Components, Duration, Classes, and Description.
           </p>
-          <input
-            className="form-input"
-            type="text"
+          <textarea
+            className="update-form-input"
             id="description"
             name="description"
             onChange={(event) => {handleChange(event, setFormData)}}
@@ -70,8 +69,9 @@ function AddSpell ({handleChange, handleSubmit, formData, setFormData}: Props) {
           />
         </div>
         <div className="update-form-field">
-          <label className="form-label" htmlFor="level">Spell Level</label>
+          <label className="update-form-label" htmlFor="level">Spell Level</label>
           <FormSelect
+            className="update-form-input"
             value={formData.level}
             handleChange={handleChange}
             setFormData={setFormData}
@@ -86,8 +86,9 @@ function AddSpell ({handleChange, handleSubmit, formData, setFormData}: Props) {
           />
         </div>
         <div className="update-form-field">
-          <label className="form-label" htmlFor="spellCastingAbility">Spellcasting Ability</label>
+          <label className="update-form-label" htmlFor="spellCastingAbility">Spellcasting Ability</label>
           <FormSelect
+            className="update-form-input"
             value={formData.spellCastingAbility}
             handleChange={handleChange}
             setFormData={setFormData}
@@ -103,21 +104,23 @@ function AddSpell ({handleChange, handleSubmit, formData, setFormData}: Props) {
         </div>
 
         <div>
-          <p>Does this spell deal damage?</p>
-          <label htmlFor="damageCheckBox">Yes</label>
-          <input
-            id="damageCheckbox"
-            type="checkbox"
-            checked={showDamageFields}
-            onChange={handleDamageCheckboxChange}
-          />
-
+          <div className="update-form-conditional">
+            <p>Does this spell deal damage?</p>
+            <label htmlFor="damageCheckBox">Yes</label>
+            <input
+              id="damageCheckbox"
+              type="checkbox"
+              checked={showDamageFields}
+              onChange={handleDamageCheckboxChange}
+            />
+          </div>
+          
           { showDamageFields &&
           <>
             <div className="update-form-field">
-            <label className="form-label" htmlFor="damage">Damage</label>
+            <label className="update-form-label" htmlFor="damage">Damage</label>
             <input
-              className="form-input"
+              className="update-form-input"
               type="text"
               id="damage"
               name="damage"
@@ -128,8 +131,9 @@ function AddSpell ({handleChange, handleSubmit, formData, setFormData}: Props) {
             />
             </div>
             <div className="update-form-field">
-              <label className="form-label" htmlFor="damageType">Damage Type</label>
+              <label className="update-form-label" htmlFor="damageType">Damage Type</label>
               <FormSelect
+                className="update-form-input"
                 value={formData.damageType}
                 handleChange={handleChange}
                 setFormData={setFormData}
@@ -148,12 +152,12 @@ function AddSpell ({handleChange, handleSubmit, formData, setFormData}: Props) {
         </div>
 
         <div className="update-form-field">
-          <label className="form-label" htmlFor="sourceUrl">Source URL (Optional)</label>
-          <p>
+          <label className="update-form-label" htmlFor="sourceUrl">Source URL (Optional)</label>
+          <p className="update-form-description">
             Link to full details of this spell, e.g. a wikidot page.
           </p>
           <input
-            className="form-input"
+            className="update-form-input"
             type="text"
             id="sourceUrl"
             name="sourceUrl"
@@ -162,7 +166,7 @@ function AddSpell ({handleChange, handleSubmit, formData, setFormData}: Props) {
           />
         </div>
            
-        <button type="submit">Add</button>
+        <button className="update-form-submit-btn" type="submit">Submit Spell</button>
       </form>
     }
     </div>

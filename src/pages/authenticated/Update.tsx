@@ -79,10 +79,9 @@ function Update ({pcData, queryClient}: Props) {
       />
 
       <hr/>
-
-      <h3>Add Items</h3>
+      
       {showSuccessAlert && <Alert alertText="Changes saved." className="successful-alert" iconFile="/images/icons/success-icon.png"/>}
-
+      
       <Card>
         <AddWeapon
           handleChange={handleChange}
@@ -159,12 +158,9 @@ function Update ({pcData, queryClient}: Props) {
           formData={noteFormData}
           setFormData={setNoteFormData}
           defaultFormData={defaultNoteFormData}
+          useTextArea={true}
         />
       </Card>
-
-      <hr/>
-
-      <h3>Update Character</h3>
 
       <Card>
         <UpdatePC
