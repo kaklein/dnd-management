@@ -1,4 +1,3 @@
-import * as config from '@data/config.json';
 import { readData, readSingleItem } from '@services/firestore/crud/read';
 import { BaseDetails, PlayerCharacter } from '@models/playerCharacter/PlayerCharacter';
 import { AbilityScores } from '@models/playerCharacter/AbilityScores';

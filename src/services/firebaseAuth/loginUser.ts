@@ -5,8 +5,6 @@ import { getUserRole } from "@services/firestore/getUserRole";
 const INVALID_LOGIN_ERROR = 'auth/invalid-credential';
 
 export const loginUser = async (email: string, password: string): Promise<boolean> => {
-  console.log('Logging in user with Firebase auth...');
-
   try {
     const userCredential = await signInWithEmailAndPassword(auth, email, password);
     const userRole = await getUserRole(userCredential.user.uid);

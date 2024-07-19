@@ -30,7 +30,7 @@ export const readSingleItem = async (collectionName: CollectionName, queryFilter
   }
 
   if (queryResult.length > 1) {
-    console.log(`Found ${queryResult.length} matching documents; returning the first item.`);
+    console.warn(`Found ${queryResult.length} matching documents; returning the first item.`);
   }
 
   return queryResult[0];

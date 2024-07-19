@@ -3,11 +3,13 @@ import Footer from "@components/Footer";
 import Card from "@components/cards/Card";
 import { formatDataAsTable, orderAndFormatWeaponElements, removeWhiteSpaceAndConvertToLowerCase } from "@components/utils";
 import { Spell } from "@models/playerCharacter/Spell";
-import { PlayerCharacter } from "@models/playerCharacter/PlayerCharacter";
-import PageHeaderBar from "@components/PageHeaderBar";
+import { BaseDetails, PlayerCharacter } from "@models/playerCharacter/PlayerCharacter";
+import PageHeaderBarPC from "@components/headerBars/PageHeaderBarPC";
 
 interface Props {
     pcData: PlayerCharacter;
+    pcList: BaseDetails[];
+    selectedPc: {pcId: string | null, setSelectedPcId: (pcId: string) => void}
 }
 
 const mapSpells = (spells: Spell[]) => {    
@@ -45,14 +47,16 @@ const mapSpells = (spells: Spell[]) => {
     )
 }
 
-function Details({pcData}: Props) {
+function Details({pcData, pcList, selectedPc}: Props) {
     return (
         <>
-            <Navbar/>
+            <Navbar isSelectedPc={!!selectedPc.pcId}/>
 
-            <PageHeaderBar 
+            <PageHeaderBarPC 
                 pcName={`${pcData.baseDetails.name.firstName} ${pcData.baseDetails.name.lastName}`}
                 pageName="Details"
+                pcList={pcList}
+                selectedPc={selectedPc}
             />
 
             {

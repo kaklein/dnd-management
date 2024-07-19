@@ -4,16 +4,18 @@ import AbilityCard from "@components/cards/AbilityCard";
 import Card from "@components/cards/Card";
 import CardSetHorizontal from "@components/cards/CardSetHorizontal";
 import { AbilityScores } from "@models/playerCharacter/AbilityScores";
-import { PlayerCharacter } from "@models/playerCharacter/PlayerCharacter";
-import PageHeaderBar from "@components/PageHeaderBar";
+import { BaseDetails, PlayerCharacter } from "@models/playerCharacter/PlayerCharacter";
 import { getPassiveWisdom, orderAbilityCardElements } from "@components/utils";
 import { Ability } from "@models/enum/Ability";
+import PageHeaderBarPC from "@components/headerBars/PageHeaderBarPC";
 
 interface Props {
     pcData: PlayerCharacter;
+    pcList: BaseDetails[];
+    selectedPc: {pcId: string | null, setSelectedPcId: (pcId: string) => void}
 }
 
-function Stats({pcData}: Props) {
+function Stats({pcData, pcList, selectedPc}: Props) {
     const mapAbilityScoreCards = (abilityScores: AbilityScores) => {
         return (
             <>
@@ -65,11 +67,13 @@ function Stats({pcData}: Props) {
 
     return (
         <>
-            <Navbar/>
+            <Navbar isSelectedPc={!!selectedPc.pcId}/>
             
-            <PageHeaderBar 
+            <PageHeaderBarPC
                 pcName={`${pcData.baseDetails.name.firstName} ${pcData.baseDetails.name.lastName}`}
                 pageName="Stats"
+                pcList={pcList}
+                selectedPc={selectedPc}
             />
 
             {/* Ability Scores */}

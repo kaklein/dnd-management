@@ -1,15 +1,17 @@
 import Navbar from "@components/Navbar";
 import ImageCard from "@components/cards/ImageCard";
 import Footer from "@components/Footer";
-import { PlayerCharacter } from "@models/playerCharacter/PlayerCharacter";
-import PageHeaderBar from "@components/PageHeaderBar";
+import { BaseDetails, PlayerCharacter } from "@models/playerCharacter/PlayerCharacter";
+import PageHeaderBarPC from "@components/headerBars/PageHeaderBarPC";
 
 interface Props {
-    pcData: PlayerCharacter
+    pcData: PlayerCharacter;
+    pcList: BaseDetails[];
+    selectedPc: {pcId: string | null, setSelectedPcId: (pcId: string) => void}
 }
 
-function Overview({pcData}: Props) {
-    const pcImagePath = `/images/playerCharacters/${pcData.baseDetails.name.firstName.toLowerCase()}_${pcData.baseDetails.name.lastName.toLowerCase()}.png`;
+function Overview({pcData, pcList, selectedPc}: Props) {
+    const pcImagePath = pcData.baseDetails.imagePaths?.avatar;
     const pcFullName = `${pcData.baseDetails.name.firstName} ${pcData.baseDetails.name.lastName}`
     const listCardObject = {
         class: pcData.baseDetails.class,
@@ -24,12 +26,14 @@ function Overview({pcData}: Props) {
 
     return (
         <>
-            <Navbar/>
-            <PageHeaderBar 
+            <Navbar isSelectedPc={!!selectedPc.pcId}/>
+            <PageHeaderBarPC
                 pcName={`${pcData.baseDetails.name.firstName} ${pcData.baseDetails.name.lastName}`}
+                pcList={pcList}
                 pageName="Overview"
+                selectedPc={selectedPc}
             />
-            <ImageCard title={pcFullName} description={pcData.baseDetails.description ?? ''} imagePath={pcImagePath} data={listCardObject}/>
+            <ImageCard title={pcFullName} description={pcData.baseDetails.description ?? ''} imagePath={pcImagePath && `/images/playerCharacters/${pcImagePath}`} data={listCardObject}/>
             <Footer/>
         </>
     )

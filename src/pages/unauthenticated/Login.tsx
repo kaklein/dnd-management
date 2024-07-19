@@ -1,5 +1,5 @@
 import Card from "@components/cards/Card";
-import PageHeaderBar from "@components/PageHeaderBar";
+import PageHeaderBar from "@components/headerBars/PageHeaderBar";
 import { loginUser } from "@services/firebaseAuth/loginUser";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -16,7 +16,6 @@ function Login () {
   }
   const handleSubmit = async (event: any) => {
     event.preventDefault();
-    console.log('Logging in...');
     if(!formData || !formData.email || !formData.password) {
       console.error(`No form data :(`);
       return;
