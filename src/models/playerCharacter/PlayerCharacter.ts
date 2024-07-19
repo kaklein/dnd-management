@@ -15,6 +15,7 @@ export interface PlayerCharacter {
 
 export interface BaseDetails {
     pcId: string;
+    uid: string;
     name: { firstName: string, lastName: string };
     description?: string;
     playerName: string;

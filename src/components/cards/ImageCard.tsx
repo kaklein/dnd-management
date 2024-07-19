@@ -4,15 +4,15 @@ import Card from "@components/cards/Card";
 interface Props {
     title: string;
     description: string;
-    imagePath: string;
+    imagePath?: string;
     data?: object;
 }
 
-function ImageCard ({ title, description, imagePath, data=undefined }: Props) {
+function ImageCard ({ title, description, imagePath=undefined, data=undefined }: Props) {
   return (
       <Card>
           <>
-              <img src={imagePath} className="card-img-top" alt={title}/>
+              {imagePath && <img src={imagePath} className="card-img-top" alt={title}/>}
               <div className="card-body">
                   <h2 className="card-title">{title}</h2>
                   <p className="card-text">{description}</p>

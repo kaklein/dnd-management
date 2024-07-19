@@ -1,5 +1,5 @@
 import Card from "@components/cards/Card";
-import PageHeaderBar from "@components/PageHeaderBar";
+import PageHeaderBar from "@components/headerBars/PageHeaderBar";
 import { User } from "@firebase/auth";
 import { createUser } from "@services/firebaseAuth/createUser";
 import { sendVerification } from "@services/firebaseAuth/sendVerification";
@@ -26,7 +26,6 @@ function SignUp () {
 
   const handleSubmit = async (event: any) => {
     event.preventDefault();
-    console.log('Signing up...');
     if(!formData || !formData.email || !formData.passwordCreate || !formData.passwordConfirm) {
       console.error(`No form data :(`);
       return;

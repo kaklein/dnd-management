@@ -4,7 +4,6 @@ import { transformFormDataForUpdate } from "./utils";
 
 export const transformAndUpdate = async (pcId: string, data: any) => {
   const transformedUpdates = transformFormDataForUpdate(pcId, data);
-  console.log(transformedUpdates);
   if (transformedUpdates.create) {
     await createDoc(transformedUpdates.collectionName, transformedUpdates.create.dataObject);
   } else if (transformedUpdates.update) {

@@ -7,12 +7,9 @@ export const createUser = async (email: string, password: string): Promise<{
   error: any,
   user: User | undefined
 }> => {
-  console.log('Creating user with Firebase');
-
   try {
     const userCredential = await createUserWithEmailAndPassword(auth, email, password);
     const user = userCredential.user;
-    console.log(`Successfully created user with email ${user.email}`);
     return {
       success: true,
       error: {},

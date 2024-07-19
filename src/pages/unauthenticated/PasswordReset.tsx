@@ -1,6 +1,6 @@
 import Alert from "@components/Alert";
 import Card from "@components/cards/Card";
-import PageHeaderBar from "@components/PageHeaderBar";
+import PageHeaderBar from "@components/headerBars/PageHeaderBar";
 import { resetPassword } from "@services/firebaseAuth/resetPassword";
 import { useState } from "react";
 

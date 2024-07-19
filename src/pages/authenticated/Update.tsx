@@ -1,8 +1,7 @@
 import Card from "@components/cards/Card";
 import Footer from "@components/Footer";
 import Navbar from "@components/Navbar";
-import PageHeaderBar from "@components/PageHeaderBar";
-import { PlayerCharacter } from "@models/playerCharacter/PlayerCharacter";
+import { BaseDetails, PlayerCharacter } from "@models/playerCharacter/PlayerCharacter";
 import { useState } from "react";
 import AddWeapon from "@components/updateForms/AddWeapon";
 import AddSpell from "@components/updateForms/AddSpell";
@@ -16,13 +15,16 @@ import { UpdateType } from "@models/enum/service/UpdateType";
 import { transformAndUpdate } from "@services/firestore/updateData";
 import { QueryClient } from "@tanstack/react-query";
 import Alert from "@components/Alert";
+import PageHeaderBarPC from "@components/headerBars/PageHeaderBarPC";
 
 interface Props {
   pcData: PlayerCharacter;
   queryClient: QueryClient;
+  pcList: BaseDetails[];
+  selectedPc: {pcId: string | null, setSelectedPcId: (pcId: string) => void}
 }
 
-function Update ({pcData, queryClient}: Props) {
+function Update ({pcData, queryClient, pcList, selectedPc}: Props) {
   const [showSuccessAlert, setShowSuccessAlert] = useState(false);
   const triggerSuccessAlert = () => {
       setShowSuccessAlert(true);
@@ -71,11 +73,13 @@ function Update ({pcData, queryClient}: Props) {
 
   return (
     <>
-      <Navbar/>
+      <Navbar isSelectedPc={!!selectedPc.pcId}/>
             
-      <PageHeaderBar 
+      <PageHeaderBarPC 
           pcName={`${pcData.baseDetails.name.firstName} ${pcData.baseDetails.name.lastName}`}
           pageName="Add Items and Make Updates"
+          pcList={pcList}
+          selectedPc={selectedPc}
       />
 
       <hr/>

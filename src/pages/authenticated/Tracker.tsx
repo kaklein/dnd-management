@@ -13,23 +13,25 @@ import {
     getSpellSlotFormData, 
     removeWhiteSpaceAndConvertToLowerCase 
 } from "@components/utils";
-import { useState} from "react";
+import { useEffect, useState} from "react";
 import { HashLink as Link } from 'react-router-hash-link';
 import { updateById, updateDataByPcId } from "@services/firestore/crud/update";
 import ItemUseToggle from "@components/ItemUseToggle";
-import { PlayerCharacter } from "@models/playerCharacter/PlayerCharacter";
+import { BaseDetails, PlayerCharacter } from "@models/playerCharacter/PlayerCharacter";
 import { QueryClient } from "@tanstack/react-query";
 import Alert from "@components/Alert";
 import { CollectionName } from "@services/firestore/enum/CollectionName";
-import PageHeaderBar from "@components/PageHeaderBar";
 import { determineAttackBonus } from "../utils";
+import PageHeaderBarPC from "@components/headerBars/PageHeaderBarPC";
 
 interface Props {
     pcData: PlayerCharacter;
     queryClient: QueryClient;
+    pcList: BaseDetails[];
+    selectedPc: {pcId: string | null, setSelectedPcId: (pcId: string) => void}
 }
 
-function Tracker({pcData, queryClient}: Props) {
+function Tracker({pcData, queryClient, pcList, selectedPc}: Props) {
     const [showSuccessAlert, setShowSuccessAlert] = useState(false);
     const triggerSuccessAlert = () => {
         setShowSuccessAlert(true);
@@ -38,20 +40,30 @@ function Tracker({pcData, queryClient}: Props) {
         }, 2000);
     };
     
-    const limitedUseFeatures = pcData.features.filter(feature => feature.data.maxUses);
-
-    const defaultFormData = {
-        hitPointsCurrent: pcData.baseDetails.usableResources.hitPoints.current,
-        hitPointsTemporary: pcData.baseDetails.usableResources.hitPoints.temporary,
-        hitDiceCurrent: pcData.baseDetails.usableResources.hitDice.current,
-        deathSavesSuccesses: pcData.baseDetails.usableResources.deathSaves.successesRemaining,
-        deathSavesFailures: pcData.baseDetails.usableResources.deathSaves.failuresRemaining,
-        gold: pcData.baseDetails.usableResources.gold,
-        inspiration: pcData.baseDetails.usableResources.inspiration,
-        ...getSpellSlotFormData(pcData.spellSlots ?? []),
-        ...getFeatureFormData(limitedUseFeatures)
+    const getLimitedUseFeatures = (pcData: PlayerCharacter) => {
+        return pcData.features.filter(feature => feature.data.maxUses);
     }
-    const [formData, setFormData] = useState(defaultFormData);
+
+    const getDefaultFormData = (pcData: PlayerCharacter) => {
+        return {
+            hitPointsCurrent: pcData.baseDetails.usableResources.hitPoints.current,
+            hitPointsTemporary: pcData.baseDetails.usableResources.hitPoints.temporary,
+            hitDiceCurrent: pcData.baseDetails.usableResources.hitDice.current,
+            deathSavesSuccesses: pcData.baseDetails.usableResources.deathSaves.successesRemaining,
+            deathSavesFailures: pcData.baseDetails.usableResources.deathSaves.failuresRemaining,
+            gold: pcData.baseDetails.usableResources.gold,
+            inspiration: pcData.baseDetails.usableResources.inspiration,
+            ...getSpellSlotFormData(pcData.spellSlots ?? []),
+            ...getFeatureFormData(getLimitedUseFeatures(pcData))
+        }
+    }
+    const [formData, setFormData] = useState(getDefaultFormData(pcData));
+    const [limitedUseFeatures, setLimitedUseFeatures] = useState(getLimitedUseFeatures(pcData));
+
+    useEffect(() => {
+        setLimitedUseFeatures(getLimitedUseFeatures(pcData));
+        setFormData(getDefaultFormData(pcData));
+    }, [pcData]);
 
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = event.target;
@@ -81,11 +93,13 @@ function Tracker({pcData, queryClient}: Props) {
 
     return (
         <>
-            <Navbar/>
+            <Navbar isSelectedPc={!!selectedPc.pcId}/>
 
-            <PageHeaderBar 
+            <PageHeaderBarPC 
                 pcName={`${pcData.baseDetails.name.firstName} ${pcData.baseDetails.name.lastName}`}
                 pageName="Tracker"
+                pcList={pcList}
+                selectedPc={selectedPc}
             />
 
             <form onSubmit={handleSubmit}>
