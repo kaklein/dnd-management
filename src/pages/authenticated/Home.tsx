@@ -18,10 +18,6 @@ const handleClick = (pcId: string, navigate: (route: string) => void, setSelecte
   navigate('/');
 }
 
-const handleCreateCharacterClick = () => {
-  console.log("We're going to create a new PC!");
-}
-
 const sortPcsByName = (a: BaseDetails, b: BaseDetails) => {
   let fullNameA = `${a.name.firstName} ${a.name.lastName}`;
   let fullNameB = `${b.name.firstName} ${b.name.lastName}`;
@@ -56,7 +52,7 @@ function Home({ selectedPcId, pcList, setSelectedPcId }: Props) {
 
         <Card>
           <div className="center">
-          <Button text="+ Create New Character" onClick={handleCreateCharacterClick} buttonType={ButtonType.INFO}/>
+          <Button text="+ Create New Character" onClick={() => navigate('/create')} buttonType={ButtonType.INFO}/>
           </div>
         </Card>
         

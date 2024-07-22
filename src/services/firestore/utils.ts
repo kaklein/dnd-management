@@ -9,6 +9,8 @@ import { Ability } from "@models/enum/Ability";
 import { SpellSlot } from "@models/playerCharacter/usableResources/SpellSlot";
 import { Feature } from "@models/playerCharacter/Feature";
 import { RestType } from "@models/enum/RestType";
+import { BaseDetails } from "@models/playerCharacter/PlayerCharacter";
+import { AbilityScores } from "@models/playerCharacter/AbilityScores";
 
 export const transformFormDataForUpdate = (pcId: string, data: {updateType: UpdateType, [key: string]: string | number | object}) => { 
   const { updateType, ...updates } = data;
@@ -159,3 +161,123 @@ export const buildRemoveFromArrayUpdate = (arrayFieldName: string, idToRemove: s
     [arrayFieldName]: arrayRemove(idToRemove)
   };
 };
+
+const getProficiencyBonusByLevel = (level: number): number => {
+  if ([1, 2, 3, 4].includes(level)) return 2;
+  if ([5, 6, 7, 8].includes(level)) return 3;
+  if ([9, 10, 11, 12].includes(level)) return 4;
+  if ([13, 14, 15, 16].includes(level)) return 5;
+  if([17, 18, 19, 20].includes(level)) return 6;
+  throw Error(`Level must be between 1 and 20 inclusive. Level: ${level}`);
+}
+
+export const transformBaseDetailsForCharacterCreation = (uid: string, pcId: string, formData: any): BaseDetails => {
+  return {
+    pcId: pcId,
+    uid: uid,
+    name: {
+      firstName: formData.firstName,
+      lastName: formData.lastName
+    },
+    playerName: formData.playerName,
+    class: formData.class,
+    race: formData.race,
+    alignment: formData.alignment,
+    background: formData.background,
+    level: Number(formData.level),
+    proficiencyBonus: getProficiencyBonusByLevel(Number(formData.level)),
+    armorClass: Number(formData.armorClass),
+    speed: Number(formData.speed),
+    usableResources: {
+      hitPoints: {
+        max: Number(formData.hitPointMaximum),
+        current: Number(formData.hitPointMaximum),
+        temporary: 0
+      },
+      hitDice: {
+        type: formData.hitDiceType,
+        max: Number(formData.level),
+        current: Number(formData.level)
+      },
+      deathSaves: {
+        max: 3,
+        successesRemaining: 3,
+        failuresRemaining: 3
+      },
+      gold: Number(formData.gold),
+      inspiration: 0
+    },
+    equipment: [],
+    weapons: [],
+    spells: [],
+    notes: [],
+    languages: [],
+    proficiencies: [],
+    ...(formData.description && {description: formData.description}),
+    ...(formData.subclass && {subclass: formData.subclass}),
+    ...(formData.xp && {xp: Number(formData.xp)}),
+    ...(formData.avatarUrl && {imagePaths: {avatar: formData.avatarUrl}})
+  };
+}
+
+const getModifier = (baseScore: number): number => {
+  return Math.floor((baseScore - 10) / 2);
+}
+
+const getBool = (asString: "true" | "false") => {
+  return asString === "true" ? true : false;
+}
+
+export const transformAbilityScoresForCharacterCreation = (pcId: string, formData: any): AbilityScores => {
+  return {
+    pcId: pcId,
+    strength: {
+      score: Number(formData.strengthScore),
+      modifier: getModifier(Number(formData.strengthScore)),
+      savingThrows: {proficient: getBool(formData.strengthST)},
+      athletics: {proficient: getBool(formData.athletics)}
+    },
+    dexterity: {
+      score: Number(formData.dexterityScore),
+      modifier: getModifier(Number(formData.dexterityScore)),
+      savingThrows: {proficient: getBool(formData.dexterityST)},
+      acrobatics: {proficient: getBool(formData.acrobatics)},
+      sleightOfHand: {proficient: getBool(formData.sleightOfHand)},
+      stealth: {proficient: getBool(formData.stealth)}
+    },
+    constitution: {
+      score: Number(formData.constitutionScore),
+      modifier: getModifier(Number(formData.constitutionScore)),
+      savingThrows: {proficient: getBool(formData.constitutionST)}
+    },
+    intelligence: {
+      score: Number(formData.intelligenceScore),
+      modifier: getModifier(Number(formData.intelligenceScore)),
+      savingThrows: {proficient: getBool(formData.intelligenceST)},
+      arcana: {proficient: getBool(formData.arcana)},
+      history: {proficient: getBool(formData.history)},
+      investigation: {proficient: getBool(formData.investigation)},
+      nature: {proficient: getBool(formData.nature)},
+      religion: {proficient: getBool(formData.religion)}
+    },
+    wisdom: {
+      score: Number(formData.wisdomScore),
+      modifier: getModifier(Number(formData.wisdomScore)),
+      savingThrows: {proficient: getBool(formData.wisdomST)},
+      animalHandling: {proficient: getBool(formData.animalHandling)},
+      insight: {proficient: getBool(formData.insight)},
+      medicine: {proficient: getBool(formData.medicine)},
+      perception: {proficient: getBool(formData.perception)},
+      survival: {proficient: getBool(formData.survival)}
+    },
+    charisma: {
+      score: Number(formData.charismaScore),
+      modifier: getModifier(Number(formData.charismaScore)),
+      savingThrows: {proficient: getBool(formData.charismaST)},
+      deception: {proficient: getBool(formData.deception)},
+      intimidation: {proficient: getBool(formData.intimidation)},
+      performance: {proficient: getBool(formData.performance)},
+      persuasion: {proficient: getBool(formData.persuasion)}
+    }
+  }
+}

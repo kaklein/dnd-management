@@ -401,3 +401,10 @@ img {
 .navbar-text p {
     margin-top: 25px;
 }
+
+.pop-up {
+    background-color: lightgreen;
+    border: 4px solid green;
+    padding: 10px;
+    text-align: center;
+}
