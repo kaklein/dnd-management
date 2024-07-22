@@ -16,6 +16,8 @@ import PasswordReset from '@pages/unauthenticated/PasswordReset';
 import Home from '@pages/authenticated/Home';
 import { useLocalStorage } from '@services/localStorage/useLocalStorage';
 import CreateCharacter from '@pages/authenticated/CreateCharacter';
+import Button from '@components/Button';
+import { logoutUser } from '@services/firebaseAuth/logoutUser';
 
 const queryClient = new QueryClient();
 
@@ -66,6 +68,10 @@ function MainApp() {
         <>
             <Card>
                 <h3>Error loading data: {error.message}</h3>
+                {
+                    loggedIn &&
+                    <a className="btn btn-secondary" href="/" onClick={() => logoutUser()}>Log Out</a>
+                }
             </Card>
         </>
     )
@@ -74,6 +80,10 @@ function MainApp() {
         <>
             <Card>
                 <h3>No data found :(</h3>
+                {
+                    loggedIn &&
+                    <a className="btn btn-secondary" href="/" onClick={() => logoutUser()}>Log Out</a>
+                }
             </Card>
         </>
     )
