@@ -15,6 +15,7 @@ import Update from '@pages/authenticated/Update';
 import PasswordReset from '@pages/unauthenticated/PasswordReset';
 import Home from '@pages/authenticated/Home';
 import { useLocalStorage } from '@services/localStorage/useLocalStorage';
+import CreateCharacter from '@pages/authenticated/CreateCharacter';
 
 const queryClient = new QueryClient();
 
@@ -82,6 +83,7 @@ function MainApp() {
             <Routes>
                 <Route index element={<Home pcList={data.pcList} setSelectedPcId={setSelectedPcId}/>}/>
                 <Route path="/home" element={<Home pcList={data.pcList} setSelectedPcId={setSelectedPcId}/>}/>
+                <Route path="/create" element={<CreateCharacter queryClient={queryClient} setSelectedPcId={setSelectedPcId}/>}/>
             </Routes>
         </BrowserRouter>
     )
@@ -96,6 +98,7 @@ function MainApp() {
                 <Route path="/tracker" element={<Tracker pcData={data.selectedPcData} queryClient={queryClient} pcList={data.pcList} selectedPc={{pcId: selectedPcId, setSelectedPcId: setSelectedPcId}}/>}/>
                 <Route path="/details" element={<Details pcData={data.selectedPcData} pcList={data.pcList} selectedPc={{pcId: selectedPcId, setSelectedPcId: setSelectedPcId}}/>}/>
                 <Route path="/update" element={<Update pcData={data.selectedPcData} queryClient={queryClient} pcList={data.pcList} selectedPc={{pcId: selectedPcId, setSelectedPcId: setSelectedPcId}}/>}/>
+                <Route path="/create" element={<CreateCharacter queryClient={queryClient} setSelectedPcId={setSelectedPcId}/>}/>
             </Routes>
         </BrowserRouter>
     )

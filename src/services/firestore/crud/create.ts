@@ -4,7 +4,7 @@ import { db } from "../../../firebase";
 
 export const createDoc = async (
   collectionName: CollectionName, 
-  data: { [key: string]: string | number | object | any[] }
+  data: any
 ) => {
   await addDoc(collection(db, collectionName), data);
 }

@@ -4,7 +4,7 @@ import { Feature } from "@models/playerCharacter/Feature";
 import { PlayerCharacter } from "@models/playerCharacter/PlayerCharacter";
 import { SpellSlot } from "@models/playerCharacter/usableResources/SpellSlot";
 import { Weapon } from "@models/playerCharacter/Weapon";
-import { determineAttackBonus } from "@pages/utils";
+import { determineAttackBonus, formatBonus } from "@pages/utils";
 
 const replaceBooleans = (data: object) => {
     const entries = Object.entries(data);
@@ -108,7 +108,7 @@ export const orderAndFormatWeaponElements = (weapon: Weapon, pcData: PlayerChara
     return {
         name: weapon.name,
         type: weapon.type,
-        damage: `${weapon.damage} + ${determineAttackBonus(weapon, pcData)}`,
+        damage: `${weapon.damage} ${formatBonus(determineAttackBonus(weapon, pcData), false)}`,
         ['damage type']: weapon.damageType,
         ['modifier property']: weapon.modifierProperty.toLowerCase(),
         magic: weapon.magic,
@@ -255,4 +255,33 @@ export const orderAbilityCardElements = (abilityScores: AbilityScores, ability: 
 
 export const capitalize = (s: string) => {
     return (`${s.substring(0,1).toUpperCase()}${s.substring(1)}`)
+}
+
+export const buildProficiencyForms = (formData: any, abilityName: string, skills: string[], handleChange: (event: any, setFormData: any) => void, setFormData: any) => {
+    skills.unshift(`${abilityName}ST`);
+    return (
+        <>
+        <p><b>Proficiencies:</b></p>
+        {
+            skills.map((skill, i) => (
+                <div key={i}>
+                    <label htmlFor={skill}>
+                        {skill == `${abilityName}ST` ? 'Saving Throws' : capitalize(skill)}
+                    </label>
+                    <input
+                        id={skill}
+                        name={skill}
+                        type="checkbox"
+                        checked={formData[skill] === "true"}
+                        onChange={(event) => {
+                            event.target.value = event.target.value === "on" ? "true" : "false";
+                            handleChange(event, setFormData)
+                        }}
+                    />
+                </div>
+            ))
+        }
+        </>
+        
+    )
 }

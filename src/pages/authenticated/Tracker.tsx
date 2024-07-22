@@ -21,7 +21,7 @@ import { BaseDetails, PlayerCharacter } from "@models/playerCharacter/PlayerChar
 import { QueryClient } from "@tanstack/react-query";
 import Alert from "@components/Alert";
 import { CollectionName } from "@services/firestore/enum/CollectionName";
-import { determineAttackBonus } from "../utils";
+import { determineAttackBonus, formatBonus } from "../utils";
 import PageHeaderBarPC from "@components/headerBars/PageHeaderBarPC";
 
 interface Props {
@@ -176,7 +176,10 @@ function Tracker({pcData, queryClient, pcList, selectedPc}: Props) {
                         <Card>
                             <h3>Available Spells</h3>
                             {
-                                pcData.baseDetails.spells!.map((spell, i) => (
+                                pcData.baseDetails.spells!.sort((a,b) => {
+                                    if (a.level < b.level) return -1;
+                                    return 1;
+                                }).map((spell, i) => (
                                     <p key={i}>
                                         {spell.level}: 
                                         <Link className="text-link" to={'/details#' + removeWhiteSpaceAndConvertToLowerCase(spell.name)}>{spell.name}</Link>
@@ -195,8 +198,8 @@ function Tracker({pcData, queryClient, pcList, selectedPc}: Props) {
                                     <Link className="text-link" to={'/details#' + removeWhiteSpaceAndConvertToLowerCase(weapon.name)}><h4>{weapon.name} ({weapon.type})</h4></Link>
                                     {
                                         formatDataAsTable({
-                                            ['Attack Bonus']: `+${determineAttackBonus(weapon, pcData) + pcData.baseDetails.proficiencyBonus}`,
-                                            Damage: `${weapon.damage} + ${determineAttackBonus(weapon, pcData)} ${weapon.damageType.toLowerCase()}`
+                                            ['Attack Bonus']: `${formatBonus(determineAttackBonus(weapon, pcData) + pcData.baseDetails.proficiencyBonus)}`,
+                                            Damage: `${weapon.damage} ${formatBonus(determineAttackBonus(weapon, pcData), false)} ${weapon.damageType.toLowerCase()}`
                                         })
                                     }
                                 </Card>

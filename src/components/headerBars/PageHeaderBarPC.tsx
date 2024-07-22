@@ -1,6 +1,7 @@
 import { useState } from "react";
 import Button, { ButtonType } from "@components/Button";
 import { BaseDetails } from "@models/playerCharacter/PlayerCharacter";
+import { useNavigate } from "react-router-dom";
 
 interface Props {
   pageName: string;
@@ -12,6 +13,7 @@ interface Props {
 
 
 function PageHeaderBarPC ({pageName, pcList, pcName, selectedPc}: Props) {
+  const navigate = useNavigate();
   const [showPcs, setShowPcs] = useState(false);
 
   const handleExpandCollapseClick = () => {
@@ -22,10 +24,6 @@ function PageHeaderBarPC ({pageName, pcList, pcName, selectedPc}: Props) {
   const handlePcClick = (pcId: string) => {
     selectedPc.setSelectedPcId(pcId);
     setShowPcs(false);
-  }
-
-  const handleCreateCharacterClick = () => {
-    console.log("We're going to make a new PC!");
   }
 
   return (
@@ -44,7 +42,7 @@ function PageHeaderBarPC ({pageName, pcList, pcName, selectedPc}: Props) {
                     <div key={pc.pcId} className="pc-list-item"><Button onClick={() => handlePcClick(pc.pcId)} buttonType={ButtonType.DARK} text={`${pc.name.firstName} ${pc.name.lastName}`}/></div>
                 ))}
                 <div className="divider"></div>
-                <div className="pc-list-item-add pc-list-item-center"><Button onClick={handleCreateCharacterClick} buttonType={ButtonType.INFO} text="+ Create New Character"/></div>
+                <div className="pc-list-item-add pc-list-item-center"><Button onClick={() => navigate('/create')} buttonType={ButtonType.INFO} text="+ Create New Character"/></div>
               </div>
             }
           </div>

@@ -16,6 +16,7 @@ import { transformAndUpdate } from "@services/firestore/updateData";
 import { QueryClient } from "@tanstack/react-query";
 import Alert from "@components/Alert";
 import PageHeaderBarPC from "@components/headerBars/PageHeaderBarPC";
+import { useSearchParams } from "react-router-dom";
 
 interface Props {
   pcData: PlayerCharacter;
@@ -25,6 +26,7 @@ interface Props {
 }
 
 function Update ({pcData, queryClient, pcList, selectedPc}: Props) {
+  const [searchParams] = useSearchParams();
   const [showSuccessAlert, setShowSuccessAlert] = useState(false);
   const triggerSuccessAlert = () => {
       setShowSuccessAlert(true);
@@ -74,6 +76,16 @@ function Update ({pcData, queryClient, pcList, selectedPc}: Props) {
   return (
     <>
       <Navbar isSelectedPc={!!selectedPc.pcId}/>
+
+      {
+        searchParams.get("created") === "true" &&
+        <div className="pop-up">
+          <h4>Successfully created {pcData.baseDetails.name.firstName} {pcData.baseDetails.name.lastName}!</h4>
+          <p>
+            <b>You're almost done! To complete your character, use the forms below to add weapons, spell slots, spells, equipment, and more.</b>
+          </p>
+        </div>
+      }
             
       <PageHeaderBarPC 
           pcName={`${pcData.baseDetails.name.firstName} ${pcData.baseDetails.name.lastName}`}

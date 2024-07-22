@@ -20,7 +20,7 @@ export interface BaseDetails {
     description?: string;
     playerName: string;
     class: string;
-    subclass: string;
+    subclass?: string;
     race: string;
     alignment: string;
     background: string;
@@ -33,8 +33,8 @@ export interface BaseDetails {
     usableResources: UsableResources;
     weapons: Weapon[];
     spells?: Spell[];
-    imagePaths: {
-        avatar: string;
+    imagePaths?: {
+        avatar?: string;
         other?: string;
     };
     notes?: string[];

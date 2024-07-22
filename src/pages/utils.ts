@@ -21,3 +21,9 @@ export const determineAttackBonus = (weapon: Weapon, pcData: PlayerCharacter) =>
   }
   return weaponModifier;
 }
+
+export const formatBonus = (num: number, displayZero=true): string => {
+  if (num > 0) return `+${num}`;
+  if (num == 0 && !displayZero) return '';
+  return `${num}`;
+}
