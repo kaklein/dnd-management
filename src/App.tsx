@@ -83,6 +83,7 @@ function MainApp() {
             <Routes>
                 <Route index element={<Home pcList={data.pcList} setSelectedPcId={setSelectedPcId}/>}/>
                 <Route path="/home" element={<Home pcList={data.pcList} setSelectedPcId={setSelectedPcId}/>}/>
+                <Route path="/create" element={<CreateCharacter queryClient={queryClient} setSelectedPcId={setSelectedPcId}/>}/>
             </Routes>
         </BrowserRouter>
     )
