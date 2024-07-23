@@ -55,7 +55,7 @@ function AddSpellSlot ({handleChange, handleSubmit, formData, setFormData}: Prop
           <input
             className="update-form-input"
             type="number"
-            min="1"
+            min="0"
             max="4"
             id="max"
             name="max"

@@ -151,11 +151,11 @@ function Tracker({pcData, queryClient, pcList, selectedPc}: Props) {
                     </Card>
 
                     {
-                        (pcData.spellSlots && pcData.spellSlots.length > 0) &&
+                        (pcData.spellSlots && pcData.spellSlots.filter(slot => slot.data.max > 0).length > 0) &&
                         <Card>
                             <h3>Spell Slots</h3>
                             {
-                                pcData.spellSlots?.map(spellSlot => (
+                                pcData.spellSlots.filter(slot => slot.data.max > 0).map(spellSlot => (
                                     <Card key={spellSlot.id}>
                                         <h3>{spellSlot.data.level}</h3>
                                         <ItemUseToggle
