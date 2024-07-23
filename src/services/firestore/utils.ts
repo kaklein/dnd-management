@@ -9,12 +9,12 @@ import { Ability } from "@models/enum/Ability";
 import { SpellSlot } from "@models/playerCharacter/usableResources/SpellSlot";
 import { Feature } from "@models/playerCharacter/Feature";
 import { RestType } from "@models/enum/RestType";
-import { BaseDetails } from "@models/playerCharacter/PlayerCharacter";
+import { BaseDetails, PlayerCharacter } from "@models/playerCharacter/PlayerCharacter";
 import { AbilityScores } from "@models/playerCharacter/AbilityScores";
 import { v4 as uuidv4 } from "uuid";
 
 
-export const transformFormDataForUpdate = (pcId: string, data: {updateType: UpdateType, [key: string]: string | number | object}) => { 
+export const transformFormDataForUpdate = (pcData: PlayerCharacter, data: {updateType: UpdateType, [key: string]: string | number | object}) => { 
   const { updateType, ...updates } = data;
   
   switch (updateType) {
@@ -22,7 +22,7 @@ export const transformFormDataForUpdate = (pcId: string, data: {updateType: Upda
       return {
         collectionName: CollectionName.PC_BASE_DETAILS,
         update: {
-          pcId: pcId,
+          pcId: pcData.baseDetails.pcId,
           updateObject: {
             level: Number(updates.level),
             armorClass: Number(updates.armorClass),
@@ -48,7 +48,7 @@ export const transformFormDataForUpdate = (pcId: string, data: {updateType: Upda
       return {
         collectionName: CollectionName.PC_BASE_DETAILS,
         update: {
-          pcId: pcId,
+          pcId: pcData.baseDetails.pcId,
           updateObject: buildAddToArrayUpdate('weapons', newWeapon)
         }
       }
@@ -69,7 +69,7 @@ export const transformFormDataForUpdate = (pcId: string, data: {updateType: Upda
       return {
         collectionName: CollectionName.PC_BASE_DETAILS,
         update: {
-          pcId: pcId,
+          pcId: pcData.baseDetails.pcId,
           updateObject: buildAddToArrayUpdate('spells', newSpell)
         }
       }
@@ -78,7 +78,7 @@ export const transformFormDataForUpdate = (pcId: string, data: {updateType: Upda
       return {
         collectionName: CollectionName.PC_BASE_DETAILS,
         update: {
-          pcId: pcId,
+          pcId: pcData.baseDetails.pcId,
           updateObject: buildAddToArrayUpdate('proficiencies', updates.proficiency)
         }
       }
@@ -87,7 +87,7 @@ export const transformFormDataForUpdate = (pcId: string, data: {updateType: Upda
       return {
         collectionName: CollectionName.PC_BASE_DETAILS,
         update: {
-          pcId: pcId,
+          pcId: pcData.baseDetails.pcId,
           updateObject: buildAddToArrayUpdate('languages', updates.language)
         }
       }
@@ -96,7 +96,7 @@ export const transformFormDataForUpdate = (pcId: string, data: {updateType: Upda
       return {
         collectionName: CollectionName.PC_BASE_DETAILS,
         update: {
-          pcId: pcId,
+          pcId: pcData.baseDetails.pcId,
           updateObject: buildAddToArrayUpdate('notes', updates.note)
         }
       }
@@ -105,7 +105,7 @@ export const transformFormDataForUpdate = (pcId: string, data: {updateType: Upda
       return {
         collectionName: CollectionName.PC_BASE_DETAILS,
         update: {
-          pcId: pcId,
+          pcId: pcData.baseDetails.pcId,
           updateObject: buildAddToArrayUpdate('equipment', {id: uuidv4(), ...updates})
         }
       }
@@ -114,16 +114,38 @@ export const transformFormDataForUpdate = (pcId: string, data: {updateType: Upda
       const newSpellSlot: SpellSlot = {
         id: '',
         data: {
-          pcId: pcId,
+          pcId: pcData.baseDetails.pcId,
           level: String(updates.level) as SpellLevel,
           max: Number(updates.max),
           current: Number(updates.max)
         }
       }
-      return {
-        collectionName: CollectionName.SPELL_SLOTS,
-        create: {
-          dataObject: newSpellSlot.data
+      const existingSpellSlot = pcData.spellSlots?.filter(spellSlot => spellSlot.data.level == newSpellSlot.data.level)[0];
+      if (existingSpellSlot) {
+        // TODO: Update existing spell slot - check how this update object is used; we need to do an update by doc id (spellSlot.id) instead of by pcId
+        const getCurrentSpellSlots = () => {
+          // if new max is 4, current max is 3, current current is 3: new current should be 4
+          const existingCurrent = existingSpellSlot.data.current;
+          const existingUsed = existingSpellSlot.data.max - existingCurrent;
+          return Math.max(newSpellSlot.data.max - existingUsed, 0);
+        }
+        
+        return {
+          collectionName: CollectionName.SPELL_SLOTS,
+          updateByDocId: {
+            docId: existingSpellSlot.id,
+            updateObject: { 
+              max: newSpellSlot.data.max, 
+              current: getCurrentSpellSlots()
+            }
+          }
+        }
+      } else {
+        return {
+          collectionName: CollectionName.SPELL_SLOTS,
+          create: {
+            dataObject: newSpellSlot.data
+          }
         }
       }
     }
@@ -131,7 +153,7 @@ export const transformFormDataForUpdate = (pcId: string, data: {updateType: Upda
       const newFeature: Feature = {
         id: '',
         data: {
-          pcId: pcId,
+          pcId: pcData.baseDetails.pcId,
           name: String(updates.name),
           description: String(updates.description),
           source: String(updates.source),
