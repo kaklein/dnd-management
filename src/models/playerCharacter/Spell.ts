@@ -2,6 +2,7 @@ import { DamageType } from "@models/enum/DamageType";
 import { Ability } from "@models/enum/Ability";
 
 export interface Spell {
+    id: string;
     name: string;
     description: string;
     level: SpellLevel;

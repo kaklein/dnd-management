@@ -106,7 +106,6 @@ export const formatSpellSlotsUpdates = (formData: any): {docId: string, updates:
 
 export const orderAndFormatWeaponElements = (weapon: Weapon, pcData: PlayerCharacter) => {
     return {
-        name: weapon.name,
         type: weapon.type,
         damage: `${weapon.damage} ${formatBonus(determineAttackBonus(weapon, pcData), false)}`,
         ['damage type']: weapon.damageType,

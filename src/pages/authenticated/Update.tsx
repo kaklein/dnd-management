@@ -22,7 +22,7 @@ interface Props {
   pcData: PlayerCharacter;
   queryClient: QueryClient;
   pcList: BaseDetails[];
-  selectedPc: {pcId: string | null, setSelectedPcId: (pcId: string) => void}
+  selectedPc: {pcId: string | null, setSelectedPcId: (pcId: string) => void};
 }
 
 function Update ({pcData, queryClient, pcList, selectedPc}: Props) {

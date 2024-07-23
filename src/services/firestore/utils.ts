@@ -11,6 +11,8 @@ import { Feature } from "@models/playerCharacter/Feature";
 import { RestType } from "@models/enum/RestType";
 import { BaseDetails } from "@models/playerCharacter/PlayerCharacter";
 import { AbilityScores } from "@models/playerCharacter/AbilityScores";
+import { v4 as uuidv4 } from "uuid";
+
 
 export const transformFormDataForUpdate = (pcId: string, data: {updateType: UpdateType, [key: string]: string | number | object}) => { 
   const { updateType, ...updates } = data;
@@ -34,6 +36,7 @@ export const transformFormDataForUpdate = (pcId: string, data: {updateType: Upda
     case UpdateType.WEAPONS: {
       const isMagic = updates.magic === "true" ? true: false;
       const newWeapon: Weapon = {
+        id: uuidv4(),
         name: String(updates.name),
         type: String(updates.type),
         damage: String(updates.damage),
@@ -52,6 +55,7 @@ export const transformFormDataForUpdate = (pcId: string, data: {updateType: Upda
     }
     case UpdateType.SPELLS: {
       const newSpell: Spell = {
+        id: uuidv4(),
         name: String(updates.name),
         description: String(updates.description),
         level: String(updates.level) as SpellLevel,
@@ -102,7 +106,7 @@ export const transformFormDataForUpdate = (pcId: string, data: {updateType: Upda
         collectionName: CollectionName.PC_BASE_DETAILS,
         update: {
           pcId: pcId,
-          updateObject: buildAddToArrayUpdate('equipment', updates)
+          updateObject: buildAddToArrayUpdate('equipment', {id: uuidv4(), ...updates})
         }
       }
     }
@@ -156,9 +160,9 @@ export const buildAddToArrayUpdate = (arrayFieldName: string, objectToAdd: any) 
   };
 };
 
-export const buildRemoveFromArrayUpdate = (arrayFieldName: string, idToRemove: string) => {
+export const buildRemoveFromArrayUpdate = (arrayFieldName: string, stringToRemove: string) => {
   return {
-    [arrayFieldName]: arrayRemove(idToRemove)
+    [arrayFieldName]: arrayRemove(stringToRemove)
   };
 };
 
