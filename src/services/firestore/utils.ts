@@ -122,14 +122,11 @@ export const transformFormDataForUpdate = (pcData: PlayerCharacter, data: {updat
       }
       const existingSpellSlot = pcData.spellSlots?.filter(spellSlot => spellSlot.data.level == newSpellSlot.data.level)[0];
       if (existingSpellSlot) {
-        // TODO: Update existing spell slot - check how this update object is used; we need to do an update by doc id (spellSlot.id) instead of by pcId
         const getCurrentSpellSlots = () => {
-          // if new max is 4, current max is 3, current current is 3: new current should be 4
           const existingCurrent = existingSpellSlot.data.current;
           const existingUsed = existingSpellSlot.data.max - existingCurrent;
           return Math.max(newSpellSlot.data.max - existingUsed, 0);
         }
-        
         return {
           collectionName: CollectionName.SPELL_SLOTS,
           updateByDocId: {
