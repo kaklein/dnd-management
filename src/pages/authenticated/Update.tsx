@@ -62,7 +62,7 @@ function Update ({pcData, queryClient, pcList, selectedPc}: Props) {
   ) => {
     event.preventDefault();
     try{
-      await transformAndUpdate(pcData.baseDetails.pcId, data);
+      await transformAndUpdate(pcData, data);
     } catch (e) {
       console.error(e);
       alert (`Update failed. Please refresh the page and try again.`);

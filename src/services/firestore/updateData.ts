@@ -1,9 +1,10 @@
+import { PlayerCharacter } from "@models/playerCharacter/PlayerCharacter";
 import { createDoc } from "./crud/create";
-import { updateDataByPcId } from "./crud/update";
+import { updateById, updateDataByPcId } from "./crud/update";
 import { transformFormDataForUpdate } from "./utils";
 
-export const transformAndUpdate = async (pcId: string, data: any) => {
-  const transformedUpdates = transformFormDataForUpdate(pcId, data);
+export const transformAndUpdate = async (pcData: PlayerCharacter, data: any) => {
+  const transformedUpdates = transformFormDataForUpdate(pcData, data);
   if (transformedUpdates.create) {
     await createDoc(transformedUpdates.collectionName, transformedUpdates.create.dataObject);
   } else if (transformedUpdates.update) {
@@ -11,6 +12,12 @@ export const transformAndUpdate = async (pcId: string, data: any) => {
       transformedUpdates.collectionName, 
       transformedUpdates.update.pcId, 
       transformedUpdates.update.updateObject
+    );
+  } else if (transformedUpdates.updateByDocId) {
+    await updateById(
+      transformedUpdates.collectionName, 
+      transformedUpdates.updateByDocId.docId, 
+      transformedUpdates.updateByDocId.updateObject
     );
   } else {
     console.log('No update or create');
