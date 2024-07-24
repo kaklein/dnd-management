@@ -1,5 +1,6 @@
 import Button, { ButtonType } from "@components/Button";
-import Modal from 'react-bootstrap';
+import { Modal, ModalDialog, ModalFooter, ModalHeader, ModalTitle } from 'react-bootstrap';
+
 
 interface Props {
   show: boolean;
@@ -12,21 +13,21 @@ interface Props {
 
 function ConfirmDelete ({show, itemName, handleCancel, handleDelete, setShow, clearedData}: Props) {
   return (
-    <Modal.Modal
-      backdrop="static"
+    <Modal
+      // backdrop="static"
       show={show}
       onHide={() => setShow({show: false, data: clearedData})}
     >
-      <Modal.ModalDialog>
-        <Modal.ModalHeader closeButton>
-          <Modal.ModalTitle>Delete {itemName}?</Modal.ModalTitle>
-        </Modal.ModalHeader>
-        <Modal.ModalFooter>
+      <ModalDialog>
+        <ModalHeader closeButton>
+          <ModalTitle>Delete {itemName}?</ModalTitle>
+        </ModalHeader>
+        <ModalFooter>
           <Button text="Cancel" buttonType={ButtonType.SECONDARY} onClick={handleCancel}/>
           <Button text="Delete" buttonType={ButtonType.DANGER} onClick={handleDelete}/>
-        </Modal.ModalFooter>
-      </Modal.ModalDialog>
-    </Modal.Modal>
+        </ModalFooter>
+      </ModalDialog>
+    </Modal>
   )
 }
 
