@@ -4,6 +4,7 @@ import { DamageType } from "@models/enum/DamageType";
 import { RestType } from "@models/enum/RestType";
 import { useState } from "react";
 import FormHeader from "./FormHeader";
+import Button, { ButtonType } from "@components/Button";
 
 interface Props {
   handleChange: (event: any, setFunction: (prevFormData: any) => void) => void;
@@ -51,7 +52,7 @@ function AddFeature ({handleChange, handleSubmit, formData, setFormData}: Props)
   return (
     <div>
       <FormHeader
-        formTitle="Add New Feature"
+        formTitle="New Feature"
         onClick={() => setShowForm(!showForm)}
         showForm={showForm}
       />
@@ -59,6 +60,10 @@ function AddFeature ({handleChange, handleSubmit, formData, setFormData}: Props)
     {
       showForm &&
       <form onSubmit={(event) => {handleSubmit(event, formData, setFormData, defaultFeatureFormData)}}>
+        <p className="update-form-description">
+          Add any special features you have due to race, class, magical items, etc.
+        </p>
+        
         <div className="update-form-field">
           <label className="update-form-label" htmlFor="name">Name</label>
           <input
@@ -241,7 +246,12 @@ function AddFeature ({handleChange, handleSubmit, formData, setFormData}: Props)
           />
         </div>
 
-        <button className="update-form-submit-btn" type="submit">Submit Feature</button>
+        <Button
+          text="Submit Feature"
+          buttonType={ButtonType.INFO}
+          type="submit"
+          onClick={() => {}}
+        />
       </form>
     }
     </div>

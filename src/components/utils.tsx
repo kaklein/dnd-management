@@ -106,7 +106,6 @@ export const formatSpellSlotsUpdates = (formData: any): {docId: string, updates:
 
 export const orderAndFormatWeaponElements = (weapon: Weapon, pcData: PlayerCharacter) => {
     return {
-        name: weapon.name,
         type: weapon.type,
         damage: `${weapon.damage} ${formatBonus(determineAttackBonus(weapon, pcData), false)}`,
         ['damage type']: weapon.damageType,
@@ -257,31 +256,41 @@ export const capitalize = (s: string) => {
     return (`${s.substring(0,1).toUpperCase()}${s.substring(1)}`)
 }
 
+export const toCamelCase = (s: string): string => {
+    const splitOnSpace = s.split(' ');
+    let newString = splitOnSpace.shift()!.toLowerCase();
+    for (const i of splitOnSpace) {
+      newString = newString + capitalize(i);
+    }
+    return newString;
+}
+
 export const buildProficiencyForms = (formData: any, abilityName: string, skills: string[], handleChange: (event: any, setFormData: any) => void, setFormData: any) => {
     skills.unshift(`${abilityName}ST`);
     return (
-        <>
+        <div className="skill-prof">
         <p><b>Proficiencies:</b></p>
         {
             skills.map((skill, i) => (
-                <div key={i}>
-                    <label htmlFor={skill}>
-                        {skill == `${abilityName}ST` ? 'Saving Throws' : capitalize(skill)}
-                    </label>
+                <div className="skill-prof-item" key={i}>
                     <input
-                        id={skill}
-                        name={skill}
+                        className="form-check-input"
+                        id={toCamelCase(skill)}
+                        name={toCamelCase(skill)}
                         type="checkbox"
-                        checked={formData[skill] === "true"}
+                        checked={formData[toCamelCase(skill)] === "true"}
                         onChange={(event) => {
                             event.target.value = event.target.value === "on" ? "true" : "false";
                             handleChange(event, setFormData)
                         }}
                     />
+                    <label className="form-check-label" htmlFor={toCamelCase(skill)}>
+                        {skill == `${abilityName}ST` ? 'Saving Throws' : capitalize(skill)}
+                    </label>
                 </div>
             ))
         }
-        </>
+        </div>
         
     )
 }

@@ -5,7 +5,7 @@ import { BaseDetails, PlayerCharacter } from "@models/playerCharacter/PlayerChar
 import { useState } from "react";
 import AddWeapon from "@components/updateForms/AddWeapon";
 import AddSpell from "@components/updateForms/AddSpell";
-import AddSpellSlot from "@components/updateForms/AddSpellSlot";
+import UpdateSpellSlot from "@components/updateForms/UpdateSpellSlot";
 import AddFeature from "@components/updateForms/AddFeature";
 import AddItemToArrayField from "@components/updateForms/AddItemToArrayField";
 import UpdatePC from "@components/updateForms/UpdatePC";
@@ -22,7 +22,7 @@ interface Props {
   pcData: PlayerCharacter;
   queryClient: QueryClient;
   pcList: BaseDetails[];
-  selectedPc: {pcId: string | null, setSelectedPcId: (pcId: string) => void}
+  selectedPc: {pcId: string | null, setSelectedPcId: (pcId: string) => void};
 }
 
 function Update ({pcData, queryClient, pcList, selectedPc}: Props) {
@@ -81,9 +81,11 @@ function Update ({pcData, queryClient, pcList, selectedPc}: Props) {
         searchParams.get("created") === "true" &&
         <div className="pop-up">
           <h4>Successfully created {pcData.baseDetails.name.firstName} {pcData.baseDetails.name.lastName}!</h4>
-          <p>
+          <div>
             <b>You're almost done! To complete your character, use the forms below to add weapons, spell slots, spells, equipment, and more.</b>
-          </p>
+            <br/>
+            You can come back to this page at any time to add new items and update your character base stats.
+          </div>
         </div>
       }
             
@@ -106,6 +108,15 @@ function Update ({pcData, queryClient, pcList, selectedPc}: Props) {
           setFormData={setWeaponFormData}
         />
       </Card>
+      
+      <Card>
+        <UpdateSpellSlot
+          handleChange={handleChange}
+          handleSubmit={handleSubmit}
+          formData={spellSlotFormData}
+          setFormData={setSpellSlotFormData}
+        />
+      </Card>
 
       <Card>
         <AddSpell
@@ -113,15 +124,6 @@ function Update ({pcData, queryClient, pcList, selectedPc}: Props) {
           handleSubmit={handleSubmit}
           formData={spellFormData}
           setFormData={setSpellFormData}
-        />
-      </Card>
-
-      <Card>
-        <AddSpellSlot
-          handleChange={handleChange}
-          handleSubmit={handleSubmit}
-          formData={spellSlotFormData}
-          setFormData={setSpellSlotFormData}
         />
       </Card>
 

@@ -5,6 +5,7 @@ import { WeaponModifierProperty } from "@models/enum/WeaponModifierProperty"
 import { useState } from "react";
 import { Link } from "react-router-dom"
 import FormHeader from "./FormHeader";
+import Button, { ButtonType } from "@components/Button";
 
 interface Props {
   handleChange: (event: any, setFunction: (prevFormData: any) => void) => void;
@@ -24,7 +25,7 @@ function AddWeapon ({handleChange, handleSubmit, formData, setFormData}: Props) 
   return (
     <div>
       <FormHeader
-        formTitle="Add New Weapon"
+        formTitle="New Weapon"
         onClick={() => setShowForm(!showForm)}
         showForm={showForm}
       />
@@ -33,7 +34,7 @@ function AddWeapon ({handleChange, handleSubmit, formData, setFormData}: Props) 
       showForm &&
       <form onSubmit={(event) => {handleSubmit(event, formData, setFormData, defaultWeaponFormData)}}>
       <div className="update-form-field">
-        <label className="update-form-label" htmlFor="name">Weapon Name</label>
+        <label className="update-form-label" htmlFor="name">Name</label>
         <input
           className="update-form-input"
           type="text"
@@ -151,7 +152,12 @@ function AddWeapon ({handleChange, handleSubmit, formData, setFormData}: Props) 
         />
       </div>
       
-      <button className="update-form-submit-btn" type="submit">Submit Weapon</button>
+      <Button
+          text="Submit Weapon"
+          buttonType={ButtonType.INFO}
+          type="submit"
+          onClick={() => {}}
+        />
     </form>
     }
     </div>

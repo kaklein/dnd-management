@@ -1,3 +1,5 @@
+import Button, { ButtonType } from "@components/Button";
+import TitleButtonRow from "@components/TitleButtonRow";
 import { PlayerCharacter } from "@models/playerCharacter/PlayerCharacter";
 import { useState } from "react";
 
@@ -19,8 +21,26 @@ function UpdatePC ({pcData, handleChange, handleSubmit, formData, setFormData}: 
   return (
     <div>
       <div className="update-form-section-header">
-        <h3>Update Character</h3>
+        <h3>Update Character Base Stats</h3>
       </div>
+
+      <TitleButtonRow
+        text="These fields will only change when you get new armor or level up your PC.
+        Click the Unlock button to make changes."
+        formatAsHeader={false}
+        button={
+          <button
+            className="btn btn-danger"
+            onClick={() => {setLocked(!locked)}}
+          >
+            {locked ? 'Unlock' : 'Lock'}
+          </button>
+        }
+      />
+      {/* <p className="update-form-description">
+        These fields will only change when you get new armor or level up your PC.
+        Click the Unlock button to make changes.
+      </p>
       
       <div className="form-lock">
         <button
@@ -29,7 +49,7 @@ function UpdatePC ({pcData, handleChange, handleSubmit, formData, setFormData}: 
         >
           {locked ? 'Unlock' : 'Lock'}
         </button>
-      </div>
+      </div> */}
 
       <br/>
 
@@ -107,7 +127,14 @@ function UpdatePC ({pcData, handleChange, handleSubmit, formData, setFormData}: 
             disabled={locked}
           />
         </div>
-        <button className="update-form-submit-btn" type="submit" disabled={locked}>Save Changes</button>
+
+        <Button
+          text="Save Changes"
+          buttonType={ButtonType.INFO}
+          type="submit"
+          onClick={() => {}}
+          disabled={locked}
+        />
       </form>      
     </div>
   )

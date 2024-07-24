@@ -10,7 +10,6 @@ export const createCharacter = async (uid: string, pcId: string, formData: any) 
     await createDoc(CollectionName.PC_BASE_DETAILS, baseDetailsTransformed);
     await createDoc(CollectionName.ABILITY_SCORES, abilityScoresTransformed);
   } catch (e) {
-    console.error(`Failed to create PC: ${JSON.stringify(e)}`);
-    alert('Error creating character. Please refresh the page and try again.');
+    throw Error(`Failed to create PC: ${JSON.stringify(e)}`);
   }
 }

@@ -1,10 +1,13 @@
 import Alert from "@components/Alert";
+import Button, { ButtonType } from "@components/Button";
 import Card from "@components/cards/Card";
 import PageHeaderBar from "@components/headerBars/PageHeaderBar";
 import { resetPassword } from "@services/firebaseAuth/resetPassword";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 function PasswordReset () {
+  const navigate = useNavigate();
   const [email, setEmail] = useState('');
   const [showConfirmation, setShowConfirmation] = useState(false);
   const handleSubmit = async (event: any) => {
@@ -36,8 +39,8 @@ function PasswordReset () {
       
       <Card>
         <div>
-          <p>Enter your email and click the Reset Password button.</p>
-          <p>If a user exists with that email address, we will email you a link to reset your password.</p>
+          <p className="center">Enter your email and click the Reset Password button.</p>
+          <p className="center">If a user exists with that email address, we will email you a link to reset your password.</p>
           <form  onSubmit={handleSubmit} className="login-form">
             <div className="form-field">
               <label className="form-label" htmlFor="email-input">Email:</label>
@@ -53,7 +56,12 @@ function PasswordReset () {
               />
             </div>
             <div>
-              <button type="submit" className="btn btn-primary" id="login-submit-button">Reset Password</button>
+              <Button
+                text="Reset Password"
+                buttonType={ButtonType.PRIMARY}
+                type="submit"
+                onClick={() => {}}
+              />
               {showSuccessAlert && <Alert alertText="" className="successful-alert" iconFile="/images/icons/success-icon.png"/>}
             </div>
           </form>
@@ -66,10 +74,18 @@ function PasswordReset () {
           </div>
         }
 
-        <div>
-          <a className="reroute-button" href="/login">Log In</a>
-          <br/>
-          <a className="reroute-button" href="/signup">Sign Up</a>
+        <hr/>
+        <div className="button-menu">
+          <Button
+            text="Log In"
+            buttonType={ButtonType.SECONDARY}
+            onClick={() => navigate('/login')}
+          />
+          <Button
+            text="Sign Up"
+            buttonType={ButtonType.SECONDARY}
+            onClick={() => navigate('/signup')}
+          />
         </div>
       </Card>
     </>

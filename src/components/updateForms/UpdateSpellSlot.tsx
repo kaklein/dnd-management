@@ -3,6 +3,7 @@ import { defaultSpellSlotFormData } from "@data/emptyFormData";
 import { SpellLevel } from "@models/playerCharacter/Spell";
 import { useState } from "react";
 import FormHeader from "./FormHeader";
+import Button, { ButtonType } from "@components/Button";
 
 interface Props {
   handleChange: (event: any, setFunction: (prevFormData: any) => void) => void;
@@ -15,13 +16,13 @@ interface Props {
   setFormData: (data: any) => void;
 }
 
-function AddSpellSlot ({handleChange, handleSubmit, formData, setFormData}: Props) {
+function UpdateSpellSlot ({handleChange, handleSubmit, formData, setFormData}: Props) {
   const [showForm, setShowForm] = useState(false);
   
   return (
     <div>
       <FormHeader
-        formTitle="Add Spell Slot"
+        formTitle="Add/Update Spell Slot"
         onClick={() => setShowForm(!showForm)}
         showForm={showForm}
       />
@@ -47,16 +48,15 @@ function AddSpellSlot ({handleChange, handleSubmit, formData, setFormData}: Prop
           />
         </div>
         <div className="update-form-field">
-          <label className="update-form-label" htmlFor="max">Total Number of Slots</label>
+          <label className="update-form-label" htmlFor="max">Number of Slots</label>
           <p className="update-form-description">
-            Enter the TOTAL number of slots for this spell level. For example, if you previously 
-            had two Level 1 spell slots and are gaining one more, enter 3.
+            Enter the TOTAL number of slots you have for this spell level. To remove spell slots of this level, enter 0.
           </p>
           <input
             className="update-form-input"
             type="number"
             min="0"
-            max="4"
+            max="10"
             id="max"
             name="max"
             onChange={(event) => {handleChange(event, setFormData)}}
@@ -64,11 +64,17 @@ function AddSpellSlot ({handleChange, handleSubmit, formData, setFormData}: Prop
             required
           />
         </div>
-        <button className="update-form-submit-btn" type="submit">Submit Spell Slot Update</button>
+
+        <Button
+          text="Submit Spell Slot Update"
+          buttonType={ButtonType.INFO}
+          type="submit"
+          onClick={() => {}}
+        />
       </form>
     }
     </div>
   )
 }
 
-export default AddSpellSlot;
+export default UpdateSpellSlot;

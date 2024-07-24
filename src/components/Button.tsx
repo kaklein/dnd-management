@@ -2,7 +2,9 @@ interface Props {
     text: string
     onClick: () => void,
     buttonType?: ButtonType;
-
+    type?: "submit" | "reset" | "button";
+    disabled?: boolean;
+    customClass?: string;
 }
 
 export enum ButtonType {
@@ -17,11 +19,11 @@ export enum ButtonType {
     'LINK' = 'link'
 }
 
-const Button = ({text, onClick, buttonType=ButtonType.PRIMARY}: Props) => {
-    const buttonTypeClassName = `btn-${buttonType}`;
+const Button = ({text, onClick, buttonType=ButtonType.PRIMARY, type=undefined, disabled=false, customClass=undefined}: Props) => {
+    const buttonTypeClassName = `btn-${buttonType} ${customClass}`;
     return (
         <div>
-            <button className={`btn ${buttonTypeClassName}`} onClick={() => {onClick()}}>{text}</button>
+            <button className={`btn ${buttonTypeClassName}`} type={type ?? undefined} disabled={disabled} onClick={() => {onClick()}}>{text}</button>
         </div>
     );
 }

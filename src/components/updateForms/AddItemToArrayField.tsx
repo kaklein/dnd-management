@@ -1,6 +1,7 @@
 import { capitalize } from "@components/utils";
 import { useState } from "react";
 import FormHeader from "./FormHeader";
+import Button, { ButtonType } from "@components/Button";
 
 interface Props {
   fieldName: string;
@@ -23,7 +24,7 @@ function AddItemToArrayField ({fieldName, handleChange, handleSubmit, formData, 
   return (
     <div>
       <FormHeader
-        formTitle={`Add New ${capitalize(fieldName)}`}
+        formTitle={`New ${capitalize(fieldName)}`}
         onClick={() => setShowForm(!showForm)}
         showForm={showForm}
       />
@@ -63,7 +64,12 @@ function AddItemToArrayField ({fieldName, handleChange, handleSubmit, formData, 
           
         </div>
         
-        <button className="update-form-submit-btn" type="submit">Submit {capitalize(fieldName)}</button>
+        <Button
+          text={`Submit ${capitalize(fieldName)}`}
+          buttonType={ButtonType.INFO}
+          type="submit"
+          onClick={() => {}}
+        />
       </form>
     }
     </div>

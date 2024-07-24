@@ -23,6 +23,7 @@ import Alert from "@components/Alert";
 import { CollectionName } from "@services/firestore/enum/CollectionName";
 import { determineAttackBonus, formatBonus } from "../utils";
 import PageHeaderBarPC from "@components/headerBars/PageHeaderBarPC";
+import Button, { ButtonType } from "@components/Button";
 
 interface Props {
     pcData: PlayerCharacter;
@@ -104,7 +105,13 @@ function Tracker({pcData, queryClient, pcList, selectedPc}: Props) {
 
             <form onSubmit={handleSubmit}>
                 <div>
-                    <button type="submit" id="tracker-save-button" className="btn btn-success">Save</button>
+                    <Button
+                        text="Save"
+                        buttonType={ButtonType.SUCCESS}
+                        type="submit"
+                        customClass="tracker-save-button"
+                        onClick={() => {}}
+                    />
                     {showSuccessAlert && <Alert alertText="Save successful." className="successful-alert" iconFile="/images/icons/success-icon.png"/>}
                     <Card>
                         <h3>Hit Points</h3>
