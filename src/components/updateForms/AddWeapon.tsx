@@ -5,6 +5,7 @@ import { WeaponModifierProperty } from "@models/enum/WeaponModifierProperty"
 import { useState } from "react";
 import { Link } from "react-router-dom"
 import FormHeader from "./FormHeader";
+import Button, { ButtonType } from "@components/Button";
 
 interface Props {
   handleChange: (event: any, setFunction: (prevFormData: any) => void) => void;
@@ -151,7 +152,12 @@ function AddWeapon ({handleChange, handleSubmit, formData, setFormData}: Props) 
         />
       </div>
       
-      <button className="update-form-submit-btn" type="submit">Submit Weapon</button>
+      <Button
+          text="Submit Weapon"
+          buttonType={ButtonType.INFO}
+          type="submit"
+          onClick={() => {}}
+        />
     </form>
     }
     </div>

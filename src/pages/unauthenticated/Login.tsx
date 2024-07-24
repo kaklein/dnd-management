@@ -1,3 +1,4 @@
+import Button, { ButtonType } from "@components/Button";
 import Card from "@components/cards/Card";
 import PageHeaderBar from "@components/headerBars/PageHeaderBar";
 import { loginUser } from "@services/firebaseAuth/loginUser";
@@ -43,16 +44,29 @@ function Login () {
             <input className="form-input" type="password" name="password" id="password" autoComplete="current-password" placeholder="Password" onChange={handleChange}/>
           </div>
           <div>
-            <button type="submit" className="btn btn-primary" id="login-submit-button">Log In</button>
+            <Button
+              text="Log In"
+              buttonType={ButtonType.PRIMARY}
+              type="submit"
+              onClick={() => {}}
+            />  
           </div>
         </form>
         <hr/>
-        <div>
+        <div className="button-menu">
           <p>New user?</p>
-          <a className="reroute-button" href="/signup">Sign Up</a>
-
+          <Button
+            text="Sign Up"
+            buttonType={ButtonType.SECONDARY}
+            onClick={() => {navigate('/signup')}}
+          />
+          <br/><br/>
           <p>Forgot password?</p>
-          <a className="reset-password-button" href="/password-reset">Reset Password</a>
+          <Button
+            text="Reset Password"
+            buttonType={ButtonType.SECONDARY}
+            onClick={() => {navigate('/password-reset')}}
+          />
         </div>
 
       </Card>

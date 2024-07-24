@@ -5,6 +5,7 @@ import { DamageType } from "@models/enum/DamageType";
 import { SpellLevel } from "@models/playerCharacter/Spell";
 import { useState } from "react";
 import FormHeader from "./FormHeader";
+import Button, { ButtonType } from "@components/Button";
 
 interface Props {
   handleChange: (event: any, setFunction: (prevFormData: any) => void) => void;
@@ -166,7 +167,12 @@ function AddSpell ({handleChange, handleSubmit, formData, setFormData}: Props) {
           />
         </div>
            
-        <button className="update-form-submit-btn" type="submit">Submit Spell</button>
+        <Button
+          text="Submit Spell"
+          buttonType={ButtonType.INFO}
+          type="submit"
+          onClick={() => {}}
+        />
       </form>
     }
     </div>

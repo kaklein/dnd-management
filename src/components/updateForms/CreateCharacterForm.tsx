@@ -252,10 +252,16 @@ function CreateCharacterForm ({handleChange, handleSubmit, formData, setFormData
         {
           showAbilityScores &&
           <>
-              <Button buttonType={ButtonType.INFO} text="< Back" onClick={() => {
-              setShowAbilityScores(false);
-              setShowBaseDetails(true);
-            }}/>  
+            <div className="div-button">
+              <Button 
+                buttonType={ButtonType.INFO}
+                text="< Back"
+                onClick={() => {
+                  setShowAbilityScores(false);
+                  setShowBaseDetails(true);
+                }}
+              />
+            </div>
             <h4>Ability Scores</h4>
             <p className="update-form-description">
               Ability modifiers will be automatically calculated. After character creation, you can view and modify your ability scores and skill proficiencies
@@ -383,11 +389,28 @@ function CreateCharacterForm ({handleChange, handleSubmit, formData, setFormData
               }
             </Card>
 
-            <Button buttonType={ButtonType.INFO} text="< Back" onClick={() => {
-              setShowAbilityScores(false);
-              setShowBaseDetails(true);
-            }}/>
-            <button className="create-form-submit-btn" type="submit">Submit</button>          
+            <div className="container-fluid">
+              <div className="row">
+                <div className="col-sm test">
+                  <Button
+                    buttonType={ButtonType.SECONDARY}
+                    text="< Back"
+                    onClick={() => {
+                      setShowAbilityScores(false);
+                      setShowBaseDetails(true);
+                    }}
+                  />
+                </div>
+                <div className="col-auto test">
+                  <Button
+                    text="Submit"
+                    buttonType={ButtonType.INFO}
+                    type="submit"
+                    onClick={() => {}}
+                  />
+                </div>
+              </div>              
+            </div>
           </>
         }
       </form>

@@ -3,6 +3,7 @@ import { defaultSpellSlotFormData } from "@data/emptyFormData";
 import { SpellLevel } from "@models/playerCharacter/Spell";
 import { useState } from "react";
 import FormHeader from "./FormHeader";
+import Button, { ButtonType } from "@components/Button";
 
 interface Props {
   handleChange: (event: any, setFunction: (prevFormData: any) => void) => void;
@@ -55,7 +56,7 @@ function UpdateSpellSlot ({handleChange, handleSubmit, formData, setFormData}: P
             className="update-form-input"
             type="number"
             min="0"
-            max="4"
+            max="10"
             id="max"
             name="max"
             onChange={(event) => {handleChange(event, setFormData)}}
@@ -63,7 +64,13 @@ function UpdateSpellSlot ({handleChange, handleSubmit, formData, setFormData}: P
             required
           />
         </div>
-        <button className="update-form-submit-btn" type="submit">Submit Spell Slot Update</button>
+
+        <Button
+          text="Submit Spell Slot Update"
+          buttonType={ButtonType.INFO}
+          type="submit"
+          onClick={() => {}}
+        />
       </form>
     }
     </div>

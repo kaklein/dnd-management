@@ -60,7 +60,7 @@ img {
     float: right;
 }
 
-#tracker-save-button {
+.tracker-save-button {
     position: fixed;
     top: 60px;
     right: 5px;
@@ -78,6 +78,7 @@ img {
 
 .center {
     margin: auto;
+    text-align: center;
 }
 
 .alert-div {
@@ -246,16 +247,6 @@ img {
     text-align: left;
     border: 1px solid darkgray;
     border-radius: 10px;
-}
-
-#login-submit-button {
-    padding-left: 20px;
-    padding-right: 20px;
-    padding-top: 10px;
-    padding-bottom: 10px;
-    width: fit-content;
-    margin: auto;
-    text-align: center;
 }
 
 .update-form-field {
@@ -429,6 +420,18 @@ img {
 .div-button {
     display: inline-block;
     width: 100%;
+}
+
+.button-menu {
+    width: fit-content;
+    text-align: center;
+    margin: auto;
+}
+
+.button-menu p, .button-menu Button {
+    width: 100%;
+    margin: auto;
+    margin-top: 5px;
 }
 
 .title-button-row {

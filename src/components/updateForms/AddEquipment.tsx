@@ -1,6 +1,7 @@
 import { defaultEquipmentFormData } from "@data/emptyFormData";
 import { useState } from "react";
 import FormHeader from "./FormHeader";
+import Button, { ButtonType } from "@components/Button";
 
 interface Props {
   handleChange: (event: any, setFunction: (prevFormData: any) => void) => void;
@@ -50,8 +51,13 @@ function AddEquipment ({handleChange, handleSubmit, formData, setFormData}: Prop
           />
         </div>
           
-        <button className="update-form-submit-btn" type="submit">Submit Equipment</button>
-      </form>
+        <Button
+          text="Submit Equipment"
+          buttonType={ButtonType.INFO}
+          type="submit"
+          onClick={() => {}}
+        />      
+        </form>
     }
     </div>
   )

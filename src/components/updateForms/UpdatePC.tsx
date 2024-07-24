@@ -1,3 +1,4 @@
+import Button, { ButtonType } from "@components/Button";
 import TitleButtonRow from "@components/TitleButtonRow";
 import { PlayerCharacter } from "@models/playerCharacter/PlayerCharacter";
 import { useState } from "react";
@@ -126,7 +127,14 @@ function UpdatePC ({pcData, handleChange, handleSubmit, formData, setFormData}: 
             disabled={locked}
           />
         </div>
-        <button className="update-form-submit-btn" type="submit" disabled={locked}>Save Changes</button>
+
+        <Button
+          text="Save Changes"
+          buttonType={ButtonType.INFO}
+          type="submit"
+          onClick={() => {}}
+          disabled={locked}
+        />
       </form>      
     </div>
   )

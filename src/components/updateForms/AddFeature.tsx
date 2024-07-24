@@ -4,6 +4,7 @@ import { DamageType } from "@models/enum/DamageType";
 import { RestType } from "@models/enum/RestType";
 import { useState } from "react";
 import FormHeader from "./FormHeader";
+import Button, { ButtonType } from "@components/Button";
 
 interface Props {
   handleChange: (event: any, setFunction: (prevFormData: any) => void) => void;
@@ -245,7 +246,12 @@ function AddFeature ({handleChange, handleSubmit, formData, setFormData}: Props)
           />
         </div>
 
-        <button className="update-form-submit-btn" type="submit">Submit Feature</button>
+        <Button
+          text="Submit Feature"
+          buttonType={ButtonType.INFO}
+          type="submit"
+          onClick={() => {}}
+        />
       </form>
     }
     </div>
