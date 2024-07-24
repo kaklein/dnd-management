@@ -130,7 +130,9 @@ function Details({pcData, pcList, selectedPc, queryClient}: Props) {
             {
                 showConfirmDelete.show &&
                 <ConfirmDelete
-                    defaultShow={true}
+                    show={showConfirmDelete.show}
+                    setShow={setShowConfirmDelete}
+                    clearedData={emptyShowConfirmDeleteData}
                     itemName={showConfirmDelete.data.displayName}
                     handleCancel={() => {setShowConfirmDelete({show: false, data: emptyShowConfirmDeleteData})}}
                     handleDelete={() => {

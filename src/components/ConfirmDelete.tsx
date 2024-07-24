@@ -1,23 +1,21 @@
 import Button, { ButtonType } from "@components/Button";
-import { useState } from "react";
 import { Modal, ModalDialog, ModalFooter, ModalHeader, ModalTitle } from 'react-bootstrap';
 
 
 interface Props {
-  defaultShow: boolean;
+  show: boolean;
   itemName: string;
   handleCancel: () => void;
   handleDelete: () => void;
+  setShow: (input: {show: boolean, data: any}) => void;
+  clearedData: any
 }
 
-function ConfirmDelete ({defaultShow, itemName, handleCancel, handleDelete}: Props) {
-  const [show, setShow] = useState(defaultShow);
+function ConfirmDelete ({show, itemName, handleCancel, handleDelete, setShow, clearedData}: Props) {
   return (
     <Modal
       show={show}
-      onHide={() => setShow(false)}
-      backdrop="static" // todo
-      keyboard={false} // todo
+      onHide={() => setShow({show: false, data: clearedData})}
     >
       <ModalDialog>
         <ModalHeader closeButton>
