@@ -14,6 +14,7 @@ interface Props {
 function ConfirmDelete ({show, itemName, handleCancel, handleDelete, setShow, clearedData}: Props) {
   return (
     <Modal
+      backdrop="static"
       show={show}
       onHide={() => setShow({show: false, data: clearedData})}
     >

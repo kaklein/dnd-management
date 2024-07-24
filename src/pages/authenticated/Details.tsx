@@ -127,29 +127,26 @@ function Details({pcData, pcList, selectedPc, queryClient}: Props) {
                 selectedPc={selectedPc}
             />
 
-            {
-                showConfirmDelete.show &&
-                <ConfirmDelete
-                    show={showConfirmDelete.show}
-                    setShow={setShowConfirmDelete}
-                    clearedData={emptyShowConfirmDeleteData}
-                    itemName={showConfirmDelete.data.displayName}
-                    handleCancel={() => {setShowConfirmDelete({show: false, data: emptyShowConfirmDeleteData})}}
-                    handleDelete={() => {
-                        if(showConfirmDelete.data.featureId) {
-                            handleDeleteFeature(showConfirmDelete.data.featureId);
-                        } else if (showConfirmDelete.data.objectArrayFieldName) {
-                            handleDeleteObjectArrayItem(showConfirmDelete.data.objectArrayFieldName, showConfirmDelete.data.objectArrayFullItem, showConfirmDelete.data.objectArrayExistingItems);
-                        } else if (showConfirmDelete.data.stringArrayFieldName) {
-                            handleDeleteStringArrayItem(showConfirmDelete.data.stringArrayFieldName, showConfirmDelete.data.stringArrayItemName);
-                        } else {
-                            console.error('Unprocessable data in state object.');
-                            alert('Error deleting item. Please refresh the page and try again.');
-                        }
-                        setShowConfirmDelete({show: false, data: emptyShowConfirmDeleteData});
-                    }}
-                />
-            }
+            <ConfirmDelete
+                show={showConfirmDelete.show}
+                setShow={setShowConfirmDelete}
+                clearedData={emptyShowConfirmDeleteData}
+                itemName={showConfirmDelete.data.displayName}
+                handleCancel={() => {setShowConfirmDelete({show: false, data: emptyShowConfirmDeleteData})}}
+                handleDelete={() => {
+                    if(showConfirmDelete.data.featureId) {
+                        handleDeleteFeature(showConfirmDelete.data.featureId);
+                    } else if (showConfirmDelete.data.objectArrayFieldName) {
+                        handleDeleteObjectArrayItem(showConfirmDelete.data.objectArrayFieldName, showConfirmDelete.data.objectArrayFullItem, showConfirmDelete.data.objectArrayExistingItems);
+                    } else if (showConfirmDelete.data.stringArrayFieldName) {
+                        handleDeleteStringArrayItem(showConfirmDelete.data.stringArrayFieldName, showConfirmDelete.data.stringArrayItemName);
+                    } else {
+                        console.error('Unprocessable data in state object.');
+                        alert('Error deleting item. Please refresh the page and try again.');
+                    }
+                    setShowConfirmDelete({show: false, data: emptyShowConfirmDeleteData});
+                }}
+            />
 
             <div className="div-button">
                 <Button buttonType={ButtonType.DANGER} text={editable ? "Lock" : "Unlock"} onClick={() => {setEditable(!editable)}}/>
