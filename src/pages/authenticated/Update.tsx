@@ -81,10 +81,11 @@ function Update ({pcData, queryClient, pcList, selectedPc}: Props) {
         searchParams.get("created") === "true" &&
         <div className="pop-up">
           <h4>Successfully created {pcData.baseDetails.name.firstName} {pcData.baseDetails.name.lastName}!</h4>
-          <p>
+          <div>
             <b>You're almost done! To complete your character, use the forms below to add weapons, spell slots, spells, equipment, and more.</b>
-            <p>You can come back to this page at any time to add new items and update your character base stats.</p>
-          </p>
+            <br/>
+            You can come back to this page at any time to add new items and update your character base stats.
+          </div>
         </div>
       }
             

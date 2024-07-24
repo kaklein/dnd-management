@@ -1,5 +1,6 @@
 import Button, { ButtonType } from "@components/Button";
 import Card from "@components/cards/Card";
+import ThreeColumnBar from "@components/ThreeColumnBar";
 import { buildProficiencyForms } from "@components/utils";
 import { useState } from "react";
 
@@ -21,10 +22,6 @@ function CreateCharacterForm ({handleChange, handleSubmit, formData, setFormData
   
   return (
     <div>
-      <div className="update-form-section-header">
-        <h3>Create New Character</h3>
-      </div>
-
       <form className="update-pc-form" onSubmit={(event) => handleSubmit(event, formData, setFormData, formData)}>
         {
           showBaseDetails &&
@@ -43,7 +40,7 @@ function CreateCharacterForm ({handleChange, handleSubmit, formData, setFormData
               />
             </div>
 
-            <h4>Character Details</h4>
+            <h4 className="form-sub-heading">Character Details</h4>
 
             <div className="update-form-field">
               <label className="update-form-label" htmlFor="firstName">Character First Name</label>
@@ -76,7 +73,7 @@ function CreateCharacterForm ({handleChange, handleSubmit, formData, setFormData
                 id="description"
                 name="description"
                 onChange={(event) => {handleChange(event, setFormData)}}
-                value={formData.description}
+                value={formData.description || ""}
               />
             </div>
             <div className="update-form-field">
@@ -100,7 +97,7 @@ function CreateCharacterForm ({handleChange, handleSubmit, formData, setFormData
                 id="subclass"
                 name="subclass"
                 onChange={(event) => {handleChange(event, setFormData)}}
-                value={formData.subclass}
+                value={formData.subclass || ""}
                 placeholder="Beast Master"
               />
             </div>
@@ -114,6 +111,7 @@ function CreateCharacterForm ({handleChange, handleSubmit, formData, setFormData
                 onChange={(event) => {handleChange(event, setFormData)}}
                 value={formData.race}
                 placeholder="Human"
+                required
               />
             </div>
             <div className="update-form-field">
@@ -143,7 +141,7 @@ function CreateCharacterForm ({handleChange, handleSubmit, formData, setFormData
               />
             </div>
 
-            <h4>Base Stats</h4>
+            <h4 className="form-sub-heading">Base Stats</h4>
 
             <div className="update-form-field">
               <label className="update-form-label" htmlFor="level">Level</label>
@@ -169,8 +167,7 @@ function CreateCharacterForm ({handleChange, handleSubmit, formData, setFormData
                 id="xp"
                 name="xp"
                 onChange={(event) => {handleChange(event, setFormData)}}
-                value={formData.xp}
-                required
+                value={formData.xp || "0"}
               />
             </div>
             <div className="update-form-field">
@@ -252,23 +249,25 @@ function CreateCharacterForm ({handleChange, handleSubmit, formData, setFormData
         {
           showAbilityScores &&
           <>
-            <div className="div-button">
-              <Button 
-                buttonType={ButtonType.INFO}
-                text="< Back"
-                onClick={() => {
-                  setShowAbilityScores(false);
-                  setShowBaseDetails(true);
-                }}
-              />
-            </div>
-            <h4>Ability Scores</h4>
+            <ThreeColumnBar
+              contentLeft={
+                <Button 
+                  buttonType={ButtonType.SECONDARY}
+                  text="< Back"
+                  onClick={() => {
+                    setShowAbilityScores(false);
+                    setShowBaseDetails(true);
+                  }}
+                />
+              }
+            />
+            <h4 className="form-sub-heading">Ability Scores</h4>
             <p className="update-form-description">
               Ability modifiers will be automatically calculated. After character creation, you can view and modify your ability scores and skill proficiencies
               at any time on the Stats page.
             </p>
             <Card>
-              <h4>Strength</h4>
+              <h4 className="form-sub-heading-2">Strength</h4>
               <div className="update-form-field">
                 <label className="update-form-label" htmlFor="strengthScore">Score</label>
                 <input
@@ -285,11 +284,11 @@ function CreateCharacterForm ({handleChange, handleSubmit, formData, setFormData
                 />
               </div>
               {
-                buildProficiencyForms(formData, 'strength', ['athletics'], handleChange, setFormData)
+                buildProficiencyForms(formData, 'strength', ['Athletics'], handleChange, setFormData)
               }
             </Card>
             <Card>
-              <h4>Dexterity</h4>
+              <h4 className="form-sub-heading-2">Dexterity</h4>
               <div className="update-form-field">
                 <label className="update-form-label" htmlFor="dexterityScore">Score</label>
                 <input
@@ -305,11 +304,11 @@ function CreateCharacterForm ({handleChange, handleSubmit, formData, setFormData
                 />
               </div>
               {
-                buildProficiencyForms(formData, 'dexterity', ['acrobatics', 'sleightOfHand', 'stealth'], handleChange, setFormData)
+                buildProficiencyForms(formData, 'dexterity', ['Acrobatics', 'Sleight of Hand', 'Stealth'], handleChange, setFormData)
               }
             </Card>
             <Card>
-              <h4>Constitution</h4>
+              <h4 className="form-sub-heading-2">Constitution</h4>
               <div className="update-form-field">
                 <label className="update-form-label" htmlFor="constitutionScore">Score</label>
                 <input
@@ -329,7 +328,7 @@ function CreateCharacterForm ({handleChange, handleSubmit, formData, setFormData
               }
             </Card>
             <Card>
-              <h4>Intelligence</h4>
+              <h4 className="form-sub-heading-2">Intelligence</h4>
               <div className="update-form-field">
                 <label className="update-form-label" htmlFor="intelligenceScore">Score</label>
                 <input
@@ -345,11 +344,11 @@ function CreateCharacterForm ({handleChange, handleSubmit, formData, setFormData
                 />
               </div>
               {
-                buildProficiencyForms(formData, 'intelligence', ['arcana', 'history', 'investigation', 'nature', 'religion'], handleChange, setFormData)
+                buildProficiencyForms(formData, 'intelligence', ['Arcana', 'History', 'Investigation', 'Nature', 'Religion'], handleChange, setFormData)
               }
             </Card>
             <Card>
-              <h4>Wisdom</h4>
+              <h4 className="form-sub-heading-2">Wisdom</h4>
               <div className="update-form-field">
                 <label className="update-form-label" htmlFor="wisdomScore">Score</label>
                 <input
@@ -365,11 +364,11 @@ function CreateCharacterForm ({handleChange, handleSubmit, formData, setFormData
                 />
               </div>
               {
-                buildProficiencyForms(formData, 'wisdom', ['animalHandling', 'insight', 'medicine', 'perception', 'survival'], handleChange, setFormData)
+                buildProficiencyForms(formData, 'wisdom', ['Animal Handling', 'Insight', 'Medicine', 'Perception', 'Survival'], handleChange, setFormData)
               }
             </Card>
             <Card>
-              <h4>Charisma</h4>
+              <h4 className="form-sub-heading-2">Charisma</h4>
               <div className="update-form-field">
                 <label className="update-form-label" htmlFor="charismaScore">Score</label>
                 <input
@@ -385,13 +384,13 @@ function CreateCharacterForm ({handleChange, handleSubmit, formData, setFormData
                 />
               </div>
               {
-                buildProficiencyForms(formData, 'charisma', ['deception', 'intimidation', 'performance', 'persuasion'], handleChange, setFormData)
+                buildProficiencyForms(formData, 'charisma', ['Deception', 'Intimidation', 'Performance', 'Persuasion'], handleChange, setFormData)
               }
             </Card>
 
             <div className="container-fluid">
-              <div className="row">
-                <div className="col-sm test">
+              <ThreeColumnBar
+                contentLeft={
                   <Button
                     buttonType={ButtonType.SECONDARY}
                     text="< Back"
@@ -400,16 +399,16 @@ function CreateCharacterForm ({handleChange, handleSubmit, formData, setFormData
                       setShowBaseDetails(true);
                     }}
                   />
-                </div>
-                <div className="col-auto test">
+                }
+                contentRight={
                   <Button
                     text="Submit"
                     buttonType={ButtonType.INFO}
                     type="submit"
                     onClick={() => {}}
                   />
-                </div>
-              </div>              
+                }
+              />
             </div>
           </>
         }

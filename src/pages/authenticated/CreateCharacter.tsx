@@ -1,8 +1,9 @@
 import Button, { ButtonType } from "@components/Button";
 import Card from "@components/cards/Card";
-import PageHeaderBar from "@components/headerBars/PageHeaderBar";
+import PageHeaderBarThreeColumn from "@components/headerBars/PageHeaderBarThreeColumn";
 import Navbar from "@components/Navbar";
 import CreateCharacterForm from "@components/updateForms/CreateCharacterForm";
+import { isFormDataValid } from "@components/updateForms/utils";
 import { defaultCreateCharacterFormData } from "@data/emptyFormData";
 import { getAuth } from "@firebase/auth";
 import { createCharacter } from "@services/firestore/createCharacter";
@@ -34,12 +35,23 @@ function CreateCharacter ({queryClient, setSelectedPcId}: Props) {
     formData: any
   ) => {
     event.preventDefault();
+    const validation = isFormDataValid(formData);
+    if(!validation.isValid) {
+      console.error('Invalid form data');
+      alert(`Missing the following fields: ${JSON.stringify(validation.missingFields)}. Please fill out all required fields before submitting.`);
+      return;
+    }
     const pcId = uuidv4();
     const uid = getAuth().currentUser!.uid;
-    await createCharacter(uid, pcId, formData);
-    queryClient.invalidateQueries();
-    setSelectedPcId(pcId);
-    navigate('/update?created=true');
+    try {
+      await createCharacter(uid, pcId, formData);
+      queryClient.invalidateQueries();
+      setSelectedPcId(pcId);
+      navigate('/update?created=true');
+    } catch (e: any) {
+      console.error(e);
+      alert('Error creating character. Please make sure you filled out all fields correctly before submitting, or refresh the page and try again.');
+    }
   }
 
 
@@ -47,8 +59,16 @@ function CreateCharacter ({queryClient, setSelectedPcId}: Props) {
     <div>
       <Navbar isSelectedPc={false}/>
 
-      <PageHeaderBar pageName="Create Character"/>
-      <Button buttonType={ButtonType.DANGER} text="Exit Character Creation" onClick={() => navigate('/')}/>
+      <PageHeaderBarThreeColumn
+        contentRight={
+          <Button
+            buttonType={ButtonType.DANGER}
+            text="Cancel"
+            onClick={() => navigate('/')}
+          />
+        }
+        pageName="Create Character"
+      />
 
       <Card>
         <CreateCharacterForm

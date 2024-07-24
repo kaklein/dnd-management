@@ -1,3 +1,4 @@
+import { CreateCharacterFormData } from "@models/CreateCharacterFormData";
 import { UpdateType } from "@models/enum/service/UpdateType";
 import { PlayerCharacter } from "@models/playerCharacter/PlayerCharacter";
 
@@ -74,12 +75,11 @@ export const buildDefaultPCFormData = (pcData: PlayerCharacter) => {
   }
 }
 
-export const defaultCreateCharacterFormData = {
+export const defaultCreateCharacterFormData: CreateCharacterFormData = {
   firstName: '',
   lastName: '',
   playerName: '',
   class: '',
-  subclass: '',
   race: '',
   alignment: '',
   background: '',
@@ -119,5 +119,4 @@ export const defaultCreateCharacterFormData = {
   intimidation: "false",
   performance: "false",
   persuasion: "false",
-  xp: 0
 }
