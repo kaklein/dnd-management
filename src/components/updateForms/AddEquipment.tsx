@@ -19,7 +19,7 @@ function AddEquipment ({handleChange, handleSubmit, formData, setFormData}: Prop
   return (
     <div>
       <FormHeader
-        formTitle="Add Equipment"
+        formTitle="New Equipment"
         onClick={() => setShowForm(!showForm)}
         showForm={showForm}
       />
@@ -28,7 +28,7 @@ function AddEquipment ({handleChange, handleSubmit, formData, setFormData}: Prop
       showForm &&
       <form onSubmit={(event) => {handleSubmit(event, formData, setFormData, defaultEquipmentFormData)}}>
         <div className="update-form-field">
-          <label className="update-form-label" htmlFor="type">Type</label>
+          <label className="update-form-label" htmlFor="type">Name</label>
           <input
             className="update-form-input"
             type="text"
@@ -41,9 +41,8 @@ function AddEquipment ({handleChange, handleSubmit, formData, setFormData}: Prop
         </div>
         <div className="update-form-field">
           <label className="update-form-label" htmlFor="description">Description (Optional)</label>
-          <input
+          <textarea
             className="update-form-input"
-            type="text"
             id="description"
             name="description"
             onChange={(event) => {handleChange(event, setFormData)}}

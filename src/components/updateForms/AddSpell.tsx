@@ -33,7 +33,7 @@ function AddSpell ({handleChange, handleSubmit, formData, setFormData}: Props) {
   return (
     <div>
       <FormHeader
-        formTitle="Add New Spell"
+        formTitle="New Spell"
         onClick={() => setShowForm(!showForm)}
         showForm={showForm}
       />
@@ -57,7 +57,7 @@ function AddSpell ({handleChange, handleSubmit, formData, setFormData}: Props) {
           <label className="update-form-label" htmlFor="description">Description</label>
           <p className="update-form-description">
             Copy/paste the full spell description from your source, including Casting Time, 
-            Range, Target, Components, Duration, Classes, and Description.
+            Range, Target, Components, Duration, Classes, and Description. This will be displayed on the Details page for easy reference.
           </p>
           <textarea
             className="update-form-input"

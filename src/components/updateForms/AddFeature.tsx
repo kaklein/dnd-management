@@ -51,7 +51,7 @@ function AddFeature ({handleChange, handleSubmit, formData, setFormData}: Props)
   return (
     <div>
       <FormHeader
-        formTitle="Add New Feature"
+        formTitle="New Feature"
         onClick={() => setShowForm(!showForm)}
         showForm={showForm}
       />
@@ -59,6 +59,10 @@ function AddFeature ({handleChange, handleSubmit, formData, setFormData}: Props)
     {
       showForm &&
       <form onSubmit={(event) => {handleSubmit(event, formData, setFormData, defaultFeatureFormData)}}>
+        <p className="update-form-description">
+          Add any special features you have due to race, class, magical items, etc.
+        </p>
+        
         <div className="update-form-field">
           <label className="update-form-label" htmlFor="name">Name</label>
           <input

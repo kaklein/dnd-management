@@ -377,6 +377,7 @@ img {
 
 .form-lock {
     width: 100%;
+    display: inline-block;
 }
 
 .update-pc-form {

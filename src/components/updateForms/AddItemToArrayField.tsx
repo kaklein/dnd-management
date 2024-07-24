@@ -23,7 +23,7 @@ function AddItemToArrayField ({fieldName, handleChange, handleSubmit, formData, 
   return (
     <div>
       <FormHeader
-        formTitle={`Add New ${capitalize(fieldName)}`}
+        formTitle={`New ${capitalize(fieldName)}`}
         onClick={() => setShowForm(!showForm)}
         showForm={showForm}
       />
