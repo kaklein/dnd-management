@@ -411,12 +411,6 @@ img {
     z-index: 10;
 }
 
-.modal {
-    display: block;
-    position: initial;
-    z-index: 100;
-}
-
 .div-button {
     display: inline-block;
     width: 100%;
