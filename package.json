@@ -7,8 +7,7 @@
     "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
-    "preview": "vite preview",
-    "test": "jest"
+    "preview": "vite preview"
   },
   "dependencies": {
     "20": "^1.0.0",
@@ -23,13 +22,11 @@
     "react-dom": "^18.2.1",
     "react-router-dom": "^6.24.0",
     "react-router-hash-link": "^2.4.3",
-    "stable": "^0.1.8",
     "tsconfig-paths": "^4.2.0",
     "uuid": "9.0.0"
   },
   "devDependencies": {
     "@tanstack/eslint-plugin-query": "^5.50.1",
-    "@types/jest": "^29.5.12",
     "@types/react": "^18.2.3",
     "@types/react-dom": "^18.2.0",
     "@types/react-router-hash-link": "^2.4.9",
@@ -40,8 +37,6 @@
     "eslint": "^8.57.0",
     "eslint-plugin-react-hooks": "^4.6.2",
     "eslint-plugin-react-refresh": "^0.4.7",
-    "jest": "^29.7.0",
-    "ts-jest": "^29.2.0",
     "ts-node": "^10.9.2",
     "typescript": "^5.2.2",
     "vite": "^5.3.1"
