@@ -14,6 +14,7 @@ import { QueryClient } from "@tanstack/react-query";
 import ConfirmDelete from "@components/ConfirmDelete";
 import { ShowConfirmDeleteData } from "@models/ShowConfirmDeleteData";
 import { TitleButtonRow } from "@components/TitleButtonRow";
+import DeleteItemButton from "@components/DeleteItemButton";
 
 interface Props {
     pcData: PlayerCharacter;
@@ -73,19 +74,20 @@ function Details({pcData, pcList, selectedPc, queryClient}: Props) {
                     <a id={removeWhiteSpaceAndConvertToLowerCase(spell.name)}></a>
                     <TitleButtonRow
                         text={spell.name}
-                        button={editable ? 
-                            <Button buttonType={ButtonType.DANGER} text="DELETE" onClick={() => setShowConfirmDelete({
-                                show: true,
-                                data: {
-                                    ...emptyShowConfirmDeleteData,
-                                    displayName: spell.name,
-                                    objectArrayFieldName: 'spells',
-                                    objectArrayFullItem: spell,
-                                    objectArrayExistingItems: spells                           
-                                }
-                            })}/>
-                            :
-                            undefined
+                        button={
+                            <DeleteItemButton
+                                editable={editable}
+                                handleDelete={() => setShowConfirmDelete({
+                                    show: true,
+                                    data: {
+                                        ...emptyShowConfirmDeleteData,
+                                        displayName: spell.name,
+                                        objectArrayFieldName: 'spells',
+                                        objectArrayFullItem: spell,
+                                        objectArrayExistingItems: spells                        
+                                    }
+                                })}
+                            />
                         }
                     />                        
                     <p><b>Description: </b>{spell.description}</p>
@@ -127,14 +129,12 @@ function Details({pcData, pcList, selectedPc, queryClient}: Props) {
                 selectedPc={selectedPc}
             />
 
+
             <ConfirmDelete
-                show={showConfirmDelete.show}
-                setShow={setShowConfirmDelete}
-                clearedData={emptyShowConfirmDeleteData}
                 itemName={showConfirmDelete.data.displayName}
                 handleCancel={() => {setShowConfirmDelete({show: false, data: emptyShowConfirmDeleteData})}}
                 handleDelete={() => {
-                    if(showConfirmDelete.data.featureId) {
+                    if (showConfirmDelete.data.featureId) {
                         handleDeleteFeature(showConfirmDelete.data.featureId);
                     } else if (showConfirmDelete.data.objectArrayFieldName) {
                         handleDeleteObjectArrayItem(showConfirmDelete.data.objectArrayFieldName, showConfirmDelete.data.objectArrayFullItem, showConfirmDelete.data.objectArrayExistingItems);
@@ -175,16 +175,17 @@ function Details({pcData, pcList, selectedPc, queryClient}: Props) {
                             <TitleButtonRow
                                 text={feature.data.name}
                                 button={
-                                    editable ?
-                                    <Button buttonType={ButtonType.DANGER} text="DELETE" onClick={() => setShowConfirmDelete({
-                                        show: true,
-                                        data: {
-                                            ...emptyShowConfirmDeleteData,
-                                            featureId: feature.id,
-                                            displayName: feature.data.name,                              
-                                        }
-                                    })}/>
-                                    : undefined
+                                    <DeleteItemButton
+                                        editable={editable}
+                                        handleDelete={() => setShowConfirmDelete({
+                                            show: true,
+                                            data: {
+                                                ...emptyShowConfirmDeleteData,
+                                                featureId: feature.id,
+                                                displayName: feature.data.name
+                                            }
+                                        })}
+                                    />
                                 }
                             />
                             <p><b>Description: </b>{feature.data.description}</p>
@@ -210,18 +211,19 @@ function Details({pcData, pcList, selectedPc, queryClient}: Props) {
                             <TitleButtonRow
                                 text={weapon.name}
                                 button={
-                                    editable ?
-                                    <Button buttonType={ButtonType.DANGER} text="DELETE" onClick={() => setShowConfirmDelete({
-                                        show: true,
-                                        data: {
-                                            ...emptyShowConfirmDeleteData,
-                                            displayName: weapon.name,
-                                            objectArrayFieldName: 'weapons',
-                                            objectArrayFullItem: weapon,
-                                            objectArrayExistingItems: pcData.baseDetails.weapons                            
-                                        }
-                                    })}/>
-                                    : undefined
+                                    <DeleteItemButton
+                                        editable={editable}
+                                        handleDelete={() => setShowConfirmDelete({
+                                            show: true,
+                                            data: {
+                                                ...emptyShowConfirmDeleteData,
+                                                displayName: weapon.name,
+                                                objectArrayFieldName: 'weapons',
+                                                objectArrayFullItem: weapon,
+                                                objectArrayExistingItems: pcData.baseDetails.weapons                            
+                                            }
+                                        })}
+                                    />                                    
                                 }
                             />
                             {formatDataAsTable(orderAndFormatWeaponElements(weapon, pcData))}
@@ -241,18 +243,19 @@ function Details({pcData, pcList, selectedPc, queryClient}: Props) {
                             <TitleButtonRow
                                 text={item.type}
                                 button={
-                                    editable ?
-                                    <Button buttonType={ButtonType.DANGER} text="DELETE" onClick={() => setShowConfirmDelete({
-                                        show: true,
-                                        data: {
-                                            ...emptyShowConfirmDeleteData,
-                                            displayName: item.type,
+                                    <DeleteItemButton
+                                        editable={editable}
+                                        handleDelete={() => setShowConfirmDelete({
+                                            show: true,
+                                            data: {
+                                                ...emptyShowConfirmDeleteData,
+                                                displayName: item.type,
                                             objectArrayFieldName: 'equipment',
                                             objectArrayExistingItems: pcData.baseDetails.equipment,
                                             objectArrayFullItem: item                            
-                                        }
-                                    })}/>
-                                    : undefined
+                                            }
+                                        })}
+                                    />
                                 }
                             />
                             {item.description && <p><i>{item.description}</i></p>}
@@ -270,17 +273,18 @@ function Details({pcData, pcList, selectedPc, queryClient}: Props) {
                             text={language}
                             formatAsHeader={false}
                             button={
-                                editable ?
-                                <Button buttonType={ButtonType.DANGER} text="DELETE" onClick={() => setShowConfirmDelete({
-                                    show: true,
-                                    data: {
-                                        ...emptyShowConfirmDeleteData,
-                                        stringArrayFieldName: 'languages',
-                                        stringArrayItemName: language,
-                                        displayName: language                           
-                                    }
-                                })}/>
-                                : undefined
+                                <DeleteItemButton
+                                    editable={editable}
+                                    handleDelete={() => setShowConfirmDelete({
+                                        show: true,
+                                        data: {
+                                            ...emptyShowConfirmDeleteData,
+                                            stringArrayFieldName: 'languages',
+                                            stringArrayItemName: language,
+                                            displayName: language                       
+                                        }
+                                    })}
+                                />
                             }
                         />
                         </Card>
@@ -297,17 +301,18 @@ function Details({pcData, pcList, selectedPc, queryClient}: Props) {
                                 text={proficiency}
                                 formatAsHeader={false}
                                 button={
-                                    editable ?
-                                    <Button buttonType={ButtonType.DANGER} text="DELETE" onClick={() => setShowConfirmDelete({
-                                        show: true,
-                                        data: {
-                                            ...emptyShowConfirmDeleteData,
-                                            stringArrayFieldName: 'proficiencies',
-                                            stringArrayItemName: proficiency,
-                                            displayName: proficiency                          
-                                        }
-                                    })}/>
-                                    : undefined
+                                    <DeleteItemButton
+                                        editable={editable}
+                                        handleDelete={() => setShowConfirmDelete({
+                                            show: true,
+                                            data: {
+                                                ...emptyShowConfirmDeleteData,
+                                                stringArrayFieldName: 'proficiencies',
+                                                stringArrayItemName: proficiency,
+                                                displayName: proficiency                          
+                                            }
+                                        })}
+                                    />
                                 }
                             />
                         </Card>
@@ -323,17 +328,18 @@ function Details({pcData, pcList, selectedPc, queryClient}: Props) {
                             <TitleButtonRow
                                 text={String(i + 1)}
                                 button={
-                                    editable ?
-                                    <Button buttonType={ButtonType.DANGER} text="DELETE" onClick={() => setShowConfirmDelete({
-                                        show: true,
-                                        data: {
-                                            ...emptyShowConfirmDeleteData,
-                                            stringArrayFieldName: 'notes',
-                                            stringArrayItemName: note,
-                                            displayName: `Note ${i + 1}`,                         
-                                        }
-                                    })}/>
-                                    : undefined
+                                    <DeleteItemButton
+                                        editable={editable}
+                                        handleDelete={() => setShowConfirmDelete({
+                                            show: true,
+                                            data: {
+                                                ...emptyShowConfirmDeleteData,
+                                                stringArrayFieldName: 'notes',
+                                                stringArrayItemName: note,
+                                                displayName: `Note ${i + 1}`,                           
+                                            }
+                                        })}
+                                    />
                                 }
                             />
                             <p>{note}</p>
