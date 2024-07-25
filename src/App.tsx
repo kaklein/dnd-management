@@ -17,6 +17,7 @@ import Home from '@pages/authenticated/Home';
 import { useLocalStorage } from '@services/localStorage/useLocalStorage';
 import CreateCharacter from '@pages/authenticated/CreateCharacter';
 import { logoutUser } from '@services/firebaseAuth/logoutUser';
+import Loading from '@pages/Loading';
 
 const queryClient = new QueryClient();
 
@@ -56,11 +57,7 @@ function MainApp() {
     }
 
     if (loggedIn && isLoading) return (
-        <>
-            <Card>
-                <h3>Loading...</h3>
-            </Card>
-        </>
+        <Loading/>
     )
 
     if (error) return (
