@@ -89,30 +89,32 @@ function Details({pcData, pcList, selectedPc, queryClient}: Props) {
                                 })}
                             />
                         }
-                    />                        
-                    <p><b>Description: </b>{spell.description}</p>
-    
-                    <p><b>Type: </b>{spell.level}</p>
-    
-                    {spell.damage &&
-                        <p><b>Damage: </b>{spell.damage} {spell.damageType}</p>
-                    }
-    
-                    {spell.saveDC &&
-                        <p><b>Spell Save DC: </b>{spell.saveDC}</p>
-                    }
-    
-                    {spell.attackBonus &&
-                        <p><b>Attack bonus: </b>+{spell.attackBonus}</p>
-                    }
-    
-                    {spell.spellCastingAbility &&
-                        <p><b>Spellcasting ability: </b>{spell.spellCastingAbility}</p>
-                    }
-    
-                    {spell.sourceUrl &&
-                        <p><b>Source URL: </b><a href={spell.sourceUrl} target="_blank">{spell.sourceUrl}</a></p>
-                    }
+                    />
+                    <div className="content">                   
+                        <p><b>Description: </b>{spell.description}</p>
+        
+                        <p><b>Type: </b>{spell.level}</p>
+        
+                        {spell.damage &&
+                            <p><b>Damage: </b>{spell.damage} {spell.damageType}</p>
+                        }
+        
+                        {spell.saveDC &&
+                            <p><b>Spell Save DC: </b>{spell.saveDC}</p>
+                        }
+        
+                        {spell.attackBonus &&
+                            <p><b>Attack bonus: </b>+{spell.attackBonus}</p>
+                        }
+        
+                        {spell.spellCastingAbility &&
+                            <p><b>Spellcasting ability: </b>{spell.spellCastingAbility}</p>
+                        }
+        
+                        {spell.sourceUrl &&
+                            <p><b>Source URL: </b><a href={spell.sourceUrl} target="_blank">{spell.sourceUrl}</a></p>
+                        }
+                    </div>
                 </Card>
             ))
         )
@@ -188,11 +190,13 @@ function Details({pcData, pcList, selectedPc, queryClient}: Props) {
                                     />
                                 }
                             />
-                            <p><b>Description: </b>{feature.data.description}</p>
-                            <p><b>Source: </b>{feature.data.source}</p>
-                            { feature.data.damage && <p><b>Damage: </b>{feature.data.damage} {feature.data.damageType}</p>}
-                            { feature.data.saveDC && <p><b>Spell Save DC: </b>{feature.data.saveDC}</p>}
-                            { feature.data.sourceUrl && <p><b>Source URL: </b><a href={feature.data.sourceUrl} target="_blank">{feature.data.sourceUrl}</a></p>}
+                            <div className="content">
+                                <p><b>Description: </b>{feature.data.description}</p>
+                                <p><b>Source: </b>{feature.data.source}</p>
+                                { feature.data.damage && <p><b>Damage: </b>{feature.data.damage} {feature.data.damageType}</p>}
+                                { feature.data.saveDC && <p><b>Spell Save DC: </b>{feature.data.saveDC}</p>}
+                                { feature.data.sourceUrl && <p><b>Source URL: </b><a href={feature.data.sourceUrl} target="_blank">{feature.data.sourceUrl}</a></p>}
+                            </div>                            
                         </Card>
                     ))
                     }
@@ -258,7 +262,9 @@ function Details({pcData, pcList, selectedPc, queryClient}: Props) {
                                     />
                                 }
                             />
-                            {item.description && <p><i>{item.description}</i></p>}
+                            <div className="content">
+                                {item.description && <p><i>{item.description}</i></p>}
+                            </div>
                         </Card>
                     )
                 }
@@ -342,7 +348,9 @@ function Details({pcData, pcList, selectedPc, queryClient}: Props) {
                                     />
                                 }
                             />
-                            <p>{note}</p>
+                            <div className="content">
+                                <p>{note}</p>
+                            </div>
                         </Card>
                     ))
                 }

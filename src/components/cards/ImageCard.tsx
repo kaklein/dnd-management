@@ -15,7 +15,7 @@ function ImageCard ({ title, description, imagePath=undefined, data=undefined }:
               {imagePath && <img src={imagePath} className="card-img-top" alt={title}/>}
               <div className="card-body">
                   <h2 className="card-title">{title}</h2>
-                  <p className="card-text">{description}</p>
+                  <p className="card-text center">{description}</p>
                   {
                       data && formatDataAsTable(data)
                   }
