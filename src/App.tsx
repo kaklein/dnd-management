@@ -7,7 +7,6 @@ import Details from "./pages/authenticated/Details";
 
 import { QueryClient, QueryClientProvider, useQuery } from '@tanstack/react-query'
 import { loadData } from '@services/firestore/loadData';
-import Card from '@components/cards/Card';
 import Login from '@pages/unauthenticated/Login';
 import SignUp from '@pages/unauthenticated/SignUp';
 import useFirebaseAuthentication from '@services/firebaseAuth/utils';
@@ -16,7 +15,8 @@ import PasswordReset from '@pages/unauthenticated/PasswordReset';
 import Home from '@pages/authenticated/Home';
 import { useLocalStorage } from '@services/localStorage/useLocalStorage';
 import CreateCharacter from '@pages/authenticated/CreateCharacter';
-import { logoutUser } from '@services/firebaseAuth/logoutUser';
+import Loading from '@pages/Loading';
+import Error from '@pages/Error';
 
 const queryClient = new QueryClient();
 
@@ -56,35 +56,14 @@ function MainApp() {
     }
 
     if (loggedIn && isLoading) return (
-        <>
-            <Card>
-                <h3>Loading...</h3>
-            </Card>
-        </>
+        <Loading/>
     )
 
-    if (error) return (
-        <>
-            <Card>
-                <h3>Error loading data: {error.message}</h3>
-                {
-                    loggedIn &&
-                    <a className="btn btn-secondary" href="/" onClick={() => logoutUser()}>Log Out</a>
-                }
-            </Card>
-        </>
-    )
-    
-    if (!data) return (
-        <>
-            <Card>
-                <h3>No data found :(</h3>
-                {
-                    loggedIn &&
-                    <a className="btn btn-secondary" href="/" onClick={() => logoutUser()}>Log Out</a>
-                }
-            </Card>
-        </>
+    if (error || !data) return (
+        <Error 
+            errorMessage="Error loading data"
+            text="We're experiencing an issue loading your data. Try logging out and back in, or come back another time."
+        />
     )
 
     if (!data.selectedPcData) return (
