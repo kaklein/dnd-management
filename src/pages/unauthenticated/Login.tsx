@@ -21,10 +21,7 @@ function Login () {
       console.error(`No form data :(`);
       return;
     }
-    const loggedIn = await loginUser(formData.email, formData.password);
-    if(!loggedIn) {
-      alert(`Dang it, we couldn't log you in :(`);
-    }
+    await loginUser(formData.email, formData.password);
     navigate('/');
   }
 
