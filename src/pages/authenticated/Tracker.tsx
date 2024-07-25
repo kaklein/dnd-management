@@ -187,7 +187,7 @@ function Tracker({pcData, queryClient, pcList, selectedPc}: Props) {
                                     if (a.level < b.level) return -1;
                                     return 1;
                                 }).map((spell, i) => (
-                                    <p key={i}>
+                                    <p className="center" key={i}>
                                         {spell.level}: 
                                         <Link className="text-link" to={'/details#' + removeWhiteSpaceAndConvertToLowerCase(spell.name)}>{spell.name}</Link>
                                          | Attack Bonus +{pcData.abilityScores[spell.spellCastingAbility].modifier + pcData.baseDetails.proficiencyBonus}
@@ -235,7 +235,7 @@ function Tracker({pcData, queryClient, pcList, selectedPc}: Props) {
 
                     <Card>
                         <h3>Hit Dice</h3>
-                        <p>{pcData.baseDetails.usableResources.hitDice.type}</p>
+                        <p className="center">{pcData.baseDetails.usableResources.hitDice.type}</p>
                         <ItemUseToggle 
                             itemLabel="Hit Dice"
                             formDataName="hitDiceCurrent"
