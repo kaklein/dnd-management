@@ -1,5 +1,4 @@
 import Card from "@components/cards/Card";
-import Footer from "@components/Footer";
 import Navbar from "@components/Navbar";
 import { BaseDetails, PlayerCharacter } from "@models/playerCharacter/PlayerCharacter";
 import { useState } from "react";
@@ -14,9 +13,11 @@ import { buildDefaultPCFormData, defaultEquipmentFormData, defaultFeatureFormDat
 import { UpdateType } from "@models/enum/service/UpdateType";
 import { transformAndUpdate } from "@services/firestore/updateData";
 import { QueryClient } from "@tanstack/react-query";
-import Alert from "@components/Alert";
 import PageHeaderBarPC from "@components/headerBars/PageHeaderBarPC";
 import { useSearchParams } from "react-router-dom";
+import QuickNav from "@components/QuickNav";
+import { triggerSuccessAlert } from "@pages/utils";
+import SuccessAlert from "@components/alerts/SuccessAlert";
 
 interface Props {
   pcData: PlayerCharacter;
@@ -28,12 +29,6 @@ interface Props {
 function Update ({pcData, queryClient, pcList, selectedPc}: Props) {
   const [searchParams] = useSearchParams();
   const [showSuccessAlert, setShowSuccessAlert] = useState(false);
-  const triggerSuccessAlert = () => {
-      setShowSuccessAlert(true);
-      setTimeout(() => {
-          setShowSuccessAlert(false);
-      }, 2000);
-  };
 
   // Form Data
   const [weaponFormData, setWeaponFormData] = useState(defaultWeaponFormData);
@@ -70,11 +65,12 @@ function Update ({pcData, queryClient, pcList, selectedPc}: Props) {
     }
     clearForm(clearedFormData);
     queryClient.invalidateQueries();
-    triggerSuccessAlert();
+    triggerSuccessAlert(setShowSuccessAlert);
   }
 
   return (
     <>
+    <div className="main-body">
       <Navbar isSelectedPc={!!selectedPc.pcId}/>
 
       {
@@ -98,7 +94,7 @@ function Update ({pcData, queryClient, pcList, selectedPc}: Props) {
 
       <hr/>
       
-      {showSuccessAlert && <Alert alertText="Changes saved." className="successful-alert" iconFile="/images/icons/success-icon.png"/>}
+      {showSuccessAlert && <SuccessAlert/>}
       
       <Card>
         <AddWeapon
@@ -190,8 +186,8 @@ function Update ({pcData, queryClient, pcList, selectedPc}: Props) {
         />
       </Card>
       
-
-      <Footer/>
+    </div>
+    <QuickNav/>
     </>
   )
 }
