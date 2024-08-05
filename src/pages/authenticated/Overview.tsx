@@ -1,8 +1,8 @@
 import Navbar from "@components/Navbar";
 import ImageCard from "@components/cards/ImageCard";
-import Footer from "@components/Footer";
 import { BaseDetails, PlayerCharacter } from "@models/playerCharacter/PlayerCharacter";
 import PageHeaderBarPC from "@components/headerBars/PageHeaderBarPC";
+import QuickNav from "@components/QuickNav";
 
 interface Props {
     pcData: PlayerCharacter;
@@ -26,6 +26,7 @@ function Overview({pcData, pcList, selectedPc}: Props) {
 
     return (
         <>
+        <div className="main-body">
             <Navbar isSelectedPc={!!selectedPc.pcId}/>
             <PageHeaderBarPC
                 pcName={`${pcData.baseDetails.name.firstName} ${pcData.baseDetails.name.lastName}`}
@@ -34,7 +35,8 @@ function Overview({pcData, pcList, selectedPc}: Props) {
                 selectedPc={selectedPc}
             />
             <ImageCard title={pcFullName} description={pcData.baseDetails.description ?? ''} imagePath={pcImagePath && `/images/playerCharacters/${pcImagePath}`} data={listCardObject}/>
-            <Footer/>
+        </div>
+        <QuickNav/>
         </>
     )
 }

@@ -1,5 +1,4 @@
 import Navbar from "@components/Navbar";
-import Footer from "@components/Footer";
 import AbilityCard from "@components/cards/AbilityCard";
 import Card from "@components/cards/Card";
 import CardSetHorizontal from "@components/cards/CardSetHorizontal";
@@ -14,6 +13,7 @@ import Alert from "@components/Alert";
 import { buildDefaultAbilityScoreFormData } from "@data/emptyFormData";
 import { transformAndUpdate } from "@services/firestore/updateData";
 import { QueryClient } from "@tanstack/react-query";
+import QuickNav from "@components/QuickNav";
 
 interface Props {
     pcData: PlayerCharacter;
@@ -128,6 +128,7 @@ function Stats({pcData, pcList, selectedPc, queryClient}: Props) {
 
     return (
         <>
+        <div className="main-body">
             <Navbar isSelectedPc={!!selectedPc.pcId}/>
             
             <PageHeaderBarPC
@@ -179,8 +180,8 @@ function Stats({pcData, pcList, selectedPc, queryClient}: Props) {
                     </h3>
                 </Card>
             </CardSetHorizontal>
-
-            <Footer/>
+        </div>
+        <QuickNav/>
         </>
     )
 }

@@ -1,5 +1,4 @@
 import Navbar from "@components/Navbar";
-import Footer from "@components/Footer";
 import Card from "@components/cards/Card";
 import { formatDataAsTable, orderAndFormatWeaponElements, removeWhiteSpaceAndConvertToLowerCase } from "@components/utils";
 import { Spell } from "@models/playerCharacter/Spell";
@@ -11,10 +10,11 @@ import { deleteItemById, deleteItemFromArrayById, deleteItemFromStringArray } fr
 import { CollectionName } from "@services/firestore/enum/CollectionName";
 import Alert from "@components/Alert";
 import { QueryClient } from "@tanstack/react-query";
-import ConfirmDelete from "@components/ConfirmDelete";
+import ConfirmDelete from "@components/modals/ConfirmDelete";
 import { ShowConfirmDeleteData } from "@models/ShowConfirmDeleteData";
 import { TitleButtonRow } from "@components/TitleButtonRow";
 import DeleteItemButton from "@components/DeleteItemButton";
+import QuickNav from "@components/QuickNav";
 
 interface Props {
     pcData: PlayerCharacter;
@@ -122,6 +122,7 @@ function Details({pcData, pcList, selectedPc, queryClient}: Props) {
 
     return (
         <>
+        <div className="main-body">
             <Navbar isSelectedPc={!!selectedPc.pcId}/>
 
             <PageHeaderBarPC 
@@ -150,9 +151,6 @@ function Details({pcData, pcList, selectedPc, queryClient}: Props) {
                 }}
             />
 
-            <div className="div-button">
-                <Button buttonType={ButtonType.DANGER} text={editable ? "Lock" : "Unlock"} onClick={() => {setEditable(!editable)}}/>
-            </div>
             {showSuccessAlert && <Alert alertText="Delete successful." className="successful-alert" iconFile="/images/icons/success-icon.png"/>}
 
             {
@@ -355,8 +353,11 @@ function Details({pcData, pcList, selectedPc, queryClient}: Props) {
                     ))
                 }
             </Card>
-
-            <Footer/>
+            <div className="div-button">
+                <Button buttonType={ButtonType.DANGER} text={editable ? "Lock" : "Unlock"} onClick={() => {setEditable(!editable)}}/>
+            </div>
+        </div>
+        <QuickNav/>
         </>
     )
 }

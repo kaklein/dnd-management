@@ -1,7 +1,6 @@
 import Navbar from "@components/Navbar";
 import Card from "@components/cards/Card";
 import Refresh from "@components/Refresh";
-import Footer from "@components/Footer";
 import { 
     buildFeatureCurrentUsesKey, 
     buildSpellSlotsCurrentKey, 
@@ -24,6 +23,7 @@ import { CollectionName } from "@services/firestore/enum/CollectionName";
 import { determineAttackBonus, formatBonus } from "../utils";
 import PageHeaderBarPC from "@components/headerBars/PageHeaderBarPC";
 import Button, { ButtonType } from "@components/Button";
+import QuickNav from "@components/QuickNav";
 
 interface Props {
     pcData: PlayerCharacter;
@@ -94,6 +94,7 @@ function Tracker({pcData, queryClient, pcList, selectedPc}: Props) {
 
     return (
         <>
+        <div className="main-body">
             <Navbar isSelectedPc={!!selectedPc.pcId}/>
 
             <PageHeaderBarPC 
@@ -281,8 +282,8 @@ function Tracker({pcData, queryClient, pcList, selectedPc}: Props) {
                 </div>               
             </form>
 
-            <Footer/>
-
+        </div>
+        <QuickNav/>
         </>
     )
 }

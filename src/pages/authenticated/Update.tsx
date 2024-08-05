@@ -1,5 +1,4 @@
 import Card from "@components/cards/Card";
-import Footer from "@components/Footer";
 import Navbar from "@components/Navbar";
 import { BaseDetails, PlayerCharacter } from "@models/playerCharacter/PlayerCharacter";
 import { useState } from "react";
@@ -17,6 +16,7 @@ import { QueryClient } from "@tanstack/react-query";
 import Alert from "@components/Alert";
 import PageHeaderBarPC from "@components/headerBars/PageHeaderBarPC";
 import { useSearchParams } from "react-router-dom";
+import QuickNav from "@components/QuickNav";
 
 interface Props {
   pcData: PlayerCharacter;
@@ -75,6 +75,7 @@ function Update ({pcData, queryClient, pcList, selectedPc}: Props) {
 
   return (
     <>
+    <div className="main-body">
       <Navbar isSelectedPc={!!selectedPc.pcId}/>
 
       {
@@ -190,8 +191,8 @@ function Update ({pcData, queryClient, pcList, selectedPc}: Props) {
         />
       </Card>
       
-
-      <Footer/>
+    </div>
+    <QuickNav/>
     </>
   )
 }
