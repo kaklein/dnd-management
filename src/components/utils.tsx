@@ -6,18 +6,18 @@ import { SpellSlot } from "@models/playerCharacter/usableResources/SpellSlot";
 import { Weapon } from "@models/playerCharacter/Weapon";
 import { determineAttackBonus, formatBonus } from "@pages/utils";
 
-const replaceBooleans = (data: object) => {
+export const replaceBooleans = (data: object) => {
     const entries = Object.entries(data);
     for (const entry of entries) {
         if(typeof entry[1] === "boolean") {
             entry[1] = entry[1] ? "true" : "false"
         }
     }
-    return entries;
+    return Object.fromEntries(entries);
 }
 
 export const formatDataAsTable = (data: object, highlightNonZeroes=false, plusNonZeroes=false) => {
-    const entries = replaceBooleans(data);
+    const entries = Object.entries(replaceBooleans(data));
 
     return (
         <table className="table">
@@ -121,130 +121,155 @@ export const getPassiveWisdom = (wisdomModifier: number, perceptionProficiency: 
 }
 
 export const orderAbilityCardElements = (abilityScores: AbilityScores, ability: Ability) => {
+    const { data } = abilityScores;
     let a;
     switch (ability) {
         case Ability.STR: {
-            a = abilityScores.strength;           
+            a = data.strength;           
             return [
                 {
-                    name: 'Saving Throws',
+                    displayName: 'Saving Throws',
+                    formFieldName: 'strengthST',
                     proficient: a.savingThrows.proficient
                 },
                 {
-                    name: 'Athletics',
+                    displayName: 'Athletics',
+                    formFieldName: 'athletics',
                     proficient: a.athletics.proficient
                 }
             ]
         }
         case Ability.DEX: {
-            a = abilityScores.dexterity;
+            a = data.dexterity;
             return [
                 {
-                    name: 'Saving Throws',
+                    displayName: 'Saving Throws',
+                    formFieldName: 'dexterityST',
                     proficient: a.savingThrows.proficient
                 },
                 {
-                    name: 'Acrobatics',
+                    displayName: 'Acrobatics',
+                    formFieldName: 'acrobatics',
                     proficient: a.acrobatics.proficient
                 },
                 {
-                    name: 'Sleight of Hand',
+                    displayName: 'Sleight of Hand',
+                    formFieldName: 'sleightOfHand',
                     proficient: a.sleightOfHand.proficient
                 },
                 {
-                    name: 'Stealth',
+                    displayName: 'Stealth',
+                    formFieldName: 'stealth',
                     proficient: a.stealth.proficient
                 }
             ]
         }
         case Ability.CON: {
-            a = abilityScores.constitution;
+            a = data.constitution;
             return [
                 {
-                    name: 'Saving Throws',
+                    displayName: 'Saving Throws',
+                    formFieldName: 'constitutionST',
                     proficient: a .savingThrows.proficient
                 }
             ]
         }
         case Ability.INT: {
-            a = abilityScores.intelligence;
+            a = data.intelligence;
             return [
                 {
-                    name: 'Saving Throws',
+                    displayName: 'Saving Throws',
+                    formFieldName: 'intelligenceST',
                     proficient: a.savingThrows.proficient
                 },
                 {
-                    name: 'Arcana',
+                    displayName: 'Arcana',
+                    formFieldName: 'arcana',
                     proficient: a.arcana.proficient
                 },
                 {
-                    name: 'History',
+                    displayName: 'History',
+                    formFieldName: 'history',
                     proficient: a.history.proficient
                 },
                 {
-                    name: 'Investigation',
+                    displayName: 'Investigation',
+                    formFieldName: 'investigation',
                     proficient: a.investigation.proficient
                 },
                 {
-                    name: 'Nature',
+                    displayName: 'Nature',
+                    formFieldName: 'nature',
                     proficient: a.nature.proficient
                 },
                 {
-                    name: 'Religion',
+                    displayName: 'Religion',
+                    formFieldName: 'religion',
                     proficient: a.religion.proficient
                 }
             ]
         }
         case Ability.WIS: {
-            a = abilityScores.wisdom;
+            a = data.wisdom;
             return [
                 {
-                    name: 'Saving Throws',
+                    displayName: 'Saving Throws',
+                    formFieldName: 'wisdomST',
                     proficient: a.savingThrows.proficient
                 },
                 {
-                    name: 'Animal Handling',
+                    displayName: 'Animal Handling',
+                    formFieldName: 'animalHandling',
                     proficient: a.animalHandling.proficient
                 },
                 {
-                    name: 'Insight',
+                    displayName: 'Insight',
+                    formFieldName: 'insight',
                     proficient: a.insight.proficient
                 },
                 {
-                    name: 'Medicine',
+                    displayName: 'Medicine',
+                    formFieldName: 'medicine',
                     proficient: a.medicine.proficient
                 },
                 {
-                    name: 'Perception',
+                    displayName: 'Perception',
+                    formFieldName: 'perception',
                     proficient: a.perception.proficient
                 },
                 {
-                    name: 'Survival',
+                    displayName: 'Survival',
+                    formFieldName: 'survival',
                     proficient: a.survival.proficient
                 }
             ]
         }
         case Ability.CHA: {
-            a = abilityScores.charisma;
+            a = data.charisma;
             return [
                 {
-                    name: 'Saving Throws',
+                    displayName: 'Saving Throws',
+                    formFieldName: 'charismaST',
                     proficient: a.savingThrows.proficient
                 },
                 {
-                    name: 'Deception',
+                    displayName: 'Deception',
+                    formFieldName: 'deception',
                     proficient: a.deception.proficient
                 },
                 {
-                    name: 'Intimidation',
+                    displayName: 'Intimidation',
+                    formFieldName: 'intimidation',
                     proficient: a.intimidation.proficient
                 },
                 {
-                    name: 'Performance',
+                    displayName: 'Performance',
+                    formFieldName: 'performance',
                     proficient: a.performance.proficient
                 },
                 {
-                    name: 'Persuasion',
+                    displayName: 'Persuasion',
+                    formFieldName: 'persuasion',
                     proficient: a.persuasion.proficient
                 }
             ]
@@ -280,8 +305,8 @@ export const buildProficiencyForms = (formData: any, abilityName: string, skills
                         type="checkbox"
                         checked={formData[toCamelCase(skill)] === "true"}
                         onChange={(event) => {
-                            event.target.value = event.target.value === "on" ? "true" : "false";
-                            handleChange(event, setFormData)
+                            event.target.value = event.target.checked ? "true" : "false";
+                            handleChange(event, setFormData);
                         }}
                     />
                     <label className="form-check-label" htmlFor={toCamelCase(skill)}>

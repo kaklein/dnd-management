@@ -82,7 +82,7 @@ function MainApp() {
                 <Route index element={<Overview pcData={data.selectedPcData} pcList={data.pcList} selectedPc={{pcId: selectedPcId, setSelectedPcId: setSelectedPcId}}/>}/>
                 <Route path="/home" element={<Home pcList={data.pcList} setSelectedPcId={setSelectedPcId}/>}/>
                 <Route path="/overview" element={<Overview pcData={data.selectedPcData} pcList={data.pcList} selectedPc={{pcId: selectedPcId, setSelectedPcId: setSelectedPcId}}/>}/>
-                <Route path="/stats" element={<Stats pcData={data.selectedPcData} pcList={data.pcList} selectedPc={{pcId: selectedPcId, setSelectedPcId: setSelectedPcId}}/>}/>
+                <Route path="/stats" element={<Stats pcData={data.selectedPcData} pcList={data.pcList} selectedPc={{pcId: selectedPcId, setSelectedPcId: setSelectedPcId}} queryClient={queryClient}/>}/>
                 <Route path="/tracker" element={<Tracker pcData={data.selectedPcData} queryClient={queryClient} pcList={data.pcList} selectedPc={{pcId: selectedPcId, setSelectedPcId: setSelectedPcId}}/>}/>
                 <Route path="/details" element={<Details pcData={data.selectedPcData} pcList={data.pcList} selectedPc={{pcId: selectedPcId, setSelectedPcId: setSelectedPcId}} queryClient={queryClient}/>}/>
                 <Route path="/update" element={<Update pcData={data.selectedPcData} queryClient={queryClient} pcList={data.pcList} selectedPc={{pcId: selectedPcId, setSelectedPcId: setSelectedPcId}}/>}/>

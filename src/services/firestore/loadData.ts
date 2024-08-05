@@ -13,7 +13,7 @@ const loadPcData = async (pcId: string): Promise<PlayerCharacter> => {
   const baseDetails = (await readSingleItem(CollectionName.PC_BASE_DETAILS, { pcId })).data as BaseDetails; 
   
   // Get ability scores
-  const abilityScores = (await readSingleItem(CollectionName.ABILITY_SCORES, { pcId })).data as AbilityScores;
+  const abilityScores = (await readSingleItem(CollectionName.ABILITY_SCORES, { pcId })) as AbilityScores;
 
   // Get features
   const features = (await readData(CollectionName.FEATURES, { pcId })) as Feature[];

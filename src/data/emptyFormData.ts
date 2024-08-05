@@ -1,5 +1,7 @@
+import { replaceBooleans } from "@components/utils";
 import { CreateCharacterFormData } from "@models/CreateCharacterFormData";
 import { UpdateType } from "@models/enum/service/UpdateType";
+import { AbilityScores } from "@models/playerCharacter/AbilityScores";
 import { PlayerCharacter } from "@models/playerCharacter/PlayerCharacter";
 
 export const defaultWeaponFormData = {
@@ -73,6 +75,45 @@ export const buildDefaultPCFormData = (pcData: PlayerCharacter) => {
     hitDice: pcData.baseDetails.usableResources.hitDice.max,
     proficiencyBonus: pcData.baseDetails.proficiencyBonus
   }
+}
+
+export const buildDefaultAbilityScoreFormData = (s: AbilityScores) => {
+  const { id, data } = s;
+  const transformed = {
+    abilityScoresId: id,
+    updateType: UpdateType.ABILITY_SCORES,
+    strengthScore: data.strength.score,
+    strengthST: data.strength.savingThrows.proficient,
+    athletics: data.strength.athletics.proficient,
+    dexterityScore: data.dexterity.score,
+    dexterityST: data.dexterity.savingThrows.proficient,
+    acrobatics: data.dexterity.acrobatics.proficient,
+    sleightOfHand: data.dexterity.sleightOfHand.proficient,
+    stealth: data.dexterity.stealth.proficient,
+    constitutionScore: data.constitution.score,
+    constitutionST: data.constitution.savingThrows.proficient,
+    intelligenceScore: data.intelligence.score,
+    intelligenceST: data.intelligence.savingThrows.proficient,
+    arcana: data.intelligence.arcana.proficient,
+    history: data.intelligence.history.proficient,
+    investigation: data.intelligence.investigation.proficient,
+    nature: data.intelligence.nature.proficient,
+    religion: data.intelligence.religion.proficient,
+    wisdomScore: data.wisdom.score,
+    wisdomST: data.wisdom.savingThrows.proficient,
+    animalHandling: data.wisdom.animalHandling.proficient,
+    insight: data.wisdom.insight.proficient,
+    medicine: data.wisdom.medicine.proficient,
+    perception: data.wisdom.perception.proficient,
+    survival: data.wisdom.survival.proficient,
+    charismaScore: data.charisma.score,
+    charismaST: data.charisma.savingThrows.proficient,
+    deception: data.charisma.deception.proficient,
+    intimidation: data.charisma.intimidation.proficient,
+    performance: data.charisma.performance.proficient,
+    persuasion: data.charisma.performance.proficient,
+  }
+  return replaceBooleans(transformed);
 }
 
 export const defaultCreateCharacterFormData: CreateCharacterFormData = {

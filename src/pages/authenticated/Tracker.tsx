@@ -190,7 +190,7 @@ function Tracker({pcData, queryClient, pcList, selectedPc}: Props) {
                                     <p className="center" key={i}>
                                         {spell.level}: 
                                         <Link className="text-link" to={'/details#' + removeWhiteSpaceAndConvertToLowerCase(spell.name)}>{spell.name}</Link>
-                                         | Attack Bonus +{pcData.abilityScores[spell.spellCastingAbility].modifier + pcData.baseDetails.proficiencyBonus}
+                                         | Attack Bonus +{pcData.abilityScores.data[spell.spellCastingAbility].modifier + pcData.baseDetails.proficiencyBonus}
                                     </p>
                                 ))
                             }
