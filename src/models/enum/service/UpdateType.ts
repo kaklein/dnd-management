@@ -1,4 +1,5 @@
 export enum UpdateType {
+  'ABILITY_SCORES' = 'ABILITY_SCORES',
   'BASE_DETAILS' = 'BASE_DETAILS',
   'EQUIPMENT' = 'EQUIPMENT',
   'FEATURES' = 'FEATURES',

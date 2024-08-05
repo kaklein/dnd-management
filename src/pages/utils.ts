@@ -7,15 +7,15 @@ export const determineAttackBonus = (weapon: Weapon, pcData: PlayerCharacter) =>
   let weaponModifier;
   switch (weapon.modifierProperty) {
     case WeaponModifierProperty.MELEE: {
-      weaponModifier = pcData.abilityScores.strength.modifier
+      weaponModifier = pcData.abilityScores.data.strength.modifier
       break;
     }    
     case WeaponModifierProperty.RANGED: {
-      weaponModifier = pcData.abilityScores.dexterity.modifier
+      weaponModifier = pcData.abilityScores.data.dexterity.modifier
       break;
     }
     case WeaponModifierProperty.FINESSE: {
-      weaponModifier = Math.max(pcData.abilityScores.strength.modifier, pcData.abilityScores.dexterity.modifier)
+      weaponModifier = Math.max(pcData.abilityScores.data.strength.modifier, pcData.abilityScores.data.dexterity.modifier)
       break;
     }
   }

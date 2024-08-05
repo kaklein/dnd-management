@@ -38,7 +38,12 @@ function PageHeaderBarPC ({pageName, pcList, pcName, selectedPc}: Props) {
             {
               showPcs &&
               <div className="pc-list">
-                {pcList!.filter(pc => pc.pcId !== selectedPc.pcId).map((pc) => (
+                {pcList!.filter(pc => pc.pcId !== selectedPc.pcId).sort((a, b) => {
+                  const aName = `${a.name.firstName} ${a.name.lastName}`;
+                  const bName = `${b.name.firstName} ${b.name.lastName}`;
+                  if (aName < bName) return -1;
+                  return 1;
+                }).map((pc) => (
                     <div key={pc.pcId} className="pc-list-item"><Button onClick={() => handlePcClick(pc.pcId)} buttonType={ButtonType.DARK} text={`${pc.name.firstName} ${pc.name.lastName}`}/></div>
                 ))}
                 <div className="divider"></div>
