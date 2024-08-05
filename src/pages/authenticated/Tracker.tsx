@@ -18,12 +18,11 @@ import { updateById, updateDataByPcId } from "@services/firestore/crud/update";
 import ItemUseToggle from "@components/ItemUseToggle";
 import { BaseDetails, PlayerCharacter } from "@models/playerCharacter/PlayerCharacter";
 import { QueryClient } from "@tanstack/react-query";
-import Alert from "@components/Alert";
 import { CollectionName } from "@services/firestore/enum/CollectionName";
-import { determineAttackBonus, formatBonus } from "../utils";
+import { determineAttackBonus, formatBonus, triggerSuccessAlert } from "../utils";
 import PageHeaderBarPC from "@components/headerBars/PageHeaderBarPC";
-import Button, { ButtonType } from "@components/Button";
 import QuickNav from "@components/QuickNav";
+import SuccessAlert from "@components/alerts/SuccessAlert";
 
 interface Props {
     pcData: PlayerCharacter;
@@ -34,12 +33,6 @@ interface Props {
 
 function Tracker({pcData, queryClient, pcList, selectedPc}: Props) {
     const [showSuccessAlert, setShowSuccessAlert] = useState(false);
-    const triggerSuccessAlert = () => {
-        setShowSuccessAlert(true);
-        setTimeout(() => {
-            setShowSuccessAlert(false);
-        }, 2000);
-    };
     
     const getLimitedUseFeatures = (pcData: PlayerCharacter) => {
         return pcData.features.filter(feature => feature.data.maxUses);
@@ -89,7 +82,7 @@ function Tracker({pcData, queryClient, pcList, selectedPc}: Props) {
             return;
         }
         queryClient.invalidateQueries();
-        triggerSuccessAlert();
+        triggerSuccessAlert(setShowSuccessAlert);
     }
 
     return (
@@ -106,14 +99,10 @@ function Tracker({pcData, queryClient, pcList, selectedPc}: Props) {
 
             <form onSubmit={handleSubmit}>
                 <div>
-                    <Button
-                        text="Save"
-                        buttonType={ButtonType.SUCCESS}
-                        type="submit"
-                        customClass="tracker-save-button"
-                        onClick={() => {}}
-                    />
-                    {showSuccessAlert && <Alert alertText="Save successful." className="successful-alert" iconFile="/images/icons/success-icon.png"/>}
+                    <button type="submit" className="tracker-save-button">
+                        Save
+                    </button>
+                    {showSuccessAlert && <SuccessAlert/>}
                     <Card>
                         <h3>Hit Points</h3>
                         <div className="inline">

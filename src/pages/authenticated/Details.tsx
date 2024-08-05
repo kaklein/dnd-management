@@ -8,13 +8,14 @@ import Button, { ButtonType } from "@components/Button";
 import { useState } from "react";
 import { deleteItemById, deleteItemFromArrayById, deleteItemFromStringArray } from "@services/firestore/crud/delete";
 import { CollectionName } from "@services/firestore/enum/CollectionName";
-import Alert from "@components/Alert";
 import { QueryClient } from "@tanstack/react-query";
 import ConfirmDelete from "@components/modals/ConfirmDelete";
 import { ShowConfirmDeleteData } from "@models/ShowConfirmDeleteData";
 import { TitleButtonRow } from "@components/TitleButtonRow";
 import DeleteItemButton from "@components/DeleteItemButton";
 import QuickNav from "@components/QuickNav";
+import { triggerSuccessAlert } from "@pages/utils";
+import SuccessAlert from "@components/alerts/SuccessAlert";
 
 interface Props {
     pcData: PlayerCharacter;
@@ -25,28 +26,22 @@ interface Props {
 
 function Details({pcData, pcList, selectedPc, queryClient}: Props) {
     const [showSuccessAlert, setShowSuccessAlert] = useState(false);
-    const triggerSuccessAlert = () => {
-        setShowSuccessAlert(true);
-        setTimeout(() => {
-            setShowSuccessAlert(false);
-        }, 2000);
-    };
 
     const [editable, setEditable] = useState(false);
     const handleDeleteFeature = async (featureId: string) => {
         await deleteItemById(CollectionName.FEATURES, featureId);
         queryClient.invalidateQueries();
-        triggerSuccessAlert();
+        triggerSuccessAlert(setShowSuccessAlert);
     }
     const handleDeleteObjectArrayItem = async (arrayName: string, item: any, existingItems: any[]) => {
         await deleteItemFromArrayById(CollectionName.PC_BASE_DETAILS, pcData.baseDetails.pcId, arrayName, existingItems, item);
         queryClient.invalidateQueries();
-        triggerSuccessAlert();
+        triggerSuccessAlert(setShowSuccessAlert);
     }
     const handleDeleteStringArrayItem = async (arrayName: string, item: string) => {
         await deleteItemFromStringArray(CollectionName.PC_BASE_DETAILS, pcData.baseDetails.pcId, arrayName, item);
         queryClient.invalidateQueries();
-        triggerSuccessAlert();
+        triggerSuccessAlert(setShowSuccessAlert);
     }
 
     const emptyShowConfirmDeleteData: ShowConfirmDeleteData = {
@@ -151,7 +146,7 @@ function Details({pcData, pcList, selectedPc, queryClient}: Props) {
                 }}
             />
 
-            {showSuccessAlert && <Alert alertText="Delete successful." className="successful-alert" iconFile="/images/icons/success-icon.png"/>}
+            {showSuccessAlert && <SuccessAlert/>}
 
             {
                 pcData.baseDetails.spells &&

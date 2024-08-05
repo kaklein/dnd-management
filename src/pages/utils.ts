@@ -27,3 +27,10 @@ export const formatBonus = (num: number, displayZero=true): string => {
   if (num == 0 && !displayZero) return '';
   return `${num}`;
 }
+
+export const triggerSuccessAlert = (setFunction: (value: boolean) => void) => {
+  setFunction(true);
+  setTimeout(() => {
+      setFunction(false);
+  }, 2000);
+};

@@ -1,7 +1,8 @@
-import Alert from "@components/Alert";
+import SuccessAlert from "@components/alerts/SuccessAlert";
 import Button, { ButtonType } from "@components/Button";
 import Card from "@components/cards/Card";
 import PageHeaderBar from "@components/headerBars/PageHeaderBar";
+import { triggerSuccessAlert } from "@pages/utils";
 import { resetPassword } from "@services/firebaseAuth/resetPassword";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -10,6 +11,8 @@ function PasswordReset () {
   const navigate = useNavigate();
   const [email, setEmail] = useState('');
   const [showConfirmation, setShowConfirmation] = useState(false);
+  const [showSuccessAlert, setShowSuccessAlert] = useState(false);
+  
   const handleSubmit = async (event: any) => {
     event.preventDefault();
     try {
@@ -20,22 +23,16 @@ function PasswordReset () {
       return;
     }
     setShowConfirmation(true);
-    triggerSuccessAlert();
+    triggerSuccessAlert(setShowSuccessAlert);
   }
-
-  const [showSuccessAlert, setShowSuccessAlert] = useState(false);
-  const triggerSuccessAlert = () => {
-      setShowSuccessAlert(true);
-      setTimeout(() => {
-          setShowSuccessAlert(false);
-      }, 2000);
-  };
   
   return (
     <>
       <PageHeaderBar 
           pageName="Reset Password"
       />
+
+      {showSuccessAlert && <SuccessAlert alertText=""/>}
       
       <Card>
         <div>
@@ -62,7 +59,6 @@ function PasswordReset () {
                 type="submit"
                 onClick={() => {}}
               />
-              {showSuccessAlert && <Alert alertText="" className="successful-alert" iconFile="/images/icons/success-icon.png"/>}
             </div>
           </form>
         </div>

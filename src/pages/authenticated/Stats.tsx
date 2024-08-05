@@ -9,11 +9,12 @@ import { Ability } from "@models/enum/Ability";
 import PageHeaderBarPC from "@components/headerBars/PageHeaderBarPC";
 import Button, { ButtonType } from "@components/Button";
 import { useState } from "react";
-import Alert from "@components/Alert";
 import { buildDefaultAbilityScoreFormData } from "@data/emptyFormData";
 import { transformAndUpdate } from "@services/firestore/updateData";
 import { QueryClient } from "@tanstack/react-query";
 import QuickNav from "@components/QuickNav";
+import { triggerSuccessAlert } from "@pages/utils";
+import SuccessAlert from "@components/alerts/SuccessAlert";
 
 interface Props {
     pcData: PlayerCharacter;
@@ -25,12 +26,7 @@ interface Props {
 function Stats({pcData, pcList, selectedPc, queryClient}: Props) { 
     const [editable, setEditable] = useState(false);
     const [showSuccessAlert, setShowSuccessAlert] = useState(false);
-    const triggerSuccessAlert = () => {
-        setShowSuccessAlert(true);
-        setTimeout(() => {
-            setShowSuccessAlert(false);
-        }, 2000);
-    }
+    
     const [formData, setFormData] = useState(buildDefaultAbilityScoreFormData(pcData.abilityScores));
     const handleChange = (
         event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>, 
@@ -51,7 +47,7 @@ function Stats({pcData, pcList, selectedPc, queryClient}: Props) {
         setEditable(false);
 
         queryClient.invalidateQueries();
-        triggerSuccessAlert();
+        triggerSuccessAlert(setShowSuccessAlert);
     }
     
     const mapAbilityScoreCards = (abilityScores: AbilityScores) => {
@@ -138,7 +134,7 @@ function Stats({pcData, pcList, selectedPc, queryClient}: Props) {
                 selectedPc={selectedPc}
             />
 
-            {showSuccessAlert && <Alert alertText="Update successful." className="successful-alert" iconFile="/images/icons/success-icon.png"/>}
+            {showSuccessAlert && <SuccessAlert/>}
 
             {/* Ability Scores */}
             { 
