@@ -35,7 +35,10 @@ function Tracker({pcData, queryClient, pcList, selectedPc}: Props) {
     const [showSuccessAlert, setShowSuccessAlert] = useState(false);
     
     const getLimitedUseFeatures = (pcData: PlayerCharacter) => {
-        return pcData.features.filter(feature => feature.data.maxUses);
+        return pcData.features.filter(feature => feature.data.maxUses).sort((a,b) => {
+            if (a.data.name < b.data.name) return -1;
+            return 1;
+        });
     }
 
     const getDefaultFormData = (pcData: PlayerCharacter) => {

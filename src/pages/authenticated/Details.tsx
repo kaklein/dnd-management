@@ -10,12 +10,16 @@ import { deleteItemById, deleteItemFromArrayById, deleteItemFromStringArray } fr
 import { CollectionName } from "@services/firestore/enum/CollectionName";
 import { QueryClient } from "@tanstack/react-query";
 import ConfirmDelete from "@components/modals/ConfirmDelete";
-import { ShowConfirmDeleteData } from "@models/ShowConfirmDeleteData";
 import { TitleButtonRow } from "@components/TitleButtonRow";
 import DeleteItemButton from "@components/DeleteItemButton";
 import QuickNav from "@components/QuickNav";
 import { triggerSuccessAlert } from "@pages/utils";
 import SuccessAlert from "@components/alerts/SuccessAlert";
+import EditItemButton from "@components/EditItemButton";
+import EditModal from "@components/modals/EditModal";
+import { updateArrayObjectItem, updateById } from "@services/firestore/crud/update";
+import { Feature } from "@models/playerCharacter/Feature";
+import { emptyEditModalData, emptyShowConfirmDeleteData } from "@data/emptyFormData";
 
 interface Props {
     pcData: PlayerCharacter;
@@ -44,16 +48,30 @@ function Details({pcData, pcList, selectedPc, queryClient}: Props) {
         triggerSuccessAlert(setShowSuccessAlert);
     }
 
-    const emptyShowConfirmDeleteData: ShowConfirmDeleteData = {
-        displayName: '',
-        featureId: '',
-        objectArrayFieldName: '',
-        objectArrayExistingItems: [],
-        objectArrayFullItem: {},
-        stringArrayItemName: '',
-        stringArrayFieldName: ''
-    };
+    const handleEdit = async (
+        featureUpdate?: { docId: string, updatedFeature: Feature },
+        baseDetailsUpdate?: { arrayName: string, updatedItem: any, existingItems: any[] }
+    ) => {
+        if (featureUpdate) {
+            await updateById(CollectionName.FEATURES, featureUpdate.docId, featureUpdate.updatedFeature.data);
+        } else if (baseDetailsUpdate) {
+            await updateArrayObjectItem(
+                CollectionName.PC_BASE_DETAILS,
+                pcData.baseDetails.pcId,
+                baseDetailsUpdate.arrayName,
+                baseDetailsUpdate.existingItems,
+                baseDetailsUpdate.updatedItem
+            );
+        } else {
+            throw Error(`Invalid update type`);
+        }
+        queryClient.invalidateQueries();
+        triggerSuccessAlert(setShowSuccessAlert);
+    }
+
+
     const [showConfirmDelete, setShowConfirmDelete] = useState({show: false, data: emptyShowConfirmDeleteData});
+    const [showEditModal, setShowEditModal] = useState({show: false, data: emptyEditModalData})
 
     const mapSpells = (
         spells: Spell[], 
@@ -69,7 +87,8 @@ function Details({pcData, pcList, selectedPc, queryClient}: Props) {
                     <a id={removeWhiteSpaceAndConvertToLowerCase(spell.name)}></a>
                     <TitleButtonRow
                         text={spell.name}
-                        button={
+                        buttons={
+                            <>
                             <DeleteItemButton
                                 editable={editable}
                                 handleDelete={() => setShowConfirmDelete({
@@ -83,6 +102,27 @@ function Details({pcData, pcList, selectedPc, queryClient}: Props) {
                                     }
                                 })}
                             />
+                            <EditItemButton
+                                editable={editable}
+                                handleEdit={() => {
+                                    setShowEditModal({
+                                        show: true,
+                                        data: {
+                                            ...emptyEditModalData,
+                                            formType: 'spell',
+                                            displayName: spell.name,
+                                            name: spell.name,
+                                            description: spell.description,
+                                            damage: spell.damage ?? '',
+                                            damageType: spell.damageType ?? '',
+                                            sourceUrl: spell.sourceUrl ?? '',
+                                            level: spell.level,
+                                            spellCastingAbility: spell.spellCastingAbility
+                                        }
+                                    })
+                                }}
+                            />
+                            </>
                         }
                     />
                     <div className="content">                   
@@ -145,6 +185,15 @@ function Details({pcData, pcList, selectedPc, queryClient}: Props) {
                     setShowConfirmDelete({show: false, data: emptyShowConfirmDeleteData});
                 }}
             />
+            {/* TODO: add functions for onchange, submit, set form data */}
+            <EditModal
+                formType={showEditModal.data.formType}
+                formData={showEditModal.data}
+                handleChange={() => {}}
+                handleSubmit={() => {}}
+                setFormData={() => {}}
+                handleCancel={() => { setShowEditModal({show: false, data: emptyEditModalData })}}
+            />
 
             {showSuccessAlert && <SuccessAlert/>}
 
@@ -169,7 +218,8 @@ function Details({pcData, pcList, selectedPc, queryClient}: Props) {
                             <a id={removeWhiteSpaceAndConvertToLowerCase(feature.data.name)}></a>
                             <TitleButtonRow
                                 text={feature.data.name}
-                                button={
+                                buttons={
+                                    <>
                                     <DeleteItemButton
                                         editable={editable}
                                         handleDelete={() => setShowConfirmDelete({
@@ -181,6 +231,30 @@ function Details({pcData, pcList, selectedPc, queryClient}: Props) {
                                             }
                                         })}
                                     />
+                                    <EditItemButton
+                                        editable={editable}
+                                        handleEdit={() => {
+                                            setShowEditModal({
+                                                show: true,
+                                                data: {
+                                                    ...emptyEditModalData,
+                                                    formType: 'feature',
+                                                    displayName: feature.data.name,
+                                                    name: feature.data.name,
+                                                    description: feature.data.description,
+                                                    damage: feature.data.damage ?? '',
+                                                    damageType: feature.data.damageType ?? '',
+                                                    sourceUrl: feature.data.sourceUrl ?? '',
+                                                    featureId: feature.id,
+                                                    source: feature.data.source,
+                                                    maxUses: feature.data.maxUses ? String(feature.data.maxUses) : '',
+                                                    refresh: feature.data.refresh ?? '',
+                                                    saveDC: feature.data.saveDC ? String(feature.data.saveDC) : ''
+                                                }
+                                            })
+                                        }}
+                                    />
+                                    </>
                                 }
                             />
                             <div className="content">
@@ -207,7 +281,8 @@ function Details({pcData, pcList, selectedPc, queryClient}: Props) {
                             <a id={removeWhiteSpaceAndConvertToLowerCase(weapon.name)}></a>
                             <TitleButtonRow
                                 text={weapon.name}
-                                button={
+                                buttons={
+                                    <>
                                     <DeleteItemButton
                                         editable={editable}
                                         handleDelete={() => setShowConfirmDelete({
@@ -220,7 +295,28 @@ function Details({pcData, pcList, selectedPc, queryClient}: Props) {
                                                 objectArrayExistingItems: pcData.baseDetails.weapons                            
                                             }
                                         })}
-                                    />                                    
+                                    />
+                                    <EditItemButton
+                                        editable={editable}
+                                        handleEdit={() => {
+                                            setShowEditModal({
+                                                show: true,
+                                                data: {
+                                                    ...emptyEditModalData,
+                                                    formType: 'weapon',
+                                                    displayName: weapon.name,
+                                                    name: weapon.name,
+                                                    description: weapon.description ?? '',
+                                                    damage: weapon.damage,
+                                                    damageType: weapon.damageType,
+                                                    type: weapon.type,
+                                                    modifierProperty: weapon.modifierProperty,
+                                                    magic: weapon.magic ? "true" : "false",
+                                                }
+                                            })
+                                        }}
+                                    />    
+                                    </>                               
                                 }
                             />
                             {formatDataAsTable(orderAndFormatWeaponElements(weapon, pcData))}
@@ -239,7 +335,8 @@ function Details({pcData, pcList, selectedPc, queryClient}: Props) {
                         <Card key={i}>
                             <TitleButtonRow
                                 text={item.type}
-                                button={
+                                buttons={
+                                    <>
                                     <DeleteItemButton
                                         editable={editable}
                                         handleDelete={() => setShowConfirmDelete({
@@ -247,12 +344,28 @@ function Details({pcData, pcList, selectedPc, queryClient}: Props) {
                                             data: {
                                                 ...emptyShowConfirmDeleteData,
                                                 displayName: item.type,
-                                            objectArrayFieldName: 'equipment',
-                                            objectArrayExistingItems: pcData.baseDetails.equipment,
-                                            objectArrayFullItem: item                            
+                                                objectArrayFieldName: 'equipment',
+                                                objectArrayExistingItems: pcData.baseDetails.equipment,
+                                                objectArrayFullItem: item                            
                                             }
                                         })}
                                     />
+                                    <EditItemButton
+                                        editable={editable}
+                                        handleEdit={() => {
+                                            setShowEditModal({
+                                                show: true,
+                                                data: {
+                                                    ...emptyEditModalData,
+                                                    formType: 'equipment',
+                                                    displayName: item.type,
+                                                    type: item.type,
+                                                    description: item.description ?? '',
+                                                }
+                                            })
+                                        }}
+                                    />
+                                    </>
                                 }
                             />
                             <div className="content">
@@ -271,7 +384,8 @@ function Details({pcData, pcList, selectedPc, queryClient}: Props) {
                         <TitleButtonRow
                             text={language}
                             formatAsHeader={false}
-                            button={
+                            buttons={
+                                <>
                                 <DeleteItemButton
                                     editable={editable}
                                     handleDelete={() => setShowConfirmDelete({
@@ -284,6 +398,22 @@ function Details({pcData, pcList, selectedPc, queryClient}: Props) {
                                         }
                                     })}
                                 />
+                                <EditItemButton
+                                        editable={editable}
+                                        handleEdit={() => {
+                                            setShowEditModal({
+                                                show: true,
+                                                data: {
+                                                    ...emptyEditModalData,
+                                                    formType: 'language',
+                                                    displayName: language,
+                                                    stringArrayFieldName: 'languages',
+                                                    language: language
+                                                }
+                                            })
+                                        }}
+                                    />
+                                </>
                             }
                         />
                         </Card>
@@ -299,7 +429,8 @@ function Details({pcData, pcList, selectedPc, queryClient}: Props) {
                             <TitleButtonRow
                                 text={proficiency}
                                 formatAsHeader={false}
-                                button={
+                                buttons={
+                                    <>
                                     <DeleteItemButton
                                         editable={editable}
                                         handleDelete={() => setShowConfirmDelete({
@@ -312,6 +443,22 @@ function Details({pcData, pcList, selectedPc, queryClient}: Props) {
                                             }
                                         })}
                                     />
+                                    <EditItemButton
+                                        editable={editable}
+                                        handleEdit={() => {
+                                            setShowEditModal({
+                                                show: true,
+                                                data: {
+                                                    ...emptyEditModalData,
+                                                    formType: 'proficiency',
+                                                    displayName: proficiency,
+                                                    stringArrayFieldName: 'proficiencies',
+                                                    proficiency: proficiency
+                                                }
+                                            })
+                                        }}
+                                    />
+                                    </>
                                 }
                             />
                         </Card>
@@ -326,7 +473,8 @@ function Details({pcData, pcList, selectedPc, queryClient}: Props) {
                         <Card key={i}>
                             <TitleButtonRow
                                 text={String(i + 1)}
-                                button={
+                                buttons={
+                                    <>
                                     <DeleteItemButton
                                         editable={editable}
                                         handleDelete={() => setShowConfirmDelete({
@@ -339,6 +487,23 @@ function Details({pcData, pcList, selectedPc, queryClient}: Props) {
                                             }
                                         })}
                                     />
+                                    <EditItemButton
+                                        editable={editable}
+                                        handleEdit={() => {
+                                            setShowEditModal({
+                                                show: true,
+                                                data: {
+                                                    ...emptyEditModalData,
+                                                    formType: 'note',
+                                                    displayName: `Note ${i + 1}`,
+                                                    stringArrayFieldName: 'notes',
+                                                    note: note,
+                                                    useTextArea: true
+                                                }
+                                            })
+                                        }}
+                                    />
+                                    </>
                                 }
                             />
                             <div className="content">
@@ -349,7 +514,7 @@ function Details({pcData, pcList, selectedPc, queryClient}: Props) {
                 }
             </Card>
             <div className="div-button">
-                <Button buttonType={ButtonType.DANGER} text={editable ? "Lock" : "Unlock"} onClick={() => {setEditable(!editable)}}/>
+                <Button buttonType={ButtonType.DANGER} text={editable ? "Cancel" : "Edit"} onClick={() => {setEditable(!editable)}}/>
             </div>
         </div>
         <QuickNav/>

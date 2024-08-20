@@ -28,7 +28,7 @@ function UpdatePC ({pcData, handleChange, handleSubmit, formData, setFormData}: 
         text="These fields will only change when you get new armor or level up your PC.
         Click the Unlock button to make changes."
         formatAsHeader={false}
-        button={
+        buttons={
           <button
             className="btn btn-danger"
             onClick={() => {setLocked(!locked)}}
@@ -37,20 +37,7 @@ function UpdatePC ({pcData, handleChange, handleSubmit, formData, setFormData}: 
           </button>
         }
       />
-      {/* <p className="update-form-description">
-        These fields will only change when you get new armor or level up your PC.
-        Click the Unlock button to make changes.
-      </p>
       
-      <div className="form-lock">
-        <button
-          className="btn btn-danger"
-          onClick={() => {setLocked(!locked)}}
-        >
-          {locked ? 'Unlock' : 'Lock'}
-        </button>
-      </div> */}
-
       <br/>
 
       <form className="update-pc-form" onSubmit={(event) => {
