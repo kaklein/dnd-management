@@ -38,7 +38,7 @@ function Stats({pcData, pcList, selectedPc, queryClient}: Props) {
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         try {
-            await transformAndUpdate(pcData, formData); // todo - reuse this function? or new one needed?
+            await transformAndUpdate(pcData, formData);
         } catch (e) {
             console.error(e);
             alert(`Update failed. PLease refresh the page and try again.`);
@@ -115,7 +115,7 @@ function Stats({pcData, pcList, selectedPc, queryClient}: Props) {
                 formData={formData}
             />
             { editable &&
-                <Button type="submit" buttonType={ButtonType.INFO} text="Save Changes" onClick={() => {console.log('clicked.')}}/>
+                <Button type="submit" buttonType={ButtonType.INFO} text="Save Changes" onClick={() => {}}/>
             }
             </form>             
             </>

@@ -183,7 +183,11 @@ export const emptyEditModalData = {
   sourceUrl: '', // spells, features
   type: '', // weapons, equipment
 
+  // equipment
+  equipmentId: '',
+
   // spells
+  spellId: '',
   level: '',
   spellCastingAbility: '',
 
@@ -195,13 +199,15 @@ export const emptyEditModalData = {
   saveDC: '',
 
   // weapons
+  weaponId: '',
   modifierProperty: '',
   magic: 'false',
 
-  // arrayItems: proficiencies/languages/notes
+  // arrayItems: languages/notes/proficiencies
   stringArrayFieldName: '',
-  proficiency: '',
   language: '',
   note: '',
+  proficiency: '',
+  originalItem: '', 
   useTextArea: false
 }

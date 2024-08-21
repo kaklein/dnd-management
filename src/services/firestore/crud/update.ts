@@ -25,11 +25,7 @@ export const updateById = async (collectionName: CollectionName, docId: string, 
   }
 }
 
-interface ArrayField {
-  id: string;
-}
-
-export const updateArrayObjectItem = async<T extends ArrayField> (collectionName: CollectionName, pcId: string, fieldName: string, existingArray: T[], updatedItem: T) => {
+export const updateArrayObjectItem = async (collectionName: CollectionName, pcId: string, fieldName: string, existingArray: any[], updatedItem: any) => {
   const updatedArray = existingArray.filter(item => item.id !== updatedItem.id);
   updatedArray.push(updatedItem);
   const update = {
@@ -41,4 +37,17 @@ export const updateArrayObjectItem = async<T extends ArrayField> (collectionName
     console.error(`Error updating array: ${JSON.stringify(e)}`);
     alert(UPDATE_ERROR_MESSAGE);
   }
+}
+
+export const updateStringArrayItem = async (
+  collectionName: CollectionName,
+  pcId: string,
+  fieldName: string,
+  existingArray: any[],
+  updatedItem: string,
+  originalItem: string
+) => {
+  const updatedArray = existingArray.filter(item => item !== originalItem);
+  updatedArray.push(updatedItem);
+  await updateDataByPcId(collectionName, pcId, { [fieldName]: updatedArray });
 }

@@ -15,9 +15,10 @@ interface Props {
   ) => void;
   formData: any;
   setFormData: (data: any) => void;
+  modalDismiss?: boolean;
 }
 
-function FeatureForm ({handleChange, handleSubmit, formData, setFormData}: Props) {
+function FeatureForm ({handleChange, handleSubmit, formData, setFormData, modalDismiss=false}: Props) {
   const [showLimitedUseFields, setShowLimitedUseFields] = useState(formData.maxUses ? true : false);
   const handleLimitedUseCheckboxChange = () => {
     const newVal = !showLimitedUseFields;
@@ -236,6 +237,7 @@ function FeatureForm ({handleChange, handleSubmit, formData, setFormData}: Props
         buttonType={ButtonType.INFO}
         type="submit"
         onClick={() => {}}
+        modalDismiss={modalDismiss}
       />
     </form>
   )

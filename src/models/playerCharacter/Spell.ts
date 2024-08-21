@@ -10,7 +10,6 @@ export interface Spell {
     damageType?: DamageType;
     damage?: string;
     saveDC?: number;
-    attackBonus?: number;
     sourceUrl?: string;
 }
 

@@ -366,7 +366,7 @@ export const getModifier = (baseScore: number): number => {
   return Math.floor((baseScore - 10) / 2);
 }
 
-const getBool = (asString: string) => {
+export const getBool = (asString: string) => {
   if(!["true", "false"].includes(asString.toLowerCase())) throw Error ('invalid boolean string: ' + asString);
   return asString.toLowerCase() === "true" ? true : false;
 }

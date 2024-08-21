@@ -14,9 +14,10 @@ interface Props {
   setFormData: (data: any) => void;
   defaultFormData: any;
   useTextArea?: boolean;
+  modalDismiss?: boolean;
 }
 
-function ArrayItemForm ({fieldName, handleChange, handleSubmit, formData, setFormData, defaultFormData, useTextArea=false}: Props) {
+function ArrayItemForm ({fieldName, handleChange, handleSubmit, formData, setFormData, defaultFormData, useTextArea=false, modalDismiss=false}: Props) {
   return (
     <form onSubmit={(event) => {handleSubmit(event, formData, setFormData, defaultFormData)}}>
       <div className="update-form-field">
@@ -52,6 +53,7 @@ function ArrayItemForm ({fieldName, handleChange, handleSubmit, formData, setFor
         buttonType={ButtonType.INFO}
         type="submit"
         onClick={() => {}}
+        modalDismiss={modalDismiss}
       />
     </form>
   )

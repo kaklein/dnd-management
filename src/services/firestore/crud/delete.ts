@@ -3,6 +3,7 @@ import { CollectionName } from "@services/firestore/enum/CollectionName";
 import { buildRemoveFromArrayUpdate } from "../utils";
 import { updateDataByPcId } from "./update";
 import { db } from "../../../firebase";
+import { ArrayField } from "@models/util/ArrayField";
 
 const DELETE_ERROR_MESSAGE = 'Error occurred deleting item. Please refresh the page and try again.';
 
@@ -14,10 +15,6 @@ export const deleteItemById = async (collectionName: CollectionName, docId: stri
     alert(DELETE_ERROR_MESSAGE);
   }
 };
-
-interface ArrayField {
-  id: string;
-}
 
 export const deleteItemFromArrayById = async<T extends ArrayField> (collectionName: CollectionName, pcId: string, fieldName: string, existingArray: T[], itemToDelete: T) => {
   const updatedArray = existingArray.filter(item => item.id !== itemToDelete.id);

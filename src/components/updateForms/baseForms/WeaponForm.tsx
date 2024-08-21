@@ -15,9 +15,10 @@ interface Props {
   ) => void;
   formData: any;
   setFormData: (data: any) => void;
+  modalDismiss?: boolean;
 }
 
-function WeaponForm ({handleChange, handleSubmit, formData, setFormData}: Props) { 
+function WeaponForm ({handleChange, handleSubmit, formData, setFormData, modalDismiss=false}: Props) { 
   return (
     <form onSubmit={(event) => {handleSubmit(event, formData, setFormData, defaultWeaponFormData)}}>
       <div className="update-form-field">
@@ -144,6 +145,7 @@ function WeaponForm ({handleChange, handleSubmit, formData, setFormData}: Props)
           buttonType={ButtonType.INFO}
           type="submit"
           onClick={() => {}}
+          modalDismiss={modalDismiss}
         />
     </form>
   )

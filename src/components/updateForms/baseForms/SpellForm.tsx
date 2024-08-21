@@ -16,9 +16,10 @@ interface Props {
   ) => void;
   formData: any;
   setFormData: (data: any) => void;
+  modalDismiss?: boolean;
 }
 
-function SpellForm ({handleChange, handleSubmit, formData, setFormData}: Props) {
+function SpellForm ({handleChange, handleSubmit, formData, setFormData, modalDismiss=false}: Props) {
   const [showDamageFields, setShowDamageFields] = useState(formData.damage ? true : false);
   const handleDamageCheckboxChange = () => {
     const newVal = !showDamageFields;
@@ -161,6 +162,7 @@ function SpellForm ({handleChange, handleSubmit, formData, setFormData}: Props) 
           buttonType={ButtonType.INFO}
           type="submit"
           onClick={() => {}}
+          modalDismiss={modalDismiss}
         />
       </form>
   )

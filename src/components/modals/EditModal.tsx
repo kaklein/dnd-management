@@ -30,6 +30,7 @@ function EditModal ({ formType, formData, handleChange, handleSubmit, handleCanc
         handleSubmit={handleSubmit}
         formData={formData}
         setFormData={setFormData}
+        modalDismiss={true}
       />
       break;
     }
@@ -39,6 +40,7 @@ function EditModal ({ formType, formData, handleChange, handleSubmit, handleCanc
         handleSubmit={handleSubmit}
         formData={formData}
         setFormData={setFormData}
+        modalDismiss={true}
       />
       break;
     }
@@ -48,6 +50,7 @@ function EditModal ({ formType, formData, handleChange, handleSubmit, handleCanc
         handleSubmit={handleSubmit}
         formData={formData}
         setFormData={setFormData}
+        modalDismiss={true}
       />
       break;
     }
@@ -57,6 +60,7 @@ function EditModal ({ formType, formData, handleChange, handleSubmit, handleCanc
         handleSubmit={handleSubmit}
         formData={formData}
         setFormData={setFormData}
+        modalDismiss={true}
       />
       break;
     }
@@ -71,6 +75,7 @@ function EditModal ({ formType, formData, handleChange, handleSubmit, handleCanc
         setFormData={setFormData}
         useTextArea={formData.useTextArea}
         defaultFormData={emptyEditModalData}
+        modalDismiss={true}
       />
       break;
     }

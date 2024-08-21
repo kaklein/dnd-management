@@ -178,6 +178,8 @@ function Tracker({pcData, queryClient, pcList, selectedPc}: Props) {
                             {
                                 pcData.baseDetails.spells!.sort((a,b) => {
                                     if (a.level < b.level) return -1;
+                                    if (a.level > b.level) return 1;
+                                    if (a.name < b.name) return -1;
                                     return 1;
                                 }).map((spell, i) => (
                                     <p className="center" key={i}>

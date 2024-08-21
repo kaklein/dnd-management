@@ -11,9 +11,10 @@ interface Props {
   ) => void;
   formData: any;
   setFormData: (data: any) => void;
+  modalDismiss?: boolean;
 }
 
-function EquipmentForm ({handleChange, handleSubmit, formData, setFormData}: Props) { 
+function EquipmentForm ({handleChange, handleSubmit, formData, setFormData, modalDismiss=false}: Props) { 
   return (
     <form onSubmit={(event) => {handleSubmit(event, formData, setFormData, defaultEquipmentFormData)}}>
       <div className="update-form-field">
@@ -44,6 +45,7 @@ function EquipmentForm ({handleChange, handleSubmit, formData, setFormData}: Pro
         buttonType={ButtonType.INFO}
         type="submit"
         onClick={() => {}}
+        modalDismiss={modalDismiss}
       />      
       </form>
   )

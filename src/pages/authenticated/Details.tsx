@@ -13,12 +13,10 @@ import ConfirmDelete from "@components/modals/ConfirmDelete";
 import { TitleButtonRow } from "@components/TitleButtonRow";
 import DeleteItemButton from "@components/DeleteItemButton";
 import QuickNav from "@components/QuickNav";
-import { triggerSuccessAlert } from "@pages/utils";
+import { handleSubmitEdit, triggerSuccessAlert } from "@pages/utils";
 import SuccessAlert from "@components/alerts/SuccessAlert";
 import EditItemButton from "@components/EditItemButton";
 import EditModal from "@components/modals/EditModal";
-import { updateArrayObjectItem, updateById } from "@services/firestore/crud/update";
-import { Feature } from "@models/playerCharacter/Feature";
 import { emptyEditModalData, emptyShowConfirmDeleteData } from "@data/emptyFormData";
 
 interface Props {
@@ -48,30 +46,16 @@ function Details({pcData, pcList, selectedPc, queryClient}: Props) {
         triggerSuccessAlert(setShowSuccessAlert);
     }
 
-    const handleEdit = async (
-        featureUpdate?: { docId: string, updatedFeature: Feature },
-        baseDetailsUpdate?: { arrayName: string, updatedItem: any, existingItems: any[] }
+    const handleChange = (
+        event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>, 
+        setFunction: (prevFormData: any) => void
     ) => {
-        if (featureUpdate) {
-            await updateById(CollectionName.FEATURES, featureUpdate.docId, featureUpdate.updatedFeature.data);
-        } else if (baseDetailsUpdate) {
-            await updateArrayObjectItem(
-                CollectionName.PC_BASE_DETAILS,
-                pcData.baseDetails.pcId,
-                baseDetailsUpdate.arrayName,
-                baseDetailsUpdate.existingItems,
-                baseDetailsUpdate.updatedItem
-            );
-        } else {
-            throw Error(`Invalid update type`);
-        }
-        queryClient.invalidateQueries();
-        triggerSuccessAlert(setShowSuccessAlert);
-    }
-
+    const { name, value } = event.target;
+    setFunction((prevFormData: any) => ({...prevFormData, [name]: value}));
+    };
 
     const [showConfirmDelete, setShowConfirmDelete] = useState({show: false, data: emptyShowConfirmDeleteData});
-    const [showEditModal, setShowEditModal] = useState({show: false, data: emptyEditModalData})
+    const [editModalFormData, setEditModalFormData] = useState(emptyEditModalData)
 
     const mapSpells = (
         spells: Spell[], 
@@ -79,7 +63,8 @@ function Details({pcData, pcList, selectedPc, queryClient}: Props) {
     ) => {    
         return (
             spells.sort((a, b) => {
-                if (a.level < b.level) return -2;
+                if (a.level < b.level) return -1;
+                if (a.level > b.level) return 1;
                 if (a.name < b.name) return -1;
                 return 1;
             }).map((spell, i) => (
@@ -105,20 +90,18 @@ function Details({pcData, pcList, selectedPc, queryClient}: Props) {
                             <EditItemButton
                                 editable={editable}
                                 handleEdit={() => {
-                                    setShowEditModal({
-                                        show: true,
-                                        data: {
-                                            ...emptyEditModalData,
-                                            formType: 'spell',
-                                            displayName: spell.name,
-                                            name: spell.name,
-                                            description: spell.description,
-                                            damage: spell.damage ?? '',
-                                            damageType: spell.damageType ?? '',
-                                            sourceUrl: spell.sourceUrl ?? '',
-                                            level: spell.level,
-                                            spellCastingAbility: spell.spellCastingAbility
-                                        }
+                                    setEditModalFormData({
+                                        ...emptyEditModalData,
+                                        formType: 'spell',
+                                        spellId: spell.id,
+                                        displayName: spell.name,
+                                        name: spell.name,
+                                        description: spell.description,
+                                        damage: spell.damage ?? '',
+                                        damageType: spell.damageType ?? '',
+                                        sourceUrl: spell.sourceUrl ?? '',
+                                        level: spell.level,
+                                        spellCastingAbility: spell.spellCastingAbility
                                     })
                                 }}
                             />
@@ -136,10 +119,6 @@ function Details({pcData, pcList, selectedPc, queryClient}: Props) {
         
                         {spell.saveDC &&
                             <p><b>Spell Save DC: </b>{spell.saveDC}</p>
-                        }
-        
-                        {spell.attackBonus &&
-                            <p><b>Attack bonus: </b>+{spell.attackBonus}</p>
                         }
         
                         {spell.spellCastingAbility &&
@@ -185,14 +164,22 @@ function Details({pcData, pcList, selectedPc, queryClient}: Props) {
                     setShowConfirmDelete({show: false, data: emptyShowConfirmDeleteData});
                 }}
             />
-            {/* TODO: add functions for onchange, submit, set form data */}
             <EditModal
-                formType={showEditModal.data.formType}
-                formData={showEditModal.data}
-                handleChange={() => {}}
-                handleSubmit={() => {}}
-                setFormData={() => {}}
-                handleCancel={() => { setShowEditModal({show: false, data: emptyEditModalData })}}
+                formType={editModalFormData.formType}
+                formData={editModalFormData}
+                handleChange={handleChange}
+                handleSubmit={async (event: any) => {
+                    try {
+                        await handleSubmitEdit(event, editModalFormData, pcData);
+                        queryClient.invalidateQueries();
+                        triggerSuccessAlert(setShowSuccessAlert);
+                    } catch (e) {
+                        console.error(`Error submitting changes: ${e}`);
+                        alert('Failed to save changes. Please refresh the page and try again');
+                    }
+                }}
+                setFormData={setEditModalFormData}
+                handleCancel={() => { setEditModalFormData(emptyEditModalData)}}
             />
 
             {showSuccessAlert && <SuccessAlert/>}
@@ -234,23 +221,20 @@ function Details({pcData, pcList, selectedPc, queryClient}: Props) {
                                     <EditItemButton
                                         editable={editable}
                                         handleEdit={() => {
-                                            setShowEditModal({
-                                                show: true,
-                                                data: {
-                                                    ...emptyEditModalData,
-                                                    formType: 'feature',
-                                                    displayName: feature.data.name,
-                                                    name: feature.data.name,
-                                                    description: feature.data.description,
-                                                    damage: feature.data.damage ?? '',
-                                                    damageType: feature.data.damageType ?? '',
-                                                    sourceUrl: feature.data.sourceUrl ?? '',
-                                                    featureId: feature.id,
-                                                    source: feature.data.source,
-                                                    maxUses: feature.data.maxUses ? String(feature.data.maxUses) : '',
-                                                    refresh: feature.data.refresh ?? '',
-                                                    saveDC: feature.data.saveDC ? String(feature.data.saveDC) : ''
-                                                }
+                                            setEditModalFormData({
+                                                ...emptyEditModalData,
+                                                formType: 'feature',
+                                                displayName: feature.data.name,
+                                                name: feature.data.name,
+                                                description: feature.data.description,
+                                                damage: feature.data.damage ?? '',
+                                                damageType: feature.data.damageType ?? '',
+                                                sourceUrl: feature.data.sourceUrl ?? '',
+                                                featureId: feature.id,
+                                                source: feature.data.source,
+                                                maxUses: feature.data.maxUses ? String(feature.data.maxUses) : '',
+                                                refresh: feature.data.refresh ?? '',
+                                                saveDC: feature.data.saveDC ? String(feature.data.saveDC) : ''
                                             })
                                         }}
                                     />
@@ -299,20 +283,18 @@ function Details({pcData, pcList, selectedPc, queryClient}: Props) {
                                     <EditItemButton
                                         editable={editable}
                                         handleEdit={() => {
-                                            setShowEditModal({
-                                                show: true,
-                                                data: {
-                                                    ...emptyEditModalData,
-                                                    formType: 'weapon',
-                                                    displayName: weapon.name,
-                                                    name: weapon.name,
-                                                    description: weapon.description ?? '',
-                                                    damage: weapon.damage,
-                                                    damageType: weapon.damageType,
-                                                    type: weapon.type,
-                                                    modifierProperty: weapon.modifierProperty,
-                                                    magic: weapon.magic ? "true" : "false",
-                                                }
+                                            setEditModalFormData({
+                                                ...emptyEditModalData,
+                                                formType: 'weapon',
+                                                weaponId: weapon.id,
+                                                displayName: weapon.name,
+                                                name: weapon.name,
+                                                description: weapon.description ?? '',
+                                                damage: weapon.damage,
+                                                damageType: weapon.damageType,
+                                                type: weapon.type,
+                                                modifierProperty: weapon.modifierProperty,
+                                                magic: weapon.magic ? "true" : "false",
                                             })
                                         }}
                                     />    
@@ -353,15 +335,13 @@ function Details({pcData, pcList, selectedPc, queryClient}: Props) {
                                     <EditItemButton
                                         editable={editable}
                                         handleEdit={() => {
-                                            setShowEditModal({
-                                                show: true,
-                                                data: {
-                                                    ...emptyEditModalData,
-                                                    formType: 'equipment',
-                                                    displayName: item.type,
-                                                    type: item.type,
-                                                    description: item.description ?? '',
-                                                }
+                                            setEditModalFormData({
+                                                ...emptyEditModalData,
+                                                formType: 'equipment',
+                                                equipmentId: item.id,
+                                                displayName: item.type,
+                                                type: item.type,
+                                                description: item.description ?? '',
                                             })
                                         }}
                                     />
@@ -401,15 +381,13 @@ function Details({pcData, pcList, selectedPc, queryClient}: Props) {
                                 <EditItemButton
                                         editable={editable}
                                         handleEdit={() => {
-                                            setShowEditModal({
-                                                show: true,
-                                                data: {
-                                                    ...emptyEditModalData,
-                                                    formType: 'language',
-                                                    displayName: language,
-                                                    stringArrayFieldName: 'languages',
-                                                    language: language
-                                                }
+                                            setEditModalFormData({
+                                                ...emptyEditModalData,
+                                                formType: 'language',
+                                                displayName: language,
+                                                stringArrayFieldName: 'languages',
+                                                language: language,
+                                                originalItem: language
                                             })
                                         }}
                                     />
@@ -446,15 +424,13 @@ function Details({pcData, pcList, selectedPc, queryClient}: Props) {
                                     <EditItemButton
                                         editable={editable}
                                         handleEdit={() => {
-                                            setShowEditModal({
-                                                show: true,
-                                                data: {
-                                                    ...emptyEditModalData,
-                                                    formType: 'proficiency',
-                                                    displayName: proficiency,
-                                                    stringArrayFieldName: 'proficiencies',
-                                                    proficiency: proficiency
-                                                }
+                                            setEditModalFormData({
+                                                ...emptyEditModalData,
+                                                formType: 'proficiency',
+                                                displayName: proficiency,
+                                                stringArrayFieldName: 'proficiencies',
+                                                proficiency: proficiency,
+                                                originalItem: proficiency
                                             })
                                         }}
                                     />
@@ -490,16 +466,14 @@ function Details({pcData, pcList, selectedPc, queryClient}: Props) {
                                     <EditItemButton
                                         editable={editable}
                                         handleEdit={() => {
-                                            setShowEditModal({
-                                                show: true,
-                                                data: {
-                                                    ...emptyEditModalData,
-                                                    formType: 'note',
-                                                    displayName: `Note ${i + 1}`,
-                                                    stringArrayFieldName: 'notes',
-                                                    note: note,
-                                                    useTextArea: true
-                                                }
+                                            setEditModalFormData({
+                                                ...emptyEditModalData,
+                                                formType: 'note',
+                                                displayName: `Note ${i + 1}`,
+                                                stringArrayFieldName: 'notes',
+                                                note: note,
+                                                originalItem: note,
+                                                useTextArea: true
                                             })
                                         }}
                                     />
