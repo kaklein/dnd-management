@@ -66,7 +66,7 @@ function UpdateSpellSlot ({handleChange, handleSubmit, formData, setFormData}: P
         </div>
 
         <Button
-          text="Submit Spell Slot Update"
+          text="Save"
           buttonType={ButtonType.INFO}
           type="submit"
           onClick={() => {}}

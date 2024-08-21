@@ -1,7 +1,7 @@
 import { capitalize } from "@components/utils";
 import { useState } from "react";
 import FormHeader from "./FormHeader";
-import Button, { ButtonType } from "@components/Button";
+import ArrayItemForm from "./baseForms/ArrayItemForm";
 
 interface Props {
   fieldName: string;
@@ -35,42 +35,15 @@ function AddItemToArrayField ({fieldName, handleChange, handleSubmit, formData, 
     }
     {
       showForm &&
-      <form onSubmit={(event) => {handleSubmit(event, formData, setFormData, defaultFormData)}}>
-        <div className="update-form-field">
-          <label className="update-form-label" htmlFor={fieldName}>{capitalize(fieldName)}</label>
-          {
-            !useTextArea &&
-            <input
-              className="update-form-input"
-              type="text"
-              id={fieldName}
-              name={fieldName}
-              onChange={(event) => {handleChange(event, setFormData)}}
-              value={formData[fieldName]}
-              required
-            />
-          }
-          {
-            useTextArea &&
-            <textarea
-              className="update-form-input"
-              id={fieldName}
-              name={fieldName}
-              onChange={(event) => {handleChange(event, setFormData)}}
-              value={formData[fieldName]}
-              required
-            />
-          }
-          
-        </div>
-        
-        <Button
-          text={`Submit ${capitalize(fieldName)}`}
-          buttonType={ButtonType.INFO}
-          type="submit"
-          onClick={() => {}}
-        />
-      </form>
+      <ArrayItemForm
+        fieldName={fieldName}
+        handleChange={handleChange}
+        handleSubmit={handleSubmit}
+        formData={formData}
+        setFormData={setFormData}
+        defaultFormData={defaultFormData}
+        useTextArea={useTextArea}
+      />
     }
     </div>
   )

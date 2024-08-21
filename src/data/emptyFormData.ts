@@ -3,6 +3,7 @@ import { CreateCharacterFormData } from "@models/CreateCharacterFormData";
 import { UpdateType } from "@models/enum/service/UpdateType";
 import { AbilityScores } from "@models/playerCharacter/AbilityScores";
 import { PlayerCharacter } from "@models/playerCharacter/PlayerCharacter";
+import { ShowConfirmDeleteData } from "@models/ShowConfirmDeleteData";
 
 export const defaultWeaponFormData = {
   updateType: UpdateType.WEAPONS,
@@ -160,4 +161,53 @@ export const defaultCreateCharacterFormData: CreateCharacterFormData = {
   intimidation: "false",
   performance: "false",
   persuasion: "false",
+}
+
+export const emptyShowConfirmDeleteData: ShowConfirmDeleteData = {
+  displayName: '',
+  featureId: '',
+  objectArrayFieldName: '',
+  objectArrayExistingItems: [],
+  objectArrayFullItem: {},
+  stringArrayItemName: '',
+  stringArrayFieldName: ''
+}
+
+export const emptyEditModalData = {
+  formType: '',
+  displayName: '',
+  name: '', // weapons, spells, features
+  description: '', // weapons, spells, features, equipment
+  damage: '', // weapons, spells, features
+  damageType: '', // weapons, spells, features
+  sourceUrl: '', // spells, features
+  type: '', // weapons, equipment
+
+  // equipment
+  equipmentId: '',
+
+  // spells
+  spellId: '',
+  level: '',
+  spellCastingAbility: '',
+
+  // features
+  featureId: '',
+  source: '',
+  maxUses: '',
+  refresh: '',
+  saveDC: '',
+
+  // weapons
+  weaponId: '',
+  modifierProperty: '',
+  magic: 'false',
+
+  // arrayItems: languages/notes/proficiencies
+  stringArrayFieldName: '',
+  language: '',
+  note: '',
+  proficiency: '',
+  originalItem: '', 
+  useTextArea: false
 }

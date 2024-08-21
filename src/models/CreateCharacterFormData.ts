@@ -10,7 +10,7 @@ export interface CreateCharacterFormData {
   armorClass: number;
   speed: number;
   hitPointMaximum: number;
-  hitDiceType: string; // todo - stricter typing? options or regex
+  hitDiceType: string; // TODO - stricter typing? options or regex
   gold: number;
   strengthScore: number;
   strengthST: "true" | "false";

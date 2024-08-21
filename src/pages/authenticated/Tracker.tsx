@@ -35,7 +35,10 @@ function Tracker({pcData, queryClient, pcList, selectedPc}: Props) {
     const [showSuccessAlert, setShowSuccessAlert] = useState(false);
     
     const getLimitedUseFeatures = (pcData: PlayerCharacter) => {
-        return pcData.features.filter(feature => feature.data.maxUses);
+        return pcData.features.filter(feature => feature.data.maxUses).sort((a,b) => {
+            if (a.data.name < b.data.name) return -1;
+            return 1;
+        });
     }
 
     const getDefaultFormData = (pcData: PlayerCharacter) => {
@@ -175,6 +178,8 @@ function Tracker({pcData, queryClient, pcList, selectedPc}: Props) {
                             {
                                 pcData.baseDetails.spells!.sort((a,b) => {
                                     if (a.level < b.level) return -1;
+                                    if (a.level > b.level) return 1;
+                                    if (a.name < b.name) return -1;
                                     return 1;
                                 }).map((spell, i) => (
                                     <p className="center" key={i}>
