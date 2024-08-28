@@ -41,7 +41,7 @@ function Navbar ({isSelectedPc, userRole=undefined}: Props) {
                     <span className="navbar-toggler-icon"></span>
                 </button>
                 <div className={`${isNavCollapsed ? "collapse": ""} navbar-collapse`}>
-                    <img src="/public/images/logo-1.png" width="100px"/>
+                    <img src="/images/logo-1.png" width="100px"/>
                     <ul className="navbar-nav mr-auto">
                         {
                             isSelectedPc &&

@@ -9,7 +9,7 @@ function PageHeaderBar ({pageName, showLogo=false}: Props) {
     {
       showLogo &&
       <div className="welcome">
-        <img src="/public/images/logo-1.png" width="250px"/>
+        <img src="/images/logo-1.png" width="250px"/>
       </div>
     }
       <div className="container-fluid page-header-bar">
