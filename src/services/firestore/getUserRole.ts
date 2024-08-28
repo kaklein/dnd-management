@@ -12,7 +12,6 @@ export const getUserRole = async (uid?: string): Promise<UserRole> => {
   let query;
   if (!uid) {
     const currentUser = getAuth().currentUser;
-    console.log(`Current user: ${JSON.stringify(currentUser!.uid)}`);
     if (!currentUser) {
       throw Error ('No current user found.');
     }
