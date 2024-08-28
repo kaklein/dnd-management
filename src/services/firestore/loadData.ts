@@ -7,6 +7,7 @@ import { CollectionName } from './enum/CollectionName';
 import { getDisplayablePCs } from './getDisplayablePCs';
 import { UserRole } from './enum/UserRole';
 import { getAuth } from '@firebase/auth';
+import { getUserRole } from './getUserRole';
 
 const loadPcData = async (pcId: string): Promise<PlayerCharacter> => {
   // Get base character details
@@ -34,15 +35,11 @@ const loadPcData = async (pcId: string): Promise<PlayerCharacter> => {
 }
 
 const loadPCList = async (): Promise<BaseDetails[]> => {
-  const userRole = localStorage.getItem('userRole');
-  if(!userRole) {
-    throw Error('No user role found; cannot load data.');
-  }
-
   const currentUser = getAuth().currentUser;
   if(!currentUser) {
     throw Error('No current user found; cannot load data.');
   }
+  const userRole = await getUserRole(currentUser.uid);
 
   const displayablePCs = await getDisplayablePCs(currentUser.uid, userRole as UserRole);
   

@@ -7,6 +7,7 @@ import { isFormDataValid } from "@components/updateForms/utils";
 import { defaultCreateCharacterFormData } from "@data/emptyFormData";
 import { getAuth } from "@firebase/auth";
 import { createCharacter } from "@services/firestore/createCharacter";
+import { UserRole } from "@services/firestore/enum/UserRole";
 import { QueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -15,9 +16,10 @@ import { v4 as uuidv4 } from "uuid";
 interface Props {
   queryClient: QueryClient;
   setSelectedPcId: (pcId: string) => void;
+  userRole: UserRole | undefined;
 }
 
-function CreateCharacter ({queryClient, setSelectedPcId}: Props) {
+function CreateCharacter ({queryClient, setSelectedPcId, userRole}: Props) {
   const navigate = useNavigate();
 
   const [formData, setFormData] = useState(defaultCreateCharacterFormData);
@@ -57,7 +59,7 @@ function CreateCharacter ({queryClient, setSelectedPcId}: Props) {
 
   return (
     <div>
-      <Navbar isSelectedPc={false}/>
+      <Navbar isSelectedPc={false} userRole={userRole}/>
 
       <PageHeaderBarThreeColumn
         contentRight={

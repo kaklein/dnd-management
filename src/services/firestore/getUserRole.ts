@@ -1,3 +1,4 @@
+import { getAuth } from "@firebase/auth";
 import { readSingleItem } from "./crud/read"
 import { CollectionName } from "./enum/CollectionName"
 import { UserRole } from "./enum/UserRole";
@@ -7,7 +8,18 @@ interface User {
   role: UserRole;
 }
 
-export const getUserRole = async (uid: string): Promise<UserRole> => {
-  const user: User = (await readSingleItem(CollectionName.USERS, {uid})).data as User;
+export const getUserRole = async (uid?: string): Promise<UserRole> => {
+  let query;
+  if (!uid) {
+    const currentUser = getAuth().currentUser;
+    console.log(`Current user: ${JSON.stringify(currentUser!.uid)}`);
+    if (!currentUser) {
+      throw Error ('No current user found.');
+    }
+    query = { uid: currentUser.uid }
+  } else {
+    query = { uid: uid }
+  }
+  const user: User = (await readSingleItem(CollectionName.USERS, query)).data as User;
   return user.role;
 }

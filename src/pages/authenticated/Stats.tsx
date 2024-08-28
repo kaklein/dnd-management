@@ -15,15 +15,17 @@ import { QueryClient } from "@tanstack/react-query";
 import QuickNav from "@components/QuickNav";
 import { triggerSuccessAlert } from "@pages/utils";
 import SuccessAlert from "@components/alerts/SuccessAlert";
+import { UserRole } from "@services/firestore/enum/UserRole";
 
 interface Props {
     pcData: PlayerCharacter;
     pcList: BaseDetails[];
     selectedPc: {pcId: string | null, setSelectedPcId: (pcId: string) => void};
     queryClient: QueryClient;
+    userRole: UserRole | undefined;
 }
 
-function Stats({pcData, pcList, selectedPc, queryClient}: Props) { 
+function Stats({pcData, pcList, selectedPc, queryClient, userRole}: Props) { 
     const [editable, setEditable] = useState(false);
     const [showSuccessAlert, setShowSuccessAlert] = useState(false);
     
@@ -125,7 +127,7 @@ function Stats({pcData, pcList, selectedPc, queryClient}: Props) {
     return (
         <>
         <div className="main-body">
-            <Navbar isSelectedPc={!!selectedPc.pcId}/>
+            <Navbar isSelectedPc={!!selectedPc.pcId} userRole={userRole}/>
             
             <PageHeaderBarPC
                 pcName={`${pcData.baseDetails.name.firstName} ${pcData.baseDetails.name.lastName}`}

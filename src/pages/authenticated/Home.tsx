@@ -5,11 +5,13 @@ import { useNavigate } from "react-router-dom";
 import PageHeaderBar from "@components/headerBars/PageHeaderBar";
 import Card from "@components/cards/Card";
 import Button, { ButtonType } from "@components/Button";
+import { UserRole } from "@services/firestore/enum/UserRole";
 
 interface Props {
   pcList: BaseDetails[];
   selectedPcId?: string;
   setSelectedPcId: (pcId: string) => void;
+  userRole: UserRole | undefined;
 }
 
 const handleClick = (pcId: string, navigate: (route: string) => void, setSelectedPcId: (pcId: string) => void) => {
@@ -24,7 +26,7 @@ const sortPcsByName = (a: BaseDetails, b: BaseDetails) => {
   return 1;
 }
 
-function Home({ selectedPcId, pcList, setSelectedPcId }: Props) {
+function Home({ selectedPcId, pcList, setSelectedPcId, userRole }: Props) {
   const navigate = useNavigate();
 
   const currentUser = getAuth().currentUser;
@@ -32,7 +34,7 @@ function Home({ selectedPcId, pcList, setSelectedPcId }: Props) {
 
   return (
     <>
-      <Navbar isSelectedPc={!!selectedPcId}/>
+      <Navbar isSelectedPc={!!selectedPcId} userRole={userRole}/>
 
         <PageHeaderBar 
             pageName="Home"

@@ -1,14 +1,11 @@
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from '../../firebase';
-import { getUserRole } from "@services/firestore/getUserRole";
 
 const INVALID_LOGIN_ERROR = 'auth/invalid-credential';
 
 export const loginUser = async (email: string, password: string): Promise<boolean> => {
   try {
-    const userCredential = await signInWithEmailAndPassword(auth, email, password);
-    const userRole = await getUserRole(userCredential.user.uid);
-    localStorage.setItem('userRole', userRole);
+    await signInWithEmailAndPassword(auth, email, password);
   } catch (e: any) {
     const errorCode = e.code;
     const errorMessage = e.message;
