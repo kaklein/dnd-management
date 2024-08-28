@@ -1,5 +1,4 @@
 import Navbar from "@components/Navbar";
-import Footer from "@components/Footer";
 import { getAuth } from "@firebase/auth";
 import { BaseDetails } from "@models/playerCharacter/PlayerCharacter";
 import { useNavigate } from "react-router-dom";
@@ -55,9 +54,7 @@ function Home({ selectedPcId, pcList, setSelectedPcId }: Props) {
           <Button text="+ Create New Character" onClick={() => navigate('/create')} buttonType={ButtonType.INFO}/>
           </div>
         </Card>
-        
-        <Footer/>
-    </>
+      </>
   )
 }
 

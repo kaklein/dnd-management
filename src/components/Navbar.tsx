@@ -17,11 +17,11 @@ function Navbar ({isSelectedPc}: Props) {
         <a id="top"></a>
         <nav className="navbar navbar-expand-sm bg-dark border-bottom border-body" data-bs-theme="dark">
             <div className="container-fluid">
-                <p className="navbar-home">D&D<br/>Management</p>
                 <button className="navbar-toggler" type="button" onClick={handleNavbarCollapse}>
                     <span className="navbar-toggler-icon"></span>
                 </button>
                 <div className={`${isNavCollapsed ? "collapse": ""} navbar-collapse`}>
+                    <img src="/public/images/logo-1.png" width="100px"/>
                     <ul className="navbar-nav mr-auto">
                         {
                             isSelectedPc &&
