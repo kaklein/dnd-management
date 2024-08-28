@@ -17,6 +17,7 @@ import { useLocalStorage } from '@services/localStorage/useLocalStorage';
 import CreateCharacter from '@pages/authenticated/CreateCharacter';
 import Loading from '@pages/Loading';
 import Error from '@pages/Error';
+import { getUserRole } from '@services/firestore/getUserRole';
 
 const queryClient = new QueryClient();
 
@@ -36,9 +37,16 @@ function MainApp() {
     const [selectedPcId, setSelectedPcId] = useLocalStorage('selectedPcId');
 
     /* Load list of all displayable PCs */
-    const { isLoading, error, data } = useQuery({
+    const pcQuery = useQuery({
         queryKey: ['pcData', selectedPcId],
         queryFn: () => loadData(selectedPcId),
+        enabled: !!loggedIn
+    });
+
+    /* Look up user role */
+    const roleQuery = useQuery({
+        queryKey: ['userRole'],
+        queryFn: () => getUserRole(),
         enabled: !!loggedIn
     });
 
@@ -55,23 +63,24 @@ function MainApp() {
         )
     }
 
-    if (loggedIn && isLoading) return (
+    if ((loggedIn && pcQuery.isLoading) || (!loggedIn && roleQuery.isLoading)) return (
         <Loading/>
     )
 
-    if (error || !data) return (
+    if (pcQuery.error || !pcQuery.data || roleQuery.error) return (
         <Error 
             errorMessage="Error loading data"
-            text="We're experiencing an issue loading your data. Try logging out and back in, or come back another time."
+            // text="We're experiencing an issue loading your data. Try logging out and back in, or come back another time."
+            text={JSON.stringify(pcQuery?.error?.message) || JSON.stringify(roleQuery?.error?.message)}
         />
     )
 
-    if (!data.selectedPcData) return (
+    if (!pcQuery.data.selectedPcData) return (
         <BrowserRouter>
             <Routes>
-                <Route index element={<Home pcList={data.pcList} setSelectedPcId={setSelectedPcId}/>}/>
-                <Route path="/home" element={<Home pcList={data.pcList} setSelectedPcId={setSelectedPcId}/>}/>
-                <Route path="/create" element={<CreateCharacter queryClient={queryClient} setSelectedPcId={setSelectedPcId}/>}/>
+                <Route index element={<Home pcList={pcQuery.data.pcList} setSelectedPcId={setSelectedPcId} userRole={roleQuery.data}/>}/>
+                <Route path="/home" element={<Home pcList={pcQuery.data.pcList} setSelectedPcId={setSelectedPcId} userRole={roleQuery.data}/>}/>
+                <Route path="/create" element={<CreateCharacter queryClient={queryClient} setSelectedPcId={setSelectedPcId} userRole={roleQuery.data}/>}/>
             </Routes>
         </BrowserRouter>
     )
@@ -79,14 +88,14 @@ function MainApp() {
     return (
         <BrowserRouter>
             <Routes>
-                <Route index element={<Overview pcData={data.selectedPcData} pcList={data.pcList} selectedPc={{pcId: selectedPcId, setSelectedPcId: setSelectedPcId}}/>}/>
-                <Route path="/home" element={<Home pcList={data.pcList} setSelectedPcId={setSelectedPcId}/>}/>
-                <Route path="/overview" element={<Overview pcData={data.selectedPcData} pcList={data.pcList} selectedPc={{pcId: selectedPcId, setSelectedPcId: setSelectedPcId}}/>}/>
-                <Route path="/stats" element={<Stats pcData={data.selectedPcData} pcList={data.pcList} selectedPc={{pcId: selectedPcId, setSelectedPcId: setSelectedPcId}} queryClient={queryClient}/>}/>
-                <Route path="/tracker" element={<Tracker pcData={data.selectedPcData} queryClient={queryClient} pcList={data.pcList} selectedPc={{pcId: selectedPcId, setSelectedPcId: setSelectedPcId}}/>}/>
-                <Route path="/details" element={<Details pcData={data.selectedPcData} pcList={data.pcList} selectedPc={{pcId: selectedPcId, setSelectedPcId: setSelectedPcId}} queryClient={queryClient}/>}/>
-                <Route path="/update" element={<Update pcData={data.selectedPcData} queryClient={queryClient} pcList={data.pcList} selectedPc={{pcId: selectedPcId, setSelectedPcId: setSelectedPcId}}/>}/>
-                <Route path="/create" element={<CreateCharacter queryClient={queryClient} setSelectedPcId={setSelectedPcId}/>}/>
+                <Route index element={<Overview pcData={pcQuery.data.selectedPcData} pcList={pcQuery.data.pcList} selectedPc={{pcId: selectedPcId, setSelectedPcId: setSelectedPcId}} userRole={roleQuery.data}/>}/>
+                <Route path="/home" element={<Home pcList={pcQuery.data.pcList} setSelectedPcId={setSelectedPcId} userRole={roleQuery.data}/>}/>
+                <Route path="/overview" element={<Overview pcData={pcQuery.data.selectedPcData} pcList={pcQuery.data.pcList} selectedPc={{pcId: selectedPcId, setSelectedPcId: setSelectedPcId}} userRole={roleQuery.data}/>}/>
+                <Route path="/stats" element={<Stats pcData={pcQuery.data.selectedPcData} pcList={pcQuery.data.pcList} selectedPc={{pcId: selectedPcId, setSelectedPcId: setSelectedPcId}} queryClient={queryClient} userRole={roleQuery.data}/>}/>
+                <Route path="/tracker" element={<Tracker pcData={pcQuery.data.selectedPcData} queryClient={queryClient} pcList={pcQuery.data.pcList} selectedPc={{pcId: selectedPcId, setSelectedPcId: setSelectedPcId}} userRole={roleQuery.data}/>}/>
+                <Route path="/details" element={<Details pcData={pcQuery.data.selectedPcData} pcList={pcQuery.data.pcList} selectedPc={{pcId: selectedPcId, setSelectedPcId: setSelectedPcId}} queryClient={queryClient} userRole={roleQuery.data}/>}/>
+                <Route path="/update" element={<Update pcData={pcQuery.data.selectedPcData} queryClient={queryClient} pcList={pcQuery.data.pcList} selectedPc={{pcId: selectedPcId, setSelectedPcId: setSelectedPcId}} userRole={roleQuery.data}/>}/>
+                <Route path="/create" element={<CreateCharacter queryClient={queryClient} setSelectedPcId={setSelectedPcId} userRole={roleQuery.data}/>}/>
             </Routes>
         </BrowserRouter>
     )

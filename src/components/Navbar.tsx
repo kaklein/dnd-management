@@ -1,17 +1,37 @@
-import { auth } from "../firebase";
 import { NavLink } from "react-router-dom";
 import { logoutUser } from "@services/firebaseAuth/logoutUser";
 import { useState } from "react";
+import { getUserRole } from "@services/firestore/getUserRole";
+import { UserRole } from "@services/firestore/enum/UserRole";
+import { getAuth } from "@firebase/auth";
 
 interface Props {
     isSelectedPc: boolean;
+    userRole?: UserRole;
 }
 
-function Navbar ({isSelectedPc}: Props) {
+function Navbar ({isSelectedPc, userRole=undefined}: Props) {
     const [isNavCollapsed, setIsNavCollapsed] = useState(true);
     const handleNavbarCollapse = () => {
         setIsNavCollapsed(!isNavCollapsed);
     }
+    const [knownUserRole, setKnownUserRole] = useState(userRole);
+    const currentUser = getAuth().currentUser;
+    const checkUserRole = async () => {
+        if (knownUserRole == undefined) {
+            if (currentUser) {
+                const retrievedRole = await getUserRole(currentUser.uid);
+                setKnownUserRole(retrievedRole);
+                return retrievedRole;
+            } else {
+                throw Error('No current user found');
+            }
+        } else {
+            return userRole;
+        }
+    }
+    checkUserRole();
+
     return (
         <>
         <a id="top"></a>
@@ -50,11 +70,11 @@ function Navbar ({isSelectedPc}: Props) {
                         <li className="nav-item navbar-text">
                             <p>
                                 Logged in
-                                {auth.currentUser?.displayName && ` as ${auth.currentUser?.displayName}` }
-                                {localStorage.getItem('userRole') === 'ADMIN' && " | ADMIN ROLE"}
-                                {localStorage.getItem('userRole') === 'READ_ALL' && " | READ_ALL ROLE"}
+                                {currentUser?.displayName && ` as ${currentUser?.displayName}` }
+                                {(currentUser && userRole === 'ADMIN') && " | ADMIN ROLE"}
+                                {(currentUser && userRole === 'READ_ALL') && " | READ_ALL ROLE"}
                             </p>
-                            {auth.currentUser &&
+                            {currentUser &&
                                 <a className="btn btn-secondary" href="/" onClick={() => logoutUser()}>Log Out</a>
                             }
                         </li>

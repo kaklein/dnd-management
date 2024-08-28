@@ -44,7 +44,6 @@ function SignUp () {
         setDisplayName(createResult.user),
         sendVerification(createResult.user)
       ]);
-      localStorage.setItem('userRole', userRole);
       navigate('/');
     } else if (!createResult.success && createResult.error.errorCode === USER_EXISTS_SIGNUP_ERROR) {
       alert(`User with email address ${formData.email} already exists. Please log in or reset your password.`);

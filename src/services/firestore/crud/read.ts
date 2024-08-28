@@ -26,7 +26,7 @@ export const readData = async (collectionName: CollectionName, queryFilter?: {[k
 export const readSingleItem = async (collectionName: CollectionName, queryFilter: {[key: string]: string | number | object}): Promise<{id: string, data: DocumentData}> => {
   const queryResult = await readData(collectionName, queryFilter);
   if (queryResult.length < 1) {
-    throw Error(`No matching document found for query: ${queryFilter}`);
+    throw Error(`No matching document found for query: ${JSON.stringify(queryFilter)} on collection: ${collectionName}`);
   }
 
   if (queryResult.length > 1) {

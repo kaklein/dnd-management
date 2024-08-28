@@ -23,15 +23,17 @@ import { determineAttackBonus, formatBonus, triggerSuccessAlert } from "../utils
 import PageHeaderBarPC from "@components/headerBars/PageHeaderBarPC";
 import QuickNav from "@components/QuickNav";
 import SuccessAlert from "@components/alerts/SuccessAlert";
+import { UserRole } from "@services/firestore/enum/UserRole";
 
 interface Props {
     pcData: PlayerCharacter;
     queryClient: QueryClient;
     pcList: BaseDetails[];
     selectedPc: {pcId: string | null, setSelectedPcId: (pcId: string) => void}
+    userRole: UserRole | undefined;
 }
 
-function Tracker({pcData, queryClient, pcList, selectedPc}: Props) {
+function Tracker({pcData, queryClient, pcList, selectedPc, userRole}: Props) {
     const [showSuccessAlert, setShowSuccessAlert] = useState(false);
     
     const getLimitedUseFeatures = (pcData: PlayerCharacter) => {
@@ -91,7 +93,7 @@ function Tracker({pcData, queryClient, pcList, selectedPc}: Props) {
     return (
         <>
         <div className="main-body">
-            <Navbar isSelectedPc={!!selectedPc.pcId}/>
+            <Navbar isSelectedPc={!!selectedPc.pcId} userRole={userRole}/>
 
             <PageHeaderBarPC 
                 pcName={`${pcData.baseDetails.name.firstName} ${pcData.baseDetails.name.lastName}`}

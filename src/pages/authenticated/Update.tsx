@@ -18,15 +18,17 @@ import { useSearchParams } from "react-router-dom";
 import QuickNav from "@components/QuickNav";
 import { triggerSuccessAlert } from "@pages/utils";
 import SuccessAlert from "@components/alerts/SuccessAlert";
+import { UserRole } from "@services/firestore/enum/UserRole";
 
 interface Props {
   pcData: PlayerCharacter;
   queryClient: QueryClient;
   pcList: BaseDetails[];
   selectedPc: {pcId: string | null, setSelectedPcId: (pcId: string) => void};
+  userRole: UserRole | undefined;
 }
 
-function Update ({pcData, queryClient, pcList, selectedPc}: Props) {
+function Update ({pcData, queryClient, pcList, selectedPc, userRole}: Props) {
   const [searchParams] = useSearchParams();
   const [showSuccessAlert, setShowSuccessAlert] = useState(false);
 
@@ -71,7 +73,7 @@ function Update ({pcData, queryClient, pcList, selectedPc}: Props) {
   return (
     <>
     <div className="main-body">
-      <Navbar isSelectedPc={!!selectedPc.pcId}/>
+      <Navbar isSelectedPc={!!selectedPc.pcId} userRole={userRole}/>
 
       {
         searchParams.get("created") === "true" &&

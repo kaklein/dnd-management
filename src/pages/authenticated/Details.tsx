@@ -18,15 +18,17 @@ import SuccessAlert from "@components/alerts/SuccessAlert";
 import EditItemButton from "@components/EditItemButton";
 import EditModal from "@components/modals/EditModal";
 import { emptyEditModalData, emptyShowConfirmDeleteData } from "@data/emptyFormData";
+import { UserRole } from "@services/firestore/enum/UserRole";
 
 interface Props {
     pcData: PlayerCharacter;
     pcList: BaseDetails[];
     selectedPc: {pcId: string | null, setSelectedPcId: (pcId: string) => void};
     queryClient: QueryClient;
+    userRole: UserRole | undefined;
 }
 
-function Details({pcData, pcList, selectedPc, queryClient}: Props) {
+function Details({pcData, pcList, selectedPc, queryClient, userRole}: Props) {
     const [showSuccessAlert, setShowSuccessAlert] = useState(false);
 
     const [editable, setEditable] = useState(false);
@@ -137,7 +139,7 @@ function Details({pcData, pcList, selectedPc, queryClient}: Props) {
     return (
         <>
         <div className="main-body">
-            <Navbar isSelectedPc={!!selectedPc.pcId}/>
+            <Navbar isSelectedPc={!!selectedPc.pcId} userRole={userRole}/>
 
             <PageHeaderBarPC 
                 pcName={`${pcData.baseDetails.name.firstName} ${pcData.baseDetails.name.lastName}`}

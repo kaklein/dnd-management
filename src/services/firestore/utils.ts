@@ -371,8 +371,8 @@ export const getBool = (asString: string) => {
   return asString.toLowerCase() === "true" ? true : false;
 }
 
-export const transformAbilityScoresForCharacterCreation = (pcId: string, formData: any): AbilityScores => {
-  return {
+export const transformAbilityScoresForCharacterCreation = (pcId: string, formData: any): any => {
+  const abilityScores: AbilityScores = {
     id: '',
     data: {
       pcId: pcId,
@@ -426,4 +426,5 @@ export const transformAbilityScoresForCharacterCreation = (pcId: string, formDat
       }
     }
   }
+  return abilityScores.data;
 }
