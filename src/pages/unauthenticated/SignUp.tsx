@@ -59,6 +59,7 @@ function SignUp () {
     <>
       <PageHeaderBar 
         pageName="Sign Up"
+        showLogo={true}
       />
       <Card>
         <form  onSubmit={handleSubmit} className="login-form">

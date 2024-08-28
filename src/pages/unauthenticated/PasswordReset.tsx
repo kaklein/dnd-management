@@ -30,6 +30,7 @@ function PasswordReset () {
     <>
       <PageHeaderBar 
           pageName="Reset Password"
+          showLogo={true}
       />
 
       {showSuccessAlert && <SuccessAlert alertText=""/>}

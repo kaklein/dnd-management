@@ -29,6 +29,7 @@ function Login () {
     <>
       <PageHeaderBar 
           pageName="Log In"
+          showLogo={true}
       />
       <Card>
         <form  onSubmit={handleSubmit} className="login-form">
