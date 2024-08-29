@@ -6,6 +6,7 @@
     --success-light: lightgreen;
     --success-dark: green;
     --near-black: #2f2c33;
+    --near-white: #f9f5f5;
 }
 
 .card-img-top {
@@ -51,8 +52,10 @@ img {
     margin-right: 10px;
 }
 
-.toggle-check {
-    zoom: 3;
+.toggle-check input {
+    width: 2em;
+    height: 2em;
+    outline: 1px solid var(--near-black);
 }
 
 .icon {
@@ -548,4 +551,31 @@ img {
 
 .populated-field {
     font-style: italic;
+}
+
+.refresh {
+    background-color: var(--near-white);
+    border-radius: 10px;
+    margin-top: 10px;
+}
+
+.refresh-row {
+    width: fit-content;
+}
+
+.refresh-col {
+    height: 50px;
+}
+
+.short-div {
+    height: 20px;
+    padding-top: 3px;
+    text-align: center;
+    color: #4f4e4e;
+}
+
+.refresh-icon {
+    width: 40px;
+    border-radius: 10px;
+    margin-top: 4px;
 }
