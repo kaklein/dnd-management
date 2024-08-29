@@ -1,10 +1,8 @@
 import Button, { ButtonType } from "@components/Button";
 import TitleButtonRow from "@components/TitleButtonRow";
-import { PlayerCharacter } from "@models/playerCharacter/PlayerCharacter";
 import { useState } from "react";
 
 interface Props {
-  pcData: PlayerCharacter;
   handleChange: (event: any, setFunction: (prevFormData: any) => void) => void;
   handleSubmit: (
     event: any, 
@@ -15,7 +13,7 @@ interface Props {
   setFormData: (data: any) => void;
 }
 
-function UpdatePC ({pcData, handleChange, handleSubmit, formData, setFormData}: Props) {
+function UpdatePC ({ handleChange, handleSubmit, formData, setFormData}: Props) {
   const [locked, setLocked] = useState(true);
 
   return (

@@ -180,7 +180,6 @@ function Update ({pcData, queryClient, pcList, selectedPc, userRole}: Props) {
 
       <Card>
         <UpdatePC
-          pcData={pcData}
           handleChange={handleChange}
           handleSubmit={handleSubmit}
           formData={pcFormData}
