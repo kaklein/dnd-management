@@ -4,7 +4,6 @@ import Overview from "./pages/authenticated/Overview";
 import Stats from "./pages/authenticated/Stats";
 import Tracker from "./pages/authenticated/Tracker";
 import Details from "./pages/authenticated/Details";
-
 import { QueryClient, QueryClientProvider, useQuery } from '@tanstack/react-query'
 import { loadData } from '@services/firestore/loadData';
 import Login from '@pages/unauthenticated/Login';
@@ -18,6 +17,8 @@ import CreateCharacter from '@pages/authenticated/CreateCharacter';
 import Loading from '@pages/Loading';
 import Error from '@pages/Error';
 import { getUserRole } from '@services/firestore/getUserRole';
+import { getAuth } from '@firebase/auth';
+import VerifyEmail from '@pages/authenticated/VerifyEmail';
 
 const queryClient = new QueryClient();
 
@@ -50,6 +51,25 @@ function MainApp() {
         enabled: !!loggedIn
     });
 
+    /* Check if user has verified email */
+    const verifiedUserQuery = useQuery({
+        queryKey: ['isVerifiedUser'],
+        queryFn: async () => {
+            const auth = getAuth();
+            if (auth.currentUser?.emailVerified) {
+                return true;
+            } else {
+                await auth.currentUser?.reload();
+                const verified = auth.currentUser?.emailVerified;
+                if (verified) {
+                    await auth.currentUser.getIdToken(true);
+                }
+                return verified;
+            }
+        },
+        enabled: !!loggedIn
+    });
+
     if (!loggedIn) {
         return (
             <BrowserRouter>
@@ -63,15 +83,14 @@ function MainApp() {
         )
     }
 
-    if ((loggedIn && pcQuery.isLoading) || (!loggedIn && roleQuery.isLoading)) return (
-        <Loading/>
-    )
+    if (loggedIn && verifiedUserQuery.data == false) return <VerifyEmail/>
 
-    if (pcQuery.error || !pcQuery.data || roleQuery.error) return (
+    if (loggedIn && (pcQuery.isLoading || roleQuery.isLoading || verifiedUserQuery.isLoading)) return <Loading/>
+
+    if (pcQuery.error || !pcQuery.data || roleQuery.error || verifiedUserQuery.error) return (
         <Error 
             errorMessage="Error loading data"
-            // text="We're experiencing an issue loading your data. Try logging out and back in, or come back another time."
-            text={JSON.stringify(pcQuery?.error?.message) || JSON.stringify(roleQuery?.error?.message)}
+            text="We're experiencing an issue loading your data. Try refreshing the page or logging out and back in, or come back another time."
         />
     )
 
