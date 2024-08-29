@@ -71,10 +71,8 @@ export const buildDefaultPCFormData = (pcData: PlayerCharacter) => {
   return {
     updateType: UpdateType.BASE_DETAILS,
     level: pcData.baseDetails.level,
-    armorClass: pcData.baseDetails.armorClass,
     hitPointMaximum: pcData.baseDetails.usableResources.hitPoints.max,
-    hitDice: pcData.baseDetails.usableResources.hitDice.max,
-    proficiencyBonus: pcData.baseDetails.proficiencyBonus
+    armorClass: pcData.baseDetails.armorClass,
   }
 }
 

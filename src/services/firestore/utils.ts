@@ -38,10 +38,11 @@ export const transformFormDataForUpdate = (pcData: PlayerCharacter, data: {updat
           pcId: pcData.baseDetails.pcId,
           updateObject: {
             level: Number(updates.level),
+            'usableResources.hitDice.max': Number(updates.level),
+            'usableResources.hitDice.current': Number(updates.level) - (pcData.baseDetails.usableResources.hitDice.max - pcData.baseDetails.usableResources.hitDice.current),
+            proficiencyBonus: getProficiencyBonusByLevel(Number(updates.level)),
             armorClass: Number(updates.armorClass),
-            'usableResources.hitPoints.max': Number(updates.hitPointMaximum),
-            'usableResources.hitDice.max': Number(updates.hitDice),
-            proficiencyBonus: Number(updates.proficiencyBonus)
+            'usableResources.hitPoints.max': Number(updates.hitPointMaximum)
           }
         }
       }
