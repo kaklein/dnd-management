@@ -45,20 +45,6 @@ function UpdatePC ({pcData, handleChange, handleSubmit, formData, setFormData}: 
         setLocked(true);
       }}>
         <div className="update-form-field">
-          <label className="update-form-label" htmlFor="armorClass">Armor Class</label>
-          <input
-            className="update-form-input"
-            type="number"
-            min="1"
-            max="99"
-            id="armorClass"
-            name="armorClass"
-            onChange={(event) => {handleChange(event, setFormData)}}
-            value={formData.armorClass}
-            disabled={locked}
-          />
-        </div>
-        <div className="update-form-field">
           <label className="update-form-label" htmlFor="level">Level</label>
           <input
             className="update-form-input"
@@ -69,20 +55,6 @@ function UpdatePC ({pcData, handleChange, handleSubmit, formData, setFormData}: 
             name="level"
             onChange={(event) => {handleChange(event, setFormData)}}
             value={formData.level}
-            disabled={locked}
-          />
-        </div>
-        <div className="update-form-field">
-          <label className="update-form-label" htmlFor="proficiencyBonus">Proficiency Bonus</label>
-          <input
-            className="update-form-input"
-            type="number"
-            min="1"
-            max="20"
-            id="proficiencyBonus"
-            name="proficiencyBonus"
-            onChange={(event) => {handleChange(event, setFormData)}}
-            value={formData.proficiencyBonus}
             disabled={locked}
           />
         </div>
@@ -101,16 +73,16 @@ function UpdatePC ({pcData, handleChange, handleSubmit, formData, setFormData}: 
           />
         </div>
         <div className="update-form-field">
-          <label className="update-form-label" htmlFor="hitDice">Hit Dice ({pcData.baseDetails.usableResources.hitDice.type})</label>
+          <label className="update-form-label" htmlFor="armorClass">Armor Class</label>
           <input
             className="update-form-input"
             type="number"
             min="1"
             max="99"
-            id="hitDice"
-            name="hitDice"
+            id="armorClass"
+            name="armorClass"
             onChange={(event) => {handleChange(event, setFormData)}}
-            value={formData.hitDice}
+            value={formData.armorClass}
             disabled={locked}
           />
         </div>
