@@ -2,11 +2,13 @@ import { ReactNode } from "react";
 
 interface Props {
     children: ReactNode;
+    customClass?: string;
 }
 
-function Card ({children}: Props) {
+function Card ({children, customClass=undefined}: Props) {
+    const className = customClass ? `card ${customClass}` : 'card';
     return (
-        <div className="card" style={{width: "100%"}}>
+        <div className={className} style={{width: "100%"}}>
             {children}
         </div>
     )
