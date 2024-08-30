@@ -1,21 +1,35 @@
 # DND Management
 
 ## Why
-I created this project as a way to teach myself web development with React.
-After starting my first actual DND campaign (as opposed to playing hours of BG3 by myself),
-I quickly realized I need a way to track my resources, character info, and notes about the campaign.
-Instead of finding one of the many existing tools out there, I decided it's the perfect excuse to learn React and dabble in more front-end work which is a nice change of pace for me.
+I created this project as a way to teach myself React.
+After starting my first actual D&D campaign (as opposed to playing hours of Baldur's Gate 3 by myself),
+I quickly realized I needed a better way to track my resources, character info, and notes about the campaign beyond
+scribbling on a paper character sheet.
+I decided it's the perfect excuse to do some web development and learn React, as a change of pace from the primarily back-end work I do professionally.
 
 ## Features
-* Home page with an overview of my character
-* Stats page with my character's base stats and abilities
-* Tracker page with changeable inputs to help track changes in HP, uses of spell slots and limited abilities, etc.
-* Details page with the full descriptions of any of my character's abilities for reference
+* User authentication using Firebase Auth (sign up, verify email, log in, reset password).
+* Create, select, and view multiple characters. Each user only has access to the character(s) they've created.
+* Automatic calculation of any stats possible. For example, the proficiency bonus and number of hit dice are directly determined by the character's level. Users never have to enter these fields; they just get automatically populated and updated based on the level.
 
-## Future
-* Back the app with a database so that updated tracker info can actually be saved and loaded from session to session
-* Add a notes page for important notes taken during sessions. TBD whether I want a page to actually take notes on vs. writing them in Google docs and uploading to my database for cleaner display later.
+## Pages
+* <b>Overview</b> page with the character's basic info.
+* <b>Stats</b> page with the character's ability scores, proficiencies, and some miscellaneous stats. Ability scores and proficiencies can be edited.
+* <b>Tracker</b> page to display HP, spell slots, and any limited-use items. Easy to make frequent updates as needed during a session so users never lose track of what they have available to them.
+* <b>Details</b> page with the full descriptions of all items and abilities for easy reference.
+All items can be deleted or edited.
+* <b>Update</b> page where users can update character details or add new items, spells, weapons, etc.
+
+
+## Planned Updates
+* Add a notes page for important notes taken during sessions
+* Allow deletion of characters
+* Improve form input validation
 
 ## Technology
 * TypeScript
-* React/HTML/CSS
+* React/HTML
+* CSS/Bootstrap
+* Firebase Hosting
+* Firebase Auth
+* Firestore database
