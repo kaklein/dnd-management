@@ -264,7 +264,7 @@ function CreateCharacterForm ({handleChange, handleSubmit, formData, setFormData
             <h4 className="form-sub-heading">Ability Scores</h4>
             <p className="update-form-description">
               Ability modifiers will be automatically calculated. After character creation, you can view and modify your ability scores and skill proficiencies
-              at any time on the Stats page.
+              at any time on the Ability Scores page.
             </p>
             <Card>
               <h4 className="form-sub-heading-2">Strength</h4>

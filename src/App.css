@@ -66,6 +66,7 @@ img {
 .btn-text {
     text-decoration: none;
     color: var(--light-text);
+    max-width: 50px;
 }
 
 .btn {
@@ -524,8 +525,31 @@ img {
     cursor: pointer;
 }
 
-.quick-nav-item img {
-    max-width: 80px;
+.quick-nav-item a {
+    text-decoration: none;
+}
+
+.quick-nav-item-button {
+    max-width: 85px;
+    height: 65px;
+    line-height: 65px;
+    background-color: var(--dark-purple);
+    box-shadow: 2px 2px 0px var(--near-black);
+    border-radius: 5px;
+    padding: 3px;
+}
+
+.quick-nav-item-button:hover {
+    background-color: var(--darker-purple);
+}
+
+.quick-nav-item-button p {
+    text-align: center;
+    color: var(--near-white);
+    font-size: medium;
+    vertical-align: middle;
+    line-height: normal;
+    display: inline-block;
 }
 
 .tracker-save-button {
