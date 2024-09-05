@@ -71,7 +71,7 @@ function Overview({pcData, pcList, selectedPc, userRole}: Props) {
                             <DeleteItemButton
                                 editable={editable}
                                 handleDelete={() => setShowPCDelete(`${pcData.baseDetails.name.firstName} ${pcData.baseDetails.name.lastName}`)}
-                                customDeleteText="Delete Player Character"
+                                customDeleteText="Delete Character"
                             />
                         }
                     />

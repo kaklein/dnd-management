@@ -32,7 +32,7 @@ function PageHeaderBarPC ({pageName, pcList, pcName, selectedPc}: Props) {
         <div className="col-sm">
           <div className="pc-select">
             <div className="pc-show-collapse-bar">
-               <Button text="Select PC" buttonType={ButtonType.INFO} onClick={handleExpandCollapseClick}></Button>
+               <Button text="Select Character" buttonType={ButtonType.INFO} onClick={handleExpandCollapseClick}></Button>
               <p>{pcName}</p>
             </div>
             {

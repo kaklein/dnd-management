@@ -58,7 +58,7 @@ function Home({ selectedPcId, pcList, setSelectedPcId, userRole }: Props) {
 
         <Card>
           <div>
-            <h4>Select a Player Character</h4>
+            <h4>Select a Character</h4>
             <div className="pc-list">
               {pcList.sort((a, b) => sortPcsByName(a, b)).map((pc) => (
                 <div key={pc.pcId} className="pc-list-item-center"><Button text={`${pc.name.firstName} ${pc.name.lastName}`} key={pc.pcId} buttonType={ButtonType.DARK} onClick={() => handleClick(pc.pcId, navigate, setSelectedPcId)}/></div>
