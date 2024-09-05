@@ -14,7 +14,7 @@ I decided it's the perfect excuse to do some web development and learn React, as
 
 ## Pages
 * <b>Overview</b> page with the character's basic info.
-* <b>Stats</b> page with the character's ability scores, proficiencies, and some miscellaneous stats. Ability scores and proficiencies can be edited.
+* <b>Ability Scores</b> page with the character's ability scores, proficiencies, and some miscellaneous stats. Ability scores and proficiencies can be edited.
 * <b>Tracker</b> page to display HP, spell slots, and any limited-use items. Easy to make frequent updates as needed during a session so users never lose track of what they have available to them.
 * <b>Details</b> page with the full descriptions of all items and abilities for easy reference.
 All items can be deleted or edited.

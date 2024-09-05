@@ -96,7 +96,7 @@ function Update ({pcData, queryClient, pcList, selectedPc, userRole}: Props) {
 
       <Card>
         <p>Use this page to add and update spell slots; add spells, weapons, and other items; and update character base stats.</p>
-        <p>These updates will be reflected on the Overview, Stats, Tracker, and Details pages.</p>
+        <p>These updates will be reflected on the Overview, Ability Scores, Tracker, and Details pages.</p>
       </Card>
       
       {showSuccessAlert && <SuccessAlert/>}

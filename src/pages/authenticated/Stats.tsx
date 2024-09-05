@@ -131,7 +131,7 @@ function Stats({pcData, pcList, selectedPc, queryClient, userRole}: Props) {
             
             <PageHeaderBarPC
                 pcName={`${pcData.baseDetails.name.firstName} ${pcData.baseDetails.name.lastName}`}
-                pageName="Stats"
+                pageName="Ability Scores"
                 pcList={pcList}
                 selectedPc={selectedPc}
             />
