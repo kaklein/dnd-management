@@ -242,16 +242,25 @@ img {
 }
 
 .form-label {
-    text-align: right;
-    width: 200px;
+    text-align: left;
+    width: 100%;
     font-weight: bold;
+    margin: 0px;
+    padding: 0px;
 }
 
 .form-input {
-    width: 300px;
+    width: 100%;
     text-align: left;
     border: 1px solid darkgray;
     border-radius: 10px;
+    margin: 0px;
+    margin-bottom: 10px;
+}
+
+.login-form Button {
+    width: 100%;
+    margin: auto;
 }
 
 .update-form-field {
@@ -614,4 +623,10 @@ img {
 
 .no-padding {
     padding: 0px;
+}
+
+.back-submit-row Button {
+    width: 100%;
+    margin: 0px;
+    margin-top: 10px;
 }

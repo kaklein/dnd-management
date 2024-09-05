@@ -64,7 +64,7 @@ function SignUp () {
         <form  onSubmit={handleSubmit} className="login-form">
           <div className="form-field">
             <label className="form-label" htmlFor="email-input">Email:</label>
-            <input className="form-input" type="email" name="email" id="email" autoComplete="email" placeholder="dungeons@dragons.com" onChange={handleChange}/>
+            <input className="form-input" type="email" name="email" id="email" autoComplete="email" placeholder="dungeons@dragons.com" onChange={handleChange} autoFocus/>
           </div>
           <div className="form-field">
             <label className="form-label" htmlFor="password-input">Password:</label>
