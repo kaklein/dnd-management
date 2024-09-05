@@ -490,7 +490,7 @@ function Details({pcData, pcList, selectedPc, queryClient, userRole}: Props) {
                 }
             </Card>
             <div className="div-button">
-                <Button buttonType={ButtonType.DANGER} text={editable ? "Cancel" : "Edit"} onClick={() => {setEditable(!editable)}}/>
+                <Button buttonType={ButtonType.DANGER} text={editable ? "Lock" : "Unlock"} onClick={() => {setEditable(!editable)}}/>
             </div>
         </div>
         <QuickNav/>

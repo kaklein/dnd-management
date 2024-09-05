@@ -1,9 +1,10 @@
 interface Props {
   editable: boolean;
   handleDelete: () => void;
+  customDeleteText?: string;
 }
 
-function DeleteItemButton ({editable, handleDelete}: Props) {
+function DeleteItemButton ({editable, handleDelete, customDeleteText}: Props) {
   if (!editable) return undefined;
 
   return (
@@ -14,7 +15,7 @@ function DeleteItemButton ({editable, handleDelete}: Props) {
       data-bs-target="#deleteModal"
       onClick={handleDelete}
     >
-      Delete
+      {customDeleteText ?? 'Delete'}
     </button>
   )
 }

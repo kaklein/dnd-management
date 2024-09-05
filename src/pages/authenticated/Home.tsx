@@ -1,7 +1,7 @@
 import Navbar from "@components/Navbar";
 import { getAuth } from "@firebase/auth";
 import { BaseDetails } from "@models/playerCharacter/PlayerCharacter";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import PageHeaderBar from "@components/headerBars/PageHeaderBar";
 import Card from "@components/cards/Card";
 import Button, { ButtonType } from "@components/Button";
@@ -28,6 +28,15 @@ const sortPcsByName = (a: BaseDetails, b: BaseDetails) => {
 
 function Home({ selectedPcId, pcList, setSelectedPcId, userRole }: Props) {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const deletedPC = searchParams.get("deleted");
+  let firstName = '';
+  let lastName = '';
+  if (deletedPC) {
+    const splitName = deletedPC.split('_');
+    firstName = splitName[0];
+    lastName = splitName[1];
+  }
 
   const currentUser = getAuth().currentUser;
   if(!currentUser) throw Error('No current user found.');
@@ -35,6 +44,13 @@ function Home({ selectedPcId, pcList, setSelectedPcId, userRole }: Props) {
   return (
     <>
       <Navbar isSelectedPc={!!selectedPcId} userRole={userRole}/>
+
+      {
+        deletedPC != undefined &&
+        <div className="pop-up">
+          <h4>Successfully deleted {firstName} {lastName}.</h4>
+        </div>
+      }
 
         <PageHeaderBar 
             pageName="Home"
