@@ -1,6 +1,5 @@
 import Button, { ButtonType } from "@components/Button";
 import Card from "@components/cards/Card";
-import ThreeColumnBar from "@components/ThreeColumnBar";
 import { buildProficiencyForms } from "@components/utils";
 import { useState } from "react";
 
@@ -27,7 +26,7 @@ function CreateCharacterForm ({handleChange, handleSubmit, formData, setFormData
           showBaseDetails &&
           <>
             <div className="update-form-field">
-              <label className="update-form-label" htmlFor="playerName">Player Name</label>
+              <label className="update-form-label" htmlFor="playerName">Your Name</label>
               <input
                 className="update-form-input"
                 type="string"
@@ -239,28 +238,24 @@ function CreateCharacterForm ({handleChange, handleSubmit, formData, setFormData
                 required
               />
             </div>
-            <Button buttonType={ButtonType.INFO} text="Next >" onClick={() => {
-              setShowAbilityScores(true);
-              setShowBaseDetails(false);
-            }}/>
+            
+            <div className="container-fluid back-submit-row">
+              <div className="row">
+                <div className="col-6"/>
+                <div className="col-6">
+                <Button buttonType={ButtonType.INFO} text="Next >" onClick={() => {
+                  setShowAbilityScores(true);
+                  setShowBaseDetails(false);
+                }}/>
+                </div>
+              </div>
+            </div>
           </>   
         }
 
         {
           showAbilityScores &&
           <>
-            <ThreeColumnBar
-              contentLeft={
-                <Button 
-                  buttonType={ButtonType.SECONDARY}
-                  text="< Back"
-                  onClick={() => {
-                    setShowAbilityScores(false);
-                    setShowBaseDetails(true);
-                  }}
-                />
-              }
-            />
             <h4 className="form-sub-heading">Ability Scores</h4>
             <p className="update-form-description">
               Ability modifiers will be automatically calculated. After character creation, you can view and modify your ability scores and skill proficiencies
@@ -388,9 +383,9 @@ function CreateCharacterForm ({handleChange, handleSubmit, formData, setFormData
               }
             </Card>
 
-            <div className="container-fluid">
-              <ThreeColumnBar
-                contentLeft={
+            <div className="container-fluid back-submit-row">
+              <div className="row">
+                <div className="col-6">
                   <Button
                     buttonType={ButtonType.SECONDARY}
                     text="< Back"
@@ -399,16 +394,16 @@ function CreateCharacterForm ({handleChange, handleSubmit, formData, setFormData
                       setShowBaseDetails(true);
                     }}
                   />
-                }
-                contentRight={
+                </div>
+                <div className="col-6">
                   <Button
                     text="Submit"
                     buttonType={ButtonType.INFO}
                     type="submit"
                     onClick={() => {}}
                   />
-                }
-              />
+                </div>
+              </div>
             </div>
           </>
         }

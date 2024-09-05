@@ -37,8 +37,8 @@ function PasswordReset () {
       
       <Card>
         <div>
-          <p className="center">Enter your email and click the Reset Password button.</p>
-          <p className="center">If a user exists with that email address, we will email you a link to reset your password.</p>
+          <p>Enter your email and click the Reset Password button.</p>
+          <p>If a user exists with that email address, we will email you a link to reset your password.</p>
           <form  onSubmit={handleSubmit} className="login-form">
             <div className="form-field">
               <label className="form-label" htmlFor="email-input">Email:</label>
@@ -51,6 +51,7 @@ function PasswordReset () {
                 placeholder="dungeons@dragons.com"
                 onChange={(event) => setEmail(event.target.value)}
                 required
+                autoFocus
               />
             </div>
             <div>
