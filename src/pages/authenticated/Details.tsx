@@ -188,16 +188,16 @@ function Details({pcData, pcList, selectedPc, queryClient, userRole}: Props) {
 
             {
                 pcData.baseDetails.spells &&
-                <Card>
-                    <h3>Spells</h3>
+                <Card customClass="no-padding">
+                    <h3 className="section-header">Spells</h3>
                     {mapSpells(pcData.baseDetails.spells, editable)}
                 </Card>
             }
 
             {
                 (pcData.features && pcData.features.length > 0) &&
-                <Card>
-                    <h3>Features</h3>
+                <Card customClass="no-padding">
+                    <h3 className="section-header">Features</h3>
                     {
                     pcData.features.sort((a,b) => {
                         if (a.data.name < b.data.name) return -1;
@@ -256,8 +256,8 @@ function Details({pcData, pcList, selectedPc, queryClient, userRole}: Props) {
                 </Card>
             }
 
-            <Card>
-                <h3>Weapons</h3>
+            <Card customClass="no-padding">
+                <h3 className="section-header">Weapons</h3>
                 {
                     pcData.baseDetails.weapons.sort((a,b) => {
                         if (a.name < b.name) return -1;
@@ -309,8 +309,8 @@ function Details({pcData, pcList, selectedPc, queryClient, userRole}: Props) {
                 }
             </Card>
 
-            <Card>
-                <h3>Equipment</h3>
+            <Card customClass="no-padding">
+                <h3 className="section-header">Equipment</h3>
                 {
                     pcData.baseDetails.equipment.sort((a, b) => {
                         if (a.type < b.type) return -1;
@@ -358,8 +358,8 @@ function Details({pcData, pcList, selectedPc, queryClient, userRole}: Props) {
                 }
             </Card>
 
-            <Card>
-                <h3>Languages</h3>
+            <Card customClass="no-padding">
+                <h3 className="section-header">Languages</h3>
                 {
                     pcData.baseDetails.languages.sort().map((language, i) => (
                         <Card key={i}>
@@ -401,8 +401,8 @@ function Details({pcData, pcList, selectedPc, queryClient, userRole}: Props) {
                 }
             </Card>
 
-            <Card>
-                <h3>Proficiencies</h3>
+            <Card customClass="no-padding">
+                <h3 className="section-header">Proficiencies</h3>
                 {
                     pcData.baseDetails.proficiencies.sort().map((proficiency, i) => (
                         <Card key={i}>
@@ -444,8 +444,8 @@ function Details({pcData, pcList, selectedPc, queryClient, userRole}: Props) {
                 }
             </Card>
 
-            <Card>
-                <h3>Notes</h3>
+            <Card customClass="no-padding">
+                <h3 className="section-header">Notes</h3>
                 {pcData.baseDetails.notes &&
                     pcData.baseDetails.notes.sort().map((note, i) => (
                         <Card key={i}>
@@ -490,7 +490,7 @@ function Details({pcData, pcList, selectedPc, queryClient, userRole}: Props) {
                 }
             </Card>
             <div className="div-button">
-                <Button buttonType={ButtonType.DANGER} text={editable ? "Cancel" : "Edit"} onClick={() => {setEditable(!editable)}}/>
+                <Button buttonType={ButtonType.DANGER} text={editable ? "Lock" : "Unlock"} onClick={() => {setEditable(!editable)}}/>
             </div>
         </div>
         <QuickNav/>
