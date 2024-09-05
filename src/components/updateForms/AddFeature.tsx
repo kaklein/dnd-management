@@ -19,7 +19,7 @@ function AddFeature ({handleChange, handleSubmit, formData, setFormData}: Props)
   return (
     <div>
       <FormHeader
-        formTitle="New Feature"
+        formTitle="Feature"
         onClick={() => setShowForm(!showForm)}
         showForm={showForm}
       />

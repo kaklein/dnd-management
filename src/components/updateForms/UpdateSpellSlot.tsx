@@ -22,7 +22,7 @@ function UpdateSpellSlot ({handleChange, handleSubmit, formData, setFormData}: P
   return (
     <div>
       <FormHeader
-        formTitle="Add/Update Spell Slot"
+        formTitle="Spell Slot"
         onClick={() => setShowForm(!showForm)}
         showForm={showForm}
       />

@@ -23,7 +23,7 @@ function UpdatePC ({ handleChange, handleSubmit, formData, setFormData}: Props) 
       </div>
 
       <TitleButtonRow
-        text="These fields will only change when you get new armor or level up your PC.
+        text="These fields will only change when you level up your character or change your Armor Class.
         Click the Unlock button to make changes."
         formatAsHeader={false}
         buttons={

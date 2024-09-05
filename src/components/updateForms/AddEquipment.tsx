@@ -19,7 +19,7 @@ function AddEquipment ({handleChange, handleSubmit, formData, setFormData}: Prop
   return (
     <div>
       <FormHeader
-        formTitle="New Equipment"
+        formTitle="Equipment"
         onClick={() => setShowForm(!showForm)}
         showForm={showForm}
       />
