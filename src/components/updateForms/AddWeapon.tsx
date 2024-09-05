@@ -20,7 +20,7 @@ function AddWeapon ({handleChange, handleSubmit, formData, setFormData}: Props) 
   return (
     <div>
       <FormHeader
-        formTitle="New Weapon"
+        formTitle="Weapon"
         onClick={() => setShowForm(!showForm)}
         showForm={showForm}
       />

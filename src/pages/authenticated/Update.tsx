@@ -80,32 +80,26 @@ function Update ({pcData, queryClient, pcList, selectedPc, userRole}: Props) {
         <div className="pop-up">
           <h4>Successfully created {pcData.baseDetails.name.firstName} {pcData.baseDetails.name.lastName}!</h4>
           <div>
-            <b>You're almost done! To complete your character, use the forms below to add weapons, spell slots, spells, equipment, and more.</b>
+            You're almost done! Use the tools on this page to add items and complete your character.
             <br/>
-            You can come back to this page at any time to add new items and update your character base stats.
+            Then check out the other pages to view, track, and edit your character info as needed.
           </div>
         </div>
       }
             
       <PageHeaderBarPC 
           pcName={`${pcData.baseDetails.name.firstName} ${pcData.baseDetails.name.lastName}`}
-          pageName="Add Items and Make Updates"
+          pageName="Update"
           pcList={pcList}
           selectedPc={selectedPc}
       />
 
-      <hr/>
+      <Card>
+        <p>Use this page to add and update spell slots; add spells, weapons, and other items; and update character base stats.</p>
+        <p>These updates will be reflected on the Overview, Stats, Tracker, and Details pages.</p>
+      </Card>
       
       {showSuccessAlert && <SuccessAlert/>}
-      
-      <Card>
-        <AddWeapon
-          handleChange={handleChange}
-          handleSubmit={handleSubmit}
-          formData={weaponFormData}
-          setFormData={setWeaponFormData}
-        />
-      </Card>
       
       <Card>
         <UpdateSpellSlot
@@ -116,6 +110,15 @@ function Update ({pcData, queryClient, pcList, selectedPc, userRole}: Props) {
         />
       </Card>
 
+      <Card>
+        <AddWeapon
+          handleChange={handleChange}
+          handleSubmit={handleSubmit}
+          formData={weaponFormData}
+          setFormData={setWeaponFormData}
+        />
+      </Card>
+      
       <Card>
         <AddSpell
           handleChange={handleChange}

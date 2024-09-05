@@ -19,7 +19,7 @@ function AddSpell ({handleChange, handleSubmit, formData, setFormData}: Props) {
   return (
     <div>
       <FormHeader
-        formTitle="New Spell"
+        formTitle="Spell"
         onClick={() => setShowForm(!showForm)}
         showForm={showForm}
       />
