@@ -179,11 +179,12 @@ export const handleSubmitEdit = async (
   }
 }
 
-export const getHPRange = (currentHP: number, maxHP: number): 'full' | 'high' | 'medium' | 'low' | 'min' | 'dying' => {
+export const getHPRange = (currentHP: number, maxHP: number): 'full' | 'high' | 'med-high' | 'med-low' | 'low' | 'min' | 'dying' => {
   const percentage = (currentHP / maxHP) * 100;
   if (percentage >= 100) return 'full';
-  if (percentage > 80) return 'high';
-  if (percentage > 30) return 'medium';
+  if (percentage >= 75) return 'high';
+  if (percentage >= 50) return 'med-high';
+  if (percentage >= 30) return 'med-low';
   if (currentHP > 1) return 'low';
   if (currentHP > 0) return 'min';
   return 'dying';

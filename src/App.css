@@ -673,7 +673,14 @@ img {
     color: darkgreen;
 }
 
-.hp-display-medium {
+.hp-display-med-high {
+    background-color: #fcd14e;
+    color: #38281d;
+    border-color: #d6a309;
+    box-shadow: 0px 0px 2px 2px #d6a309;
+}
+
+.hp-display-med-low {
     background-color: #e3ab42;
     color: #38281d;
     border-color: #b37d19;
