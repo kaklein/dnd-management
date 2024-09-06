@@ -19,11 +19,12 @@ import ItemUseToggle from "@components/ItemUseToggle";
 import { BaseDetails, PlayerCharacter } from "@models/playerCharacter/PlayerCharacter";
 import { QueryClient } from "@tanstack/react-query";
 import { CollectionName } from "@services/firestore/enum/CollectionName";
-import { determineAttackBonus, formatBonus, triggerSuccessAlert } from "../utils";
+import { determineAttackBonus, formatBonus, getHPRange, triggerSuccessAlert } from "../utils";
 import PageHeaderBarPC from "@components/headerBars/PageHeaderBarPC";
 import QuickNav from "@components/QuickNav";
 import SuccessAlert from "@components/alerts/SuccessAlert";
 import { UserRole } from "@services/firestore/enum/UserRole";
+import HPModal from "@components/modals/HPModal";
 
 interface Props {
     pcData: PlayerCharacter;
@@ -58,6 +59,7 @@ function Tracker({pcData, queryClient, pcList, selectedPc, userRole}: Props) {
     }
     const [formData, setFormData] = useState(getDefaultFormData(pcData));
     const [limitedUseFeatures, setLimitedUseFeatures] = useState(getLimitedUseFeatures(pcData));
+    const [hpModalAction, setHPModalAction] = useState('');
 
     useEffect(() => {
         setLimitedUseFeatures(getLimitedUseFeatures(pcData));
@@ -87,6 +89,7 @@ function Tracker({pcData, queryClient, pcList, selectedPc, userRole}: Props) {
             return;
         }
         queryClient.invalidateQueries();
+        setFormData(getDefaultFormData(pcData));
         triggerSuccessAlert(setShowSuccessAlert);
     }
 
@@ -102,6 +105,14 @@ function Tracker({pcData, queryClient, pcList, selectedPc, userRole}: Props) {
                 selectedPc={selectedPc}
             />
 
+            <HPModal
+                handleChange={handleChange}
+                handleSubmit={handleSubmit}
+                setFormData={setFormData}
+                action={hpModalAction}
+                pcHitPoints={pcData.baseDetails.usableResources.hitPoints}
+            />            
+
             <form onSubmit={handleSubmit}>
                 <div>
                     <button type="submit" className="tracker-save-button">
@@ -110,19 +121,55 @@ function Tracker({pcData, queryClient, pcList, selectedPc, userRole}: Props) {
                     {showSuccessAlert && <SuccessAlert/>}
                     <Card>
                         <h3>Hit Points</h3>
-                        <div className="inline">
-                            <input
-                            className="number-input"
-                            type="number" 
-                            id="hitPointsCurrent" 
-                            name="hitPointsCurrent" 
-                            value={formData.hitPointsCurrent} 
-                            min="0" 
-                            max={pcData.baseDetails.usableResources.hitPoints.max} 
-                            onChange={handleChange}
-                            /> 
-                            <p className="inline hp-total">&nbsp; / {pcData.baseDetails.usableResources.hitPoints.max}</p>
-                        </div>              
+                        <Card>
+                        <div className="hp container-fluid">
+                            <div className="row">
+                                <div className="col-6 hp-col">
+                                    <div className={`hp-display hp-display-${getHPRange(pcData.baseDetails.usableResources.hitPoints.current, pcData.baseDetails.usableResources.hitPoints.max)}`}>
+                                        {pcData.baseDetails.usableResources.hitPoints.current} / {pcData.baseDetails.usableResources.hitPoints.max}
+                                    </div>
+                                </div>
+                                <div className="col-6 hp-col">
+                                    <button
+                                        type="button"
+                                        className="btn btn-danger"
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#hpModal"
+                                        onClick={() => { setHPModalAction('takeDamage') }}
+                                        disabled={pcData.baseDetails.usableResources.hitPoints.current == 0}
+                                    >
+                                        Take Damage
+                                    </button>
+                                    <button
+                                        type="button"
+                                        className="btn btn-success"
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#hpModal"
+                                        onClick={() => { setHPModalAction('gainHP') }}
+                                        disabled={pcData.baseDetails.usableResources.hitPoints.current == pcData.baseDetails.usableResources.hitPoints.max}
+                                    >
+                                        Gain HP
+                                    </button>
+                                    <button
+                                        type="button"
+                                        className="btn btn-info"
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#hpModal"
+                                        onClick={() => { 
+                                            setHPModalAction('refillHP');
+                                            setFormData({
+                                                ...getDefaultFormData(pcData),
+                                                hitPointsCurrent: pcData.baseDetails.usableResources.hitPoints.max,
+                                            });
+                                        }}
+                                        disabled={pcData.baseDetails.usableResources.hitPoints.current == pcData.baseDetails.usableResources.hitPoints.max}
+                                    >
+                                        Refill
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        </Card>            
                         <br/>
                         <label htmlFor="hitPointsTemporary">Temporary Hit Points</label>
                         <br/>

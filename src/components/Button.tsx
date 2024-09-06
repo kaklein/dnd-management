@@ -26,7 +26,7 @@ const Button = ({text, onClick, buttonType=ButtonType.PRIMARY, type=undefined, d
         <div>
             <button
                 className={`btn ${buttonTypeClassName}`}
-                type={type ?? undefined}
+                type={type ?? "button"}
                 disabled={disabled}
                 onClick={() => {onClick()}}
                 data-bs-dismiss={modalDismiss ? "modal" : null}

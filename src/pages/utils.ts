@@ -178,3 +178,13 @@ export const handleSubmitEdit = async (
     throw Error(`Invalid update type: ${formData.formType}`);
   }
 }
+
+export const getHPRange = (currentHP: number, maxHP: number): 'full' | 'high' | 'medium' | 'low' | 'min' | 'dying' => {
+  const percentage = (currentHP / maxHP) * 100;
+  if (percentage >= 100) return 'full';
+  if (percentage > 80) return 'high';
+  if (percentage > 30) return 'medium';
+  if (currentHP > 1) return 'low';
+  if (currentHP > 0) return 'min';
+  return 'dying';
+}
