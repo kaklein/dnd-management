@@ -25,6 +25,7 @@ import QuickNav from "@components/QuickNav";
 import SuccessAlert from "@components/alerts/SuccessAlert";
 import { UserRole } from "@services/firestore/enum/UserRole";
 import HPModal from "@components/modals/HPModal";
+import GoldModal from "@components/modals/GoldModal";
 
 interface Props {
     pcData: PlayerCharacter;
@@ -60,6 +61,7 @@ function Tracker({pcData, queryClient, pcList, selectedPc, userRole}: Props) {
     const [formData, setFormData] = useState(getDefaultFormData(pcData));
     const [limitedUseFeatures, setLimitedUseFeatures] = useState(getLimitedUseFeatures(pcData));
     const [hpModalAction, setHPModalAction] = useState('');
+    const [goldModalAction, setGoldModalAction] = useState('');
 
     useEffect(() => {
         setLimitedUseFeatures(getLimitedUseFeatures(pcData));
@@ -111,7 +113,14 @@ function Tracker({pcData, queryClient, pcList, selectedPc, userRole}: Props) {
                 setFormData={setFormData}
                 action={hpModalAction}
                 pcHitPoints={pcData.baseDetails.usableResources.hitPoints}
-            />            
+            />
+            <GoldModal
+                handleChange={handleChange}
+                handleSubmit={handleSubmit}
+                setFormData={setFormData}
+                action={goldModalAction}
+                currentGold={pcData.baseDetails.usableResources.gold}
+            />
 
             <form onSubmit={handleSubmit}>
                 <div>
@@ -311,16 +320,39 @@ function Tracker({pcData, queryClient, pcList, selectedPc, userRole}: Props) {
 
                     <Card>
                         <h3>Gold</h3>
-                        <input
-                            className="number-input"
-                            type="number"
-                            id="gold"
-                            name="gold"
-                            min="0"
-                            max="99999"
-                            value={formData.gold}
-                            onChange={handleChange}
-                        />
+                        <Card>
+                        <div className="gold container-fluid">
+                            <div className="row">
+                                <div className="col-6 hp-col">
+                                    <div className={`gold-display ${pcData.baseDetails.usableResources.gold === 0 ? "gold-display-none" : undefined}`}>
+                                        {pcData.baseDetails.usableResources.gold}
+                                    </div>
+                                </div>
+                                <div className="col-6 hp-col">
+                                    <button
+                                        type="button"
+                                        className="btn btn-success"
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#goldModal"
+                                        onClick={() => { setGoldModalAction('gain') }}
+                                    >
+                                        Gain Gold
+                                    </button>
+                                    <button
+                                        type="button"
+                                        className="btn btn-danger"
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#goldModal"
+                                        onClick={() => { setGoldModalAction('spend') }}
+                                        disabled={pcData.baseDetails.usableResources.gold == 0}
+                                    >
+                                        Spend Gold
+                                    </button>
+
+                                </div>
+                            </div>
+                        </div>
+                        </Card> 
                     </Card>
                 </div>               
             </form>
