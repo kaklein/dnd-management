@@ -729,6 +729,12 @@ img {
     box-shadow: none;
 }
 
+.gold-modal-txt {
+    width: 100%;
+    margin-bottom: 10px;
+    font-style: italic;
+}
+
 .modal-button-wide button {
     width: 100%;
 }

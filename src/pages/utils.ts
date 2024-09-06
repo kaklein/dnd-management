@@ -189,3 +189,11 @@ export const getHPRange = (currentHP: number, maxHP: number): 'full' | 'high' | 
   if (currentHP > 0) return 'min';
   return 'dying';
 }
+
+export const getSpendGoldButtonText = (inputAmountToSpend: string) => {
+  const amount = Number(inputAmountToSpend);
+  if (!amount) {
+    return "Spend Gold";
+  }
+  return `Spend ${amount.toLocaleString()} Gold`;
+}

@@ -1,3 +1,4 @@
+import { getSpendGoldButtonText } from "@pages/utils";
 import { useState } from "react";
 
 interface Props {
@@ -11,8 +12,8 @@ interface Props {
 }
 
 function GoldModal ({ handleChange, handleSubmit, setFormData, action, currentGold }: Props) { 
-  const title = action == 'gain' ? "Amount Gained:" :
-    action == 'spend' ? "Amount Spent:" : 
+  const title = action == 'gain' ? "Amount to Gain:" :
+    action == 'spend' ? "Amount to Spend:" : 
     undefined;
   const className = `modal fade ${action}`;
   const [modalFormData, setModalFormData] = useState({
@@ -39,11 +40,15 @@ function GoldModal ({ handleChange, handleSubmit, setFormData, action, currentGo
             <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close" onClick={() => setModalFormData({goldAmount: ""})}></button>
           </div>
           <div className="modal-body">
+            { 
+              action === 'spend' &&
+              <p className="center gold-modal-txt">{currentGold.toLocaleString()} gold available</p>
+            }
             <input
               className="large-number-input"
               value={modalFormData.goldAmount}
               min="0"
-              max="9999"
+              max="99999"
               type="number"
               name="goldAmount"
               autoFocus
@@ -58,10 +63,6 @@ function GoldModal ({ handleChange, handleSubmit, setFormData, action, currentGo
                 }
               }
             />
-            {
-              action === 'spend' &&
-              <p className="center"><i>You have {currentGold} gold available to spend.</i></p>
-            }
           </div>         
           <div className="modal-footer modal-button-wide">
             {
@@ -70,9 +71,9 @@ function GoldModal ({ handleChange, handleSubmit, setFormData, action, currentGo
                 type="submit"
                 className="btn btn-success"
                 data-bs-dismiss="modal"
-                disabled={Number(modalFormData.goldAmount) <= 0}
+                disabled={Number(modalFormData.goldAmount) <= 0 || Number(modalFormData.goldAmount) > 99999}
               >
-                {`Gain${" " + (Number(modalFormData.goldAmount) > 0 ? modalFormData.goldAmount : '')} Gold`}
+                {`Gain${" " + (Number(modalFormData.goldAmount) > 0 ? Number(modalFormData.goldAmount).toLocaleString() : '')} Gold`}
               </button>
             }
             {
@@ -81,10 +82,14 @@ function GoldModal ({ handleChange, handleSubmit, setFormData, action, currentGo
                 type="submit"
                 className="btn btn-danger"
                 data-bs-dismiss="modal"
-                disabled={Number(modalFormData.goldAmount) <= 0 || Number(modalFormData.goldAmount) > currentGold}
+                disabled={Number(modalFormData.goldAmount) <= 0 || Number(modalFormData.goldAmount) > currentGold || Number(modalFormData.goldAmount) > 99999}
               >
-                {`Spend${" " + (Number(modalFormData.goldAmount) > 0 ? modalFormData.goldAmount : '')} Gold`}
+                { getSpendGoldButtonText(modalFormData.goldAmount) }
               </button>
+            }
+            { 
+              (action === 'spend' && Number(modalFormData.goldAmount) > 0) &&
+              <p className="center gold-modal-txt">You will have {(currentGold - Number(modalFormData.goldAmount)).toLocaleString()} gold left.</p>
             }
           </div>
         </div>

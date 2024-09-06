@@ -325,7 +325,7 @@ function Tracker({pcData, queryClient, pcList, selectedPc, userRole}: Props) {
                             <div className="row">
                                 <div className="col-6 hp-col">
                                     <div className={`gold-display ${pcData.baseDetails.usableResources.gold === 0 ? "gold-display-none" : undefined}`}>
-                                        {pcData.baseDetails.usableResources.gold}
+                                        {pcData.baseDetails.usableResources.gold.toLocaleString()}
                                     </div>
                                 </div>
                                 <div className="col-6 hp-col">
