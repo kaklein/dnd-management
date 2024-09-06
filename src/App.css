@@ -637,7 +637,7 @@ img {
 
 .hp button {
     margin: 5px;
-    width: 100%;
+    width: 90%;
 }
 
 .hp-col {
@@ -647,8 +647,9 @@ img {
 
 .hp-display {
     font-weight: bold;
-    font-size: xx-large;
-    margin-top: 31px;
+    font-size: 1.6em;
+    margin: 10px;
+    margin-top: 36px;
     padding-top: 15px;
     padding-bottom: 15px;
     padding-left: 0px;
@@ -672,7 +673,14 @@ img {
     color: darkgreen;
 }
 
-.hp-display-medium {
+.hp-display-med-high {
+    background-color: #fcd14e;
+    color: #38281d;
+    border-color: #d6a309;
+    box-shadow: 0px 0px 2px 2px #d6a309;
+}
+
+.hp-display-med-low {
     background-color: #e3ab42;
     color: #38281d;
     border-color: #b37d19;
