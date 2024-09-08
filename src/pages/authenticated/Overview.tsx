@@ -62,7 +62,7 @@ function Overview({pcData, pcList, selectedPc, userRole}: Props) {
                 selectedPc={selectedPc}
             />
             <Card>
-                {pcImagePath && <img src={pcImagePath} className="card-img-top" alt={pcFullName}/>}
+                {pcImagePath && <img src={`/images/playerCharacters/${pcImagePath}`} className="card-img-top" alt={pcFullName}/>}
                 <div className="card-body">
                     <TitleButtonRow
                         text={pcFullName}
