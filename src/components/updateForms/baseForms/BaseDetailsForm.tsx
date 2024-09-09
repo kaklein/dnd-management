@@ -24,7 +24,6 @@ function BaseDetailsForm ({handleChange, handleSubmit, formData, setFormData, mo
           name="description"
           onChange={(event) => {handleChange(event, setFormData)}}
           value={formData.description}
-          required
         />
       </div>
       <div className="update-form-field">
@@ -40,7 +39,7 @@ function BaseDetailsForm ({handleChange, handleSubmit, formData, setFormData, mo
         />
       </div>
       <div className="update-form-field">
-        <label className="update-form-label" htmlFor="subclass">Subclass</label>
+        <label className="update-form-label" htmlFor="subclass">Subclass (Optional)</label>
         <input
           className="update-form-input"
           type="text"
