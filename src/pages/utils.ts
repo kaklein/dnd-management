@@ -2,9 +2,9 @@ import { WeaponModifierProperty } from "@models/enum/WeaponModifierProperty";
 import { Feature } from "@models/playerCharacter/Feature";
 import { PlayerCharacter } from "@models/playerCharacter/PlayerCharacter";
 import { Weapon } from "@models/playerCharacter/Weapon";
-import { updateArrayObjectItem, updateById, updateStringArrayItem } from "@services/firestore/crud/update";
+import { updateArrayObjectItem, updateById, updateDataByPcId, updateStringArrayItem } from "@services/firestore/crud/update";
 import { CollectionName } from "@services/firestore/enum/CollectionName";
-import { getBool } from "@services/firestore/utils";
+import { getBool, getProficiencyBonusByLevel } from "@services/firestore/utils";
 
 export const determineAttackBonus = (weapon: Weapon, pcData: PlayerCharacter) => {
   // weapon modifier + proficiency bonus
@@ -39,7 +39,7 @@ export const triggerSuccessAlert = (setFunction: (value: boolean) => void) => {
   }, 2000);
 };
 
-// For use on Details page
+// For use on Details and Overview pages
 export const handleSubmitEdit = async (
   event: React.ChangeEvent<HTMLInputElement>,
   formData: any,
@@ -174,6 +174,23 @@ export const handleSubmitEdit = async (
         updatedItem,
         formData.originalItem
     );            
+  } else if (formData.formType === 'character') {
+    const update = {
+      description: formData.description,
+      class: formData.class,
+      subclass: formData.subclass,
+      race: formData.race,
+      background: formData.background,
+      alignment: formData.alignment,
+      level: Number(formData.level),
+      'usableResources.hitDice.max': Number(formData.level),
+      'usableResources.hitDice.current': Number(formData.level) - (pcData.baseDetails.usableResources.hitDice.max - pcData.baseDetails.usableResources.hitDice.current),
+      proficiencyBonus: getProficiencyBonusByLevel(Number(formData.level)),
+      'usableResources.hitPoints.max': Number(formData.maxHP),
+      ...(Number(formData.maxHP) < pcData.baseDetails.usableResources.hitPoints.current && {'usableResources.hitPoints.current': Number(formData.maxHP)}),
+      armorClass: Number(formData.armorClass)
+    };
+    await (updateDataByPcId(CollectionName.PC_BASE_DETAILS, pcData.baseDetails.pcId, update));
   } else {
     throw Error(`Invalid update type: ${formData.formType}`);
   }

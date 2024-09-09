@@ -18,7 +18,6 @@ export interface BaseDetails {
     uid: string;
     name: { firstName: string, lastName: string };
     description?: string;
-    playerName: string;
     class: string;
     subclass?: string;
     race: string;
