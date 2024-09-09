@@ -13,17 +13,17 @@ I decided it's the perfect excuse to do some web development and learn React, as
 * Automatic calculation of any stats possible. For example, the proficiency bonus and number of hit dice are directly determined by the character's level. Users never have to enter these fields; they just get automatically populated and updated based on the level.
 
 ## Pages
-* <b>Overview</b> page with the character's basic info.
+* <b>Overview</b> page with the character's basic info. Data can be edited, and the entire character can be deleted here.
+* <b>Add Items</b> page where users can add new items, spells, weapons, etc.
 * <b>Ability Scores</b> page with the character's ability scores, proficiencies, and some miscellaneous stats. Ability scores and proficiencies can be edited.
 * <b>Tracker</b> page to display HP, spell slots, and any limited-use items. Easy to make frequent updates as needed during a session so users never lose track of what they have available to them.
 * <b>Details</b> page with the full descriptions of all items and abilities for easy reference.
 All items can be deleted or edited.
-* <b>Update</b> page where users can update character details or add new items, spells, weapons, etc.
 
 
 ## Planned Updates
+* Enhance user feedback for unsaved changes
 * Add a notes page for important notes taken during sessions
-* Allow deletion of characters
 * Improve form input validation
 
 ## Technology
