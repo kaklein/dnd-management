@@ -7,9 +7,8 @@ import AddSpell from "@components/updateForms/AddSpell";
 import UpdateSpellSlot from "@components/updateForms/UpdateSpellSlot";
 import AddFeature from "@components/updateForms/AddFeature";
 import AddItemToArrayField from "@components/updateForms/AddItemToArrayField";
-import UpdatePC from "@components/updateForms/UpdatePC";
 import AddEquipment from "@components/updateForms/AddEquipment";
-import { buildDefaultPCFormData, defaultEquipmentFormData, defaultFeatureFormData, defaultLanguageFormData, defaultNoteFormData, defaultProficiencyFormData, defaultSpellFormData, defaultSpellSlotFormData, defaultWeaponFormData } from "@data/emptyFormData";
+import { defaultEquipmentFormData, defaultFeatureFormData, defaultLanguageFormData, defaultNoteFormData, defaultProficiencyFormData, defaultSpellFormData, defaultSpellSlotFormData, defaultWeaponFormData } from "@data/emptyFormData";
 import { UpdateType } from "@models/enum/service/UpdateType";
 import { transformAndUpdate } from "@services/firestore/updateData";
 import { QueryClient } from "@tanstack/react-query";
@@ -28,7 +27,7 @@ interface Props {
   userRole: UserRole | undefined;
 }
 
-function Update ({pcData, queryClient, pcList, selectedPc, userRole}: Props) {
+function AddItems ({pcData, queryClient, pcList, selectedPc, userRole}: Props) {
   const [searchParams] = useSearchParams();
   const [showSuccessAlert, setShowSuccessAlert] = useState(false);
 
@@ -41,7 +40,6 @@ function Update ({pcData, queryClient, pcList, selectedPc, userRole}: Props) {
   const [proficiencyFormData, setProficiencyFormData] = useState(defaultProficiencyFormData);
   const [languageFormData, setLanguageFormData] = useState(defaultLanguageFormData);
   const [noteFormData, setNoteFormData] = useState(defaultNoteFormData);
-  const [pcFormData, setPcFormData] = useState(buildDefaultPCFormData(pcData));
 
   const handleChange = (
     event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>, 
@@ -89,15 +87,10 @@ function Update ({pcData, queryClient, pcList, selectedPc, userRole}: Props) {
             
       <PageHeaderBarPC 
           pcName={`${pcData.baseDetails.name.firstName} ${pcData.baseDetails.name.lastName}`}
-          pageName="Update"
+          pageName="Add Items"
           pcList={pcList}
           selectedPc={selectedPc}
       />
-
-      <Card>
-        <p>Use this page to add and update spell slots; add spells, weapons, and other items; and update character base stats.</p>
-        <p>These updates will be reflected on the Overview, Ability Scores, Tracker, and Details pages.</p>
-      </Card>
       
       {showSuccessAlert && <SuccessAlert/>}
       
@@ -179,21 +172,11 @@ function Update ({pcData, queryClient, pcList, selectedPc, userRole}: Props) {
           defaultFormData={defaultNoteFormData}
           useTextArea={true}
         />
-      </Card>
-
-      <Card>
-        <UpdatePC
-          handleChange={handleChange}
-          handleSubmit={handleSubmit}
-          formData={pcFormData}
-          setFormData={setPcFormData}
-        />
-      </Card>
-      
+      </Card>      
     </div>
     <QuickNav/>
     </>
   )
 }
 
-export default Update;
+export default AddItems;

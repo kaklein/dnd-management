@@ -306,7 +306,7 @@ export const buildRemoveFromArrayUpdate = (arrayFieldName: string, stringToRemov
   };
 };
 
-const getProficiencyBonusByLevel = (level: number): number => {
+export const getProficiencyBonusByLevel = (level: number): number => {
   if ([1, 2, 3, 4].includes(level)) return 2;
   if ([5, 6, 7, 8].includes(level)) return 3;
   if ([9, 10, 11, 12].includes(level)) return 4;
@@ -323,7 +323,6 @@ export const transformBaseDetailsForCharacterCreation = (uid: string, pcId: stri
       firstName: formData.firstName,
       lastName: formData.lastName
     },
-    playerName: formData.playerName,
     class: formData.class,
     race: formData.race,
     alignment: formData.alignment,

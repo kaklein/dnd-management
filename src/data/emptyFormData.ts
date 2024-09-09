@@ -2,7 +2,6 @@ import { replaceBooleans } from "@components/utils";
 import { CreateCharacterFormData } from "@models/CreateCharacterFormData";
 import { UpdateType } from "@models/enum/service/UpdateType";
 import { AbilityScores } from "@models/playerCharacter/AbilityScores";
-import { PlayerCharacter } from "@models/playerCharacter/PlayerCharacter";
 import { ShowConfirmDeleteData } from "@models/ShowConfirmDeleteData";
 
 export const defaultWeaponFormData = {
@@ -67,15 +66,6 @@ export const defaultNoteFormData = {
   note: ''
 }
 
-export const buildDefaultPCFormData = (pcData: PlayerCharacter) => {
-  return {
-    updateType: UpdateType.BASE_DETAILS,
-    level: pcData.baseDetails.level,
-    hitPointMaximum: pcData.baseDetails.usableResources.hitPoints.max,
-    armorClass: pcData.baseDetails.armorClass,
-  }
-}
-
 export const buildDefaultAbilityScoreFormData = (s: AbilityScores) => {
   const { id, data } = s;
   const transformed = {
@@ -118,7 +108,6 @@ export const buildDefaultAbilityScoreFormData = (s: AbilityScores) => {
 export const defaultCreateCharacterFormData: CreateCharacterFormData = {
   firstName: '',
   lastName: '',
-  playerName: '',
   class: '',
   race: '',
   alignment: '',
@@ -175,18 +164,18 @@ export const emptyEditModalData = {
   formType: '',
   displayName: '',
   name: '', // weapons, spells, features
-  description: '', // weapons, spells, features, equipment
+  description: '', // weapons, spells, features, equipment, base details
   damage: '', // weapons, spells, features
   damageType: '', // weapons, spells, features
   sourceUrl: '', // spells, features
   type: '', // weapons, equipment
+  level: '', // spells, character
 
   // equipment
   equipmentId: '',
 
   // spells
   spellId: '',
-  level: '',
   spellCastingAbility: '',
 
   // features
@@ -207,5 +196,16 @@ export const emptyEditModalData = {
   note: '',
   proficiency: '',
   originalItem: '', 
-  useTextArea: false
+  useTextArea: false,
+
+  // character
+  class: '',
+  subclass: '',
+  race: '',
+  background: '',
+  alignment: '',
+  armorClass: '',
+  maxHP: '',
+  speed: '',
+  xp: ''
 }

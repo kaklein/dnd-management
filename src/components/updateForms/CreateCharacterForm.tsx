@@ -25,20 +25,6 @@ function CreateCharacterForm ({handleChange, handleSubmit, formData, setFormData
         {
           showBaseDetails &&
           <>
-            <div className="update-form-field">
-              <label className="update-form-label" htmlFor="playerName">Your Name</label>
-              <input
-                className="update-form-input"
-                type="string"
-                id="playerName"
-                name="playerName"
-                onChange={(event) => {handleChange(event, setFormData)}}
-                value={formData.playerName}
-                required
-                autoFocus
-              />
-            </div>
-
             <h4 className="form-sub-heading">Character Details</h4>
 
             <div className="update-form-field">

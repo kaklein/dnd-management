@@ -1,4 +1,5 @@
 import ArrayItemForm from "@components/updateForms/baseForms/ArrayItemForm";
+import BaseDetailsForm from "@components/updateForms/baseForms/BaseDetailsForm";
 import EquipmentForm from "@components/updateForms/baseForms/EquipmentForm";
 import FeatureForm from "@components/updateForms/baseForms/FeatureForm";
 import SpellForm from "@components/updateForms/baseForms/SpellForm";
@@ -75,6 +76,16 @@ function EditModal ({ formType, formData, handleChange, handleSubmit, handleCanc
         setFormData={setFormData}
         useTextArea={formData.useTextArea}
         defaultFormData={emptyEditModalData}
+        modalDismiss={true}
+      />
+      break;
+    }
+    case 'character': {
+      form = <BaseDetailsForm
+        handleChange={handleChange}
+        handleSubmit={handleSubmit}
+        formData={formData}
+        setFormData={setFormData}
         modalDismiss={true}
       />
       break;

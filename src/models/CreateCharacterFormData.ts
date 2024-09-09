@@ -1,7 +1,6 @@
 export interface CreateCharacterFormData {
   firstName: string;
   lastName: string;
-  playerName: string;
   class: string;
   race: string;
   alignment: string;
