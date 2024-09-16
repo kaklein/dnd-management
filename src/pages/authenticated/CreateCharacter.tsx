@@ -49,7 +49,7 @@ function CreateCharacter ({queryClient, setSelectedPcId, userRole}: Props) {
       await createCharacter(uid, pcId, formData);
       queryClient.invalidateQueries();
       setSelectedPcId(pcId);
-      navigate('/update?created=true');
+      navigate('/add?created=true');
     } catch (e: any) {
       console.error(e);
       alert('Error creating character. Please make sure you filled out all fields correctly before submitting, or refresh the page and try again.');
