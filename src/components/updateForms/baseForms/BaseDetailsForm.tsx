@@ -110,7 +110,6 @@ function BaseDetailsForm ({handleChange, handleSubmit, formData, setFormData, mo
           name="xp"
           onChange={(event) => {handleChange(event, setFormData)}}
           value={formData.xp}
-          required
         />
       </div>
       <div className="update-form-field">
