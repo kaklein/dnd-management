@@ -399,6 +399,10 @@ img {
     text-align: center;
 }
 
+.nav-item {
+    white-space: nowrap;
+}
+
 .navbar-text {
     display: flex;
     height: fit-content;
