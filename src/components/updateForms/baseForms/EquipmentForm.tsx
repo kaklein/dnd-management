@@ -42,6 +42,7 @@ function EquipmentForm ({handleChange, handleSubmit, formData, setFormData, moda
         
       <Button
         text="Save"
+        customClass="float-right"
         buttonType={ButtonType.INFO}
         type="submit"
         onClick={() => {}}
