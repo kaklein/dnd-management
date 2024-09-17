@@ -156,6 +156,7 @@ function BaseDetailsForm ({handleChange, handleSubmit, formData, setFormData, mo
       </div>
       <Button
           text="Save"
+          customClass="float-right"
           buttonType={ButtonType.INFO}
           type="submit"
           onClick={() => {}}

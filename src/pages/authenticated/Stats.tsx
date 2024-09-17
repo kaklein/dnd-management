@@ -143,7 +143,7 @@ function Stats({pcData, pcList, selectedPc, queryClient, userRole}: Props) {
                 mapAbilityScoreCards(pcData.abilityScores) 
             }
             <div className="div-button">
-                <Button buttonType={ButtonType.DANGER} text={editable ? "Cancel" : "Edit Ability Scores"} onClick={() => {
+                <Button customClass="float-right" buttonType={ButtonType.DANGER} text={editable ? "Cancel" : "Edit Ability Scores"} onClick={() => {
                     setEditable(!editable);
                     setFormData(buildDefaultAbilityScoreFormData(pcData.abilityScores));
                 }}/>

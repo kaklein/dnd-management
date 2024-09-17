@@ -30,7 +30,7 @@ export const defaultSpellSlotFormData = {
   updateType: UpdateType.SPELL_SLOTS,
   level: '',
   max: ''
-}
+};
 
 export const defaultFeatureFormData = {
   updateType: UpdateType.FEATURES,
@@ -54,17 +54,17 @@ export const defaultEquipmentFormData = {
 export const defaultProficiencyFormData = {
   updateType: UpdateType.PROFICIENCIES,
   proficiency: ''
-}
+};
 
 export const defaultLanguageFormData = { 
   updateType: UpdateType.LANGUAGES,
   language: ''
-}
+};
 
 export const defaultNoteFormData = {
   updateType: UpdateType.NOTES,
   note: ''
-}
+};
 
 export const buildDefaultAbilityScoreFormData = (s: AbilityScores) => {
   const { id, data } = s;
@@ -103,7 +103,7 @@ export const buildDefaultAbilityScoreFormData = (s: AbilityScores) => {
     persuasion: data.charisma.performance.proficient,
   }
   return replaceBooleans(transformed);
-}
+};
 
 export const defaultCreateCharacterFormData: CreateCharacterFormData = {
   firstName: '',
@@ -148,7 +148,7 @@ export const defaultCreateCharacterFormData: CreateCharacterFormData = {
   intimidation: "false",
   performance: "false",
   persuasion: "false",
-}
+};
 
 export const emptyShowConfirmDeleteData: ShowConfirmDeleteData = {
   displayName: '',
@@ -158,7 +158,7 @@ export const emptyShowConfirmDeleteData: ShowConfirmDeleteData = {
   objectArrayFullItem: {},
   stringArrayItemName: '',
   stringArrayFieldName: ''
-}
+};
 
 export const emptyEditModalData = {
   formType: '',
@@ -208,4 +208,15 @@ export const emptyEditModalData = {
   maxHP: '',
   speed: '',
   xp: ''
-}
+};
+
+export const emptyShowSectionData = {
+  spells: false,
+  weapons: false,
+  features: false,
+  equipment: false,
+  languages: false,
+  proficiencies: false,
+  notes: false,
+  spellSlots: false
+};

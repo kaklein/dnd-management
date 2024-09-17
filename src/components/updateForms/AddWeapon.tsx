@@ -1,6 +1,6 @@
-import { useState } from "react";
 import FormHeader from "./FormHeader";
 import WeaponForm from "./baseForms/WeaponForm";
+import { emptyShowSectionData } from "@data/emptyFormData";
 
 interface Props {
   handleChange: (event: any, setFunction: (prevFormData: any) => void) => void;
@@ -12,16 +12,18 @@ interface Props {
   ) => void;
   formData: any;
   setFormData: (data: any) => void;
+  showSection: {data: any, setFunction: (newValues: any) => void};
 }
 
-function AddWeapon ({handleChange, handleSubmit, formData, setFormData}: Props) {
-  const [showForm, setShowForm] = useState(false);
+function AddWeapon ({handleChange, handleSubmit, formData, setFormData, showSection}: Props) {  
+  const showForm = showSection.data.weapons;
   
   return (
     <div>
       <FormHeader
+        anchorTag="weapons"
         formTitle="Weapon"
-        onClick={() => setShowForm(!showForm)}
+        onClick={() => showSection.setFunction({...emptyShowSectionData, weapons: !showForm})}
         showForm={showForm}
       />
     

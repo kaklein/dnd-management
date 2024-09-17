@@ -10,7 +10,7 @@ function DeleteItemButton ({editable, handleDelete, customDeleteText}: Props) {
   return (
     <button
       type="button"
-      className="btn btn-danger"
+      className="btn btn-danger float-right"
       data-bs-toggle="modal"
       data-bs-target="#deleteModal"
       onClick={handleDelete}

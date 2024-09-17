@@ -71,7 +71,6 @@ img {
 
 .btn {
     margin: 20px;
-    float: right;
 }
 
 .inline {
@@ -81,6 +80,10 @@ img {
 .center {
     margin: auto;
     text-align: center;
+}
+
+.float-right {
+    float: right;
 }
 
 .alert-div {

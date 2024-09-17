@@ -159,6 +159,7 @@ function SpellForm ({handleChange, handleSubmit, formData, setFormData, modalDis
            
         <Button
           text="Save"
+          customClass="float-right"
           buttonType={ButtonType.INFO}
           type="submit"
           onClick={() => {}}

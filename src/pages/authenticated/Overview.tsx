@@ -140,7 +140,7 @@ function Overview({pcData, pcList, selectedPc, userRole, queryClient}: Props) {
               </div>
             </Card>
             <div className="div-button">
-                <Button buttonType={ButtonType.DANGER} text={editable ? "Lock" : "Unlock"} onClick={() => {setEditable(!editable)}}/>
+                <Button customClass="float-right" buttonType={ButtonType.DANGER} text={editable ? "Lock" : "Unlock"} onClick={() => {setEditable(!editable)}}/>
             </div>
         </div>
         

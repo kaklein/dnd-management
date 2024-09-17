@@ -13,12 +13,14 @@ import ConfirmDelete from "@components/modals/ConfirmDelete";
 import { TitleButtonRow } from "@components/TitleButtonRow";
 import DeleteItemButton from "@components/DeleteItemButton";
 import QuickNav from "@components/QuickNav";
-import { formatWeaponDisplayTitle, handleSubmitEdit, triggerSuccessAlert } from "@pages/utils";
+import { formatWeaponDisplayTitle, handleSubmitEdit, pcHasDetailsPageItems, triggerSuccessAlert } from "@pages/utils";
 import SuccessAlert from "@components/alerts/SuccessAlert";
 import EditItemButton from "@components/EditItemButton";
 import EditModal from "@components/modals/EditModal";
-import { emptyEditModalData, emptyShowConfirmDeleteData } from "@data/emptyFormData";
+import { emptyEditModalData, emptyShowConfirmDeleteData, emptyShowSectionData } from "@data/emptyFormData";
 import { UserRole } from "@services/firestore/enum/UserRole";
+import { useNavigate } from "react-router-dom";
+import FormHeader from "@components/updateForms/FormHeader";
 
 interface Props {
     pcData: PlayerCharacter;
@@ -29,6 +31,10 @@ interface Props {
 }
 
 function Details({pcData, pcList, selectedPc, queryClient, userRole}: Props) {
+    const hasItems = pcHasDetailsPageItems(pcData);
+    const navigate = useNavigate();
+    const [showSection, setShowSection] = useState(emptyShowSectionData);
+
     const [showSuccessAlert, setShowSuccessAlert] = useState(false);
 
     const [editable, setEditable] = useState(false);
@@ -187,78 +193,32 @@ function Details({pcData, pcList, selectedPc, queryClient, userRole}: Props) {
             {showSuccessAlert && <SuccessAlert/>}
 
             {
-                pcData.baseDetails.spells &&
-                <Card customClass="no-padding">
-                    <h3 className="section-header">Spells</h3>
-                    {mapSpells(pcData.baseDetails.spells, editable)}
-                </Card>
-            }
-
-            {
-                (pcData.features && pcData.features.length > 0) &&
-                <Card customClass="no-padding">
-                    <h3 className="section-header">Features</h3>
+                (pcData.baseDetails.spells && pcData.baseDetails.spells.length > 0) &&
+                <Card>
+                    <FormHeader
+                        anchorTag="spells"
+                        formTitle="Spells"
+                        onClick={() => setShowSection({...emptyShowSectionData, spells: !showSection.spells})}
+                        showForm={showSection.spells}
+                    />
                     {
-                    pcData.features.sort((a,b) => {
-                        if (a.data.name < b.data.name) return -1;
-                        return 1;
-                    }).map(feature => (
-                        <Card key={feature.id}>
-                            <a id={removeWhiteSpaceAndConvertToLowerCase(feature.data.name)}></a>
-                            <TitleButtonRow
-                                text={feature.data.name}
-                                buttons={
-                                    <>
-                                    <DeleteItemButton
-                                        editable={editable}
-                                        handleDelete={() => setShowConfirmDelete({
-                                            show: true,
-                                            data: {
-                                                ...emptyShowConfirmDeleteData,
-                                                featureId: feature.id,
-                                                displayName: feature.data.name
-                                            }
-                                        })}
-                                    />
-                                    <EditItemButton
-                                        editable={editable}
-                                        handleEdit={() => {
-                                            setEditModalFormData({
-                                                ...emptyEditModalData,
-                                                formType: 'feature',
-                                                displayName: feature.data.name,
-                                                name: feature.data.name,
-                                                description: feature.data.description,
-                                                damage: feature.data.damage ?? '',
-                                                damageType: feature.data.damageType ?? '',
-                                                sourceUrl: feature.data.sourceUrl ?? '',
-                                                featureId: feature.id,
-                                                source: feature.data.source,
-                                                maxUses: feature.data.maxUses ? String(feature.data.maxUses) : '',
-                                                refresh: feature.data.refresh ?? '',
-                                                saveDC: feature.data.saveDC ? String(feature.data.saveDC) : ''
-                                            })
-                                        }}
-                                    />
-                                    </>
-                                }
-                            />
-                            <div className="content">
-                                <p><b>Description: </b>{feature.data.description}</p>
-                                <p><b>Source: </b>{feature.data.source}</p>
-                                { feature.data.damage && <p><b>Damage: </b>{feature.data.damage} {feature.data.damageType}</p>}
-                                { feature.data.saveDC && <p><b>Spell Save DC: </b>{feature.data.saveDC}</p>}
-                                { feature.data.sourceUrl && <p><b>Source URL: </b><a href={feature.data.sourceUrl} target="_blank">{feature.data.sourceUrl}</a></p>}
-                            </div>                            
-                        </Card>
-                    ))
+                        showSection.spells &&
+                        mapSpells(pcData.baseDetails.spells, editable)
                     }
                 </Card>
             }
 
-            <Card customClass="no-padding">
-                <h3 className="section-header">Weapons</h3>
+            {
+                (pcData.baseDetails.weapons && pcData.baseDetails.weapons.length > 0) &&
+                <Card>
+                <FormHeader
+                    anchorTag="weapons"
+                    formTitle="Weapons"
+                    onClick={() => setShowSection({...emptyShowSectionData, weapons: !showSection.weapons})}
+                    showForm={showSection.weapons}
+                />
                 {
+                    showSection.weapons &&
                     pcData.baseDetails.weapons.sort((a,b) => {
                         const compA = a.name ?? a.type;
                         const compB = b.name ?? b.type;
@@ -309,11 +269,88 @@ function Details({pcData, pcList, selectedPc, queryClient, userRole}: Props) {
                         </Card>
                     ))
                 }
-            </Card>
+                </Card>
+            }
 
-            <Card customClass="no-padding">
-                <h3 className="section-header">Equipment</h3>
+            {
+                (pcData.features && pcData.features.length > 0) &&
+                <Card>
+                    <FormHeader
+                        anchorTag="features"
+                        formTitle="Features"
+                        onClick={() => setShowSection({...emptyShowSectionData, features: !showSection.features})}
+                        showForm={showSection.features}
+                    />
+                    {
+                        showSection.features &&
+                        pcData.features.sort((a,b) => {
+                            if (a.data.name < b.data.name) return -1;
+                            return 1;
+                        }).map(feature => (
+                            <Card key={feature.id}>
+                                <a id={removeWhiteSpaceAndConvertToLowerCase(feature.data.name)}></a>
+                                <TitleButtonRow
+                                    text={feature.data.name}
+                                    buttons={
+                                        <>
+                                        <DeleteItemButton
+                                            editable={editable}
+                                            handleDelete={() => setShowConfirmDelete({
+                                                show: true,
+                                                data: {
+                                                    ...emptyShowConfirmDeleteData,
+                                                    featureId: feature.id,
+                                                    displayName: feature.data.name
+                                                }
+                                            })}
+                                        />
+                                        <EditItemButton
+                                            editable={editable}
+                                            handleEdit={() => {
+                                                setEditModalFormData({
+                                                    ...emptyEditModalData,
+                                                    formType: 'feature',
+                                                    displayName: feature.data.name,
+                                                    name: feature.data.name,
+                                                    description: feature.data.description,
+                                                    damage: feature.data.damage ?? '',
+                                                    damageType: feature.data.damageType ?? '',
+                                                    sourceUrl: feature.data.sourceUrl ?? '',
+                                                    featureId: feature.id,
+                                                    source: feature.data.source,
+                                                    maxUses: feature.data.maxUses ? String(feature.data.maxUses) : '',
+                                                    refresh: feature.data.refresh ?? '',
+                                                    saveDC: feature.data.saveDC ? String(feature.data.saveDC) : ''
+                                                })
+                                            }}
+                                        />
+                                        </>
+                                    }
+                                />
+                                <div className="content">
+                                    <p><b>Description: </b>{feature.data.description}</p>
+                                    <p><b>Source: </b>{feature.data.source}</p>
+                                    { feature.data.damage && <p><b>Damage: </b>{feature.data.damage} {feature.data.damageType}</p>}
+                                    { feature.data.saveDC && <p><b>Spell Save DC: </b>{feature.data.saveDC}</p>}
+                                    { feature.data.sourceUrl && <p><b>Source URL: </b><a href={feature.data.sourceUrl} target="_blank">{feature.data.sourceUrl}</a></p>}
+                                </div>                            
+                            </Card>
+                        ))
+                    }
+                </Card>
+            }
+            
+            {
+                (pcData.baseDetails.equipment && pcData.baseDetails.equipment.length > 0) &&
+                <Card>
+                <FormHeader
+                    anchorTag="equipment"
+                    formTitle="Equipment"
+                    onClick={() => setShowSection({...emptyShowSectionData, equipment: !showSection.equipment})}
+                    showForm={showSection.equipment}
+                />
                 {
+                    showSection.equipment &&
                     pcData.baseDetails.equipment.sort((a, b) => {
                         if (a.type < b.type) return -1;
                         return 1;
@@ -358,11 +395,20 @@ function Details({pcData, pcList, selectedPc, queryClient, userRole}: Props) {
                         </Card>
                     )
                 }
-            </Card>
-
-            <Card customClass="no-padding">
-                <h3 className="section-header">Languages</h3>
+                </Card>
+            }
+            
+            {
+                (pcData.baseDetails.languages && pcData.baseDetails.languages.length > 0) &&
+                <Card>
+                <FormHeader
+                    anchorTag="languages"
+                    formTitle="Languages"
+                    onClick={() => setShowSection({...emptyShowSectionData, languages: !showSection.languages})}
+                    showForm={showSection.languages}
+                />
                 {
+                    showSection.languages &&
                     pcData.baseDetails.languages.sort().map((language, i) => (
                         <Card key={i}>
                         <TitleButtonRow
@@ -401,11 +447,20 @@ function Details({pcData, pcList, selectedPc, queryClient, userRole}: Props) {
                         </Card>
                     ))
                 }
-            </Card>
-
-            <Card customClass="no-padding">
-                <h3 className="section-header">Proficiencies</h3>
+                </Card>
+            }
+            
+            {
+                (pcData.baseDetails.proficiencies && pcData.baseDetails.proficiencies.length > 0) &&
+                <Card>
+                <FormHeader
+                    anchorTag="proficiencies"
+                    formTitle="Proficiencies"
+                    onClick={() => setShowSection({...emptyShowSectionData, proficiencies: !showSection.proficiencies})}
+                    showForm={showSection.proficiencies}
+                />
                 {
+                    showSection.proficiencies &&
                     pcData.baseDetails.proficiencies.sort().map((proficiency, i) => (
                         <Card key={i}>
                             <TitleButtonRow
@@ -444,11 +499,20 @@ function Details({pcData, pcList, selectedPc, queryClient, userRole}: Props) {
                         </Card>
                     ))
                 }
-            </Card>
-
-            <Card customClass="no-padding">
-                <h3 className="section-header">Notes</h3>
-                {pcData.baseDetails.notes &&
+                </Card>
+            }
+            
+            {
+                (pcData.baseDetails.notes && pcData.baseDetails.notes.length > 0) &&
+                <Card>
+                <FormHeader
+                    anchorTag="notes"
+                    formTitle="Notes"
+                    onClick={() => setShowSection({...emptyShowSectionData, notes: !showSection.notes})}
+                    showForm={showSection.notes}
+                />
+                {
+                    showSection.notes &&
                     pcData.baseDetails.notes.sort().map((note, i) => (
                         <Card key={i}>
                             <TitleButtonRow
@@ -490,10 +554,28 @@ function Details({pcData, pcList, selectedPc, queryClient, userRole}: Props) {
                         </Card>
                     ))
                 }
-            </Card>
-            <div className="div-button">
-                <Button buttonType={ButtonType.DANGER} text={editable ? "Lock" : "Unlock"} onClick={() => {setEditable(!editable)}}/>
-            </div>
+                </Card>
+            }
+            
+            {
+                hasItems &&
+                <div className="div-button">
+                    <Button customClass="float-right" buttonType={ButtonType.DANGER} text={editable ? "Lock" : "Unlock"} onClick={() => {setEditable(!editable)}}/>
+                </div>
+            }
+            {
+                !hasItems &&
+                <Card>
+                    {pcData.baseDetails.name.firstName} {pcData.baseDetails.name.lastName} is looking a little empty-handed.
+                    Want to give them some stuff?
+                    <Button
+                        buttonType={ButtonType.INFO}
+                        text="Add Items"
+                        onClick={() => {navigate('/add')}}
+                    />
+                </Card>
+            }
+
         </div>
         <QuickNav/>
         </>

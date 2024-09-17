@@ -50,6 +50,7 @@ function ArrayItemForm ({fieldName, handleChange, handleSubmit, formData, setFor
       
       <Button
         text="Save"
+        customClass="float-right"
         buttonType={ButtonType.INFO}
         type="submit"
         onClick={() => {}}

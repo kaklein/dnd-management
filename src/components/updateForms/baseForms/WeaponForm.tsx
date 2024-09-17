@@ -141,6 +141,7 @@ function WeaponForm ({handleChange, handleSubmit, formData, setFormData, modalDi
       
       <Button
           text="Save"
+          customClass="float-right"
           buttonType={ButtonType.INFO}
           type="submit"
           onClick={() => {}}

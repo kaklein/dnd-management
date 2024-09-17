@@ -1,6 +1,6 @@
-import { useState } from "react";
 import FormHeader from "./FormHeader";
 import FeatureForm from "./baseForms/FeatureForm";
+import { emptyShowSectionData } from "@data/emptyFormData";
 
 interface Props {
   handleChange: (event: any, setFunction: (prevFormData: any) => void) => void;
@@ -11,16 +11,18 @@ interface Props {
     clearedFormData: any
   ) => void;  formData: any;
   setFormData: (data: any) => void;
+  showSection: {data: any, setFunction: (newValues: any) => void};
 }
 
-function AddFeature ({handleChange, handleSubmit, formData, setFormData}: Props) {
-  const [showForm, setShowForm] = useState(false);  
-  
+function AddFeature ({handleChange, handleSubmit, formData, setFormData, showSection}: Props) {
+  const showForm = showSection.data.features;
+
   return (
     <div>
       <FormHeader
+        anchorTag="features"
         formTitle="Feature"
-        onClick={() => setShowForm(!showForm)}
+        onClick={() => showSection.setFunction({...emptyShowSectionData, features: !showForm})}
         showForm={showForm}
       />
     

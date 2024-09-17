@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { emptyShowSectionData } from "@data/emptyFormData";
 import FormHeader from "./FormHeader";
 import SpellForm from "./baseForms/SpellForm";
 
@@ -11,16 +11,18 @@ interface Props {
     clearedFormData: any
   ) => void;  formData: any;
   setFormData: (data: any) => void;
+  showSection: {data: any, setFunction: (newValues: any) => void};
 }
 
-function AddSpell ({handleChange, handleSubmit, formData, setFormData}: Props) {
-  const [showForm, setShowForm] = useState(false);
+function AddSpell ({handleChange, handleSubmit, formData, setFormData, showSection}: Props) { 
+  const showForm = showSection.data.spells;
   
   return (
     <div>
       <FormHeader
+        anchorTag="spells"
         formTitle="Spell"
-        onClick={() => setShowForm(!showForm)}
+        onClick={() => showSection.setFunction({...emptyShowSectionData, spells: !showForm})}
         showForm={showForm}
       />
     

@@ -1,7 +1,7 @@
 import { capitalize } from "@components/utils";
-import { useState } from "react";
 import FormHeader from "./FormHeader";
 import ArrayItemForm from "./baseForms/ArrayItemForm";
+import { emptyShowSectionData } from "@data/emptyFormData";
 
 interface Props {
   fieldName: string;
@@ -16,16 +16,24 @@ interface Props {
   setFormData: (data: any) => void;
   defaultFormData: any;
   useTextArea?: boolean;
+  showSection: {data: any, setFunction: (newValues: any) => void};
 }
 
-function AddItemToArrayField ({fieldName, handleChange, handleSubmit, formData, setFormData, defaultFormData, description="", useTextArea=false}: Props) {
-  const [showForm, setShowForm] = useState(false);
+function AddItemToArrayField ({fieldName, handleChange, handleSubmit, formData, setFormData, defaultFormData, description="", useTextArea=false, showSection}: Props) {
+  const arrayFieldName = 
+    fieldName == 'language' ? 'languages' : 
+    fieldName == 'proficiency' ? 'proficiencies' : 
+    fieldName == 'note' ? 'notes' :
+    undefined;
+  if(!arrayFieldName) throw Error (`Unknown array field  name: ${fieldName}`);
+  const showForm = showSection.data[arrayFieldName];
 
   return (
     <div>
       <FormHeader
+        anchorTag={arrayFieldName}
         formTitle={capitalize(fieldName)}
-        onClick={() => setShowForm(!showForm)}
+        onClick={() => showSection.setFunction({...emptyShowSectionData, [arrayFieldName]: !showSection.data[arrayFieldName]})}
         showForm={showForm}
       />
     

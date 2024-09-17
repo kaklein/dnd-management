@@ -8,7 +8,7 @@ import UpdateSpellSlot from "@components/updateForms/UpdateSpellSlot";
 import AddFeature from "@components/updateForms/AddFeature";
 import AddItemToArrayField from "@components/updateForms/AddItemToArrayField";
 import AddEquipment from "@components/updateForms/AddEquipment";
-import { defaultEquipmentFormData, defaultFeatureFormData, defaultLanguageFormData, defaultNoteFormData, defaultProficiencyFormData, defaultSpellFormData, defaultSpellSlotFormData, defaultWeaponFormData } from "@data/emptyFormData";
+import { defaultEquipmentFormData, defaultFeatureFormData, defaultLanguageFormData, defaultNoteFormData, defaultProficiencyFormData, defaultSpellFormData, defaultSpellSlotFormData, defaultWeaponFormData, emptyShowSectionData } from "@data/emptyFormData";
 import { UpdateType } from "@models/enum/service/UpdateType";
 import { transformAndUpdate } from "@services/firestore/updateData";
 import { QueryClient } from "@tanstack/react-query";
@@ -30,6 +30,7 @@ interface Props {
 function AddItems ({pcData, queryClient, pcList, selectedPc, userRole}: Props) {
   const [searchParams] = useSearchParams();
   const [showSuccessAlert, setShowSuccessAlert] = useState(false);
+  const [showSection, setShowSection] = useState(emptyShowSectionData);
 
   // Form Data
   const [weaponFormData, setWeaponFormData] = useState(defaultWeaponFormData);
@@ -100,15 +101,7 @@ function AddItems ({pcData, queryClient, pcList, selectedPc, userRole}: Props) {
           handleSubmit={handleSubmit}
           formData={spellSlotFormData}
           setFormData={setSpellSlotFormData}
-        />
-      </Card>
-
-      <Card>
-        <AddWeapon
-          handleChange={handleChange}
-          handleSubmit={handleSubmit}
-          formData={weaponFormData}
-          setFormData={setWeaponFormData}
+          showSection={{data: showSection, setFunction: setShowSection}}
         />
       </Card>
       
@@ -118,6 +111,17 @@ function AddItems ({pcData, queryClient, pcList, selectedPc, userRole}: Props) {
           handleSubmit={handleSubmit}
           formData={spellFormData}
           setFormData={setSpellFormData}
+          showSection={{data: showSection, setFunction: setShowSection}}
+        />
+      </Card>
+
+      <Card>
+        <AddWeapon
+          handleChange={handleChange}
+          handleSubmit={handleSubmit}
+          formData={weaponFormData}
+          setFormData={setWeaponFormData}
+          showSection={{data: showSection, setFunction: setShowSection}}
         />
       </Card>
 
@@ -127,6 +131,7 @@ function AddItems ({pcData, queryClient, pcList, selectedPc, userRole}: Props) {
           handleSubmit={handleSubmit}
           formData={featureFormData}
           setFormData={setFeatureFormData}
+          showSection={{data: showSection, setFunction: setShowSection}}
         />
       </Card>
 
@@ -136,17 +141,7 @@ function AddItems ({pcData, queryClient, pcList, selectedPc, userRole}: Props) {
           handleSubmit={handleSubmit}
           formData={equipmentFormData}
           setFormData={setEquipmentFormData}
-        />
-      </Card>
-
-      <Card>
-        <AddItemToArrayField
-          fieldName="proficiency"
-          handleChange={handleChange}
-          handleSubmit={handleSubmit}
-          formData={proficiencyFormData}
-          setFormData={setProficiencyFormData}
-          defaultFormData={defaultProficiencyFormData}
+          showSection={{data: showSection, setFunction: setShowSection}}
         />
       </Card>
 
@@ -158,6 +153,19 @@ function AddItems ({pcData, queryClient, pcList, selectedPc, userRole}: Props) {
           formData={languageFormData}
           setFormData={setLanguageFormData}
           defaultFormData={defaultLanguageFormData}
+          showSection={{data: showSection, setFunction: setShowSection}}
+        />
+      </Card>
+
+      <Card>
+        <AddItemToArrayField
+          fieldName="proficiency"
+          handleChange={handleChange}
+          handleSubmit={handleSubmit}
+          formData={proficiencyFormData}
+          setFormData={setProficiencyFormData}
+          defaultFormData={defaultProficiencyFormData}
+          showSection={{data: showSection, setFunction: setShowSection}}
         />
       </Card>
 
@@ -171,6 +179,7 @@ function AddItems ({pcData, queryClient, pcList, selectedPc, userRole}: Props) {
           setFormData={setNoteFormData}
           defaultFormData={defaultNoteFormData}
           useTextArea={true}
+          showSection={{data: showSection, setFunction: setShowSection}}
         />
       </Card>      
     </div>
