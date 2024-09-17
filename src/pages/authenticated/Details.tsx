@@ -13,7 +13,7 @@ import ConfirmDelete from "@components/modals/ConfirmDelete";
 import { TitleButtonRow } from "@components/TitleButtonRow";
 import DeleteItemButton from "@components/DeleteItemButton";
 import QuickNav from "@components/QuickNav";
-import { handleSubmitEdit, triggerSuccessAlert } from "@pages/utils";
+import { formatWeaponDisplayTitle, handleSubmitEdit, triggerSuccessAlert } from "@pages/utils";
 import SuccessAlert from "@components/alerts/SuccessAlert";
 import EditItemButton from "@components/EditItemButton";
 import EditModal from "@components/modals/EditModal";
@@ -260,13 +260,15 @@ function Details({pcData, pcList, selectedPc, queryClient, userRole}: Props) {
                 <h3 className="section-header">Weapons</h3>
                 {
                     pcData.baseDetails.weapons.sort((a,b) => {
-                        if (a.name < b.name) return -1;
+                        const compA = a.name ?? a.type;
+                        const compB = b.name ?? b.type;
+                        if (compA < compB) return -1;
                         return 1;
                     }).map((weapon, i) => (
                         <Card key={i}>
-                            <a id={removeWhiteSpaceAndConvertToLowerCase(weapon.name)}></a>
+                            <a id={weapon.id}></a>
                             <TitleButtonRow
-                                text={weapon.name}
+                                text={formatWeaponDisplayTitle(weapon.type, weapon.name)}
                                 buttons={
                                     <>
                                     <DeleteItemButton
@@ -275,7 +277,7 @@ function Details({pcData, pcList, selectedPc, queryClient, userRole}: Props) {
                                             show: true,
                                             data: {
                                                 ...emptyShowConfirmDeleteData,
-                                                displayName: weapon.name,
+                                                displayName: formatWeaponDisplayTitle(weapon.type, weapon.name),
                                                 objectArrayFieldName: 'weapons',
                                                 objectArrayFullItem: weapon,
                                                 objectArrayExistingItems: pcData.baseDetails.weapons                            
@@ -289,8 +291,8 @@ function Details({pcData, pcList, selectedPc, queryClient, userRole}: Props) {
                                                 ...emptyEditModalData,
                                                 formType: 'weapon',
                                                 weaponId: weapon.id,
-                                                displayName: weapon.name,
-                                                name: weapon.name,
+                                                displayName: formatWeaponDisplayTitle(weapon.type, weapon.name),
+                                                name: weapon.name ?? '',
                                                 description: weapon.description ?? '',
                                                 damage: weapon.damage,
                                                 damageType: weapon.damageType,

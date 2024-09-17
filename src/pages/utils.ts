@@ -216,3 +216,9 @@ export const getSpendGoldButtonText = (inputAmountToSpend: string) => {
   }
   return `Spend ${amount.toLocaleString()} Gold`;
 }
+
+export const formatWeaponDisplayTitle = (type: string, name?: string):
+string => {  
+  const displayTitle = name ? `${name} (${type})` : type;
+  return displayTitle;
+}
