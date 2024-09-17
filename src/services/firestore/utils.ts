@@ -52,13 +52,13 @@ export const transformFormDataForUpdate = (pcData: PlayerCharacter, data: {updat
       const isMagic = updates.magic === "true" ? true: false;
       const newWeapon: Weapon = {
         id: uuidv4(),
-        name: String(updates.name),
+        name: String(updates.name) ?? '',
         type: String(updates.type),
         damage: String(updates.damage),
         damageType: String(updates.damageType) as DamageType,
         magic: isMagic,
         modifierProperty: String(updates.modifierProperty) as WeaponModifierProperty,
-        ...(updates.description && {description: String(updates.description)})
+        ...(updates.description && {description: String(updates.description)}),
       };
       return {
         collectionName: CollectionName.PC_BASE_DETAILS,
