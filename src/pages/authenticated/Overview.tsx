@@ -128,7 +128,7 @@ function Overview({pcData, pcList, selectedPc, userRole, queryClient}: Props) {
                                         maxHP: String(pcData.baseDetails.usableResources.hitPoints.max),
                                         armorClass: String(pcData.baseDetails.armorClass),
                                         speed: String(pcData.baseDetails.speed),
-                                        xp: String(pcData.baseDetails.xp ?? '')
+                                        xp: String(pcData.baseDetails.xp) ?? ''
                                     });
                                 }}
                             />
