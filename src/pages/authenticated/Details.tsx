@@ -13,12 +13,13 @@ import ConfirmDelete from "@components/modals/ConfirmDelete";
 import { TitleButtonRow } from "@components/TitleButtonRow";
 import DeleteItemButton from "@components/DeleteItemButton";
 import QuickNav from "@components/QuickNav";
-import { formatWeaponDisplayTitle, handleSubmitEdit, triggerSuccessAlert } from "@pages/utils";
+import { formatWeaponDisplayTitle, handleSubmitEdit, pcHasDetailsPageItems, triggerSuccessAlert } from "@pages/utils";
 import SuccessAlert from "@components/alerts/SuccessAlert";
 import EditItemButton from "@components/EditItemButton";
 import EditModal from "@components/modals/EditModal";
 import { emptyEditModalData, emptyShowConfirmDeleteData } from "@data/emptyFormData";
 import { UserRole } from "@services/firestore/enum/UserRole";
+import { useNavigate } from "react-router-dom";
 
 interface Props {
     pcData: PlayerCharacter;
@@ -29,6 +30,8 @@ interface Props {
 }
 
 function Details({pcData, pcList, selectedPc, queryClient, userRole}: Props) {
+    const hasItems = pcHasDetailsPageItems(pcData);
+    const navigate = useNavigate();
     const [showSuccessAlert, setShowSuccessAlert] = useState(false);
 
     const [editable, setEditable] = useState(false);
@@ -187,7 +190,7 @@ function Details({pcData, pcList, selectedPc, queryClient, userRole}: Props) {
             {showSuccessAlert && <SuccessAlert/>}
 
             {
-                pcData.baseDetails.spells &&
+                (pcData.baseDetails.spells && pcData.baseDetails.spells.length > 0) &&
                 <Card customClass="no-padding">
                     <h3 className="section-header">Spells</h3>
                     {mapSpells(pcData.baseDetails.spells, editable)}
@@ -256,7 +259,9 @@ function Details({pcData, pcList, selectedPc, queryClient, userRole}: Props) {
                 </Card>
             }
 
-            <Card customClass="no-padding">
+            {
+                (pcData.baseDetails.weapons && pcData.baseDetails.weapons.length > 0) &&
+                <Card customClass="no-padding">
                 <h3 className="section-header">Weapons</h3>
                 {
                     pcData.baseDetails.weapons.sort((a,b) => {
@@ -309,9 +314,12 @@ function Details({pcData, pcList, selectedPc, queryClient, userRole}: Props) {
                         </Card>
                     ))
                 }
-            </Card>
-
-            <Card customClass="no-padding">
+                </Card>
+            }
+            
+            {
+                (pcData.baseDetails.equipment && pcData.baseDetails.equipment.length > 0) &&
+                <Card customClass="no-padding">
                 <h3 className="section-header">Equipment</h3>
                 {
                     pcData.baseDetails.equipment.sort((a, b) => {
@@ -358,9 +366,12 @@ function Details({pcData, pcList, selectedPc, queryClient, userRole}: Props) {
                         </Card>
                     )
                 }
-            </Card>
-
-            <Card customClass="no-padding">
+                </Card>
+            }
+            
+            {
+                (pcData.baseDetails.languages && pcData.baseDetails.languages.length > 0) &&
+                <Card customClass="no-padding">
                 <h3 className="section-header">Languages</h3>
                 {
                     pcData.baseDetails.languages.sort().map((language, i) => (
@@ -401,9 +412,12 @@ function Details({pcData, pcList, selectedPc, queryClient, userRole}: Props) {
                         </Card>
                     ))
                 }
-            </Card>
-
-            <Card customClass="no-padding">
+                </Card>
+            }
+            
+            {
+                (pcData.baseDetails.proficiencies && pcData.baseDetails.proficiencies.length > 0) &&
+                <Card customClass="no-padding">
                 <h3 className="section-header">Proficiencies</h3>
                 {
                     pcData.baseDetails.proficiencies.sort().map((proficiency, i) => (
@@ -444,9 +458,12 @@ function Details({pcData, pcList, selectedPc, queryClient, userRole}: Props) {
                         </Card>
                     ))
                 }
-            </Card>
-
-            <Card customClass="no-padding">
+                </Card>
+            }
+            
+            {
+                (pcData.baseDetails.notes && pcData.baseDetails.notes.length > 0) &&
+                <Card customClass="no-padding">
                 <h3 className="section-header">Notes</h3>
                 {pcData.baseDetails.notes &&
                     pcData.baseDetails.notes.sort().map((note, i) => (
@@ -490,10 +507,28 @@ function Details({pcData, pcList, selectedPc, queryClient, userRole}: Props) {
                         </Card>
                     ))
                 }
-            </Card>
-            <div className="div-button">
-                <Button buttonType={ButtonType.DANGER} text={editable ? "Lock" : "Unlock"} onClick={() => {setEditable(!editable)}}/>
-            </div>
+                </Card>
+            }
+            
+            {
+                hasItems &&
+                <div className="div-button">
+                    <Button customClass="float-right" buttonType={ButtonType.DANGER} text={editable ? "Lock" : "Unlock"} onClick={() => {setEditable(!editable)}}/>
+                </div>
+            }
+            {
+                !hasItems &&
+                <Card>
+                    {pcData.baseDetails.name.firstName} {pcData.baseDetails.name.lastName} is looking a little empty-handed.
+                    Want to give them some stuff?
+                    <Button
+                        buttonType={ButtonType.INFO}
+                        text="Add Items"
+                        onClick={() => {navigate('/add')}}
+                    />
+                </Card>
+            }
+
         </div>
         <QuickNav/>
         </>
