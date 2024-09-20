@@ -1,7 +1,6 @@
 import Navbar from "@components/Navbar";
 import AbilityCard from "@components/cards/AbilityCard";
 import Card from "@components/cards/Card";
-import CardSetHorizontal from "@components/cards/CardSetHorizontal";
 import { AbilityScores } from "@models/playerCharacter/AbilityScores";
 import { BaseDetails, PlayerCharacter } from "@models/playerCharacter/PlayerCharacter";
 import { getPassiveWisdom, orderAbilityCardElements } from "@components/utils";
@@ -16,6 +15,8 @@ import QuickNav from "@components/QuickNav";
 import { triggerSuccessAlert } from "@pages/utils";
 import SuccessAlert from "@components/alerts/SuccessAlert";
 import { UserRole } from "@services/firestore/enum/UserRole";
+import Popover from "@components/modals/Popover";
+import PassivePerceptionPopoverContent from "@components/popovers/PassivePerceptionPopoverContent";
 
 interface Props {
     pcData: PlayerCharacter;
@@ -151,33 +152,95 @@ function Stats({pcData, pcList, selectedPc, queryClient, userRole}: Props) {
 
             <br/>
 
-            <CardSetHorizontal>
-                <Card>
-                    <h4>AC</h4>
-                    <h3>{pcData.baseDetails.armorClass}</h3>
-                </Card>
-                <Card>
-                    <h4>Initiative</h4>
-                    <h3>{pcData.abilityScores.data.dexterity.modifier > 0 && '+'}{pcData.abilityScores.data.dexterity.modifier}</h3>
-                </Card>
-                <Card>
-                    <h4>Proficiency Bonus</h4>
-                    <h3>+{pcData.baseDetails.proficiencyBonus}</h3>
-                </Card>
-                <Card>
-                    <h4>Speed</h4>
-                    <h3>{pcData.baseDetails.speed}</h3>
-                </Card>
-                <Card>
-                    <h4>Passive Wisdom</h4>
-                    <h3>{getPassiveWisdom(
-                            pcData.abilityScores.data.wisdom.modifier, 
-                            pcData.abilityScores.data.wisdom.perception.proficient, 
-                            pcData.baseDetails.proficiencyBonus
-                        )}
-                    </h3>
-                </Card>
-            </CardSetHorizontal>
+            <Card>
+                <div className="container-fluid">
+                    <div className="row">
+                        <div className="col-6 right-justify">
+                            <h5>AC:</h5>
+                        </div>
+                        <div className="col-6 left-justify">
+                            <h4>{pcData.baseDetails.armorClass}</h4>
+                        </div>
+                    </div>
+                </div>
+            </Card>
+            <Card>
+                <div className="row">
+                    <div className="col-6 right-justify">
+                        <h5>Initiative:</h5>
+                    </div>
+                    <div className="col-6 left-justify">
+                    <Popover
+                        popoverBody={
+                            <div>
+                                <b>{pcData.abilityScores.data.dexterity.modifier > 0 && '+'}{pcData.abilityScores.data.dexterity.modifier}</b> from DEX modifier
+                            </div>
+                        }
+                        fitContent={true}
+                    >
+                        <h4>{pcData.abilityScores.data.dexterity.modifier > 0 && '+'}{pcData.abilityScores.data.dexterity.modifier}</h4>
+                    </Popover>
+                    </div>
+                </div>                    
+            </Card>
+            <Card>
+                    <div className="row">
+                    <div className="col-6 right-justify">
+                        <h5>Passive Perception:</h5>
+                    </div>
+                    <div className="col-6 left-justify">
+                    <Popover
+                        popoverBody={
+                            <PassivePerceptionPopoverContent
+                                wisdomModifier={pcData.abilityScores.data.wisdom.modifier}
+                                perceptionProficiency={pcData.abilityScores.data.wisdom.perception.proficient}
+                                proficiencyBonus={pcData.baseDetails.proficiencyBonus}
+                            />
+                        }
+                        fitContent={true}
+                    >
+                        <h4>
+                            {getPassiveWisdom(
+                                pcData.abilityScores.data.wisdom.modifier, 
+                                pcData.abilityScores.data.wisdom.perception.proficient, 
+                                pcData.baseDetails.proficiencyBonus
+                            )}
+                        </h4>                            
+                    </Popover>
+                    </div>
+                </div>                    
+            </Card>
+            <Card>
+                <div className="row">
+                    <div className="col-6 right-justify">
+                        <h5>Proficiency Bonus:</h5>
+                    </div>
+                    <div className="col-6 left-justify">
+                    <Popover
+                        popoverBody={
+                            <div>
+                            <b>+{pcData.baseDetails.proficiencyBonus}</b> for level {pcData.baseDetails.level} character
+                            </div>
+                        }
+                        fitContent={true}
+                    >
+                        <h4>+{pcData.baseDetails.proficiencyBonus}</h4>
+                    </Popover>
+                    </div>
+                </div>
+            </Card>
+            <Card>
+                <div className="container-fluid">
+                    <div className="row">
+                        <div className="col-6 right-justify">
+                            <h5>Speed:</h5>
+                        </div>
+                        <div className="col-6 left-justify">
+                            <h4>{pcData.baseDetails.speed}</h4>
+                        </div>
+                    </div>
+                </div>
+            </Card>
         </div>
         <QuickNav/>
         </>

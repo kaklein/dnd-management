@@ -7,7 +7,6 @@ import {
     formatBaseDetailsUpdates, 
     formatFeaturesUpdates, 
     formatSpellSlotsUpdates,
-    formatDataAsTable,
     getFeatureFormData, 
     getSpellSlotFormData, 
     removeWhiteSpaceAndConvertToLowerCase 
@@ -26,6 +25,9 @@ import SuccessAlert from "@components/alerts/SuccessAlert";
 import { UserRole } from "@services/firestore/enum/UserRole";
 import HPModal from "@components/modals/HPModal";
 import GoldModal from "@components/modals/GoldModal";
+import Popover from "@components/modals/Popover";
+import PopoverContentSpell from "@components/popovers/SpellPopoverContent";
+import WeaponContentPopover from "@components/popovers/WeaponPopoverContent";
 
 interface Props {
     pcData: PlayerCharacter;
@@ -233,6 +235,7 @@ function Tracker({pcData, queryClient, pcList, selectedPc, userRole}: Props) {
                         (pcData.baseDetails.spells && pcData.baseDetails.spells.length > 0)  &&
                         <Card>
                             <h3>Available Spells</h3>
+                            <div className="center-table">
                             {
                                 pcData.baseDetails.spells!.sort((a,b) => {
                                     if (a.level < b.level) return -1;
@@ -240,13 +243,24 @@ function Tracker({pcData, queryClient, pcList, selectedPc, userRole}: Props) {
                                     if (a.name < b.name) return -1;
                                     return 1;
                                 }).map((spell, i) => (
-                                    <p className="center" key={i}>
-                                        {spell.level}: 
-                                        <Link className="text-link" to={'/details#' + removeWhiteSpaceAndConvertToLowerCase(spell.name)}>{spell.name}</Link>
-                                         | Attack Bonus +{pcData.abilityScores.data[spell.spellCastingAbility].modifier + pcData.baseDetails.proficiencyBonus}
-                                    </p>
+                                    <div className="container-fluid left-justify" key={i}>
+                                        <div className="row display-item-row">
+                                            <div className="col-6">
+                                                <b><Link className="text-link" to={'/details#' + removeWhiteSpaceAndConvertToLowerCase(spell.name)}>{spell.name}</Link></b>
+                                            </div>
+                                            <div className="col-6">
+                                                <Popover
+                                                    popoverBody={<PopoverContentSpell pcData={pcData} spell={spell}/>}
+                                                    fitContent={true}
+                                                >
+                                                    <span>Attack Bonus <b>+{pcData.abilityScores.data[spell.spellCastingAbility].modifier + pcData.baseDetails.proficiencyBonus}</b></span>
+                                                </Popover>
+                                            </div>
+                                        </div>
+                                    </div>
                                 ))
                             }
+                            </div>
                         </Card>
                     }
                 
@@ -255,13 +269,39 @@ function Tracker({pcData, queryClient, pcList, selectedPc, userRole}: Props) {
                         {
                             pcData.baseDetails.weapons.map((weapon, i) => (
                                 <Card key={i}>
-                                    <Link className="text-link" to={'/details#' + weapon.id}><h4>{formatWeaponDisplayTitle(weapon.type, weapon.name)}</h4></Link>
-                                    {
-                                        formatDataAsTable({
-                                            ['Attack Bonus']: `${formatBonus(determineAttackBonus(weapon, pcData) + pcData.baseDetails.proficiencyBonus)}`,
-                                            Damage: `${weapon.damage} ${formatBonus(determineAttackBonus(weapon, pcData), false)} ${weapon.damageType.toLowerCase()}`
-                                        })
-                                    }
+                                    <div className="center-table">
+                                    <div className="container-fluid left-justify" key={i}>
+                                        <div className="row">
+                                            <Link className="text-link center" to={'/details#' + weapon.id}><h4>{formatWeaponDisplayTitle(weapon.type, weapon.name)}</h4></Link>
+                                        </div>
+                                        <div className="row display-item-row">
+                                            <div className="col-5">
+                                                Attack Bonus: 
+                                            </div>
+                                            <div className="col-7">
+                                                <Popover
+                                                    popoverBody={<WeaponContentPopover weapon={weapon} pcData={pcData} attribute="attack bonus"/>}
+                                                    fitContent={true}
+                                                >
+                                                    <span><b>{formatBonus(determineAttackBonus(weapon, pcData) + pcData.baseDetails.proficiencyBonus)}</b></span>
+                                                </Popover>
+                                            </div>
+                                        </div>
+                                        <div className="row display-item-row">
+                                            <div className="col-5">
+                                                Damage:
+                                            </div>
+                                            <div className="col-7">
+                                                <Popover
+                                                    popoverBody={<WeaponContentPopover weapon={weapon} pcData={pcData} attribute="damage"/>}
+                                                    fitContent={true}
+                                                >
+                                                    <span><b>{weapon.damage} {formatBonus(determineAttackBonus(weapon, pcData), false)}</b> {weapon.damageType.toLowerCase()}</span>
+                                                </Popover>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    </div>
                                 </Card>
                             ))
                         }
@@ -300,7 +340,7 @@ function Tracker({pcData, queryClient, pcList, selectedPc, userRole}: Props) {
 
                     <Card>
                         <h3>Death Saves</h3>
-                        <h4>Successes</h4>
+                        <h4 className="text-green">Successes</h4>
                         <ItemUseToggle
                             itemLabel="Death Save Successes"
                             formDataName="deathSavesSuccesses"
@@ -308,7 +348,7 @@ function Tracker({pcData, queryClient, pcList, selectedPc, userRole}: Props) {
                             currentUses={formData.deathSavesSuccesses}
                             onChange={handleChange}
                         />
-                        <h4>Failures</h4>
+                        <h4 className="text-red">Failures</h4>
                         <ItemUseToggle
                             itemLabel="Death Save Failures"
                             formDataName="deathSavesFailures"

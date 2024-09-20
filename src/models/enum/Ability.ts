@@ -6,3 +6,12 @@ export enum Ability {
     'WIS' = 'wisdom',
     'CHA' = 'charisma'
 }
+
+export enum AbilityAbbreviation {
+    'strength' = 'STR',
+    'dexterity' = 'DEX',
+    'constitution' = 'CON',
+    'intelligence' = 'INT',
+    'wisdom' = 'WIS',
+    'charisma' = 'CHA'
+}
