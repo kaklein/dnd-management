@@ -70,7 +70,7 @@ function AbilityCard({ abilityName, proficiencyBonus, skills, editable, handleCh
                                                 />
                                             </td>
                                             <td>{ skill.displayName.toUpperCase() + ':' }</td>
-                                            <td>{ getSkillModifier(formData[skill.formFieldName] === "true" ? true : false, modifier, proficiencyBonus) }</td>
+                                            <td><b>{ getSkillModifier(formData[skill.formFieldName] === "true" ? true : false, modifier, proficiencyBonus) }</b></td>
                                         </tr>
                                     ))
                                 }
