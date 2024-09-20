@@ -25,3 +25,16 @@ export enum SpellLevel {
     'L8' = 'Level 8',
     'L9' = 'Level 9'
 }
+
+export enum SpellLevelAbbreviation {
+    'Cantrip' = 'CANTRIP',
+    'Level 1' = 'L1',
+    'Level 2' = 'L2',
+    'Level 3' = 'L3',
+    'Level 4' = 'L4',
+    'Level 5' = 'L5',
+    'Level 6' = 'L6',
+    'Level 7' = 'L7',
+    'Level 8' = 'L8',
+    'Level 9' = 'L9'
+}

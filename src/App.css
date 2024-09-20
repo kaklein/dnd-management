@@ -73,19 +73,6 @@ img {
     margin: 20px;
 }
 
-.inline {
-    display: inline
-}
-
-.center {
-    margin: auto;
-    text-align: center;
-}
-
-.float-right {
-    float: right;
-}
-
 .alert-div {
     position: fixed;
     text-align: center;
@@ -227,10 +214,6 @@ img {
 .text-link {
     text-decoration: none;
     color: var(--dark-purple);
-    width: fit-content;
-    margin: auto;
-    padding-left: 5px;
-    padding-right: 5px;
 }
 
 /* Login Form */
@@ -752,4 +735,69 @@ img {
     display: block;
     font-size: xx-large;
     text-align: center;
+}
+
+.popover {
+    padding: 10px;
+}
+
+.left-justify {
+    text-align: left;
+}
+
+.right-justify {
+    text-align: right;
+}
+
+.center-table {
+    margin: auto;
+}
+
+.display-item-row {
+    background-color: var(--near-white);
+    border-radius: 5px;
+    margin: 10px;
+    padding: 5px;
+    max-width: 400px;
+    min-width: 320px;
+}
+
+.popover-main-content {
+    padding-left: 5px;
+    padding-right: 5px;
+    color: var(--dark-purple);
+}
+
+.text-red {
+    color: red;
+}
+
+.text-green {
+    color: green;
+}
+
+.inline {
+    display: inline
+}
+
+.center {
+    margin: auto;
+    text-align: center;
+}
+
+.float-right {
+    float: right;
+}
+
+.fit-content {
+    width: fit-content;
+}
+
+.margin-auto {
+    margin: auto;
+}
+
+.max-width-800 {
+    width: 90%;
+    max-width: 900px;
 }
