@@ -28,6 +28,7 @@ import GoldModal from "@components/modals/GoldModal";
 import Popover from "@components/modals/Popover";
 import PopoverContentSpell from "@components/popovers/SpellPopoverContent";
 import WeaponContentPopover from "@components/popovers/WeaponPopoverContent";
+import AboutFooter from "@components/AboutFooter";
 
 interface Props {
     pcData: PlayerCharacter;
@@ -275,68 +276,74 @@ function Tracker({pcData, queryClient, pcList, selectedPc, userRole}: Props) {
                         </Card>
                     }
                 
-                    <Card>
-                        <h3 className="section-header">Weapons</h3>
-                        {
-                            pcData.baseDetails.weapons.map((weapon, i) => (
-                                <Card key={i}>
-                                    <div className="center-table">
-                                    <div className="container-fluid left-justify" key={i}>
-                                        <div className="row">
-                                            <Link className="text-link center" to={'/details?weapons=true#' + weapon.id}><h4>{formatWeaponDisplayTitle(weapon.type, weapon.name)}</h4></Link>
+                    {
+                        (pcData.baseDetails.weapons && pcData.baseDetails.weapons.length > 0) &&
+                        <Card>
+                            <h3 className="section-header">Weapons</h3>
+                            {
+                                pcData.baseDetails.weapons.map((weapon, i) => (
+                                    <Card key={i}>
+                                        <div className="center-table">
+                                        <div className="container-fluid left-justify" key={i}>
+                                            <div className="row">
+                                                <Link className="text-link center" to={'/details?weapons=true#' + weapon.id}><h4>{formatWeaponDisplayTitle(weapon.type, weapon.name)}</h4></Link>
+                                            </div>
+                                            <div className="row display-item-row">
+                                                <div className="col-5">
+                                                    Attack Bonus: 
+                                                </div>
+                                                <div className="col-7">
+                                                    <Popover
+                                                        popoverBody={<WeaponContentPopover weapon={weapon} pcData={pcData} attribute="attack bonus"/>}
+                                                        fitContent={true}
+                                                    >
+                                                        <span><b>{formatBonus(determineAttackBonus(weapon, pcData) + pcData.baseDetails.proficiencyBonus)}</b></span>
+                                                    </Popover>
+                                                </div>
+                                            </div>
+                                            <div className="row display-item-row">
+                                                <div className="col-5">
+                                                    Damage:
+                                                </div>
+                                                <div className="col-7">
+                                                    <Popover
+                                                        popoverBody={<WeaponContentPopover weapon={weapon} pcData={pcData} attribute="damage"/>}
+                                                        fitContent={true}
+                                                    >
+                                                        <span><b>{weapon.damage} {formatBonus(determineAttackBonus(weapon, pcData), false)}</b> {weapon.damageType.toLowerCase()}</span>
+                                                    </Popover>
+                                                </div>
+                                            </div>
                                         </div>
-                                        <div className="row display-item-row">
-                                            <div className="col-5">
-                                                Attack Bonus: 
-                                            </div>
-                                            <div className="col-7">
-                                                <Popover
-                                                    popoverBody={<WeaponContentPopover weapon={weapon} pcData={pcData} attribute="attack bonus"/>}
-                                                    fitContent={true}
-                                                >
-                                                    <span><b>{formatBonus(determineAttackBonus(weapon, pcData) + pcData.baseDetails.proficiencyBonus)}</b></span>
-                                                </Popover>
-                                            </div>
                                         </div>
-                                        <div className="row display-item-row">
-                                            <div className="col-5">
-                                                Damage:
-                                            </div>
-                                            <div className="col-7">
-                                                <Popover
-                                                    popoverBody={<WeaponContentPopover weapon={weapon} pcData={pcData} attribute="damage"/>}
-                                                    fitContent={true}
-                                                >
-                                                    <span><b>{weapon.damage} {formatBonus(determineAttackBonus(weapon, pcData), false)}</b> {weapon.damageType.toLowerCase()}</span>
-                                                </Popover>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    </div>
-                                </Card>
-                            ))
-                        }
-                    </Card>
+                                    </Card>
+                                ))
+                            }
+                        </Card>
+                    }
 
-                    <Card>
-                        <h3 className="section-header">Abilities</h3>
-                        {
-                            limitedUseFeatures.map(feature => (
-                                <Card key={feature.id}>
-                                    <Link className="text-link" to={'/details?features=true#' + removeWhiteSpaceAndConvertToLowerCase(feature.data.name)}><h4>{feature.data.name}</h4></Link>
-                                    <ItemUseToggle
-                                        itemLabel={removeWhiteSpaceAndConvertToLowerCase(feature.data.name)}
-                                        formDataName={buildFeatureCurrentUsesKey(feature)}
-                                        maxUses={feature.data.maxUses!}
-                                        currentUses={formData[buildFeatureCurrentUsesKey(feature)]}
-                                        onChange={handleChange}
-                                    />
-                                    <Refresh refreshRestType={feature.data.refresh!}/>
-                                </Card>
-                            ))
-                        }
-                    </Card>
-
+                    {
+                        (limitedUseFeatures && limitedUseFeatures.length > 0) &&
+                        <Card>
+                            <h3 className="section-header">Abilities</h3>
+                            {
+                                limitedUseFeatures.map(feature => (
+                                    <Card key={feature.id}>
+                                        <Link className="text-link" to={'/details?features=true#' + removeWhiteSpaceAndConvertToLowerCase(feature.data.name)}><h4>{feature.data.name}</h4></Link>
+                                        <ItemUseToggle
+                                            itemLabel={removeWhiteSpaceAndConvertToLowerCase(feature.data.name)}
+                                            formDataName={buildFeatureCurrentUsesKey(feature)}
+                                            maxUses={feature.data.maxUses!}
+                                            currentUses={formData[buildFeatureCurrentUsesKey(feature)]}
+                                            onChange={handleChange}
+                                        />
+                                        <Refresh refreshRestType={feature.data.refresh!}/>
+                                    </Card>
+                                ))
+                            }
+                        </Card>
+                    }
+                    
                     <Card>
                         <h3 className="section-header">Hit Dice</h3>
                         <p className="center">{pcData.baseDetails.usableResources.hitDice.type}</p>
@@ -408,6 +415,7 @@ function Tracker({pcData, queryClient, pcList, selectedPc, userRole}: Props) {
                 </div>               
             </form>
 
+            <AboutFooter/>
         </div>
         <QuickNav/>
         </>

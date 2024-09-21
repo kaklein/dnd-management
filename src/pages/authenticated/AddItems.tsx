@@ -18,6 +18,7 @@ import QuickNav from "@components/QuickNav";
 import { triggerSuccessAlert } from "@pages/utils";
 import SuccessAlert from "@components/alerts/SuccessAlert";
 import { UserRole } from "@services/firestore/enum/UserRole";
+import AboutFooter from "@components/AboutFooter";
 
 interface Props {
   pcData: PlayerCharacter;
@@ -181,7 +182,8 @@ function AddItems ({pcData, queryClient, pcList, selectedPc, userRole}: Props) {
           useTextArea={true}
           showSection={{data: showSection, setFunction: setShowSection}}
         />
-      </Card>      
+      </Card>
+      <AboutFooter/>   
     </div>
     <QuickNav/>
     </>

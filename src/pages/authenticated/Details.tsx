@@ -21,6 +21,7 @@ import { buildEmptyShowSectionData, emptyEditModalData, emptyShowConfirmDeleteDa
 import { UserRole } from "@services/firestore/enum/UserRole";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import FormHeader from "@components/updateForms/FormHeader";
+import AboutFooter from "@components/AboutFooter";
 
 interface Props {
     pcData: PlayerCharacter;
@@ -145,7 +146,7 @@ function Details({pcData, pcList, selectedPc, queryClient, userRole}: Props) {
 
     return (
         <>
-        <div className="main-body">
+        <div className="main-body-short">
             <Navbar isSelectedPc={!!selectedPc.pcId} userRole={userRole}/>
 
             <PageHeaderBarPC 
@@ -597,8 +598,8 @@ function Details({pcData, pcList, selectedPc, queryClient, userRole}: Props) {
                     />
                 </Card>
             }
-
         </div>
+        <AboutFooter/>
         <QuickNav/>
         </>
     )

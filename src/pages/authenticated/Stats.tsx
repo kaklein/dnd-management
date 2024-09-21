@@ -17,6 +17,7 @@ import SuccessAlert from "@components/alerts/SuccessAlert";
 import { UserRole } from "@services/firestore/enum/UserRole";
 import Popover from "@components/modals/Popover";
 import PassivePerceptionPopoverContent from "@components/popovers/PassivePerceptionPopoverContent";
+import AboutFooter from "@components/AboutFooter";
 
 interface Props {
     pcData: PlayerCharacter;
@@ -241,6 +242,8 @@ function Stats({pcData, pcList, selectedPc, queryClient, userRole}: Props) {
                     </div>
                 </div>
             </Card>
+
+            <AboutFooter/>
         </div>
         <QuickNav/>
         </>
