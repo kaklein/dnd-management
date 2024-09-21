@@ -131,8 +131,7 @@ function Tracker({pcData, queryClient, pcList, selectedPc, userRole}: Props) {
                     </button>
                     {showSuccessAlert && <SuccessAlert/>}
                     <Card>
-                        <h3>Hit Points</h3>
-                        <Card>
+                        <h3 className="section-header">Hit Points</h3>
                         <div className="hp container-fluid">
                             <div className="row">
                                 <div className="col-6 hp-col">
@@ -180,40 +179,52 @@ function Tracker({pcData, queryClient, pcList, selectedPc, userRole}: Props) {
                                 </div>
                             </div>
                         </div>
-                        </Card>            
-                        <br/>
-                        <label htmlFor="hitPointsTemporary">Temporary Hit Points</label>
-                        <br/>
-                        <input
-                            className="number-input"
-                            type="number"
-                            id="hitPointsTemporary"
-                            name="hitPointsTemporary"
-                            min="0"
-                            max="99" 
-                            value={formData.hitPointsTemporary}
-                            onChange={handleChange}
-                        />
-                    </Card>
-
+                    </Card>            
                     <Card>
-                        <label htmlFor="inspiration">Inspiration</label>
-                        <input
-                            className="number-input"
-                            type="number"
-                            min="0"
-                            max="10"
-                            id="inspiration"
-                            name="inspiration"
-                            value={formData.inspiration}
-                            onChange={handleChange}
-                        />
+                    <div className="container-fluid">
+                    <div className="row">
+                        <div className="col-4">
+                            <label htmlFor="hitPointsTemporary">Temp HP</label>
+                            <br/>
+                            <input
+                                className="number-input"
+                                type="number"
+                                id="hitPointsTemporary"
+                                name="hitPointsTemporary"
+                                min="0"
+                                max="999" 
+                                value={formData.hitPointsTemporary}
+                                onChange={handleChange}
+                            />
+                        </div>
+                        <div className="col-4">
+                            <Card customClass="bg-light">
+                                <h4>AC</h4>
+                                <h4>{pcData.baseDetails.armorClass}</h4>
+                            </Card>
+                        </div>
+                        <div className="col-4">
+                            <label htmlFor="inspiration">Inspiration</label>
+                            <br/>
+                            <input
+                                className="number-input"
+                                type="number"
+                                min="0"
+                                max="999"
+                                id="inspiration"
+                                name="inspiration"
+                                value={formData.inspiration}
+                                onChange={handleChange}
+                            />
+                        </div>
+                    </div>
+                    </div>
                     </Card>
 
                     {
                         (pcData.spellSlots && pcData.spellSlots.filter(slot => slot.data.max > 0).length > 0) &&
                         <Card>
-                            <h3>Spell Slots</h3>
+                            <h3 className="section-header">Spell Slots</h3>
                             {
                                 pcData.spellSlots.filter(slot => slot.data.max > 0).map(spellSlot => (
                                     <Card key={spellSlot.id}>
@@ -234,7 +245,7 @@ function Tracker({pcData, queryClient, pcList, selectedPc, userRole}: Props) {
                     {
                         (pcData.baseDetails.spells && pcData.baseDetails.spells.length > 0)  &&
                         <Card>
-                            <h3>Available Spells</h3>
+                            <h3 className="section-header">Available Spells</h3>
                             <div className="center-table">
                             {
                                 pcData.baseDetails.spells!.sort((a,b) => {
@@ -265,7 +276,7 @@ function Tracker({pcData, queryClient, pcList, selectedPc, userRole}: Props) {
                     }
                 
                     <Card>
-                        <h3>Weapons</h3>
+                        <h3 className="section-header">Weapons</h3>
                         {
                             pcData.baseDetails.weapons.map((weapon, i) => (
                                 <Card key={i}>
@@ -308,7 +319,7 @@ function Tracker({pcData, queryClient, pcList, selectedPc, userRole}: Props) {
                     </Card>
 
                     <Card>
-                        <h3>Abilities</h3>
+                        <h3 className="section-header">Abilities</h3>
                         {
                             limitedUseFeatures.map(feature => (
                                 <Card key={feature.id}>
@@ -327,7 +338,7 @@ function Tracker({pcData, queryClient, pcList, selectedPc, userRole}: Props) {
                     </Card>
 
                     <Card>
-                        <h3>Hit Dice</h3>
+                        <h3 className="section-header">Hit Dice</h3>
                         <p className="center">{pcData.baseDetails.usableResources.hitDice.type}</p>
                         <ItemUseToggle 
                             itemLabel="Hit Dice"
@@ -339,7 +350,7 @@ function Tracker({pcData, queryClient, pcList, selectedPc, userRole}: Props) {
                     </Card>
 
                     <Card>
-                        <h3>Death Saves</h3>
+                        <h3 className="section-header">Death Saves</h3>
                         <h4 className="text-green">Successes</h4>
                         <ItemUseToggle
                             itemLabel="Death Save Successes"
@@ -359,7 +370,7 @@ function Tracker({pcData, queryClient, pcList, selectedPc, userRole}: Props) {
                     </Card>
 
                     <Card>
-                        <h3>Gold</h3>
+                        <h3 className="section-header">Gold</h3>
                         <Card>
                         <div className="gold container-fluid">
                             <div className="row">
