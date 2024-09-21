@@ -17,9 +17,9 @@ import { formatWeaponDisplayTitle, handleSubmitEdit, pcHasDetailsPageItems, trig
 import SuccessAlert from "@components/alerts/SuccessAlert";
 import EditItemButton from "@components/EditItemButton";
 import EditModal from "@components/modals/EditModal";
-import { emptyEditModalData, emptyShowConfirmDeleteData, emptyShowSectionData } from "@data/emptyFormData";
+import { buildEmptyShowSectionData, emptyEditModalData, emptyShowConfirmDeleteData, emptyShowSectionData } from "@data/emptyFormData";
 import { UserRole } from "@services/firestore/enum/UserRole";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import FormHeader from "@components/updateForms/FormHeader";
 
 interface Props {
@@ -33,7 +33,8 @@ interface Props {
 function Details({pcData, pcList, selectedPc, queryClient, userRole}: Props) {
     const hasItems = pcHasDetailsPageItems(pcData);
     const navigate = useNavigate();
-    const [showSection, setShowSection] = useState(emptyShowSectionData);
+    const [searchParams, setSearchParams] = useSearchParams();
+    const [showSection, setShowSection] = useState(buildEmptyShowSectionData(searchParams));
 
     const [showSuccessAlert, setShowSuccessAlert] = useState(false);
 
@@ -198,7 +199,10 @@ function Details({pcData, pcList, selectedPc, queryClient, userRole}: Props) {
                     <FormHeader
                         anchorTag="spells"
                         formTitle="Spells"
-                        onClick={() => setShowSection({...emptyShowSectionData, spells: !showSection.spells})}
+                        onClick={() => {
+                            setShowSection({...emptyShowSectionData, spells: !showSection.spells});
+                            setSearchParams();
+                        }}
                         showForm={showSection.spells}
                     />
                     {
@@ -214,7 +218,10 @@ function Details({pcData, pcList, selectedPc, queryClient, userRole}: Props) {
                 <FormHeader
                     anchorTag="weapons"
                     formTitle="Weapons"
-                    onClick={() => setShowSection({...emptyShowSectionData, weapons: !showSection.weapons})}
+                    onClick={() => {
+                        setShowSection({...emptyShowSectionData, weapons: !showSection.weapons});
+                        setSearchParams();
+                    }}
                     showForm={showSection.weapons}
                 />
                 {
@@ -278,7 +285,10 @@ function Details({pcData, pcList, selectedPc, queryClient, userRole}: Props) {
                     <FormHeader
                         anchorTag="features"
                         formTitle="Features"
-                        onClick={() => setShowSection({...emptyShowSectionData, features: !showSection.features})}
+                        onClick={() => {
+                            setShowSection({...emptyShowSectionData, features: !showSection.features});
+                            setSearchParams();
+                        }}
                         showForm={showSection.features}
                     />
                     {
@@ -346,7 +356,10 @@ function Details({pcData, pcList, selectedPc, queryClient, userRole}: Props) {
                 <FormHeader
                     anchorTag="equipment"
                     formTitle="Equipment"
-                    onClick={() => setShowSection({...emptyShowSectionData, equipment: !showSection.equipment})}
+                    onClick={() => {
+                        setShowSection({...emptyShowSectionData, equipment: !showSection.equipment});
+                        setSearchParams();
+                    }}
                     showForm={showSection.equipment}
                 />
                 {
@@ -404,7 +417,10 @@ function Details({pcData, pcList, selectedPc, queryClient, userRole}: Props) {
                 <FormHeader
                     anchorTag="languages"
                     formTitle="Languages"
-                    onClick={() => setShowSection({...emptyShowSectionData, languages: !showSection.languages})}
+                    onClick={() => {
+                        setShowSection({...emptyShowSectionData, languages: !showSection.languages});
+                        setSearchParams();
+                    }}
                     showForm={showSection.languages}
                 />
                 {
@@ -456,7 +472,10 @@ function Details({pcData, pcList, selectedPc, queryClient, userRole}: Props) {
                 <FormHeader
                     anchorTag="proficiencies"
                     formTitle="Proficiencies"
-                    onClick={() => setShowSection({...emptyShowSectionData, proficiencies: !showSection.proficiencies})}
+                    onClick={() => {
+                        setShowSection({...emptyShowSectionData, proficiencies: !showSection.proficiencies});
+                        setSearchParams();
+                    }}
                     showForm={showSection.proficiencies}
                 />
                 {
@@ -508,7 +527,10 @@ function Details({pcData, pcList, selectedPc, queryClient, userRole}: Props) {
                 <FormHeader
                     anchorTag="notes"
                     formTitle="Notes"
-                    onClick={() => setShowSection({...emptyShowSectionData, notes: !showSection.notes})}
+                    onClick={() => {
+                        setShowSection({...emptyShowSectionData, notes: !showSection.notes});
+                        setSearchParams();
+                    }}
                     showForm={showSection.notes}
                 />
                 {
