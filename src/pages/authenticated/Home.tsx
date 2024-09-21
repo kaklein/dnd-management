@@ -6,6 +6,7 @@ import PageHeaderBar from "@components/headerBars/PageHeaderBar";
 import Card from "@components/cards/Card";
 import Button, { ButtonType } from "@components/Button";
 import { UserRole } from "@services/firestore/enum/UserRole";
+import AboutFooter from "@components/AboutFooter";
 
 interface Props {
   pcList: BaseDetails[];
@@ -43,6 +44,7 @@ function Home({ selectedPcId, pcList, setSelectedPcId, userRole }: Props) {
 
   return (
     <>
+      <div className="main-body main-body-short">
       <Navbar isSelectedPc={!!selectedPcId} userRole={userRole}/>
 
       {
@@ -72,6 +74,9 @@ function Home({ selectedPcId, pcList, setSelectedPcId, userRole }: Props) {
           <Button text="+ Create New Character" onClick={() => navigate('/create')} buttonType={ButtonType.INFO}/>
           </div>
         </Card>
+        </div>
+
+        <AboutFooter/>
       </>
   )
 }

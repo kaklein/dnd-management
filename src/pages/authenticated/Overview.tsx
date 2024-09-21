@@ -18,6 +18,7 @@ import { emptyEditModalData } from "@data/emptyFormData";
 import { handleSubmitEdit, triggerSuccessAlert } from "@pages/utils";
 import { QueryClient } from "@tanstack/react-query";
 import SuccessAlert from "@components/alerts/SuccessAlert";
+import AboutFooter from "@components/AboutFooter";
 
 interface Props {
     pcData: PlayerCharacter;
@@ -142,6 +143,7 @@ function Overview({pcData, pcList, selectedPc, userRole, queryClient}: Props) {
             <div className="div-button">
                 <Button customClass="float-right" buttonType={ButtonType.DANGER} text={editable ? "Lock" : "Unlock"} onClick={() => {setEditable(!editable)}}/>
             </div>
+            <AboutFooter/>
         </div>
         
         <QuickNav/>
