@@ -257,7 +257,7 @@ function Tracker({pcData, queryClient, pcList, selectedPc, userRole}: Props) {
                                     <div className="container-fluid left-justify" key={i}>
                                         <div className="row display-item-row">
                                             <div className="col-6">
-                                                <b><Link className="text-link" to={'/details#' + removeWhiteSpaceAndConvertToLowerCase(spell.name)}>{spell.name}</Link></b>
+                                                <b><Link className="text-link" to={'/details?spells=true#' + removeWhiteSpaceAndConvertToLowerCase(spell.name)}>{spell.name}</Link></b>
                                             </div>
                                             <div className="col-6">
                                                 <Popover
@@ -283,7 +283,7 @@ function Tracker({pcData, queryClient, pcList, selectedPc, userRole}: Props) {
                                     <div className="center-table">
                                     <div className="container-fluid left-justify" key={i}>
                                         <div className="row">
-                                            <Link className="text-link center" to={'/details#' + weapon.id}><h4>{formatWeaponDisplayTitle(weapon.type, weapon.name)}</h4></Link>
+                                            <Link className="text-link center" to={'/details?weapons=true#' + weapon.id}><h4>{formatWeaponDisplayTitle(weapon.type, weapon.name)}</h4></Link>
                                         </div>
                                         <div className="row display-item-row">
                                             <div className="col-5">
@@ -323,7 +323,7 @@ function Tracker({pcData, queryClient, pcList, selectedPc, userRole}: Props) {
                         {
                             limitedUseFeatures.map(feature => (
                                 <Card key={feature.id}>
-                                    <Link className="text-link" to={'/details#' + removeWhiteSpaceAndConvertToLowerCase(feature.data.name)}><h4>{feature.data.name}</h4></Link>
+                                    <Link className="text-link" to={'/details?features=true#' + removeWhiteSpaceAndConvertToLowerCase(feature.data.name)}><h4>{feature.data.name}</h4></Link>
                                     <ItemUseToggle
                                         itemLabel={removeWhiteSpaceAndConvertToLowerCase(feature.data.name)}
                                         formDataName={buildFeatureCurrentUsesKey(feature)}

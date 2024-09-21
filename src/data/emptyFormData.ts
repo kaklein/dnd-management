@@ -220,3 +220,16 @@ export const emptyShowSectionData = {
   notes: false,
   spellSlots: false
 };
+
+export const buildEmptyShowSectionData = (searchParams: URLSearchParams) => {
+  return {
+    spells: searchParams.get("spells") == "true" ? true: false,
+    weapons: searchParams.get("weapons") == "true" ? true: false,
+    features: searchParams.get("features") == "true" ? true: false,
+    equipment: searchParams.get("equipment") == "true" ? true: false,
+    languages: searchParams.get("languages") == "true" ? true: false,
+    proficiencies: searchParams.get("proficiencies") == "true" ? true: false,
+    notes: searchParams.get("notes") == "true" ? true: false,
+    spellSlots: searchParams.get("spellSlots") == "true" ? true: false
+  }
+}
