@@ -3,6 +3,7 @@ import Button, { ButtonType } from "@components/Button";
 import Card from "@components/cards/Card";
 import PageHeaderBar from "@components/headerBars/PageHeaderBar";
 import Navbar from "@components/Navbar";
+import ReleaseNote from "@components/ReleaseNote";
 import { UserRole } from "@services/firestore/enum/UserRole";
 import { useNavigate } from "react-router-dom";
 
@@ -53,10 +54,24 @@ function About ({selectedPc, userRole}: Props) {
             <h4 className="center">Current: {import.meta.env.PACKAGE_VERSION}</h4>
             <br/>
             <h5>Version History</h5>
-            <table className="version-table">
-              <tr><th>Version</th><th>Release Date</th></tr>
-              <tr><td>1.0.0</td><td>{new Date('2024-09-09').toISOString().substring(0,10)}</td></tr>
-            </table>
+            <div className="version-table container-fluid">
+              <div className="row release-notes-header">
+                <div className="col-2"><b>Version</b></div>
+                <div className="col-2"><b>Release Date</b></div>
+                <div className="col-8"><b>Release Notes</b></div>
+              </div>
+              <ReleaseNote version="1.1.0" releaseDate="2024-09-23"
+              releaseNotes={
+                <>
+                  <p>Added tooltip info for attack and damage calculations, AC display on Tracker page, and About page.</p>                  
+                  <p>Made UI improvements to Add Items page, Details page, and spell organization on Tracker page.</p>
+                  <p>Minor bug fixes.</p>
+                </>
+              }
+              />
+              
+              <ReleaseNote version="1.0.0" releaseDate="2024-09-09"/>
+            </div>
         </Card>
 
         <Card>

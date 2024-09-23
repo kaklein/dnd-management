@@ -829,21 +829,6 @@ img {
     text-decoration: underline;
 }
 
-.version-table {
-    border: 1px solid lightgray;
-    border-radius: 15px;
-}
-
-.version-table td, .version-table th{
-    padding: 5px;
-    border-top: 1px solid lightgray;
-    border-bottom: 1px solid lightgray;
-}
-
-.version-table th{
-    background-color: lightgray;
-}
-
 .padding-20 {
     padding: 20px;
     margin: auto;
@@ -866,4 +851,20 @@ img {
 
 .spell-display p {
     margin: 10px;
+}
+
+.version-table {
+    border: 1px solid lightgray;
+}
+
+.release-notes-header {
+    background-color: lightgray;
+}
+
+.release-notes-row {
+    border-top: 1px solid lightgray;
+}
+
+.release-notes-row, .release-notes-header {
+    padding: 5px;
 }
