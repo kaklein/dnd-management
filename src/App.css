@@ -756,6 +756,7 @@ img {
 
 .center-table {
     margin: auto;
+    width: 100%;
 }
 
 .display-item-row {
@@ -763,8 +764,6 @@ img {
     border-radius: 5px;
     margin: 10px;
     padding: 5px;
-    max-width: 400px;
-    min-width: 320px;
 }
 
 .popover-main-content {
@@ -814,7 +813,11 @@ img {
 .about-footer {
     padding: 3em;
     color: var(--near-white);
-    margin-top: auto;
+    margin-top: 25px;
+    display: flex;
+    min-height: 25vh;
+    flex-direction: column;
+    justify-content: space-between;
 }
 
 .about-footer a {
@@ -848,4 +851,19 @@ img {
 
 .dark-purple {
     color: var(--dark-purple);
+}
+
+.spell-display {
+    margin-top: 10px;
+    margin-bottom: 10px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.spell-display h3 {
+    background-color: lightgray;
+}
+
+.spell-display p {
+    margin: 10px;
 }

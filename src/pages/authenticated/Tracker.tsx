@@ -3,7 +3,6 @@ import Card from "@components/cards/Card";
 import Refresh from "@components/Refresh";
 import { 
     buildFeatureCurrentUsesKey, 
-    buildSpellSlotsCurrentKey, 
     formatBaseDetailsUpdates, 
     formatFeaturesUpdates, 
     formatSpellSlotsUpdates,
@@ -26,9 +25,9 @@ import { UserRole } from "@services/firestore/enum/UserRole";
 import HPModal from "@components/modals/HPModal";
 import GoldModal from "@components/modals/GoldModal";
 import Popover from "@components/modals/Popover";
-import PopoverContentSpell from "@components/popovers/SpellPopoverContent";
 import WeaponContentPopover from "@components/popovers/WeaponPopoverContent";
 import AboutFooter from "@components/AboutFooter";
+import SpellsTrackerComponent from "@components/SpellsTrackerComponent";
 
 interface Props {
     pcData: PlayerCharacter;
@@ -223,57 +222,14 @@ function Tracker({pcData, queryClient, pcList, selectedPc, userRole}: Props) {
                     </Card>
 
                     {
-                        (pcData.spellSlots && pcData.spellSlots.filter(slot => slot.data.max > 0).length > 0) &&
-                        <Card>
-                            <h3 className="section-header">Spell Slots</h3>
-                            {
-                                pcData.spellSlots.filter(slot => slot.data.max > 0).map(spellSlot => (
-                                    <Card key={spellSlot.id}>
-                                        <h3>{spellSlot.data.level}</h3>
-                                        <ItemUseToggle
-                                            itemLabel={removeWhiteSpaceAndConvertToLowerCase(spellSlot.data.level)}
-                                            formDataName={buildSpellSlotsCurrentKey(spellSlot)}
-                                            maxUses={spellSlot.data.max}
-                                            currentUses={spellSlot.data.current}
-                                            onChange={handleChange} 
-                                        />
-                                    </Card>
-                                ))
-                            }
-                        </Card>
-                    }   
-
-                    {
-                        (pcData.baseDetails.spells && pcData.baseDetails.spells.length > 0)  &&
-                        <Card>
-                            <h3 className="section-header">Available Spells</h3>
-                            <div className="center-table">
-                            {
-                                pcData.baseDetails.spells!.sort((a,b) => {
-                                    if (a.level < b.level) return -1;
-                                    if (a.level > b.level) return 1;
-                                    if (a.name < b.name) return -1;
-                                    return 1;
-                                }).map((spell, i) => (
-                                    <div className="container-fluid left-justify" key={i}>
-                                        <div className="row display-item-row">
-                                            <div className="col-6">
-                                                <b><Link className="text-link" to={'/details?spells=true#' + removeWhiteSpaceAndConvertToLowerCase(spell.name)}>{spell.name}</Link></b>
-                                            </div>
-                                            <div className="col-6">
-                                                <Popover
-                                                    popoverBody={<PopoverContentSpell pcData={pcData} spell={spell}/>}
-                                                    fitContent={true}
-                                                >
-                                                    <span>Attack Bonus <b>+{pcData.abilityScores.data[spell.spellCastingAbility].modifier + pcData.baseDetails.proficiencyBonus}</b></span>
-                                                </Popover>
-                                            </div>
-                                        </div>
-                                    </div>
-                                ))
-                            }
-                            </div>
-                        </Card>
+                        (
+                            (pcData.spellSlots && pcData.spellSlots.filter(slot => slot.data.max > 0).length > 0) ||
+                            (pcData.baseDetails.spells && pcData.baseDetails.spells.length > 0)
+                        ) &&
+                        <SpellsTrackerComponent
+                            pcData={pcData}
+                            handleChange={handleChange}
+                        />
                     }
                 
                     {
