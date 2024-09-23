@@ -2,6 +2,7 @@ import { Ability } from "@models/enum/Ability";
 import { AbilityScores } from "@models/playerCharacter/AbilityScores";
 import { Feature } from "@models/playerCharacter/Feature";
 import { PlayerCharacter } from "@models/playerCharacter/PlayerCharacter";
+import { Spell } from "@models/playerCharacter/Spell";
 import { SpellSlot } from "@models/playerCharacter/usableResources/SpellSlot";
 import { Weapon } from "@models/playerCharacter/Weapon";
 import { determineAttackBonus, formatBonus } from "@pages/utils";
@@ -318,4 +319,9 @@ export const buildProficiencyForms = (formData: any, abilityName: string, skills
         </div>
         
     )
+}
+
+export const getSpellSaveDC = (pcData: PlayerCharacter, spell: Spell): number => {
+    const mod = pcData.abilityScores.data[spell.spellCastingAbility].modifier;
+    return 8 + mod + pcData.baseDetails.proficiencyBonus;
 }

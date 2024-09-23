@@ -79,7 +79,7 @@ function Details({pcData, pcList, selectedPc, queryClient, userRole}: Props) {
                 return 1;
             }).map((spell, i) => (
                 <Card key={i}>
-                    <a id={removeWhiteSpaceAndConvertToLowerCase(spell.name)}></a>
+                    <a id={spell.id}></a>
                     <TitleButtonRow
                         text={spell.name}
                         buttons={
