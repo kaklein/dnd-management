@@ -216,3 +216,20 @@ export const getSpendGoldButtonText = (inputAmountToSpend: string) => {
   }
   return `Spend ${amount.toLocaleString()} Gold`;
 }
+
+export const formatWeaponDisplayTitle = (type: string, name?: string):
+string => {  
+  const displayTitle = name ? `${name} (${type})` : type;
+  return displayTitle;
+}
+
+export const pcHasDetailsPageItems = (pcData: PlayerCharacter): boolean => {
+  const hasItems =
+    (Object.keys(pcData.baseDetails).includes('spells') && ((pcData.baseDetails.spells?.length ?? -1) > 0)) ||
+    (Object.keys(pcData.baseDetails).includes('weapons') && ((pcData.baseDetails.weapons?.length ?? -1) > 0)) ||
+    (Object.keys(pcData.baseDetails).includes('equipment') && ((pcData.baseDetails.equipment?.length ?? -1) > 0)) ||
+    (Object.keys(pcData.baseDetails).includes('languages') && ((pcData.baseDetails.languages?.length ?? -1) > 0)) ||
+    (Object.keys(pcData.baseDetails).includes('proficiencies') && ((pcData.baseDetails.proficiencies?.length ?? -1) > 0)) ||
+    (Object.keys(pcData.baseDetails).includes('notes') && ((pcData.baseDetails.notes?.length ?? -1) > 0));
+  return hasItems;
+}

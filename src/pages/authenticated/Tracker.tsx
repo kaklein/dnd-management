@@ -3,11 +3,9 @@ import Card from "@components/cards/Card";
 import Refresh from "@components/Refresh";
 import { 
     buildFeatureCurrentUsesKey, 
-    buildSpellSlotsCurrentKey, 
     formatBaseDetailsUpdates, 
     formatFeaturesUpdates, 
     formatSpellSlotsUpdates,
-    formatDataAsTable,
     getFeatureFormData, 
     getSpellSlotFormData, 
     removeWhiteSpaceAndConvertToLowerCase 
@@ -19,13 +17,17 @@ import ItemUseToggle from "@components/ItemUseToggle";
 import { BaseDetails, PlayerCharacter } from "@models/playerCharacter/PlayerCharacter";
 import { QueryClient } from "@tanstack/react-query";
 import { CollectionName } from "@services/firestore/enum/CollectionName";
-import { determineAttackBonus, formatBonus, getHPRange, triggerSuccessAlert } from "../utils";
+import { determineAttackBonus, formatBonus, formatWeaponDisplayTitle, getHPRange, triggerSuccessAlert } from "../utils";
 import PageHeaderBarPC from "@components/headerBars/PageHeaderBarPC";
 import QuickNav from "@components/QuickNav";
 import SuccessAlert from "@components/alerts/SuccessAlert";
 import { UserRole } from "@services/firestore/enum/UserRole";
 import HPModal from "@components/modals/HPModal";
 import GoldModal from "@components/modals/GoldModal";
+import Popover from "@components/modals/Popover";
+import WeaponContentPopover from "@components/popovers/WeaponPopoverContent";
+import AboutFooter from "@components/AboutFooter";
+import SpellsTrackerComponent from "@components/SpellsTrackerComponent";
 
 interface Props {
     pcData: PlayerCharacter;
@@ -129,8 +131,7 @@ function Tracker({pcData, queryClient, pcList, selectedPc, userRole}: Props) {
                     </button>
                     {showSuccessAlert && <SuccessAlert/>}
                     <Card>
-                        <h3>Hit Points</h3>
-                        <Card>
+                        <h3 className="section-header">Hit Points</h3>
                         <div className="hp container-fluid">
                             <div className="row">
                                 <div className="col-6 hp-col">
@@ -178,116 +179,129 @@ function Tracker({pcData, queryClient, pcList, selectedPc, userRole}: Props) {
                                 </div>
                             </div>
                         </div>
-                        </Card>            
-                        <br/>
-                        <label htmlFor="hitPointsTemporary">Temporary Hit Points</label>
-                        <br/>
-                        <input
-                            className="number-input"
-                            type="number"
-                            id="hitPointsTemporary"
-                            name="hitPointsTemporary"
-                            min="0"
-                            max="99" 
-                            value={formData.hitPointsTemporary}
-                            onChange={handleChange}
-                        />
-                    </Card>
-
+                    </Card>            
                     <Card>
-                        <label htmlFor="inspiration">Inspiration</label>
-                        <input
-                            className="number-input"
-                            type="number"
-                            min="0"
-                            max="10"
-                            id="inspiration"
-                            name="inspiration"
-                            value={formData.inspiration}
-                            onChange={handleChange}
-                        />
+                    <div className="container-fluid">
+                    <div className="row">
+                        <div className="col-4">
+                            <label htmlFor="hitPointsTemporary">Temp HP</label>
+                            <br/>
+                            <input
+                                className="number-input"
+                                type="number"
+                                id="hitPointsTemporary"
+                                name="hitPointsTemporary"
+                                min="0"
+                                max="999" 
+                                value={formData.hitPointsTemporary}
+                                onChange={handleChange}
+                            />
+                        </div>
+                        <div className="col-4">
+                            <Card customClass="bg-light">
+                                <h4>AC</h4>
+                                <h4>{pcData.baseDetails.armorClass}</h4>
+                            </Card>
+                        </div>
+                        <div className="col-4">
+                            <label htmlFor="inspiration">Inspiration</label>
+                            <br/>
+                            <input
+                                className="number-input"
+                                type="number"
+                                min="0"
+                                max="999"
+                                id="inspiration"
+                                name="inspiration"
+                                value={formData.inspiration}
+                                onChange={handleChange}
+                            />
+                        </div>
+                    </div>
+                    </div>
                     </Card>
 
                     {
-                        (pcData.spellSlots && pcData.spellSlots.filter(slot => slot.data.max > 0).length > 0) &&
+                        (
+                            (pcData.spellSlots && pcData.spellSlots.filter(slot => slot.data.max > 0).length > 0) ||
+                            (pcData.baseDetails.spells && pcData.baseDetails.spells.length > 0)
+                        ) &&
+                        <SpellsTrackerComponent
+                            pcData={pcData}
+                            handleChange={handleChange}
+                        />
+                    }
+                
+                    {
+                        (pcData.baseDetails.weapons && pcData.baseDetails.weapons.length > 0) &&
                         <Card>
-                            <h3>Spell Slots</h3>
+                            <h3 className="section-header">Weapons</h3>
                             {
-                                pcData.spellSlots.filter(slot => slot.data.max > 0).map(spellSlot => (
-                                    <Card key={spellSlot.id}>
-                                        <h3>{spellSlot.data.level}</h3>
-                                        <ItemUseToggle
-                                            itemLabel={removeWhiteSpaceAndConvertToLowerCase(spellSlot.data.level)}
-                                            formDataName={buildSpellSlotsCurrentKey(spellSlot)}
-                                            maxUses={spellSlot.data.max}
-                                            currentUses={spellSlot.data.current}
-                                            onChange={handleChange} 
-                                        />
+                                pcData.baseDetails.weapons.map((weapon, i) => (
+                                    <Card key={i}>
+                                        <div className="center-table">
+                                        <div className="container-fluid left-justify" key={i}>
+                                            <div className="row">
+                                                <Link className="text-link center" to={'/details?weapons=true#' + weapon.id}><h4>{formatWeaponDisplayTitle(weapon.type, weapon.name)}</h4></Link>
+                                            </div>
+                                            <div className="row display-item-row">
+                                                <div className="col-5">
+                                                    Attack Bonus: 
+                                                </div>
+                                                <div className="col-7">
+                                                    <Popover
+                                                        popoverBody={<WeaponContentPopover weapon={weapon} pcData={pcData} attribute="attack bonus"/>}
+                                                        fitContent={true}
+                                                    >
+                                                        <span><b>{formatBonus(determineAttackBonus(weapon, pcData) + pcData.baseDetails.proficiencyBonus)}</b></span>
+                                                    </Popover>
+                                                </div>
+                                            </div>
+                                            <div className="row display-item-row">
+                                                <div className="col-5">
+                                                    Damage:
+                                                </div>
+                                                <div className="col-7">
+                                                    <Popover
+                                                        popoverBody={<WeaponContentPopover weapon={weapon} pcData={pcData} attribute="damage"/>}
+                                                        fitContent={true}
+                                                    >
+                                                        <span><b>{weapon.damage} {formatBonus(determineAttackBonus(weapon, pcData), false)}</b> {weapon.damageType.toLowerCase()}</span>
+                                                    </Popover>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        </div>
                                     </Card>
                                 ))
                             }
                         </Card>
-                    }   
+                    }
 
                     {
-                        (pcData.baseDetails.spells && pcData.baseDetails.spells.length > 0)  &&
+                        (limitedUseFeatures && limitedUseFeatures.length > 0) &&
                         <Card>
-                            <h3>Available Spells</h3>
+                            <h3 className="section-header">Abilities</h3>
                             {
-                                pcData.baseDetails.spells!.sort((a,b) => {
-                                    if (a.level < b.level) return -1;
-                                    if (a.level > b.level) return 1;
-                                    if (a.name < b.name) return -1;
-                                    return 1;
-                                }).map((spell, i) => (
-                                    <p className="center" key={i}>
-                                        {spell.level}: 
-                                        <Link className="text-link" to={'/details#' + removeWhiteSpaceAndConvertToLowerCase(spell.name)}>{spell.name}</Link>
-                                         | Attack Bonus +{pcData.abilityScores.data[spell.spellCastingAbility].modifier + pcData.baseDetails.proficiencyBonus}
-                                    </p>
+                                limitedUseFeatures.map(feature => (
+                                    <Card key={feature.id}>
+                                        <Link className="text-link" to={'/details?features=true#' + removeWhiteSpaceAndConvertToLowerCase(feature.data.name)}><h4>{feature.data.name}</h4></Link>
+                                        <ItemUseToggle
+                                            itemLabel={removeWhiteSpaceAndConvertToLowerCase(feature.data.name)}
+                                            formDataName={buildFeatureCurrentUsesKey(feature)}
+                                            maxUses={feature.data.maxUses!}
+                                            currentUses={formData[buildFeatureCurrentUsesKey(feature)]}
+                                            onChange={handleChange}
+                                        />
+                                        <Refresh refreshRestType={feature.data.refresh!}/>
+                                    </Card>
                                 ))
                             }
                         </Card>
                     }
-                
+                    
                     <Card>
-                        <h3>Weapons</h3>
-                        {
-                            pcData.baseDetails.weapons.map((weapon, i) => (
-                                <Card key={i}>
-                                    <Link className="text-link" to={'/details#' + removeWhiteSpaceAndConvertToLowerCase(weapon.name)}><h4>{weapon.name} ({weapon.type})</h4></Link>
-                                    {
-                                        formatDataAsTable({
-                                            ['Attack Bonus']: `${formatBonus(determineAttackBonus(weapon, pcData) + pcData.baseDetails.proficiencyBonus)}`,
-                                            Damage: `${weapon.damage} ${formatBonus(determineAttackBonus(weapon, pcData), false)} ${weapon.damageType.toLowerCase()}`
-                                        })
-                                    }
-                                </Card>
-                            ))
-                        }
-                    </Card>
-
-                    <Card>
-                        <h3>Abilities</h3>
-                        {
-                            limitedUseFeatures.map(feature => (
-                                <Card key={feature.id}>
-                                    <Link className="text-link" to={'/details#' + removeWhiteSpaceAndConvertToLowerCase(feature.data.name)}><h4>{feature.data.name}</h4></Link>
-                                    <ItemUseToggle
-                                        itemLabel={removeWhiteSpaceAndConvertToLowerCase(feature.data.name)}
-                                        formDataName={buildFeatureCurrentUsesKey(feature)}
-                                        maxUses={feature.data.maxUses!}
-                                        currentUses={formData[buildFeatureCurrentUsesKey(feature)]}
-                                        onChange={handleChange}
-                                    />
-                                    <Refresh refreshRestType={feature.data.refresh!}/>
-                                </Card>
-                            ))
-                        }
-                    </Card>
-
-                    <Card>
-                        <h3>Hit Dice</h3>
+                        <h3 className="section-header">Hit Dice</h3>
                         <p className="center">{pcData.baseDetails.usableResources.hitDice.type}</p>
                         <ItemUseToggle 
                             itemLabel="Hit Dice"
@@ -299,8 +313,8 @@ function Tracker({pcData, queryClient, pcList, selectedPc, userRole}: Props) {
                     </Card>
 
                     <Card>
-                        <h3>Death Saves</h3>
-                        <h4>Successes</h4>
+                        <h3 className="section-header">Death Saves</h3>
+                        <h4 className="text-green">Successes</h4>
                         <ItemUseToggle
                             itemLabel="Death Save Successes"
                             formDataName="deathSavesSuccesses"
@@ -308,7 +322,7 @@ function Tracker({pcData, queryClient, pcList, selectedPc, userRole}: Props) {
                             currentUses={formData.deathSavesSuccesses}
                             onChange={handleChange}
                         />
-                        <h4>Failures</h4>
+                        <h4 className="text-red">Failures</h4>
                         <ItemUseToggle
                             itemLabel="Death Save Failures"
                             formDataName="deathSavesFailures"
@@ -319,7 +333,7 @@ function Tracker({pcData, queryClient, pcList, selectedPc, userRole}: Props) {
                     </Card>
 
                     <Card>
-                        <h3>Gold</h3>
+                        <h3 className="section-header">Gold</h3>
                         <Card>
                         <div className="gold container-fluid">
                             <div className="row">
@@ -357,6 +371,7 @@ function Tracker({pcData, queryClient, pcList, selectedPc, userRole}: Props) {
                 </div>               
             </form>
 
+            <AboutFooter/>
         </div>
         <QuickNav/>
         </>

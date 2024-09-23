@@ -1,7 +1,6 @@
 import FormSelect from "@components/FormSelect";
-import { defaultSpellSlotFormData } from "@data/emptyFormData";
+import { defaultSpellSlotFormData, emptyShowSectionData } from "@data/emptyFormData";
 import { SpellLevel } from "@models/playerCharacter/Spell";
-import { useState } from "react";
 import FormHeader from "./FormHeader";
 import Button, { ButtonType } from "@components/Button";
 
@@ -14,16 +13,18 @@ interface Props {
     clearedFormData: any
   ) => void;  formData: any;
   setFormData: (data: any) => void;
+  showSection: {data: any, setFunction: (newValues: any) => void};
 }
 
-function UpdateSpellSlot ({handleChange, handleSubmit, formData, setFormData}: Props) {
-  const [showForm, setShowForm] = useState(false);
+function UpdateSpellSlot ({handleChange, handleSubmit, formData, setFormData, showSection}: Props) {
+  const showForm = showSection.data.spellSlots;
   
   return (
     <div>
       <FormHeader
+        anchorTag="spellSlots"
         formTitle="Spell Slot"
-        onClick={() => setShowForm(!showForm)}
+        onClick={() => showSection.setFunction({...emptyShowSectionData, spellSlots: !showForm})}
         showForm={showForm}
       />
     
@@ -67,6 +68,7 @@ function UpdateSpellSlot ({handleChange, handleSubmit, formData, setFormData}: P
 
         <Button
           text="Save"
+          customClass="float-right"
           buttonType={ButtonType.INFO}
           type="submit"
           onClick={() => {}}

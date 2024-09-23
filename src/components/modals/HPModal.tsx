@@ -74,7 +74,7 @@ function HPModal ({ handleChange, handleSubmit, setFormData, action, pcHitPoints
                 type="submit"
                 className="btn btn-danger"
                 data-bs-dismiss="modal"
-                disabled={Number(modalFormData.hpAmount) <= 0}
+                disabled={Number(modalFormData.hpAmount) <= 0 || Number(modalFormData.hpAmount) > 999}
               >
                 {`Take${" " + (Number(modalFormData.hpAmount) > 0 ? modalFormData.hpAmount : '')} Damage`}
               </button>
@@ -85,7 +85,7 @@ function HPModal ({ handleChange, handleSubmit, setFormData, action, pcHitPoints
                 type="submit"
                 className="btn btn-success"
                 data-bs-dismiss="modal"
-                disabled={Number(modalFormData.hpAmount) <= 0}
+                disabled={Number(modalFormData.hpAmount) <= 0 || Number(modalFormData.hpAmount) > 999}
               >
                 {`Gain${" " + (Number(modalFormData.hpAmount) > 0 ? modalFormData.hpAmount : '')} HP`}
               </button>

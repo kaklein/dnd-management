@@ -22,18 +22,6 @@ function WeaponForm ({handleChange, handleSubmit, formData, setFormData, modalDi
   return (
     <form onSubmit={(event) => {handleSubmit(event, formData, setFormData, defaultWeaponFormData)}}>
       <div className="update-form-field">
-        <label className="update-form-label" htmlFor="name">Name</label>
-        <input
-          className="update-form-input"
-          type="text"
-          id="name"
-          name="name"
-          onChange={(event) => {handleChange(event, setFormData)}}
-          value={formData.name}
-          required
-        />
-      </div>
-      <div className="update-form-field">
         <label className="update-form-label" htmlFor="type">Type</label>
         <p className="update-form-description">"dagger", "quarterstaff", "shortbow", etc. See all possible weapon types listed <Link to="http://dnd5e.wikidot.com/weapons" target="_blank">here</Link>.</p>
         <input
@@ -44,6 +32,17 @@ function WeaponForm ({handleChange, handleSubmit, formData, setFormData, modalDi
           onChange={(event) => {handleChange(event, setFormData)}}
           value={formData.type}
           required
+        />
+      </div>
+      <div className="update-form-field">
+        <label className="update-form-label" htmlFor="name">Name (Optional)</label>
+        <input
+          className="update-form-input"
+          type="text"
+          id="name"
+          name="name"
+          onChange={(event) => {handleChange(event, setFormData)}}
+          value={formData.name}
         />
       </div>
       <div className="update-form-field">
@@ -142,6 +141,7 @@ function WeaponForm ({handleChange, handleSubmit, formData, setFormData, modalDi
       
       <Button
           text="Save"
+          customClass="float-right"
           buttonType={ButtonType.INFO}
           type="submit"
           onClick={() => {}}

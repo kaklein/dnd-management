@@ -71,16 +71,6 @@ img {
 
 .btn {
     margin: 20px;
-    float: right;
-}
-
-.inline {
-    display: inline
-}
-
-.center {
-    margin: auto;
-    text-align: center;
 }
 
 .alert-div {
@@ -224,10 +214,6 @@ img {
 .text-link {
     text-decoration: none;
     color: var(--dark-purple);
-    width: fit-content;
-    margin: auto;
-    padding-left: 5px;
-    padding-right: 5px;
 }
 
 /* Login Form */
@@ -399,6 +385,10 @@ img {
     text-align: center;
 }
 
+.nav-item {
+    white-space: nowrap;
+}
+
 .navbar-text {
     display: flex;
     height: fit-content;
@@ -518,7 +508,12 @@ img {
 }
 
 .main-body {
-    margin-bottom: 180px;
+    min-height: 100%;
+    margin-bottom: 100px;
+}
+
+.main-body-short {
+    min-height: 700px;
 }
 
 .quick-nav-bar {
@@ -745,4 +740,131 @@ img {
     display: block;
     font-size: xx-large;
     text-align: center;
+}
+
+.popover {
+    padding: 10px;
+}
+
+.left-justify {
+    text-align: left;
+}
+
+.right-justify {
+    text-align: right;
+}
+
+.center-table {
+    margin: auto;
+    width: 100%;
+}
+
+.display-item-row {
+    background-color: var(--near-white);
+    border-radius: 5px;
+    margin: 10px;
+    padding: 5px;
+}
+
+.popover-main-content {
+    padding-left: 5px;
+    padding-right: 5px;
+    color: var(--dark-purple);
+}
+
+.text-red {
+    color: red;
+}
+
+.text-green {
+    color: green;
+}
+
+.inline {
+    display: inline
+}
+
+.center {
+    margin: auto;
+    text-align: center;
+}
+
+.float-right {
+    float: right;
+}
+
+.fit-content {
+    width: fit-content;
+}
+
+.margin-auto {
+    margin: auto;
+}
+
+.max-width-800 {
+    width: 90%;
+    max-width: 900px;
+}
+
+.gray-bg {
+    background-color: darkgray;
+}
+
+.about-footer {
+    padding: 3em;
+    color: var(--near-white);
+    margin-top: 25px;
+    display: flex;
+    min-height: 25vh;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.about-footer a {
+    text-decoration: none;
+    color: var(--near-white);
+}
+
+.about-footer a:hover {
+    text-decoration: underline;
+}
+
+.padding-20 {
+    padding: 20px;
+    margin: auto;
+}
+
+.dark-purple {
+    color: var(--dark-purple);
+}
+
+.spell-display {
+    margin-top: 10px;
+    margin-bottom: 10px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.spell-display h3 {
+    background-color: lightgray;
+}
+
+.spell-display p {
+    margin: 10px;
+}
+
+.version-table {
+    border: 1px solid lightgray;
+}
+
+.release-notes-header {
+    background-color: lightgray;
+}
+
+.release-notes-row {
+    border-top: 1px solid lightgray;
+}
+
+.release-notes-row, .release-notes-header {
+    padding: 5px;
 }

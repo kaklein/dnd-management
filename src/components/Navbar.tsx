@@ -35,13 +35,13 @@ function Navbar ({isSelectedPc, userRole=undefined}: Props) {
     return (
         <>
         <a id="top"></a>
-        <nav className="navbar navbar-expand-sm bg-dark border-bottom border-body" data-bs-theme="dark">
+        <nav className="navbar navbar-expand-xl bg-dark border-bottom border-body" data-bs-theme="dark">
             <div className="container-fluid">
                 <button className="navbar-toggler" type="button" onClick={handleNavbarCollapse}>
                     <span className="navbar-toggler-icon"></span>
                 </button>
                 <div className={`${isNavCollapsed ? "collapse": ""} navbar-collapse`}>
-                    <img src="/images/logo-1.png" width="100px"/>
+                    <a href="/home"><img src="/images/logo-1.png" width="100px"/></a>
                     <ul className="navbar-nav mr-auto">
                         {
                             isSelectedPc &&

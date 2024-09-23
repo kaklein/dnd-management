@@ -234,6 +234,7 @@ function FeatureForm ({handleChange, handleSubmit, formData, setFormData, modalD
 
       <Button
         text="Save"
+        customClass="float-right"
         buttonType={ButtonType.INFO}
         type="submit"
         onClick={() => {}}
