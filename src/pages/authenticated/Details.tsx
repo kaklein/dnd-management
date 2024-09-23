@@ -146,7 +146,7 @@ function Details({pcData, pcList, selectedPc, queryClient, userRole}: Props) {
 
     return (
         <>
-        <div className="main-body-short">
+        <div className="main-body main-body-short">
             <Navbar isSelectedPc={!!selectedPc.pcId} userRole={userRole}/>
 
             <PageHeaderBarPC 
@@ -598,8 +598,8 @@ function Details({pcData, pcList, selectedPc, queryClient, userRole}: Props) {
                     />
                 </Card>
             }
+            <AboutFooter/>
         </div>
-        <AboutFooter/>
         <QuickNav/>
         </>
     )
