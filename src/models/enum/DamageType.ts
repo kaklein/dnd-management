@@ -11,5 +11,6 @@ export enum DamageType {
     'NECROTIC' = 'necrotic',
     'RADIANT' = 'radiant',
     'FORCE' = 'force',
-    'PSYCHIC' = 'psychic'
+    'PSYCHIC' = 'psychic',
+    'HEALING' = 'healing'
 }
