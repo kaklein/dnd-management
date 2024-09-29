@@ -7,6 +7,7 @@ import { Link } from "react-router-dom";
 import Popover from "./modals/Popover";
 import PopoverContentSpell from "./popovers/SpellPopoverContent";
 import { PlayerCharacter } from "@models/playerCharacter/PlayerCharacter";
+import { DamageType } from "@models/enum/DamageType";
 
 interface Props {
   pcData: PlayerCharacter;
@@ -98,14 +99,16 @@ function SpellsTrackerComponent ({pcData, handleChange}: Props) {
                                 {
                                   s.damage &&
                                   <>
-                                    <Popover
+                                    {
+                                      s.damageType != DamageType.HEALING &&
+                                      <Popover
                                         popoverBody={<PopoverContentSpell pcData={pcData} spell={s} displayType="attack bonus"/>}
                                         fitContent={true}
-                                    >
+                                      >
                                         <span>ATK: <b>+{pcData.abilityScores.data[s.spellCastingAbility].modifier + pcData.baseDetails.proficiencyBonus}</b></span>
-                                    </Popover>
-                                    
-                                    <div className="popover-main-content"><span>DMG: {s.damage} {s.damageType}</span></div>
+                                      </Popover>
+                                    }                                                                       
+                                    <div className="popover-main-content"><span>{s.damageType == DamageType.HEALING ? 'EFFECT:' : 'DMG:'} {s.damage} {s.damageType}</span></div>
                                   </>
                                 }   
                                 {
