@@ -96,7 +96,7 @@ function SpellForm ({handleChange, handleSubmit, formData, setFormData, modalDis
 
         <div>
           <div className="update-form-conditional">
-            <p>Does this spell deal damage?</p>
+            <p>Does this spell deal damage or provide healing?</p>
             <label htmlFor="damageCheckBox">Yes</label>
             <input
               id="damageCheckbox"
@@ -109,7 +109,7 @@ function SpellForm ({handleChange, handleSubmit, formData, setFormData, modalDis
           { showDamageFields &&
           <>
             <div className="update-form-field">
-            <label className="update-form-label" htmlFor="damage">Damage</label>
+            <label className="update-form-label" htmlFor="damage">Damage/Healing Amount</label>
             <input
               className="update-form-input"
               type="text"
@@ -123,6 +123,7 @@ function SpellForm ({handleChange, handleSubmit, formData, setFormData, modalDis
             </div>
             <div className="update-form-field">
               <label className="update-form-label" htmlFor="damageType">Damage Type</label>
+              <p className="update-form-description">Select damage type, or 'HEALING' for healing spells</p>
               <FormSelect
                 className="update-form-input"
                 value={formData.damageType}

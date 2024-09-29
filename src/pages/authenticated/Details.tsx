@@ -22,6 +22,7 @@ import { UserRole } from "@services/firestore/enum/UserRole";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import FormHeader from "@components/updateForms/FormHeader";
 import AboutFooter from "@components/AboutFooter";
+import { DamageType } from "@models/enum/DamageType";
 
 interface Props {
     pcData: PlayerCharacter;
@@ -124,7 +125,7 @@ function Details({pcData, pcList, selectedPc, queryClient, userRole}: Props) {
                         <p><b>Type: </b>{spell.level}</p>
         
                         {spell.damage &&
-                            <p><b>Damage: </b>{spell.damage} {spell.damageType}</p>
+                            <p><b>{spell.damageType == DamageType.HEALING ? 'Effect:' : 'Damage:'} </b>{spell.damage} {spell.damageType}</p>
                         }
         
                         {spell.saveDC &&
