@@ -11,7 +11,8 @@ import { DamageType } from "@models/enum/DamageType";
 
 interface Props {
   pcData: PlayerCharacter;
-  handleChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  formData: any;
+  handleSubmit: (event: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
 interface SpellDisplay {
@@ -49,7 +50,7 @@ const mergeSpellsAndSlots = (spellSlots: SpellSlot[], spells: Spell[]): SpellDis
   return spellDisplays;
 }
 
-function SpellsTrackerComponent ({pcData, handleChange}: Props) {
+function SpellsTrackerComponent ({pcData, formData, handleSubmit}: Props) {
   const spellSlots = pcData.spellSlots ?? [];
   const spells = pcData.baseDetails.spells ?? [];
   
@@ -64,8 +65,8 @@ function SpellsTrackerComponent ({pcData, handleChange}: Props) {
           spellDisplays.sort((a,b) => {
             if (a.level < b.level) return -1;
             return 1;
-          }).map(d => (
-            <Card>
+          }).map((d, index) => (
+            <Card key={index}>
             <div className="spell-display center-table">
               <h3>{d.level === SpellLevel.CANTRIP ? 'Cantrips' : d.level}</h3>
               {
@@ -75,7 +76,8 @@ function SpellsTrackerComponent ({pcData, handleChange}: Props) {
                   formDataName={buildSpellSlotsCurrentKey(d.spellSlot)}
                   maxUses={d.spellSlot.data.max}
                   currentUses={d.spellSlot.data.current}
-                  onChange={handleChange} 
+                  formData={formData}
+                  handleSubmit={handleSubmit} 
                 />
               }
               {

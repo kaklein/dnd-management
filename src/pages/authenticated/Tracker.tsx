@@ -75,11 +75,11 @@ function Tracker({pcData, queryClient, pcList, selectedPc, userRole}: Props) {
         setFormData((prevFormData: any) => ({...prevFormData, [name]: value}));
     }
 
-    const handleSubmit = async (event: any) => {
+    const handleSubmit = async (event: any, explicitFormData?: any) => {
         event.preventDefault();
-        const baseDetailsUpdates = formatBaseDetailsUpdates(formData);
-        const featuresUpdates = formatFeaturesUpdates(formData);
-        const spellSlotsUpdate = formatSpellSlotsUpdates(formData);
+        const baseDetailsUpdates = formatBaseDetailsUpdates(explicitFormData ?? formData);
+        const featuresUpdates = formatFeaturesUpdates(explicitFormData ?? formData);
+        const spellSlotsUpdate = formatSpellSlotsUpdates(explicitFormData ?? formData);
 
         try {
             await Promise.all([
@@ -115,6 +115,7 @@ function Tracker({pcData, queryClient, pcList, selectedPc, userRole}: Props) {
                 setFormData={setFormData}
                 action={hpModalAction}
                 pcHitPoints={pcData.baseDetails.usableResources.hitPoints}
+                inspiration={pcData.baseDetails.usableResources.inspiration}
             />
             <GoldModal
                 handleChange={handleChange}
@@ -126,9 +127,6 @@ function Tracker({pcData, queryClient, pcList, selectedPc, userRole}: Props) {
 
             <form onSubmit={handleSubmit}>
                 <div>
-                    <button type="submit" className="tracker-save-button">
-                        Save
-                    </button>
                     {showSuccessAlert && <SuccessAlert/>}
                     <Card>
                         <h3 className="section-header">Hit Points</h3>
@@ -138,6 +136,26 @@ function Tracker({pcData, queryClient, pcList, selectedPc, userRole}: Props) {
                                     <div className={`hp-display hp-display-${getHPRange(pcData.baseDetails.usableResources.hitPoints.current, pcData.baseDetails.usableResources.hitPoints.max)}`}>
                                         {pcData.baseDetails.usableResources.hitPoints.current} / {pcData.baseDetails.usableResources.hitPoints.max}
                                     </div>
+                                    <div className="row">
+                                        <div className="col-6">
+                                            <h5>Temp HP</h5>
+                                            <div className="hp-display-temp">
+                                                {`${(pcData.baseDetails.usableResources.hitPoints.temporary > 0) ? '+' : ''}${pcData.baseDetails.usableResources.hitPoints.temporary}`}
+                                            </div>
+                                        </div>
+                                        <div className="col-6">
+                                            <button
+                                                type="button"
+                                                className="btn btn-info"
+                                                data-bs-toggle="modal"
+                                                data-bs-target="#hpModal"
+                                                onClick={() => { setHPModalAction('editTempHP') }}
+                                            >
+                                                Edit
+                                            </button>   
+                                        </div>
+                                    </div>
+                                    
                                 </div>
                                 <div className="col-6 hp-col">
                                     <button
@@ -178,46 +196,65 @@ function Tracker({pcData, queryClient, pcList, selectedPc, userRole}: Props) {
                                     </button>
                                 </div>
                             </div>
+                            <div className="row">        
+                        </div>                    
                         </div>
                     </Card>            
                     <Card>
                     <div className="container-fluid">
-                    <div className="row">
-                        <div className="col-4">
-                            <label htmlFor="hitPointsTemporary">Temp HP</label>
-                            <br/>
-                            <input
-                                className="number-input"
-                                type="number"
-                                id="hitPointsTemporary"
-                                name="hitPointsTemporary"
-                                min="0"
-                                max="999" 
-                                value={formData.hitPointsTemporary}
-                                onChange={handleChange}
-                            />
-                        </div>
-                        <div className="col-4">
-                            <Card customClass="bg-light">
-                                <h4>AC</h4>
-                                <h4>{pcData.baseDetails.armorClass}</h4>
-                            </Card>
-                        </div>
-                        <div className="col-4">
-                            <label htmlFor="inspiration">Inspiration</label>
-                            <br/>
-                            <input
-                                className="number-input"
-                                type="number"
-                                min="0"
-                                max="999"
-                                id="inspiration"
-                                name="inspiration"
-                                value={formData.inspiration}
-                                onChange={handleChange}
-                            />
-                        </div>
-                    </div>
+                        <div className="row">
+                            <div className="col-4">
+                                <Card customClass="bg-light">
+                                    <h5>AC</h5>
+                                    <h4>{pcData.baseDetails.armorClass}</h4>
+                                </Card>
+                            </div>
+                            <div className="col-4">
+                                <Card customClass="bg-light">
+                                    <h5>Initiative</h5>
+                                    <h4>{pcData.abilityScores.data.dexterity.modifier > 0 && '+'}{pcData.abilityScores.data.dexterity.modifier}</h4>
+                                </Card>
+                            </div>
+                            <div className="col-4">
+                                <label htmlFor="inspiration">Inspiration</label>
+                                <div className="col-6">
+                                    <p>{pcData.baseDetails.usableResources.inspiration}</p>
+                                    <button
+                                        type="button"
+                                        className="btn btn-info"
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#hpModal"
+                                        onClick={() => { 
+                                            setHPModalAction('useInspiration') 
+                                            setFormData({
+                                                ...getDefaultFormData(pcData),
+                                                inspiration: pcData.baseDetails.usableResources.inspiration - 1,
+                                            });
+                                        }}
+                                        disabled={pcData.baseDetails.usableResources.inspiration < 1}
+                                    >
+                                        Use
+                                    </button> 
+                                </div>
+                                <div className="col-6">
+                                <button
+                                    type="button"
+                                    className="btn btn-success"
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#hpModal"
+                                    onClick={() => { 
+                                        setHPModalAction('addInspiration') 
+                                        setFormData({
+                                            ...getDefaultFormData(pcData),
+                                            inspiration: pcData.baseDetails.usableResources.inspiration + 1,
+                                        });
+                                    }}                            
+                                >
+                                    Add
+                                </button> 
+                                </div>
+                            </div>
+                        </div>                        
                     </div>
                     </Card>
 
@@ -228,7 +265,8 @@ function Tracker({pcData, queryClient, pcList, selectedPc, userRole}: Props) {
                         ) &&
                         <SpellsTrackerComponent
                             pcData={pcData}
-                            handleChange={handleChange}
+                            formData={formData}
+                            handleSubmit={handleSubmit}
                         />
                     }
                 
@@ -291,7 +329,8 @@ function Tracker({pcData, queryClient, pcList, selectedPc, userRole}: Props) {
                                             formDataName={buildFeatureCurrentUsesKey(feature)}
                                             maxUses={feature.data.maxUses!}
                                             currentUses={formData[buildFeatureCurrentUsesKey(feature)]}
-                                            onChange={handleChange}
+                                            formData={formData}
+                                            handleSubmit={handleSubmit}
                                         />
                                         <Refresh refreshRestType={feature.data.refresh!}/>
                                     </Card>
@@ -308,7 +347,8 @@ function Tracker({pcData, queryClient, pcList, selectedPc, userRole}: Props) {
                             formDataName="hitDiceCurrent"
                             maxUses={pcData.baseDetails.usableResources.hitDice.max}
                             currentUses={formData.hitDiceCurrent}
-                            onChange={handleChange}
+                            formData={formData}
+                            handleSubmit={handleSubmit}
                         />
                     </Card>
 
@@ -320,7 +360,8 @@ function Tracker({pcData, queryClient, pcList, selectedPc, userRole}: Props) {
                             formDataName="deathSavesSuccesses"
                             maxUses={pcData.baseDetails.usableResources.deathSaves.max}
                             currentUses={formData.deathSavesSuccesses}
-                            onChange={handleChange}
+                            formData={formData}
+                            handleSubmit={handleSubmit}
                         />
                         <h4 className="text-red">Failures</h4>
                         <ItemUseToggle
@@ -328,7 +369,8 @@ function Tracker({pcData, queryClient, pcList, selectedPc, userRole}: Props) {
                             formDataName="deathSavesFailures"
                             maxUses={pcData.baseDetails.usableResources.deathSaves.max}
                             currentUses={formData.deathSavesFailures}
-                            onChange={handleChange}
+                            formData={formData}
+                            handleSubmit={handleSubmit}                           
                         />
                     </Card>
 
