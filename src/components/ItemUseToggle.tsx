@@ -6,12 +6,11 @@ interface ItemUseToggleProps {
     formDataName: string;
     maxUses: number;
     currentUses: number;
-    onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
+    formData: any;
+    handleSubmit: (event: React.ChangeEvent<HTMLInputElement>, explicitFormData?: any) => void;
 }
 
-
-
-function ItemUseToggle({ formDataName, itemLabel, maxUses, currentUses, onChange }: ItemUseToggleProps) {
+function ItemUseToggle({ formDataName, itemLabel, maxUses, currentUses, formData, handleSubmit }: ItemUseToggleProps) {
   const formattedLabel = removeWhiteSpaceAndConvertToLowerCase(itemLabel);
 
   const [localCurrentUses, setCurrentUses] = useState(currentUses);
@@ -33,9 +32,10 @@ function ItemUseToggle({ formDataName, itemLabel, maxUses, currentUses, onChange
         updatedCurrentUses = localCurrentUses + 1;
     }
     setCurrentUses(updatedCurrentUses);
-    event.target.name = formDataName;
-    event.target.value = String(updatedCurrentUses);
-    onChange(event);
+    handleSubmit(event, {
+        ...formData,
+        [formDataName]: String(updatedCurrentUses)
+    });
   }
 
   return (

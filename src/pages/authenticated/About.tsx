@@ -56,10 +56,17 @@ function About ({selectedPc, userRole}: Props) {
             <h5>Version History</h5>
             <div className="version-table container-fluid">
               <div className="row release-notes-header">
-                <div className="col-2"><b>Version</b></div>
-                <div className="col-2"><b>Release Date</b></div>
-                <div className="col-8"><b>Release Notes</b></div>
+                <div className="col-2 small-text"><b>Version</b></div>
+                <div className="col-2 small-text"><b>Release Date</b></div>
+                <div className="col-8 small-text"><b>Release Notes</b></div>
               </div>
+              <ReleaseNote version="1.1.1" releaseDate="2024-09-29"
+                releaseNotes={
+                  <>
+                    <p>Enhanced input options and display for spells with healing effects.</p>
+                  </>
+                }
+              />
               <ReleaseNote version="1.1.0" releaseDate="2024-09-23"
               releaseNotes={
                 <>

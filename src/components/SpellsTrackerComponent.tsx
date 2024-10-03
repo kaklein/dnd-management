@@ -7,10 +7,12 @@ import { Link } from "react-router-dom";
 import Popover from "./modals/Popover";
 import PopoverContentSpell from "./popovers/SpellPopoverContent";
 import { PlayerCharacter } from "@models/playerCharacter/PlayerCharacter";
+import { DamageType } from "@models/enum/DamageType";
 
 interface Props {
   pcData: PlayerCharacter;
-  handleChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  formData: any;
+  handleSubmit: (event: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
 interface SpellDisplay {
@@ -48,7 +50,7 @@ const mergeSpellsAndSlots = (spellSlots: SpellSlot[], spells: Spell[]): SpellDis
   return spellDisplays;
 }
 
-function SpellsTrackerComponent ({pcData, handleChange}: Props) {
+function SpellsTrackerComponent ({pcData, formData, handleSubmit}: Props) {
   const spellSlots = pcData.spellSlots ?? [];
   const spells = pcData.baseDetails.spells ?? [];
   
@@ -63,8 +65,8 @@ function SpellsTrackerComponent ({pcData, handleChange}: Props) {
           spellDisplays.sort((a,b) => {
             if (a.level < b.level) return -1;
             return 1;
-          }).map(d => (
-            <Card>
+          }).map((d, index) => (
+            <Card key={index}>
             <div className="spell-display center-table">
               <h3>{d.level === SpellLevel.CANTRIP ? 'Cantrips' : d.level}</h3>
               {
@@ -74,7 +76,8 @@ function SpellsTrackerComponent ({pcData, handleChange}: Props) {
                   formDataName={buildSpellSlotsCurrentKey(d.spellSlot)}
                   maxUses={d.spellSlot.data.max}
                   currentUses={d.spellSlot.data.current}
-                  onChange={handleChange} 
+                  formData={formData}
+                  handleSubmit={handleSubmit} 
                 />
               }
               {
@@ -98,14 +101,16 @@ function SpellsTrackerComponent ({pcData, handleChange}: Props) {
                                 {
                                   s.damage &&
                                   <>
-                                    <Popover
+                                    {
+                                      s.damageType != DamageType.HEALING &&
+                                      <Popover
                                         popoverBody={<PopoverContentSpell pcData={pcData} spell={s} displayType="attack bonus"/>}
                                         fitContent={true}
-                                    >
+                                      >
                                         <span>ATK: <b>+{pcData.abilityScores.data[s.spellCastingAbility].modifier + pcData.baseDetails.proficiencyBonus}</b></span>
-                                    </Popover>
-                                    
-                                    <div className="popover-main-content"><span>DMG: {s.damage} {s.damageType}</span></div>
+                                      </Popover>
+                                    }                                                                       
+                                    <div className="popover-main-content"><span>{s.damageType == DamageType.HEALING ? 'EFFECT:' : 'DMG:'} {s.damage} {s.damageType}</span></div>
                                   </>
                                 }   
                                 {
