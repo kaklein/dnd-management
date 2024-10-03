@@ -43,6 +43,7 @@ function Overview({pcData, pcList, selectedPc, userRole, queryClient}: Props) {
         ['Max Hit Points']: pcData.baseDetails.usableResources.hitPoints.max,
         ['Armor Class']: pcData.baseDetails.armorClass,
         speed: pcData.baseDetails.speed,
+        ['Hit Dice Type']: pcData.baseDetails.usableResources.hitDice.type
     };
     const [editable, setEditable] = useState(false);
     const [showPCDelete, setShowPCDelete] = useState('');
@@ -129,7 +130,8 @@ function Overview({pcData, pcList, selectedPc, userRole, queryClient}: Props) {
                                         maxHP: String(pcData.baseDetails.usableResources.hitPoints.max),
                                         armorClass: String(pcData.baseDetails.armorClass),
                                         speed: String(pcData.baseDetails.speed),
-                                        xp: String(pcData.baseDetails.xp) ?? ''
+                                        xp: String(pcData.baseDetails.xp) ?? '',
+                                        hitDiceType: pcData.baseDetails.usableResources.hitDice.type,
                                     });
                                 }}
                             />

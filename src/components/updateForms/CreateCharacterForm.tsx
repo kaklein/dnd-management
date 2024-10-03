@@ -1,6 +1,9 @@
 import Button, { ButtonType } from "@components/Button";
 import Card from "@components/cards/Card";
+import FormSelect from "@components/FormSelect";
 import { buildProficiencyForms } from "@components/utils";
+import { Alignment } from "@models/enum/Alignment";
+import { HitDiceType } from "@models/enum/HitDiceType";
 import { useState } from "react";
 
 interface Props {
@@ -101,16 +104,20 @@ function CreateCharacterForm ({handleChange, handleSubmit, formData, setFormData
             </div>
             <div className="update-form-field">
               <label className="update-form-label" htmlFor="alignment">Alignment</label>
-              <input
+              <FormSelect
                 className="update-form-input"
-                type="string"
-                id="alignment"
-                name="alignment"
-                onChange={(event) => {handleChange(event, setFormData)}}
                 value={formData.alignment}
+                handleChange={handleChange}
+                setFormData={setFormData}
+                name="alignment"
+                options={
+                  Object.values(Alignment).map((option) => ({
+                    text: option.toUpperCase(),
+                    value: option
+                  }))
+                }
                 required
-                placeholder="Chaotic neutral"
-              />
+              />              
             </div>
             <div className="update-form-field">
               <label className="update-form-label" htmlFor="background">Background</label>
@@ -199,16 +206,20 @@ function CreateCharacterForm ({handleChange, handleSubmit, formData, setFormData
             </div>
             <div className="update-form-field">
               <label className="update-form-label" htmlFor="hitDiceType">Hit Dice Type</label>
-              <input
+              <FormSelect
                 className="update-form-input"
-                type="string"
-                id="hitDiceType"
-                name="hitDiceType"
-                onChange={(event) => {handleChange(event, setFormData)}}
                 value={formData.hitDiceType}
-                placeholder="d8"
+                handleChange={handleChange}
+                setFormData={setFormData}
+                name="hitDiceType"
+                options={
+                  Object.values(HitDiceType).map((option) => ({
+                    text: option,
+                    value: option
+                  }))
+                }
                 required
-              />
+              />              
             </div>
             <div className="update-form-field">
               <label className="update-form-label" htmlFor="gold">Starting Gold</label>
