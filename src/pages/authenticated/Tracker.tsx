@@ -38,6 +38,8 @@ interface Props {
 }
 
 function Tracker({pcData, queryClient, pcList, selectedPc, userRole}: Props) {
+    const conModifier = pcData.abilityScores.data.constitution.modifier;
+   
     const [showSuccessAlert, setShowSuccessAlert] = useState(false);
     
     const getLimitedUseFeatures = (pcData: PlayerCharacter) => {
@@ -323,8 +325,15 @@ function Tracker({pcData, queryClient, pcList, selectedPc, userRole}: Props) {
                     
                     <Card>
                         <h3 className="section-header">Hit Dice</h3>
-                        <p className="center">{pcData.baseDetails.usableResources.hitDice.type}</p>
-                        <ItemUseToggle 
+                        <Popover
+                            popoverBody={
+                                <p><b>{conModifier > 0 ? '+' : undefined}{conModifier}</b> from CON modifier</p>
+                                                           
+                            }
+                        >
+                            <p className="center">{pcData.baseDetails.usableResources.hitDice.type} {conModifier > 0 ? `+${conModifier}` : conModifier < 0 ? `${conModifier} (minimum of 0)` : undefined}</p>
+                        </Popover>
+                        <ItemUseToggle
                             itemLabel="Hit Dice"
                             formDataName="hitDiceCurrent"
                             maxUses={pcData.baseDetails.usableResources.hitDice.max}
