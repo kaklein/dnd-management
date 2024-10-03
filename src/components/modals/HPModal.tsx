@@ -12,11 +12,10 @@ interface Props {
     max: number;
     temporary: number;
   };
-  inspiration: number;
   pcName?: string;
 }
 
-function HPModal ({ handleChange, handleSubmit, setFormData, action, pcHitPoints, inspiration, pcName=undefined }: Props) { 
+function HPModal ({ handleChange, handleSubmit, setFormData, action, pcHitPoints, pcName=undefined }: Props) { 
   const title = action == 'takeDamage' ? "Damage Amount:" :
     action == 'gainHP' ? "Gained HP Amount:" : 
     action == 'refillHP' ? "Refill to Max HP?" :

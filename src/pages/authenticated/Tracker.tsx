@@ -115,7 +115,6 @@ function Tracker({pcData, queryClient, pcList, selectedPc, userRole}: Props) {
                 setFormData={setFormData}
                 action={hpModalAction}
                 pcHitPoints={pcData.baseDetails.usableResources.hitPoints}
-                inspiration={pcData.baseDetails.usableResources.inspiration}
                 pcName={pcData.baseDetails.name.firstName}
             />
             <GoldModal
