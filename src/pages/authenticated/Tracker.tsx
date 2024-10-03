@@ -116,6 +116,7 @@ function Tracker({pcData, queryClient, pcList, selectedPc, userRole}: Props) {
                 action={hpModalAction}
                 pcHitPoints={pcData.baseDetails.usableResources.hitPoints}
                 inspiration={pcData.baseDetails.usableResources.inspiration}
+                pcName={pcData.baseDetails.name.firstName}
             />
             <GoldModal
                 handleChange={handleChange}
@@ -131,31 +132,11 @@ function Tracker({pcData, queryClient, pcList, selectedPc, userRole}: Props) {
                     <Card>
                         <h3 className="section-header">Hit Points</h3>
                         <div className="hp container-fluid">
-                            <div className="row">
+                            <div className="row hp-row">
                                 <div className="col-6 hp-col">
                                     <div className={`hp-display hp-display-${getHPRange(pcData.baseDetails.usableResources.hitPoints.current, pcData.baseDetails.usableResources.hitPoints.max)}`}>
                                         {pcData.baseDetails.usableResources.hitPoints.current} / {pcData.baseDetails.usableResources.hitPoints.max}
-                                    </div>
-                                    <div className="row">
-                                        <div className="col-6">
-                                            <h5>Temp HP</h5>
-                                            <div className="hp-display-temp">
-                                                {`${(pcData.baseDetails.usableResources.hitPoints.temporary > 0) ? '+' : ''}${pcData.baseDetails.usableResources.hitPoints.temporary}`}
-                                            </div>
-                                        </div>
-                                        <div className="col-6">
-                                            <button
-                                                type="button"
-                                                className="btn btn-info"
-                                                data-bs-toggle="modal"
-                                                data-bs-target="#hpModal"
-                                                onClick={() => { setHPModalAction('editTempHP') }}
-                                            >
-                                                Edit
-                                            </button>   
-                                        </div>
-                                    </div>
-                                    
+                                    </div>                                   
                                 </div>
                                 <div className="col-6 hp-col">
                                     <button
@@ -196,67 +177,69 @@ function Tracker({pcData, queryClient, pcList, selectedPc, userRole}: Props) {
                                     </button>
                                 </div>
                             </div>
-                            <div className="row">        
-                        </div>                    
-                        </div>
-                    </Card>            
-                    <Card>
-                    <div className="container-fluid">
-                        <div className="row">
-                            <div className="col-4">
-                                <Card customClass="bg-light">
-                                    <h5>AC</h5>
-                                    <h4>{pcData.baseDetails.armorClass}</h4>
-                                </Card>
-                            </div>
-                            <div className="col-4">
-                                <Card customClass="bg-light">
-                                    <h5>Initiative</h5>
-                                    <h4>{pcData.abilityScores.data.dexterity.modifier > 0 && '+'}{pcData.abilityScores.data.dexterity.modifier}</h4>
-                                </Card>
-                            </div>
-                            <div className="col-4">
-                                <label htmlFor="inspiration">Inspiration</label>
+                            <div className="row hp-row">
                                 <div className="col-6">
-                                    <p>{pcData.baseDetails.usableResources.inspiration}</p>
+                                    <Popover
+                                        popoverBody={
+                                            <div>
+                                                <p>
+                                                    If {pcData.baseDetails.name.firstName} has Temporary HP,
+                                                    any damage taken will be subtracted from Temporary HP first.
+                                                </p>
+                                                <p>
+                                                    Temporary HP:
+                                                    <ul>
+                                                        <li>Lasts until depleted or until after the next long rest, unless there is a specified duration</li>
+                                                        <li>Cannot be replenished with healing</li>
+                                                        <li>Can only be used from one source at a time</li>
+                                                    </ul>
+                                               </p>                                        
+                                            </div>
+                                        }
+                                    >
+                                        <h5 className="hp-display-temp">Temp HP: <span className={`hp-display-temp-number ${pcData.baseDetails.usableResources.hitPoints.temporary < 1 ? 'hp-display-temp-number-none' : undefined}`}>{`${(pcData.baseDetails.usableResources.hitPoints.temporary > 0) ? '+' : ''}${pcData.baseDetails.usableResources.hitPoints.temporary}`}</span></h5>
+                                    </Popover>  
+                                </div>
+                                <div className="col-6">
                                     <button
                                         type="button"
                                         className="btn btn-info"
                                         data-bs-toggle="modal"
                                         data-bs-target="#hpModal"
-                                        onClick={() => { 
-                                            setHPModalAction('useInspiration') 
-                                            setFormData({
-                                                ...getDefaultFormData(pcData),
-                                                inspiration: pcData.baseDetails.usableResources.inspiration - 1,
-                                            });
-                                        }}
-                                        disabled={pcData.baseDetails.usableResources.inspiration < 1}
+                                        onClick={() => { setHPModalAction('editTempHP') }}
                                     >
-                                        Use
-                                    </button> 
-                                </div>
-                                <div className="col-6">
-                                <button
-                                    type="button"
-                                    className="btn btn-success"
-                                    data-bs-toggle="modal"
-                                    data-bs-target="#hpModal"
-                                    onClick={() => { 
-                                        setHPModalAction('addInspiration') 
-                                        setFormData({
-                                            ...getDefaultFormData(pcData),
-                                            inspiration: pcData.baseDetails.usableResources.inspiration + 1,
-                                        });
-                                    }}                            
-                                >
-                                    Add
-                                </button> 
-                                </div>
+                                        Edit Temp HP
+                                    </button>
+                                </div>     
+                            </div>                    
+                        </div>
+                    </Card>            
+                    <Card>
+                    <div className="container-fluid">
+                        <div className="row">
+                            <div className="col-6">
+                                <Card customClass="bg-light">
+                                    <h5>AC</h5>
+                                    <h4>{pcData.baseDetails.armorClass}</h4>
+                                </Card>
                             </div>
-                        </div>                        
+                            <div className="col-6">
+                                <Card customClass="bg-light">
+                                    <h5>Initiative</h5>
+                                    <Popover
+                                        popoverBody={
+                                            <div>
+                                                <b>{pcData.abilityScores.data.dexterity.modifier > 0 && '+'}{pcData.abilityScores.data.dexterity.modifier}</b> from DEX modifier
+                                            </div>
+                                        }
+                                    >
+                                        <h4>{pcData.abilityScores.data.dexterity.modifier > 0 && '+'}{pcData.abilityScores.data.dexterity.modifier}</h4>
+                                    </Popover>                                
+                                </Card>
+                            </div>                            
+                        </div>                    
                     </div>
-                    </Card>
+                    </Card>                    
 
                     {
                         (
@@ -409,6 +392,63 @@ function Tracker({pcData, queryClient, pcList, selectedPc, userRole}: Props) {
                             </div>
                         </div>
                         </Card> 
+                    </Card>
+
+                    <Card>
+                        <h3 className="section-header">Inspiration</h3>
+                        <Card customClass="bg-light">
+                            <div className="container-fluid">
+                                <div className="row">
+                                    <div className="col-6">
+                                        <Popover
+                                            popoverBody={
+                                                <div>
+                                                    <p>Use inspiration to gain advantage on one attack roll, saving throw, or ability check.</p>
+                                                </div>
+                                            }
+                                        >
+                                            <div className={`insp-display ${pcData.baseDetails.usableResources.inspiration < 1 ? 'insp-display-none' : undefined}`}>
+                                                {pcData.baseDetails.usableResources.inspiration}
+                                            </div>
+                                        </Popover> 
+                                    </div>
+                                    <div className="col-6">
+                                        <button
+                                            type="button"
+                                            className="btn btn-success btn-insp"
+                                            data-bs-toggle="modal"
+                                            data-bs-target="#hpModal"
+                                            onClick={() => { 
+                                                setHPModalAction('addInspiration') 
+                                                setFormData({
+                                                    ...getDefaultFormData(pcData),
+                                                    inspiration: pcData.baseDetails.usableResources.inspiration + 1,
+                                                });
+                                            }}
+                                            disabled={pcData.baseDetails.usableResources.inspiration >= 5}                         
+                                        >
+                                            Gain Inspiration
+                                        </button>
+                                        <button
+                                            type="button"
+                                            className="btn btn-danger btn-insp"
+                                            data-bs-toggle="modal"
+                                            data-bs-target="#hpModal"
+                                            onClick={() => { 
+                                                setHPModalAction('useInspiration') 
+                                                setFormData({
+                                                    ...getDefaultFormData(pcData),
+                                                    inspiration: pcData.baseDetails.usableResources.inspiration - 1,
+                                                });
+                                            }}
+                                            disabled={pcData.baseDetails.usableResources.inspiration < 1}
+                                        >
+                                            Use Inspiration
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </Card>                                                              
                     </Card>
                 </div>               
             </form>

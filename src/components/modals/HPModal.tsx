@@ -13,21 +13,21 @@ interface Props {
     temporary: number;
   };
   inspiration: number;
+  pcName?: string;
 }
 
-function HPModal ({ handleChange, handleSubmit, setFormData, action, pcHitPoints, inspiration }: Props) { 
+function HPModal ({ handleChange, handleSubmit, setFormData, action, pcHitPoints, inspiration, pcName=undefined }: Props) { 
   const title = action == 'takeDamage' ? "Damage Amount:" :
     action == 'gainHP' ? "Gained HP Amount:" : 
     action == 'refillHP' ? "Refill to Max HP?" :
     action == 'editTempHP' ? "Edit Temporary HP" :
-    action == 'addInspiration' ? "Add 1 Inspiration?" :
+    action == 'addInspiration' ? "Gain 1 Inspiration?" :
     action == 'useInspiration' ? "Use 1 Inspiration?" :
     undefined;
   const className = `modal fade ${action}`;
   const emptyModalData = {
     hpAmount: "",
-    tempHPAmount: String(pcHitPoints.temporary),
-    inspirationAmount: String(inspiration)
+    tempHPAmount: "",
   }
   const [modalFormData, setModalFormData] = useState(emptyModalData);
 
@@ -97,7 +97,7 @@ function HPModal ({ handleChange, handleSubmit, setFormData, action, pcHitPoints
               />
               {
                 (action == 'takeDamage' && pcHitPoints.temporary > 0) &&
-                <p className="center gold-modal-txt">Damage will be subtracted from your {pcHitPoints.temporary} temporary HP first.</p>
+                <p className="center gold-modal-txt">Damage will be subtracted from Temporary HP ({pcHitPoints.temporary}) first.</p>
               }
             </div>
           }
@@ -119,7 +119,15 @@ function HPModal ({ handleChange, handleSubmit, setFormData, action, pcHitPoints
               }}
               />
             </div>
-          }          
+          }
+          {
+            action === 'useInspiration' &&
+            <div className="modal-body">
+              <p className="center gold-modal-text">
+                Gives advantage on one attack roll, saving throw, or ability check.
+              </p>
+            </div>
+          }   
 
           {/* Footers/Submit buttons */}
           <div className="modal-footer modal-button-wide">
@@ -177,7 +185,7 @@ function HPModal ({ handleChange, handleSubmit, setFormData, action, pcHitPoints
               action == 'useInspiration' &&
               <button
                 type="submit"
-                className="btn btn-info"
+                className="btn btn-insp-pink"
                 data-bs-dismiss="modal"
               >
                 Use it!
@@ -190,7 +198,7 @@ function HPModal ({ handleChange, handleSubmit, setFormData, action, pcHitPoints
                 className="btn btn-success"
                 data-bs-dismiss="modal"                
               >
-                Add Inspiration
+                Yes, {`${pcName ? pcName + ' is' : "I'm"}`} inspired!
               </button>
             }
           </div>

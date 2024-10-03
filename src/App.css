@@ -703,31 +703,25 @@ img {
     box-shadow: 0px 0px 14px 14px var(--near-black);
 }
 
-.gold-display {
-    font-weight: bold;
-    font-size: 1.6em;
-    margin: 10px;
-    padding-top: 15px;
-    padding-bottom: 15px;
-    padding-left: 0px;
-    padding-right: 0px;
-    border: 3px solid #e6c120;
-    border-radius: 15px;
+.hp-display-temp {
+    margin-top: 10px;
+}
+
+.hp-display-temp-number {
+    margin-left: 2px;
+    font-size: 1.1em;
+    padding: 5px;
+    border: 2px solid #e6c120;
+    border-radius: 5px;
     background-color: #ebcb42;
-    box-shadow: 0px 0px 2px 2px #e6c120;
     color: var(--near-black);
 }
 
-.gold-display-none {
-    border-color: gray;
-    background-color: lightgray;
-    box-shadow: none;
-}
-
-.gold-modal-txt {
-    width: 100%;
-    margin-bottom: 10px;
-    font-style: italic;
+.hp-row {
+    padding-top: 10px;
+    padding-bottom: 10px;
+    border-radius: 5px;
+    border: 1px solid lightgray;
 }
 
 .modal-button-wide button {
@@ -869,6 +863,57 @@ img {
     padding: 5px;
 }
 
-.small-text {
-    
+.btn-insp {
+    margin: 0px;
+    margin-top: 5px;
+    margin-bottom: 5px;
+    width: 100%;
+}
+
+.insp-display {
+    font-weight: bold;
+    font-size: 1.6em;
+    margin: 10px;
+    padding-top: 15px;
+    padding-bottom: 15px;
+    padding-left: 0px;
+    padding-right: 0px;
+    border: 3px solid pink;
+    border-radius: 15px;
+    background-color: #d68ff2;
+    box-shadow: 0px 0px 2px 2px #fcb1fc;
+    color: var(--near-black);
+}
+
+.gold-display {
+    font-weight: bold;
+    font-size: 1.6em;
+    margin: 10px;
+    padding-top: 15px;
+    padding-bottom: 15px;
+    padding-left: 0px;
+    padding-right: 0px;
+    border: 3px solid #e6c120;
+    border-radius: 15px;
+    background-color: #ebcb42;
+    box-shadow: 0px 0px 2px 2px #e6c120;
+    color: var(--near-black);
+}
+
+.gold-display-none, .insp-display-none, .hp-display-temp-number-none {
+    border-color: gray;
+    background-color: lightgray;
+    box-shadow: none;
+}
+
+.gold-modal-txt {
+    width: 100%;
+    margin-bottom: 10px;
+    font-style: italic;
+}
+
+.btn-insp-pink {
+    background-color: #d68ff2 !important;
+    box-shadow: 0px 0px 2px 2px #fcb1fc;
+    border: 3px solid pink;
 }
