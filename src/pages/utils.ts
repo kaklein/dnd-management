@@ -190,7 +190,8 @@ export const handleSubmitEdit = async (
       ...(Number(formData.maxHP) < pcData.baseDetails.usableResources.hitPoints.current && {'usableResources.hitPoints.current': Number(formData.maxHP)}),
       armorClass: Number(formData.armorClass),
       xp: formData.xp ? Number(formData.xp) : 0,
-      speed: Number(formData.speed)
+      speed: Number(formData.speed),
+      'usableResources.hitDice.type': formData.hitDiceType
     };
     await (updateDataByPcId(CollectionName.PC_BASE_DETAILS, pcData.baseDetails.pcId, update));
   } else {

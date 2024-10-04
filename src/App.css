@@ -707,21 +707,19 @@ img {
     margin-top: 10px;
 }
 
-.hp-display-temp-number {
-    margin-left: 2px;
-    font-size: 1.1em;
-    padding: 5px;
-    border: 2px solid #e6c120;
-    border-radius: 5px;
-    background-color: #ebcb42;
-    color: var(--near-black);
+.number-display {
+    width: fit-content;
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-top: 5px;
+    padding-bottom: 5px;
 }
 
-.hp-row {
-    padding-top: 10px;
-    padding-bottom: 10px;
+.hp-display-temp-number {
     border-radius: 5px;
-    border: 1px solid lightgray;
+    background-color: #ebcb42;
 }
 
 .modal-button-wide button {
@@ -900,7 +898,7 @@ img {
     color: var(--near-black);
 }
 
-.gold-display-none, .insp-display-none, .hp-display-temp-number-none {
+.gold-display-none, .insp-display-none {
     border-color: gray;
     background-color: lightgray;
     box-shadow: none;
@@ -916,4 +914,30 @@ img {
     background-color: #d68ff2 !important;
     box-shadow: 0px 0px 2px 2px #fcb1fc;
     border: 3px solid pink;
+}
+
+.no-margin {
+    margin: 0px;
+}
+
+.overview-top {
+    padding: 10px;
+    padding-left: 25px;
+    padding-right: 25px;
+    border-bottom: 1px solid var(--near-black);
+}
+
+.card-text {
+    padding: 10px;
+    padding-left: 25px;
+    padding-right: 25px;
+}
+
+.bottom-border {
+    border-bottom: 1px solid var(--near-black);
+}
+
+.bg-purple {
+    background-color: var(--dark-purple);
+    color: white;
 }
