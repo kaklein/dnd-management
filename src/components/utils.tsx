@@ -49,6 +49,7 @@ export const formatBaseDetailsUpdates = (formData: any) => {
         'usableResources.deathSaves.failuresRemaining': Number(formData.deathSavesFailures),
         'usableResources.gold': Number(formData.gold),
         'usableResources.inspiration': Number(formData.inspiration),
+        armorClass: Number(formData.armorClass)
     };
 };
 

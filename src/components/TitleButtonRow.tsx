@@ -4,10 +4,11 @@ interface Props {
   text: string;
   formatAsHeader?: boolean;
   buttons?: ReactNode;
+  customColor?: "dark-purple";
 }
-export function TitleButtonRow ({text, formatAsHeader=true, buttons}: Props) {
+export function TitleButtonRow ({text, formatAsHeader=true, buttons, customColor=undefined}: Props) {
   return (
-    <div className={`container-fluid title-button-row ${formatAsHeader ? "title-button-row-bg-dark": ""}`}>
+    <div className={`container-fluid title-button-row ${customColor ? "bg-purple" : formatAsHeader ? "title-button-row-bg-dark": ""}`}>
       <div className="row">
         <div className="col-7">
           {

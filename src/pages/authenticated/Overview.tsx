@@ -34,16 +34,12 @@ function Overview({pcData, pcList, selectedPc, userRole, queryClient}: Props) {
     const pcFullName = `${pcData.baseDetails.name.firstName} ${pcData.baseDetails.name.lastName}`
     const listCardObject = {
         class: pcData.baseDetails.class,
+        ['Hit Dice Type']: pcData.baseDetails.usableResources.hitDice.type,
         subclass: pcData.baseDetails.subclass,
         race: pcData.baseDetails.race,
+        speed: pcData.baseDetails.speed,
         background: pcData.baseDetails.background,
         alignment: pcData.baseDetails.alignment,
-        level: pcData.baseDetails.level,
-        ...(pcData.baseDetails.xp && {XP: pcData.baseDetails.xp}),
-        ['Max Hit Points']: pcData.baseDetails.usableResources.hitPoints.max,
-        ['Armor Class']: pcData.baseDetails.armorClass,
-        speed: pcData.baseDetails.speed,
-        ['Hit Dice Type']: pcData.baseDetails.usableResources.hitDice.type
     };
     const [editable, setEditable] = useState(false);
     const [showPCDelete, setShowPCDelete] = useState('');
@@ -106,6 +102,7 @@ function Overview({pcData, pcList, selectedPc, userRole, queryClient}: Props) {
                 <div className="card-body">
                     <TitleButtonRow
                         text={pcFullName}
+                        customColor="dark-purple"
                         buttons={
                             editable &&
                             <>
@@ -138,7 +135,20 @@ function Overview({pcData, pcList, selectedPc, userRole, queryClient}: Props) {
                             </>
                         }
                     />
-                    <p className="card-text center">{pcData.baseDetails.description ?? ''}</p>
+                    <div className="overview-top">
+                        <h5 className="left-justify">Level: {pcData.baseDetails.level}</h5>
+                        {
+                            (Number(pcData.baseDetails.xp) >= 0) && 
+                            <h5 className="left-justify">XP: {pcData.baseDetails.xp}</h5>
+                        }
+                        <h5 className="left-justify">Max Hit Points: {pcData.baseDetails.usableResources.hitPoints.max}</h5>
+                    </div>
+                    
+                    {
+                        pcData.baseDetails.description &&
+                        <p className="card-text bottom-border">{pcData.baseDetails.description}</p>                        
+                    }
+
                     {formatDataAsTable(listCardObject)}
               </div>
             </Card>

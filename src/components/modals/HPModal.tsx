@@ -12,21 +12,24 @@ interface Props {
     max: number;
     temporary: number;
   };
+  currentAC: number;
   pcName?: string;
 }
 
-function HPModal ({ handleChange, handleSubmit, setFormData, action, pcHitPoints, pcName=undefined }: Props) { 
+function HPModal ({ handleChange, handleSubmit, setFormData, action, pcHitPoints, currentAC, pcName=undefined }: Props) { 
   const title = action == 'takeDamage' ? "Damage Amount:" :
     action == 'gainHP' ? "Gained HP Amount:" : 
     action == 'refillHP' ? "Refill to Max HP?" :
     action == 'editTempHP' ? "Edit Temporary HP" :
     action == 'addInspiration' ? "Gain 1 Inspiration?" :
     action == 'useInspiration' ? "Use 1 Inspiration?" :
+    action == 'editAC' ? "Edit Armor Class" :
     undefined;
   const className = `modal fade ${action}`;
   const emptyModalData = {
     hpAmount: "",
     tempHPAmount: "",
+    acAmount: ""
   }
   const [modalFormData, setModalFormData] = useState(emptyModalData);
 
@@ -120,6 +123,25 @@ function HPModal ({ handleChange, handleSubmit, setFormData, action, pcHitPoints
             </div>
           }
           {
+            action === 'editAC' &&
+            <div className="modal-body">
+              <p className="center gold-modal-text">Current: {currentAC}</p>
+              <input className="large-number-input"
+              value={modalFormData.acAmount}
+              min="0"
+              max="99"
+              type="number"
+              name="acAmount"
+              id="acAmount"
+              autoFocus
+              onChange={(event) => {
+                setModalFormData({...emptyModalData, acAmount: event.target.value});
+                handleChange({target: {name: 'armorClass', value: Number(event.target.value)}}, setFormData);
+              }}
+              />
+            </div>
+          }
+          {
             action === 'useInspiration' &&
             <div className="modal-body">
               <p className="center gold-modal-text">
@@ -178,6 +200,22 @@ function HPModal ({ handleChange, handleSubmit, setFormData, action, pcHitPoints
                 }
               >
                 {`Set Temporary HP ${modalFormData.tempHPAmount ? 'to ' + Number(modalFormData.tempHPAmount) : ""}`}
+              </button>
+            }
+            {
+              action === 'editAC' &&
+              <button
+                type="submit"
+                className="btn btn-success"
+                data-bs-dismiss="modal"
+                disabled={
+                  Number(modalFormData.acAmount) < 0 || 
+                  Number(modalFormData.acAmount) > 99 || 
+                  modalFormData.acAmount == "" ||
+                  Number(modalFormData.acAmount) == currentAC
+                }
+              >
+                {`Set AC ${modalFormData.acAmount ? 'to ' + Number(modalFormData.acAmount) : ""}`}
               </button>
             }
             {

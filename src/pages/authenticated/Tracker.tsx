@@ -58,6 +58,7 @@ function Tracker({pcData, queryClient, pcList, selectedPc, userRole}: Props) {
             deathSavesFailures: pcData.baseDetails.usableResources.deathSaves.failuresRemaining,
             gold: pcData.baseDetails.usableResources.gold,
             inspiration: pcData.baseDetails.usableResources.inspiration,
+            armorClass: pcData.baseDetails.armorClass,
             ...getSpellSlotFormData(pcData.spellSlots ?? []),
             ...getFeatureFormData(getLimitedUseFeatures(pcData))
         }
@@ -118,6 +119,7 @@ function Tracker({pcData, queryClient, pcList, selectedPc, userRole}: Props) {
                 action={hpModalAction}
                 pcHitPoints={pcData.baseDetails.usableResources.hitPoints}
                 pcName={pcData.baseDetails.name.firstName}
+                currentAC={pcData.baseDetails.armorClass}
             />
             <GoldModal
                 handleChange={handleChange}
@@ -133,7 +135,7 @@ function Tracker({pcData, queryClient, pcList, selectedPc, userRole}: Props) {
                     <Card>
                         <h3 className="section-header">Hit Points</h3>
                         <div className="hp container-fluid">
-                            <div className="row hp-row">
+                            <div className="row">
                                 <div className="col-6 hp-col">
                                     <div className={`hp-display hp-display-${getHPRange(pcData.baseDetails.usableResources.hitPoints.current, pcData.baseDetails.usableResources.hitPoints.max)}`}>
                                         {pcData.baseDetails.usableResources.hitPoints.current} / {pcData.baseDetails.usableResources.hitPoints.max}
@@ -177,9 +179,14 @@ function Tracker({pcData, queryClient, pcList, selectedPc, userRole}: Props) {
                                         Refill
                                     </button>
                                 </div>
-                            </div>
-                            <div className="row hp-row">
-                                <div className="col-6">
+                            </div>                  
+                        </div>
+                    </Card>            
+                    <Card>
+                    <div className="container-fluid">
+                        <div className="row">
+                            <div className="col-6">
+                                <Card customClass="bg-light">
                                     <Popover
                                         popoverBody={
                                             <div>
@@ -198,49 +205,52 @@ function Tracker({pcData, queryClient, pcList, selectedPc, userRole}: Props) {
                                             </div>
                                         }
                                     >
-                                        <h5 className="hp-display-temp">Temp HP: <span className={`hp-display-temp-number ${pcData.baseDetails.usableResources.hitPoints.temporary < 1 ? 'hp-display-temp-number-none' : undefined}`}>{`${(pcData.baseDetails.usableResources.hitPoints.temporary > 0) ? '+' : ''}${pcData.baseDetails.usableResources.hitPoints.temporary}`}</span></h5>
-                                    </Popover>  
-                                </div>
-                                <div className="col-6">
+                                        <>
+                                        <h5>Temp HP</h5>
+                                        <h4 className={`number-display ${pcData.baseDetails.usableResources.hitPoints.temporary > 0 ? 'hp-display-temp-number' : undefined}`}>{`${(pcData.baseDetails.usableResources.hitPoints.temporary > 0) ? '+' : ''}${pcData.baseDetails.usableResources.hitPoints.temporary}`}</h4>
+                                        </>
+                                    </Popover> 
                                     <button
                                         type="button"
-                                        className="btn btn-info"
+                                        className="btn btn-secondary no-margin"
                                         data-bs-toggle="modal"
                                         data-bs-target="#hpModal"
                                         onClick={() => { setHPModalAction('editTempHP') }}
                                     >
-                                        Edit Temp HP
+                                        Edit
                                     </button>
-                                </div>     
-                            </div>                    
-                        </div>
-                    </Card>            
-                    <Card>
-                    <div className="container-fluid">
-                        <div className="row">
-                            <div className="col-6">
-                                <Card customClass="bg-light">
-                                    <h5>AC</h5>
-                                    <h4>{pcData.baseDetails.armorClass}</h4>
                                 </Card>
                             </div>
                             <div className="col-6">
                                 <Card customClass="bg-light">
-                                    <h5>Initiative</h5>
-                                    <Popover
-                                        popoverBody={
-                                            <div>
-                                                <b>{pcData.abilityScores.data.dexterity.modifier > 0 && '+'}{pcData.abilityScores.data.dexterity.modifier}</b> from DEX modifier
-                                            </div>
-                                        }
+                                    <h5>AC</h5>                                    
+                                    <h4 className="number-display">{pcData.baseDetails.armorClass}</h4>
+                                    <button
+                                        type="button"
+                                        className="btn btn-secondary no-margin"
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#hpModal"
+                                        onClick={() => { setHPModalAction('editAC') }}
                                     >
-                                        <h4>{pcData.abilityScores.data.dexterity.modifier > 0 && '+'}{pcData.abilityScores.data.dexterity.modifier}</h4>
-                                    </Popover>                                
+                                        Edit
+                                    </button>                                                                          
                                 </Card>
-                            </div>                            
+                            </div>                                                       
                         </div>                    
                     </div>
-                    </Card>                    
+                    </Card> 
+                    <Card>
+                        <h5>Initiative</h5>
+                            <Popover
+                                popoverBody={
+                                    <div>
+                                        <b>{pcData.abilityScores.data.dexterity.modifier > 0 && '+'}{pcData.abilityScores.data.dexterity.modifier}</b> from DEX modifier
+                                    </div>
+                                }
+                            >
+                                <h4>{pcData.abilityScores.data.dexterity.modifier > 0 && '+'}{pcData.abilityScores.data.dexterity.modifier}</h4>
+                            </Popover>        
+                    </Card>                   
 
                     {
                         (
