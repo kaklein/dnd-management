@@ -54,7 +54,7 @@ function RestModalBody({restType, pcData, setFormData, handleChange, limitedUseF
         <div>
           <input
             type="checkbox"
-            checked={shortRestFormData.refreshSRFeatures}
+            checked={(!shortRestDisabled.features && shortRestFormData.refreshSRFeatures)}
             name="refreshSRFeatures"
             id="refreshSRFeatures"
             onChange={() => {
@@ -82,7 +82,7 @@ function RestModalBody({restType, pcData, setFormData, handleChange, limitedUseF
         <div>
           <input
             type="checkbox"
-            checked={shortRestFormData.resetSavingThrows}
+            checked={(!shortRestDisabled.savingThrows && shortRestFormData.resetSavingThrows)}
             name="resetSavingThrows"
             id="resetSavingThrows"
             onChange={() => {
@@ -108,7 +108,7 @@ function RestModalBody({restType, pcData, setFormData, handleChange, limitedUseF
           <div>
             <input
               type="checkbox"
-              checked={shortRestFormData.resetSpellSlots}
+              checked={(!shortRestDisabled.spellSlots && shortRestFormData.resetSpellSlots)}
               name="resetSpellSlots"
               id="resetSpellSlots"
               onChange={() => {
@@ -149,7 +149,7 @@ function RestModalBody({restType, pcData, setFormData, handleChange, limitedUseF
         <div>
           <input
             type="checkbox"
-            checked={longRestFormData.refillHP}
+            checked={(!longRestDisabled.hitPoints && longRestFormData.refillHP)}
             name="refillHP"
             id="refillHP"
             onChange={() => {
@@ -172,7 +172,7 @@ function RestModalBody({restType, pcData, setFormData, handleChange, limitedUseF
         <div>
           <input
             type="checkbox"
-            checked={longRestFormData.removeTempHP}
+            checked={(!longRestDisabled.tempHP && longRestFormData.removeTempHP)}
             name="removeTempHP"
             id="removeTempHP"
             onChange={() => {
@@ -195,7 +195,7 @@ function RestModalBody({restType, pcData, setFormData, handleChange, limitedUseF
         <div>
           <input
             type="checkbox"
-            checked={longRestFormData.resetSpellSlots}
+            checked={(!longRestDisabled.spellSlots && longRestFormData.resetSpellSlots)}
             name="resetSpellSlots"
             id="resetSpellSlots"
             onChange={() => {
@@ -224,7 +224,7 @@ function RestModalBody({restType, pcData, setFormData, handleChange, limitedUseF
         <div>
           <input
             type="checkbox"
-            checked={longRestFormData.resetLRFeatures}
+            checked={(!longRestDisabled.features && longRestFormData.resetLRFeatures)}
             name="resetLRFeatures"
             id="resetLRFeatures"
             onChange={() => {
@@ -253,7 +253,7 @@ function RestModalBody({restType, pcData, setFormData, handleChange, limitedUseF
         <div>
           <input
             type="checkbox"
-            checked={longRestFormData.resetSavingThrows}
+            checked={(!longRestDisabled.savingThrows && longRestFormData.resetSavingThrows)}
             name="resetSavingThrows"
             id="resetSavingThrows"
             onChange={() => {
@@ -280,7 +280,7 @@ function RestModalBody({restType, pcData, setFormData, handleChange, limitedUseF
         <div>
           <input
             type="checkbox"
-            checked={longRestFormData.regainHalfHitDice}
+            checked={(!longRestDisabled.hitDice && longRestFormData.regainHalfHitDice)}
             name="regainHalfHitDice"
             id="regainHalfHitDice"
             onChange={() => {
@@ -306,7 +306,7 @@ function RestModalBody({restType, pcData, setFormData, handleChange, limitedUseF
         <div>
           <input
             type="checkbox"
-            checked={longRestFormData.regainAllHitDice}
+            checked={(!longRestDisabled.hitDice && longRestFormData.regainAllHitDice)}
             name="regainAllHitDice"
             id="regainAllHitDice"
             onChange={() => {
