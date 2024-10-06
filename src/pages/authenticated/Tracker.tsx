@@ -467,7 +467,7 @@ function Tracker({pcData, queryClient, pcList, selectedPc, userRole}: Props) {
                                             });
                                         }}
                                     >
-                                        <h5><img src="images/icons/short-rest.png" width="30px"/>Short Rest</h5>
+                                        <p className="center"><img src="images/icons/short-rest.png" width="30px"/>Short Rest</p>
                                     </button>                        
                                 </div>
                                 <div className="col-6">
@@ -490,7 +490,7 @@ function Tracker({pcData, queryClient, pcList, selectedPc, userRole}: Props) {
                                             });
                                         }}
                                     >
-                                        <h5><img src="images/icons/long-rest.png" width="30px"/>Long Rest</h5>
+                                        <p className="center"><img src="images/icons/long-rest.png" width="30px"/>Long Rest</p>
                                     </button>
                                 </div>
                             </div>

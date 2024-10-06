@@ -968,7 +968,11 @@ img {
     border: none !important;
 }
 
-.no-refresh-msg {
+.no-refresh-text, .no-refresh-msg {
     color: var(--dark-gray);
     font-style: italic;
+}
+
+.no-padding {
+    padding: 0px;
 }
