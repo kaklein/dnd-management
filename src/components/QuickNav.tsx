@@ -24,12 +24,7 @@ function QuickNav () {
               <p>Details</p>
             </div>
           </Link>
-        </div>
-        <div className="col-auto quick-nav-item">
-          <a className="btn-text" href="#top">
-            <img src="/images/icons/back-to-top.png" alt="back to top link"/>
-          </a>
-        </div>
+        </div>        
       </div>
     </div>
   )

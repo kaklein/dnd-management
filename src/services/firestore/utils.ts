@@ -429,3 +429,7 @@ export const transformAbilityScoresForCharacterCreation = (pcId: string, formDat
   }
   return abilityScores.data;
 }
+
+export const sleep = async (ms: number) => {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}

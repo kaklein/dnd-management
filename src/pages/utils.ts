@@ -1,3 +1,4 @@
+import { getFeatureFormData, getSpellSlotFormData } from "@components/utils";
 import { WeaponModifierProperty } from "@models/enum/WeaponModifierProperty";
 import { Feature } from "@models/playerCharacter/Feature";
 import { PlayerCharacter } from "@models/playerCharacter/PlayerCharacter";
@@ -233,4 +234,26 @@ export const pcHasDetailsPageItems = (pcData: PlayerCharacter): boolean => {
     (Object.keys(pcData.baseDetails).includes('proficiencies') && ((pcData.baseDetails.proficiencies?.length ?? -1) > 0)) ||
     (Object.keys(pcData.baseDetails).includes('notes') && ((pcData.baseDetails.notes?.length ?? -1) > 0));
   return hasItems;
+}
+
+export const getLimitedUseFeatures = (pcData: PlayerCharacter) => {
+  return pcData.features.filter(feature => feature.data.maxUses).sort((a,b) => {
+      if (a.data.name < b.data.name) return -1;
+      return 1;
+  });
+}
+
+export const getDefaultFormData = (pcData: PlayerCharacter) => {
+  return {
+      hitPointsCurrent: pcData.baseDetails.usableResources.hitPoints.current,
+      hitPointsTemporary: pcData.baseDetails.usableResources.hitPoints.temporary,
+      hitDiceCurrent: pcData.baseDetails.usableResources.hitDice.current,
+      deathSavesSuccesses: pcData.baseDetails.usableResources.deathSaves.successesRemaining,
+      deathSavesFailures: pcData.baseDetails.usableResources.deathSaves.failuresRemaining,
+      gold: pcData.baseDetails.usableResources.gold,
+      inspiration: pcData.baseDetails.usableResources.inspiration,
+      armorClass: pcData.baseDetails.armorClass,
+      ...getSpellSlotFormData(pcData.spellSlots ?? []),
+      ...getFeatureFormData(getLimitedUseFeatures(pcData))
+  }
 }

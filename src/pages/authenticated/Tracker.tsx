@@ -3,11 +3,10 @@ import Card from "@components/cards/Card";
 import Refresh from "@components/Refresh";
 import { 
     buildFeatureCurrentUsesKey, 
+    buildSpellSlotsCurrentKey, 
     formatBaseDetailsUpdates, 
     formatFeaturesUpdates, 
     formatSpellSlotsUpdates,
-    getFeatureFormData, 
-    getSpellSlotFormData, 
     removeWhiteSpaceAndConvertToLowerCase 
 } from "@components/utils";
 import { useEffect, useState} from "react";
@@ -17,7 +16,7 @@ import ItemUseToggle from "@components/ItemUseToggle";
 import { BaseDetails, PlayerCharacter } from "@models/playerCharacter/PlayerCharacter";
 import { QueryClient } from "@tanstack/react-query";
 import { CollectionName } from "@services/firestore/enum/CollectionName";
-import { determineAttackBonus, formatBonus, formatWeaponDisplayTitle, getHPRange, triggerSuccessAlert } from "../utils";
+import { determineAttackBonus, formatBonus, formatWeaponDisplayTitle, getDefaultFormData, getHPRange, getLimitedUseFeatures, triggerSuccessAlert } from "../utils";
 import PageHeaderBarPC from "@components/headerBars/PageHeaderBarPC";
 import QuickNav from "@components/QuickNav";
 import SuccessAlert from "@components/alerts/SuccessAlert";
@@ -28,6 +27,7 @@ import Popover from "@components/modals/Popover";
 import WeaponContentPopover from "@components/popovers/WeaponPopoverContent";
 import AboutFooter from "@components/AboutFooter";
 import SpellsTrackerComponent from "@components/SpellsTrackerComponent";
+import { RestType } from "@models/enum/RestType";
 
 interface Props {
     pcData: PlayerCharacter;
@@ -42,27 +42,6 @@ function Tracker({pcData, queryClient, pcList, selectedPc, userRole}: Props) {
    
     const [showSuccessAlert, setShowSuccessAlert] = useState(false);
     
-    const getLimitedUseFeatures = (pcData: PlayerCharacter) => {
-        return pcData.features.filter(feature => feature.data.maxUses).sort((a,b) => {
-            if (a.data.name < b.data.name) return -1;
-            return 1;
-        });
-    }
-
-    const getDefaultFormData = (pcData: PlayerCharacter) => {
-        return {
-            hitPointsCurrent: pcData.baseDetails.usableResources.hitPoints.current,
-            hitPointsTemporary: pcData.baseDetails.usableResources.hitPoints.temporary,
-            hitDiceCurrent: pcData.baseDetails.usableResources.hitDice.current,
-            deathSavesSuccesses: pcData.baseDetails.usableResources.deathSaves.successesRemaining,
-            deathSavesFailures: pcData.baseDetails.usableResources.deathSaves.failuresRemaining,
-            gold: pcData.baseDetails.usableResources.gold,
-            inspiration: pcData.baseDetails.usableResources.inspiration,
-            armorClass: pcData.baseDetails.armorClass,
-            ...getSpellSlotFormData(pcData.spellSlots ?? []),
-            ...getFeatureFormData(getLimitedUseFeatures(pcData))
-        }
-    }
     const [formData, setFormData] = useState(getDefaultFormData(pcData));
     const [limitedUseFeatures, setLimitedUseFeatures] = useState(getLimitedUseFeatures(pcData));
     const [hpModalAction, setHPModalAction] = useState('');
@@ -117,9 +96,8 @@ function Tracker({pcData, queryClient, pcList, selectedPc, userRole}: Props) {
                 handleSubmit={handleSubmit}
                 setFormData={setFormData}
                 action={hpModalAction}
-                pcHitPoints={pcData.baseDetails.usableResources.hitPoints}
-                pcName={pcData.baseDetails.name.firstName}
-                currentAC={pcData.baseDetails.armorClass}
+                pcData={pcData}
+                limitedUseFeatures={limitedUseFeatures}
             />
             <GoldModal
                 handleChange={handleChange}
@@ -468,7 +446,57 @@ function Tracker({pcData, queryClient, pcList, selectedPc, userRole}: Props) {
                             </div>
                         </Card>                                                              
                     </Card>
-                </div>               
+                    <Card customClass="card-no-outline">
+                        <div className="container-fluid container-rest">
+                            <div className="row">
+                                <div className="col-6">
+                                    <button
+                                        type="button"
+                                        className="btn btn-dark btn-rest"
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#hpModal"
+                                        onClick={() => { 
+                                            setHPModalAction('shortRest') 
+                                            setFormData({
+                                                ...getDefaultFormData(pcData),
+                                                ...limitedUseFeatures.filter(f => f.data.refresh == RestType.SHORT).reduce((obj, item) => Object.assign(obj, { [buildFeatureCurrentUsesKey(item)]: item.data.maxUses }), {}),
+                                                deathSavesSuccesses: 3,
+                                                deathSavesFailures: 3,
+                                                // TODO: only do default spell slots if isWarlock is true...
+                                                ...(pcData.baseDetails.class.toUpperCase() === 'WARLOCK' && {...pcData.spellSlots?.reduce((obj, item) => Object.assign(obj, { [buildSpellSlotsCurrentKey(item)]: item.data.max }), {})}),
+                                            });
+                                        }}
+                                    >
+                                        <p className="center"><img src="images/icons/short-rest.png" width="30px"/>Short Rest</p>
+                                    </button>                        
+                                </div>
+                                <div className="col-6">
+                                    <button
+                                        type="button"
+                                        className="btn btn-dark btn-rest"
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#hpModal"
+                                        onClick={() => { 
+                                            setHPModalAction('longRest') 
+                                            setFormData({
+                                                ...getDefaultFormData(pcData),
+                                                hitPointsCurrent: pcData.baseDetails.usableResources.hitPoints.max,
+                                                hitPointsTemporary: 0,
+                                                ...pcData.spellSlots?.reduce((obj, item) => Object.assign(obj, { [buildSpellSlotsCurrentKey(item)]: item.data.max }), {}),
+                                                ...limitedUseFeatures.reduce((obj, item) => Object.assign(obj, { [buildFeatureCurrentUsesKey(item)]: item.data.maxUses }), {}),
+                                                deathSavesSuccesses: 3,
+                                                deathSavesFailures: 3,
+                                                hitDiceCurrent: pcData.baseDetails.usableResources.hitDice.max
+                                            });
+                                        }}
+                                    >
+                                        <p className="center"><img src="images/icons/long-rest.png" width="30px"/>Long Rest</p>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </Card>                    
+                </div>                          
             </form>
 
             <AboutFooter/>

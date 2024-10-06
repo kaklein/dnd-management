@@ -7,6 +7,7 @@
     --success-dark: green;
     --near-black: #2f2c33;
     --near-white: #f9f5f5;
+    --dark-gray: #666666;
 }
 
 .card-img-top {
@@ -940,4 +941,38 @@ img {
 .bg-purple {
     background-color: var(--dark-purple);
     color: white;
+}
+
+.container-rest {
+    margin-top: 25px;
+}
+
+.container-rest img {
+    display: inline;
+    margin-right: 10px;
+}
+
+.btn-rest {
+    width: 100%;
+    height: 50px;
+    margin: auto;
+    border: 3px solid purple !important;
+    box-shadow: 0 0 3px 3px pink;
+}
+
+.btn-rest h5 {
+    margin-top: 3px;
+}
+
+.card-no-outline {
+    border: none !important;
+}
+
+.no-refresh-text, .no-refresh-msg {
+    color: var(--dark-gray);
+    font-style: italic;
+}
+
+.no-padding {
+    padding: 0px;
 }
