@@ -13,7 +13,7 @@ function ReleaseNote({version, releaseDate, releaseNotes}: Props) {
         {version}
       </div>
       <div className="col-2">
-        {new Date(releaseDate).toLocaleDateString()}
+        {new Date(releaseDate).toISOString().substring(0,10)}
       </div>
       <div className="col-8">
         {releaseNotes}
