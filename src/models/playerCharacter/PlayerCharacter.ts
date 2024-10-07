@@ -24,7 +24,7 @@ export interface BaseDetails {
     alignment: string;
     background: string;
     level: number;
-    xp: number | undefined;
+    xp: number | undefined | '';
     proficiencyBonus: number,
     armorClass: number;
     speed: number;

@@ -190,7 +190,7 @@ export const handleSubmitEdit = async (
       'usableResources.hitPoints.max': Number(formData.maxHP),
       ...(Number(formData.maxHP) < pcData.baseDetails.usableResources.hitPoints.current && {'usableResources.hitPoints.current': Number(formData.maxHP)}),
       armorClass: Number(formData.armorClass),
-      xp: formData.xp ? Number(formData.xp) : 0,
+      xp: formData.xp ? Number(formData.xp) : '',
       speed: Number(formData.speed),
       'usableResources.hitDice.type': formData.hitDiceType
     };
