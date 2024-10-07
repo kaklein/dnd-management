@@ -3,11 +3,10 @@ import Card from "@components/cards/Card";
 import Refresh from "@components/Refresh";
 import { 
     buildFeatureCurrentUsesKey, 
+    buildSpellSlotsCurrentKey, 
     formatBaseDetailsUpdates, 
     formatFeaturesUpdates, 
     formatSpellSlotsUpdates,
-    getFeatureFormData, 
-    getSpellSlotFormData, 
     removeWhiteSpaceAndConvertToLowerCase 
 } from "@components/utils";
 import { useEffect, useState} from "react";
@@ -17,7 +16,7 @@ import ItemUseToggle from "@components/ItemUseToggle";
 import { BaseDetails, PlayerCharacter } from "@models/playerCharacter/PlayerCharacter";
 import { QueryClient } from "@tanstack/react-query";
 import { CollectionName } from "@services/firestore/enum/CollectionName";
-import { determineAttackBonus, formatBonus, formatWeaponDisplayTitle, getHPRange, triggerSuccessAlert } from "../utils";
+import { determineAttackBonus, formatBonus, formatWeaponDisplayTitle, getDefaultFormData, getHPRange, getLimitedUseFeatures, triggerSuccessAlert } from "../utils";
 import PageHeaderBarPC from "@components/headerBars/PageHeaderBarPC";
 import QuickNav from "@components/QuickNav";
 import SuccessAlert from "@components/alerts/SuccessAlert";
@@ -28,6 +27,7 @@ import Popover from "@components/modals/Popover";
 import WeaponContentPopover from "@components/popovers/WeaponPopoverContent";
 import AboutFooter from "@components/AboutFooter";
 import SpellsTrackerComponent from "@components/SpellsTrackerComponent";
+import { RestType } from "@models/enum/RestType";
 
 interface Props {
     pcData: PlayerCharacter;
@@ -38,28 +38,10 @@ interface Props {
 }
 
 function Tracker({pcData, queryClient, pcList, selectedPc, userRole}: Props) {
+    const conModifier = pcData.abilityScores.data.constitution.modifier;
+   
     const [showSuccessAlert, setShowSuccessAlert] = useState(false);
     
-    const getLimitedUseFeatures = (pcData: PlayerCharacter) => {
-        return pcData.features.filter(feature => feature.data.maxUses).sort((a,b) => {
-            if (a.data.name < b.data.name) return -1;
-            return 1;
-        });
-    }
-
-    const getDefaultFormData = (pcData: PlayerCharacter) => {
-        return {
-            hitPointsCurrent: pcData.baseDetails.usableResources.hitPoints.current,
-            hitPointsTemporary: pcData.baseDetails.usableResources.hitPoints.temporary,
-            hitDiceCurrent: pcData.baseDetails.usableResources.hitDice.current,
-            deathSavesSuccesses: pcData.baseDetails.usableResources.deathSaves.successesRemaining,
-            deathSavesFailures: pcData.baseDetails.usableResources.deathSaves.failuresRemaining,
-            gold: pcData.baseDetails.usableResources.gold,
-            inspiration: pcData.baseDetails.usableResources.inspiration,
-            ...getSpellSlotFormData(pcData.spellSlots ?? []),
-            ...getFeatureFormData(getLimitedUseFeatures(pcData))
-        }
-    }
     const [formData, setFormData] = useState(getDefaultFormData(pcData));
     const [limitedUseFeatures, setLimitedUseFeatures] = useState(getLimitedUseFeatures(pcData));
     const [hpModalAction, setHPModalAction] = useState('');
@@ -75,11 +57,11 @@ function Tracker({pcData, queryClient, pcList, selectedPc, userRole}: Props) {
         setFormData((prevFormData: any) => ({...prevFormData, [name]: value}));
     }
 
-    const handleSubmit = async (event: any) => {
+    const handleSubmit = async (event: any, explicitFormData?: any) => {
         event.preventDefault();
-        const baseDetailsUpdates = formatBaseDetailsUpdates(formData);
-        const featuresUpdates = formatFeaturesUpdates(formData);
-        const spellSlotsUpdate = formatSpellSlotsUpdates(formData);
+        const baseDetailsUpdates = formatBaseDetailsUpdates(explicitFormData ?? formData);
+        const featuresUpdates = formatFeaturesUpdates(explicitFormData ?? formData);
+        const spellSlotsUpdate = formatSpellSlotsUpdates(explicitFormData ?? formData);
 
         try {
             await Promise.all([
@@ -114,7 +96,8 @@ function Tracker({pcData, queryClient, pcList, selectedPc, userRole}: Props) {
                 handleSubmit={handleSubmit}
                 setFormData={setFormData}
                 action={hpModalAction}
-                pcHitPoints={pcData.baseDetails.usableResources.hitPoints}
+                pcData={pcData}
+                limitedUseFeatures={limitedUseFeatures}
             />
             <GoldModal
                 handleChange={handleChange}
@@ -126,9 +109,6 @@ function Tracker({pcData, queryClient, pcList, selectedPc, userRole}: Props) {
 
             <form onSubmit={handleSubmit}>
                 <div>
-                    <button type="submit" className="tracker-save-button">
-                        Save
-                    </button>
                     {showSuccessAlert && <SuccessAlert/>}
                     <Card>
                         <h3 className="section-header">Hit Points</h3>
@@ -137,7 +117,7 @@ function Tracker({pcData, queryClient, pcList, selectedPc, userRole}: Props) {
                                 <div className="col-6 hp-col">
                                     <div className={`hp-display hp-display-${getHPRange(pcData.baseDetails.usableResources.hitPoints.current, pcData.baseDetails.usableResources.hitPoints.max)}`}>
                                         {pcData.baseDetails.usableResources.hitPoints.current} / {pcData.baseDetails.usableResources.hitPoints.max}
-                                    </div>
+                                    </div>                                   
                                 </div>
                                 <div className="col-6 hp-col">
                                     <button
@@ -177,49 +157,78 @@ function Tracker({pcData, queryClient, pcList, selectedPc, userRole}: Props) {
                                         Refill
                                     </button>
                                 </div>
-                            </div>
+                            </div>                  
                         </div>
                     </Card>            
                     <Card>
                     <div className="container-fluid">
-                    <div className="row">
-                        <div className="col-4">
-                            <label htmlFor="hitPointsTemporary">Temp HP</label>
-                            <br/>
-                            <input
-                                className="number-input"
-                                type="number"
-                                id="hitPointsTemporary"
-                                name="hitPointsTemporary"
-                                min="0"
-                                max="999" 
-                                value={formData.hitPointsTemporary}
-                                onChange={handleChange}
-                            />
-                        </div>
-                        <div className="col-4">
-                            <Card customClass="bg-light">
-                                <h4>AC</h4>
-                                <h4>{pcData.baseDetails.armorClass}</h4>
-                            </Card>
-                        </div>
-                        <div className="col-4">
-                            <label htmlFor="inspiration">Inspiration</label>
-                            <br/>
-                            <input
-                                className="number-input"
-                                type="number"
-                                min="0"
-                                max="999"
-                                id="inspiration"
-                                name="inspiration"
-                                value={formData.inspiration}
-                                onChange={handleChange}
-                            />
-                        </div>
+                        <div className="row">
+                            <div className="col-6">
+                                <Card customClass="bg-light">
+                                    <Popover
+                                        popoverBody={
+                                            <div>
+                                                <p>
+                                                    If {pcData.baseDetails.name.firstName} has Temporary HP,
+                                                    any damage taken will be subtracted from Temporary HP first.
+                                                </p>
+                                                <p>
+                                                    Temporary HP:
+                                                    <ul>
+                                                        <li>Lasts until depleted or until after the next long rest, unless there is a specified duration</li>
+                                                        <li>Cannot be replenished with healing</li>
+                                                        <li>Can only be used from one source at a time</li>
+                                                    </ul>
+                                               </p>                                        
+                                            </div>
+                                        }
+                                    >
+                                        <>
+                                        <h5>Temp HP</h5>
+                                        <h4 className={`number-display ${pcData.baseDetails.usableResources.hitPoints.temporary > 0 ? 'hp-display-temp-number' : undefined}`}>{`${(pcData.baseDetails.usableResources.hitPoints.temporary > 0) ? '+' : ''}${pcData.baseDetails.usableResources.hitPoints.temporary}`}</h4>
+                                        </>
+                                    </Popover> 
+                                    <button
+                                        type="button"
+                                        className="btn btn-secondary no-margin"
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#hpModal"
+                                        onClick={() => { setHPModalAction('editTempHP') }}
+                                    >
+                                        Edit
+                                    </button>
+                                </Card>
+                            </div>
+                            <div className="col-6">
+                                <Card customClass="bg-light">
+                                    <h5>AC</h5>                                    
+                                    <h4 className="number-display">{pcData.baseDetails.armorClass}</h4>
+                                    <button
+                                        type="button"
+                                        className="btn btn-secondary no-margin"
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#hpModal"
+                                        onClick={() => { setHPModalAction('editAC') }}
+                                    >
+                                        Edit
+                                    </button>                                                                          
+                                </Card>
+                            </div>                                                       
+                        </div>                    
                     </div>
-                    </div>
-                    </Card>
+                    </Card> 
+                    <Card>
+                        <h5>Initiative</h5>
+                            <Popover
+                                popoverBody={
+                                    <div>
+                                        <b>{pcData.abilityScores.data.dexterity.modifier > 0 && '+'}{pcData.abilityScores.data.dexterity.modifier}</b> from DEX modifier
+                                    </div>
+                                }
+                            >
+                                <h4>{pcData.abilityScores.data.dexterity.modifier > 0 && '+'}{pcData.abilityScores.data.dexterity.modifier}</h4>
+                            </Popover>        
+                    </Card>                   
 
                     {
                         (
@@ -228,7 +237,8 @@ function Tracker({pcData, queryClient, pcList, selectedPc, userRole}: Props) {
                         ) &&
                         <SpellsTrackerComponent
                             pcData={pcData}
-                            handleChange={handleChange}
+                            formData={formData}
+                            handleSubmit={handleSubmit}
                         />
                     }
                 
@@ -291,7 +301,8 @@ function Tracker({pcData, queryClient, pcList, selectedPc, userRole}: Props) {
                                             formDataName={buildFeatureCurrentUsesKey(feature)}
                                             maxUses={feature.data.maxUses!}
                                             currentUses={formData[buildFeatureCurrentUsesKey(feature)]}
-                                            onChange={handleChange}
+                                            formData={formData}
+                                            handleSubmit={handleSubmit}
                                         />
                                         <Refresh refreshRestType={feature.data.refresh!}/>
                                     </Card>
@@ -302,13 +313,21 @@ function Tracker({pcData, queryClient, pcList, selectedPc, userRole}: Props) {
                     
                     <Card>
                         <h3 className="section-header">Hit Dice</h3>
-                        <p className="center">{pcData.baseDetails.usableResources.hitDice.type}</p>
-                        <ItemUseToggle 
+                        <Popover
+                            popoverBody={
+                                <p><b>{conModifier > 0 ? '+' : undefined}{conModifier}</b> from CON modifier</p>
+                                                           
+                            }
+                        >
+                            <p className="center">{pcData.baseDetails.usableResources.hitDice.type} {conModifier > 0 ? `+${conModifier}` : conModifier < 0 ? `${conModifier} (minimum of 0)` : undefined}</p>
+                        </Popover>
+                        <ItemUseToggle
                             itemLabel="Hit Dice"
                             formDataName="hitDiceCurrent"
                             maxUses={pcData.baseDetails.usableResources.hitDice.max}
                             currentUses={formData.hitDiceCurrent}
-                            onChange={handleChange}
+                            formData={formData}
+                            handleSubmit={handleSubmit}
                         />
                     </Card>
 
@@ -320,7 +339,8 @@ function Tracker({pcData, queryClient, pcList, selectedPc, userRole}: Props) {
                             formDataName="deathSavesSuccesses"
                             maxUses={pcData.baseDetails.usableResources.deathSaves.max}
                             currentUses={formData.deathSavesSuccesses}
-                            onChange={handleChange}
+                            formData={formData}
+                            handleSubmit={handleSubmit}
                         />
                         <h4 className="text-red">Failures</h4>
                         <ItemUseToggle
@@ -328,7 +348,8 @@ function Tracker({pcData, queryClient, pcList, selectedPc, userRole}: Props) {
                             formDataName="deathSavesFailures"
                             maxUses={pcData.baseDetails.usableResources.deathSaves.max}
                             currentUses={formData.deathSavesFailures}
-                            onChange={handleChange}
+                            formData={formData}
+                            handleSubmit={handleSubmit}                           
                         />
                     </Card>
 
@@ -368,7 +389,114 @@ function Tracker({pcData, queryClient, pcList, selectedPc, userRole}: Props) {
                         </div>
                         </Card> 
                     </Card>
-                </div>               
+
+                    <Card>
+                        <h3 className="section-header">Inspiration</h3>
+                        <Card customClass="bg-light">
+                            <div className="container-fluid">
+                                <div className="row">
+                                    <div className="col-6">
+                                        <Popover
+                                            popoverBody={
+                                                <div>
+                                                    <p>Use inspiration to gain advantage on one attack roll, saving throw, or ability check.</p>
+                                                </div>
+                                            }
+                                        >
+                                            <div className={`insp-display ${pcData.baseDetails.usableResources.inspiration < 1 ? 'insp-display-none' : undefined}`}>
+                                                {pcData.baseDetails.usableResources.inspiration}
+                                            </div>
+                                        </Popover> 
+                                    </div>
+                                    <div className="col-6">
+                                        <button
+                                            type="button"
+                                            className="btn btn-success btn-insp"
+                                            data-bs-toggle="modal"
+                                            data-bs-target="#hpModal"
+                                            onClick={() => { 
+                                                setHPModalAction('addInspiration') 
+                                                setFormData({
+                                                    ...getDefaultFormData(pcData),
+                                                    inspiration: pcData.baseDetails.usableResources.inspiration + 1,
+                                                });
+                                            }}
+                                            disabled={pcData.baseDetails.usableResources.inspiration >= 5}                         
+                                        >
+                                            Gain Inspiration
+                                        </button>
+                                        <button
+                                            type="button"
+                                            className="btn btn-danger btn-insp"
+                                            data-bs-toggle="modal"
+                                            data-bs-target="#hpModal"
+                                            onClick={() => { 
+                                                setHPModalAction('useInspiration') 
+                                                setFormData({
+                                                    ...getDefaultFormData(pcData),
+                                                    inspiration: pcData.baseDetails.usableResources.inspiration - 1,
+                                                });
+                                            }}
+                                            disabled={pcData.baseDetails.usableResources.inspiration < 1}
+                                        >
+                                            Use Inspiration
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </Card>                                                              
+                    </Card>
+                    <Card customClass="card-no-outline">
+                        <div className="container-fluid container-rest">
+                            <div className="row">
+                                <div className="col-6">
+                                    <button
+                                        type="button"
+                                        className="btn btn-dark btn-rest"
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#hpModal"
+                                        onClick={() => { 
+                                            setHPModalAction('shortRest') 
+                                            setFormData({
+                                                ...getDefaultFormData(pcData),
+                                                ...limitedUseFeatures.filter(f => f.data.refresh == RestType.SHORT).reduce((obj, item) => Object.assign(obj, { [buildFeatureCurrentUsesKey(item)]: item.data.maxUses }), {}),
+                                                deathSavesSuccesses: 3,
+                                                deathSavesFailures: 3,
+                                                // TODO: only do default spell slots if isWarlock is true...
+                                                ...(pcData.baseDetails.class.toUpperCase() === 'WARLOCK' && {...pcData.spellSlots?.reduce((obj, item) => Object.assign(obj, { [buildSpellSlotsCurrentKey(item)]: item.data.max }), {})}),
+                                            });
+                                        }}
+                                    >
+                                        <p className="center"><img src="images/icons/short-rest.png" width="30px"/>Short Rest</p>
+                                    </button>                        
+                                </div>
+                                <div className="col-6">
+                                    <button
+                                        type="button"
+                                        className="btn btn-dark btn-rest"
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#hpModal"
+                                        onClick={() => { 
+                                            setHPModalAction('longRest') 
+                                            setFormData({
+                                                ...getDefaultFormData(pcData),
+                                                hitPointsCurrent: pcData.baseDetails.usableResources.hitPoints.max,
+                                                hitPointsTemporary: 0,
+                                                ...pcData.spellSlots?.reduce((obj, item) => Object.assign(obj, { [buildSpellSlotsCurrentKey(item)]: item.data.max }), {}),
+                                                ...limitedUseFeatures.reduce((obj, item) => Object.assign(obj, { [buildFeatureCurrentUsesKey(item)]: item.data.maxUses }), {}),
+                                                deathSavesSuccesses: 3,
+                                                deathSavesFailures: 3,
+                                                hitDiceCurrent: pcData.baseDetails.usableResources.hitDice.max
+                                            });
+                                        }}
+                                    >
+                                        <p className="center"><img src="images/icons/long-rest.png" width="30px"/>Long Rest</p>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </Card>                    
+                </div>                          
             </form>
 
             <AboutFooter/>

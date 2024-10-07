@@ -207,7 +207,8 @@ export const emptyEditModalData = {
   armorClass: '',
   maxHP: '',
   speed: '',
-  xp: ''
+  xp: '',
+  hitDiceType: ''
 };
 
 export const emptyShowSectionData = {

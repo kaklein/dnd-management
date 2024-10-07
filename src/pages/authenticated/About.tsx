@@ -60,6 +60,16 @@ function About ({selectedPc, userRole}: Props) {
                 <div className="col-2 small-text"><b>Release Date</b></div>
                 <div className="col-8 small-text"><b>Release Notes</b></div>
               </div>
+              <ReleaseNote version="1.2.0" releaseDate="2024-10-06"
+                releaseNotes={
+                  <>
+                    <p>Added Short Rest/Long Rest buttons on Tracker page to automatically reset resources.</p>
+                    <p>Autosave all fields on Tracker page after form submission or toggling checkboxes (replaces Save button).</p>
+                    <p>Added dropdowns to Alignment and Hit Dice Type fields on character creation/update.</p>
+                    <p>Minor bug fixes.</p>
+                  </>
+                }
+              />
               <ReleaseNote version="1.1.1" releaseDate="2024-09-29"
                 releaseNotes={
                   <>

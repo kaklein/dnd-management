@@ -8,9 +8,10 @@ interface Props {
   fitContent?: boolean;
   marginAuto?: boolean;
   placement?: "top" | "bottom" | "left" | "right"
+  customClass?: string;
 }
 
-function Popover ({children, popoverHeader, popoverBody, fitContent=false, marginAuto=false, placement="top"}: Props) {
+function Popover ({children, popoverHeader, popoverBody, fitContent=false, marginAuto=false, placement="top", customClass=undefined}: Props) {
   const popoverTop = <RBPopover
     id="popover-basic"
     placement={placement}
@@ -21,7 +22,7 @@ function Popover ({children, popoverHeader, popoverBody, fitContent=false, margi
 
   return (
     <OverlayTrigger trigger={["hover", "focus"]} placement={placement} overlay={popoverTop} delay={100}>
-      <div className={`popover-main-content ${fitContent ? 'fit-content' : undefined} ${marginAuto ? 'margin-auto' : undefined}`}>
+      <div className={`popover-main-content ${fitContent ? 'fit-content' : undefined} ${marginAuto ? 'margin-auto' : undefined} ${customClass ?? undefined}`}>
         {children}
       </div>
     </OverlayTrigger>

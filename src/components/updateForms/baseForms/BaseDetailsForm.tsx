@@ -1,4 +1,7 @@
 import Button, { ButtonType } from "@components/Button";
+import FormSelect from "@components/FormSelect";
+import { Alignment } from "@models/enum/Alignment";
+import { HitDiceType } from "@models/enum/HitDiceType";
 
 interface Props {
   handleChange: (event: any, setFunction: (prevFormData: any) => void) => void;
@@ -16,75 +19,6 @@ interface Props {
 function BaseDetailsForm ({handleChange, handleSubmit, formData, setFormData, modalDismiss}: Props) {
   return (
     <form onSubmit={(event) => {handleSubmit(event, formData, setFormData, {})}}>
-      <div className="update-form-field">
-        <label className="update-form-label" htmlFor="description">Description (Optional)</label>
-        <textarea
-          className="update-form-input"
-          id="description"
-          name="description"
-          onChange={(event) => {handleChange(event, setFormData)}}
-          value={formData.description}
-        />
-      </div>
-      <div className="update-form-field">
-        <label className="update-form-label" htmlFor="class">Class</label>
-        <input
-          className="update-form-input"
-          type="text"
-          id="class"
-          name="class"
-          onChange={(event) => {handleChange(event, setFormData)}}
-          value={formData.class}
-          required
-        />
-      </div>
-      <div className="update-form-field">
-        <label className="update-form-label" htmlFor="subclass">Subclass (Optional)</label>
-        <input
-          className="update-form-input"
-          type="text"
-          id="subclass"
-          name="subclass"
-          onChange={(event) => {handleChange(event, setFormData)}}
-          value={formData.subclass}
-        />
-      </div>
-      <div className="update-form-field">
-        <label className="update-form-label" htmlFor="race">Race</label>
-        <input
-          className="update-form-input"
-          type="text"
-          id="race"
-          name="race"
-          onChange={(event) => {handleChange(event, setFormData)}}
-          value={formData.race}
-          required
-        />
-      </div>
-      <div className="update-form-field">
-        <label className="update-form-label" htmlFor="background">Background</label>
-        <input
-          className="update-form-input"
-          type="text"
-          id="background"
-          name="background"
-          onChange={(event) => {handleChange(event, setFormData)}}
-          value={formData.background}
-          required
-        />
-      </div>
-      <div className="update-form-field">
-        <label className="update-form-label" htmlFor="alignment">Alignment</label>
-        <input
-          className="update-form-input"
-          type="text"
-          id="alignment"
-          name="alignment"
-          onChange={(event) => {handleChange(event, setFormData)}}
-          value={formData.alignment}
-          required
-        />
-      </div>
       <div className="update-form-field">
         <label className="update-form-label" htmlFor="level">Level</label>
         <input
@@ -127,16 +61,64 @@ function BaseDetailsForm ({handleChange, handleSubmit, formData, setFormData, mo
         />
       </div>
       <div className="update-form-field">
-        <label className="update-form-label" htmlFor="armorClass">Armor Class (AC)</label>
+        <label className="update-form-label" htmlFor="description">Description (Optional)</label>
+        <textarea
+          className="update-form-input"
+          id="description"
+          name="description"
+          onChange={(event) => {handleChange(event, setFormData)}}
+          value={formData.description}
+        />
+      </div>
+      <div className="update-form-field">
+        <label className="update-form-label" htmlFor="class">Class</label>
         <input
           className="update-form-input"
-          type="number"
-          min="0"
-          max="99"
-          id="armorClass"
-          name="armorClass"
+          type="text"
+          id="class"
+          name="class"
           onChange={(event) => {handleChange(event, setFormData)}}
-          value={formData.armorClass}
+          value={formData.class}
+          required
+        />
+      </div>
+      <div className="update-form-field">
+        <label className="update-form-label" htmlFor="hitDiceType">Hit Dice Type</label>
+        <FormSelect
+          className="update-form-input"
+          value={formData.hitDiceType}
+          handleChange={handleChange}
+          setFormData={setFormData}
+          name="hitDiceType"
+          options={
+            Object.values(HitDiceType).map((option) => ({
+              text: option,
+              value: option
+            }))
+          }
+          required
+        />              
+      </div> 
+      <div className="update-form-field">
+        <label className="update-form-label" htmlFor="subclass">Subclass (Optional)</label>
+        <input
+          className="update-form-input"
+          type="text"
+          id="subclass"
+          name="subclass"
+          onChange={(event) => {handleChange(event, setFormData)}}
+          value={formData.subclass}
+        />
+      </div>
+      <div className="update-form-field">
+        <label className="update-form-label" htmlFor="race">Race</label>
+        <input
+          className="update-form-input"
+          type="text"
+          id="race"
+          name="race"
+          onChange={(event) => {handleChange(event, setFormData)}}
+          value={formData.race}
           required
         />
       </div>
@@ -154,6 +136,36 @@ function BaseDetailsForm ({handleChange, handleSubmit, formData, setFormData, mo
           required
         />
       </div>
+      <div className="update-form-field">
+        <label className="update-form-label" htmlFor="background">Background</label>
+        <input
+          className="update-form-input"
+          type="text"
+          id="background"
+          name="background"
+          onChange={(event) => {handleChange(event, setFormData)}}
+          value={formData.background}
+          required
+        />
+      </div>
+      <div className="update-form-field">
+        <label className="update-form-label" htmlFor="alignment">Alignment</label>
+        <FormSelect
+          className="update-form-input"
+          value={formData.alignment}
+          handleChange={handleChange}
+          setFormData={setFormData}
+          name="alignment"
+          options={
+            Object.values(Alignment).map((option) => ({
+              text: option.toUpperCase(),
+              value: option
+            }))
+          }
+          required
+        />        
+      </div>      
+      
       <Button
           text="Save"
           customClass="float-right"
