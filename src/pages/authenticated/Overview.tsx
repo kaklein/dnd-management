@@ -138,7 +138,7 @@ function Overview({pcData, pcList, selectedPc, userRole, queryClient}: Props) {
                     <div className="overview-top">
                         <h5 className="left-justify">Level: {pcData.baseDetails.level}</h5>
                         {
-                            (Number(pcData.baseDetails.xp) >= 0) && 
+                            (pcData.baseDetails.xp !== '' && pcData.baseDetails.xp != undefined && pcData.baseDetails.xp >= 0) && 
                             <h5 className="left-justify">XP: {pcData.baseDetails.xp}</h5>
                         }
                         <h5 className="left-justify">Max Hit Points: {pcData.baseDetails.usableResources.hitPoints.max}</h5>
