@@ -3,6 +3,7 @@ import BaseDetailsForm from "@components/updateForms/baseForms/BaseDetailsForm";
 import EquipmentForm from "@components/updateForms/baseForms/EquipmentForm";
 import FeatureForm from "@components/updateForms/baseForms/FeatureForm";
 import SpellForm from "@components/updateForms/baseForms/SpellForm";
+import SummonableForm from "@components/updateForms/baseForms/SummonableForm";
 import WeaponForm from "@components/updateForms/baseForms/WeaponForm";
 import { capitalize } from "@components/utils";
 import { emptyEditModalData } from "@data/emptyFormData";
@@ -37,6 +38,16 @@ function EditModal ({ formType, formData, handleChange, handleSubmit, handleCanc
     }
     case 'feature': {
       form = <FeatureForm
+        handleChange={handleChange}
+        handleSubmit={handleSubmit}
+        formData={formData}
+        setFormData={setFormData}
+        modalDismiss={true}
+      />
+      break;
+    }
+    case 'summonable': {
+      form = <SummonableForm
         handleChange={handleChange}
         handleSubmit={handleSubmit}
         formData={formData}

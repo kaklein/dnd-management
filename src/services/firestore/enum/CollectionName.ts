@@ -3,5 +3,6 @@ export enum CollectionName {
   'FEATURES' = 'features',
   'PC_BASE_DETAILS' = 'pcBaseDetails',
   'SPELL_SLOTS' = 'spellSlots',
-  'USERS' = 'users'
+  'USERS' = 'users',
+  'SUMMONABLES' = 'summonables'
 }

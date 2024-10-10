@@ -8,6 +8,7 @@ import { getDisplayablePCs } from './getDisplayablePCs';
 import { UserRole } from './enum/UserRole';
 import { getAuth } from '@firebase/auth';
 import { getUserRole } from './getUserRole';
+import { Summonable } from '@models/playerCharacter/Summonable';
 
 const loadPcData = async (pcId: string): Promise<PlayerCharacter> => {
   // Get base character details
@@ -21,7 +22,14 @@ const loadPcData = async (pcId: string): Promise<PlayerCharacter> => {
   features.sort((a, b) =>  { 
     if (a.id < b.id) return -1;
     return 1;
-   });
+  });
+
+  // Get summonables
+  const summonables = (await readData(CollectionName.SUMMONABLES, { pcId })) as Summonable[];
+  summonables.sort((a, b) => {
+    if (a.id < b.id) return -1;
+    return 1;
+  });
 
   // Get spell slots
   const spellSlots = (await readData(CollectionName.SPELL_SLOTS, { pcId })) as SpellSlot[];
@@ -31,7 +39,7 @@ const loadPcData = async (pcId: string): Promise<PlayerCharacter> => {
   });
   
   // Format
-  return { baseDetails, abilityScores, features, spellSlots };
+  return { baseDetails, abilityScores, features, spellSlots, summonables };
 }
 
 const loadPCList = async (): Promise<BaseDetails[]> => {

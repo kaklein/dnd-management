@@ -2,6 +2,7 @@ import { getFeatureFormData, getSpellSlotFormData } from "@components/utils";
 import { WeaponModifierProperty } from "@models/enum/WeaponModifierProperty";
 import { Feature } from "@models/playerCharacter/Feature";
 import { PlayerCharacter } from "@models/playerCharacter/PlayerCharacter";
+import { Summonable } from "@models/playerCharacter/Summonable";
 import { Weapon } from "@models/playerCharacter/Weapon";
 import { updateArrayObjectItem, updateById, updateDataByPcId, updateStringArrayItem } from "@services/firestore/crud/update";
 import { CollectionName } from "@services/firestore/enum/CollectionName";
@@ -77,6 +78,48 @@ export const handleSubmitEdit = async (
         }
     }
     await updateById(CollectionName.FEATURES, formData.featureId, updatedFeature.data);
+  } else if (formData.formType === 'summonable') {
+    if (!pcData.summonables || pcData.summonables.length < 1) return;
+    let currentUses = 0;
+    const existingSummonable = pcData.summonables?.filter(x => x.id === formData.summonableId)[0];
+
+    // calculate new current uses, if applicable
+    if (formData.maxUses) {
+      if (existingSummonable.data.currentUses !== undefined && existingSummonable.data.maxUses !== undefined) {
+        const currentUsed = existingSummonable.data.maxUses - existingSummonable.data.currentUses;
+        currentUses = Math.max(Number(formData.maxUses) - currentUsed, 0);
+      } else {
+        currentUses = Number(formData.maxUses);
+      }
+    }
+
+    // calculate new HP
+    const lostHP = existingSummonable.data.hitPoints.max - existingSummonable.data.hitPoints.current;
+    const hitPointsCurrent = Math.max(Number(formData.hitPointMaximum) - lostHP, 0);
+    
+    const updatedSummonable: Summonable = {
+        id: '',
+        data: {
+            pcId: pcData.baseDetails.pcId,
+            type: formData.type,
+            ...(formData.name && {name: formData.name}),
+            description: formData.description,
+            source: {
+              type: formData.sourceType,
+              name: formData.sourceName
+            },
+            hitPoints: {
+              max: formData.hitPointMaximum,
+              current: hitPointsCurrent
+            },
+            maxUses: formData.maxUses ? Number(formData.maxUses) : 0,
+            currentUses: currentUses,
+            ...(formData.refresh && {refresh: formData.refresh}),
+            armorClass: Number(formData.armorClass),
+            summoned: existingSummonable.data.summoned
+        }
+    }
+    await updateById(CollectionName.SUMMONABLES, formData.summonableId, updatedSummonable.data);
   } else if (['spell', 'weapon', 'equipment'].includes(formData.formType)) {     
     let updatedItem;
     let fieldName;
@@ -232,7 +275,9 @@ export const pcHasDetailsPageItems = (pcData: PlayerCharacter): boolean => {
     (Object.keys(pcData.baseDetails).includes('equipment') && ((pcData.baseDetails.equipment?.length ?? -1) > 0)) ||
     (Object.keys(pcData.baseDetails).includes('languages') && ((pcData.baseDetails.languages?.length ?? -1) > 0)) ||
     (Object.keys(pcData.baseDetails).includes('proficiencies') && ((pcData.baseDetails.proficiencies?.length ?? -1) > 0)) ||
-    (Object.keys(pcData.baseDetails).includes('notes') && ((pcData.baseDetails.notes?.length ?? -1) > 0));
+    (Object.keys(pcData.baseDetails).includes('notes') && ((pcData.baseDetails.notes?.length ?? -1) > 0)) ||
+    (pcData.features.length > 0) ||
+    (pcData.summonables != undefined && pcData.summonables.length > 0);
   return hasItems;
 }
 

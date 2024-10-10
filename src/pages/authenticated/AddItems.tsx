@@ -8,7 +8,7 @@ import UpdateSpellSlot from "@components/updateForms/UpdateSpellSlot";
 import AddFeature from "@components/updateForms/AddFeature";
 import AddItemToArrayField from "@components/updateForms/AddItemToArrayField";
 import AddEquipment from "@components/updateForms/AddEquipment";
-import { defaultEquipmentFormData, defaultFeatureFormData, defaultLanguageFormData, defaultNoteFormData, defaultProficiencyFormData, defaultSpellFormData, defaultSpellSlotFormData, defaultWeaponFormData, emptyShowSectionData } from "@data/emptyFormData";
+import { defaultEquipmentFormData, defaultFeatureFormData, defaultLanguageFormData, defaultNoteFormData, defaultProficiencyFormData, defaultSpellFormData, defaultSpellSlotFormData, defaultSummonableFormData, defaultWeaponFormData, emptyShowSectionData } from "@data/emptyFormData";
 import { UpdateType } from "@models/enum/service/UpdateType";
 import { transformAndUpdate } from "@services/firestore/updateData";
 import { QueryClient } from "@tanstack/react-query";
@@ -19,6 +19,7 @@ import { triggerSuccessAlert } from "@pages/utils";
 import SuccessAlert from "@components/alerts/SuccessAlert";
 import { UserRole } from "@services/firestore/enum/UserRole";
 import AboutFooter from "@components/AboutFooter";
+import AddSummonable from "@components/updateForms/AddSummonable";
 
 interface Props {
   pcData: PlayerCharacter;
@@ -42,6 +43,7 @@ function AddItems ({pcData, queryClient, pcList, selectedPc, userRole}: Props) {
   const [proficiencyFormData, setProficiencyFormData] = useState(defaultProficiencyFormData);
   const [languageFormData, setLanguageFormData] = useState(defaultLanguageFormData);
   const [noteFormData, setNoteFormData] = useState(defaultNoteFormData);
+  const [summonableFormData, setSummonableFormData] = useState(defaultSummonableFormData);
 
   const handleChange = (
     event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>, 
@@ -142,6 +144,16 @@ function AddItems ({pcData, queryClient, pcList, selectedPc, userRole}: Props) {
           handleSubmit={handleSubmit}
           formData={equipmentFormData}
           setFormData={setEquipmentFormData}
+          showSection={{data: showSection, setFunction: setShowSection}}
+        />
+      </Card>
+
+      <Card>
+        <AddSummonable
+          handleChange={handleChange}
+          handleSubmit={handleSubmit}
+          formData={summonableFormData}
+          setFormData={setSummonableFormData}
           showSection={{data: showSection, setFunction: setShowSection}}
         />
       </Card>

@@ -17,7 +17,7 @@ export const updateDataByPcId = async (collectionName: CollectionName, pcId: str
   }
 }
 
-export const updateById = async (collectionName: CollectionName, docId: string, update: {[key: string]: string |  number | object}) => {
+export const updateById = async (collectionName: CollectionName, docId: string, update: {[key: string]: string |  number | object | boolean}) => {
   try {
     await updateDoc(doc(db, collectionName, docId), update);
   } catch (e) {
