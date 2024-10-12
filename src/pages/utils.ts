@@ -1,4 +1,4 @@
-import { getFeatureFormData, getSpellSlotFormData } from "@components/utils";
+import { getFeatureFormData, getSpellSlotFormData, getSummonablesSummoned } from "@components/utils";
 import { WeaponModifierProperty } from "@models/enum/WeaponModifierProperty";
 import { Feature } from "@models/playerCharacter/Feature";
 import { PlayerCharacter } from "@models/playerCharacter/PlayerCharacter";
@@ -80,18 +80,7 @@ export const handleSubmitEdit = async (
     await updateById(CollectionName.FEATURES, formData.featureId, updatedFeature.data);
   } else if (formData.formType === 'summonable') {
     if (!pcData.summonables || pcData.summonables.length < 1) return;
-    let currentUses = 0;
     const existingSummonable = pcData.summonables?.filter(x => x.id === formData.summonableId)[0];
-
-    // calculate new current uses, if applicable
-    if (formData.maxUses) {
-      if (existingSummonable.data.currentUses !== undefined && existingSummonable.data.maxUses !== undefined) {
-        const currentUsed = existingSummonable.data.maxUses - existingSummonable.data.currentUses;
-        currentUses = Math.max(Number(formData.maxUses) - currentUsed, 0);
-      } else {
-        currentUses = Number(formData.maxUses);
-      }
-    }
 
     // calculate new HP
     const lostHP = existingSummonable.data.hitPoints.max - existingSummonable.data.hitPoints.current;
@@ -112,9 +101,6 @@ export const handleSubmitEdit = async (
               max: formData.hitPointMaximum,
               current: hitPointsCurrent
             },
-            maxUses: formData.maxUses ? Number(formData.maxUses) : 0,
-            currentUses: currentUses,
-            ...(formData.refresh && {refresh: formData.refresh}),
             armorClass: Number(formData.armorClass),
             summoned: existingSummonable.data.summoned
         }
@@ -288,6 +274,10 @@ export const getLimitedUseFeatures = (pcData: PlayerCharacter) => {
   });
 }
 
+export const getDefaultSummoned = (pcData: PlayerCharacter): {[key: string]: any} => {
+  return pcData.summonables!.map(s => ({[s.id] : false}));
+}
+
 export const getDefaultFormData = (pcData: PlayerCharacter) => {
   return {
       hitPointsCurrent: pcData.baseDetails.usableResources.hitPoints.current,
@@ -299,6 +289,36 @@ export const getDefaultFormData = (pcData: PlayerCharacter) => {
       inspiration: pcData.baseDetails.usableResources.inspiration,
       armorClass: pcData.baseDetails.armorClass,
       ...getSpellSlotFormData(pcData.spellSlots ?? []),
-      ...getFeatureFormData(getLimitedUseFeatures(pcData))
+      ...getFeatureFormData(getLimitedUseFeatures(pcData)),
+      ...getSummonablesSummoned(pcData.summonables ?? [])
+  }
+}
+
+export const getSummonedItem = (pcData: PlayerCharacter) => {
+  const summonables = pcData.summonables;
+  
+  const summoned = summonables?.filter(s => s.data.summoned == true)[0];  
+  
+  if (!summoned) {
+    return {
+      id: '',
+      data: {
+        pcId: '',
+        type: '',
+        description: '',
+        source: {
+          type: '',
+          name: ''
+        },
+        hitPoints: {
+          max: 0,
+          current: 0
+        },
+        armorClass: 0,
+        summoned: false
+      }
+    }
+  } else {
+    return summoned;
   }
 }

@@ -1,8 +1,7 @@
 import Button, { ButtonType } from "@components/Button";
 import FormSelect from "@components/FormSelect";
 import { defaultSummonableFormData } from "@data/emptyFormData";
-import { RestType } from "@models/enum/RestType";
-import { useState } from "react";
+import { PlayerCharacter } from "@models/playerCharacter/PlayerCharacter";
 
 interface Props {
   handleChange: (event: any, setFunction: (prevFormData: any) => void) => void;
@@ -14,20 +13,11 @@ interface Props {
   ) => void;
   formData: any;
   setFormData: (data: any) => void;
+  pcData: PlayerCharacter;
   modalDismiss?: boolean;
 }
 
-function SummonableForm ({handleChange, handleSubmit, formData, setFormData, modalDismiss=false}: Props) {
-  const [showLimitedUseFields, setShowLimitedUseFields] = useState(formData.maxUses ? true : false);
-  const handleLimitedUseCheckboxChange = () => {
-    const newVal = !showLimitedUseFields;
-    setShowLimitedUseFields(newVal);
-    if (!newVal) {
-      handleChange({target: {name: 'maxUses', value: ''}}, setFormData);
-      handleChange({target: {name: 'refresh', value: ''}}, setFormData);
-    }
-  };
-
+function SummonableForm ({handleChange, handleSubmit, formData, setFormData, pcData, modalDismiss=false}: Props) {
   return (
     <form onSubmit={(event) => {handleSubmit(event, formData, setFormData, defaultSummonableFormData)}}>     
       <div className="update-form-field">
@@ -35,6 +25,7 @@ function SummonableForm ({handleChange, handleSubmit, formData, setFormData, mod
         <input
           className="update-form-input"
           type="text"
+          placeholder="Familiar"
           id="type"
           name="type"
           onChange={(event) => {handleChange(event, setFormData)}}
@@ -47,6 +38,7 @@ function SummonableForm ({handleChange, handleSubmit, formData, setFormData, mod
         <input
           className="update-form-input"
           type="text"
+          placeholder="Fluffy"
           id="name"
           name="name"
           onChange={(event) => {handleChange(event, setFormData)}}
@@ -65,38 +57,6 @@ function SummonableForm ({handleChange, handleSubmit, formData, setFormData, mod
         />          
       </div>
 
-      <h5>Source</h5>
-      <div className="update-form-field">
-        <label className="update-form-label" htmlFor="sourceName">Type</label>
-        <FormSelect
-          className="update-form-input"
-          value={formData.sourceType}
-          handleChange={handleChange}
-          setFormData={setFormData}
-          name="sourceType"
-          options={
-            [
-              { text: 'SPELL', value: 'spell'},
-              { text: 'FEATURE / OTHER', value: 'feature'}
-            ]
-          }
-          required
-        />
-      </div>
-      <div className="update-form-field">
-        <label className="update-form-label" htmlFor="sourceName">Name</label>
-        <p className="update-form-description">Name of the spell or feature that allows you to summon this {formData.type.toLowerCase()}</p>
-        <input
-          className="update-form-input"
-          type="text"
-          id="sourceName"
-          name="sourceName"
-          onChange={(event) => {handleChange(event, setFormData)}}
-          value={formData.sourceName}
-          required
-        />      
-      </div>
-      
       <div className="update-form-field">
         <label className="update-form-label" htmlFor="hitPointMaximum">Max HP</label>
         <input
@@ -127,57 +87,68 @@ function SummonableForm ({handleChange, handleSubmit, formData, setFormData, mod
         />     
       </div>
 
+      <div className="update-form-field">
+        <label className="update-form-label" htmlFor="sourceName">Source - Spell or Feature?</label>
+        <FormSelect
+          className="update-form-input"
+          value={formData.sourceType}
+          handleChange={handleChange}
+          setFormData={setFormData}
+          name="sourceType"
+          options={
+            [
+              { text: 'SPELL', value: 'spell'},
+              { text: 'FEATURE', value: 'feature'}
+            ]
+          }
+          required
+        />
+      </div>
       {
-        formData.sourceType == 'feature' &&
-        <div>
-          <div className="update-form-conditional">
-            <p>Are there a limited number of summons?</p>
-            <label htmlFor="limitedUseCheckbox">Yes</label>
-            <input
-              id="limitedUseCheckbox"
-              type="checkbox"
-              checked={showLimitedUseFields}
-              onChange={handleLimitedUseCheckboxChange}
-            />
-          </div>
-
-          { showLimitedUseFields &&
-          <>
-            <div className="update-form-field">
-              <label className="update-form-label" htmlFor="maxUses">Number of uses</label>
-              <input
-                className="update-form-input"
-                type="number"
-                min="1"
-                max="99"
-                id="maxUses"
-                name="maxUses"
-                onChange={(event) => {handleChange(event, setFormData)}}
-                value={formData.maxUses}
-                required={showLimitedUseFields}
-              />
-            </div>
-            <div className="update-form-field">
-              <label className="update-form-label" htmlFor="refresh">Refresh after</label>
-              <FormSelect
-                className="update-form-input"
-                value={formData.refresh}
-                handleChange={handleChange}
-                setFormData={setFormData}
-                name="refresh"
-                options={
-                  Object.values(RestType).sort().map((option) => ({
-                    text: option.toUpperCase() + ' REST',
-                    value: option
-                  }))
-                }
-                required={showLimitedUseFields}
-              />
-            </div>
-          </>
-          }         
+        formData.sourceType === 'spell' &&
+        <div className="update-form-field">
+          <label className="update-form-label" htmlFor="sourceName">Source Spell</label>
+          <p className="update-form-description">Select the spell that allows you to summon this{formData.type ? ' ' + formData.type.toLowerCase() : ''}.</p>
+          <p className="update-form-description">If you still need to add it, go to the <a href="#spells">Spell</a> section.</p>
+          <FormSelect
+            className="update-form-input"
+            value={formData.sourceName}
+            handleChange={handleChange}
+            setFormData={setFormData}
+            name="sourceName"
+            options={
+              pcData.baseDetails.spells?.map((s) => ({
+                text: s.name,
+                value: s.name
+              })) ?? []
+            }
+            required
+          />
         </div>
-      }      
+      }
+      {
+        formData.sourceType === 'feature' &&
+        <div className="update-form-field">
+          <label className="update-form-label" htmlFor="sourceName">Source Feature</label>
+          <p className="update-form-description">Select the feature that allows you to summon this {formData.type.toLowerCase()}</p>
+          <p className="update-form-description">If you still need to add it, go to the <a href="#features">Feature</a> section.</p>
+          <FormSelect
+            className="update-form-input"
+            value={formData.sourceName}
+            handleChange={handleChange}
+            setFormData={setFormData}
+            name="sourceName"
+            options={
+              pcData.features?.map((f) => ({
+                text: f.data.name,
+                value: f.data.name
+              })) ?? []
+            }
+            required
+          />      
+        </div>
+      }
+             
 
       <Button
         text="Save"

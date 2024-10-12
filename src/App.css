@@ -976,3 +976,35 @@ img {
 .no-padding {
     padding: 0px;
 }
+
+.summonable {
+    z-index: 100;
+    position: fixed;
+    border-radius: 5px;
+}
+
+.drawer-body {
+    background-color: white;
+    border: 2px solid red;
+}
+
+.drawer-handle {
+    background-color: white;
+    height: 60px;
+    border-top: 1px solid red;
+    border-right: 1px solid red;
+    border-bottom: 1px solid red;
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+}
+
+.summonable-content {
+    width: 75vw;
+    max-width: 500px;
+}
+
+.drawer-handle-btn {
+    margin-left: 0px;
+    margin-right: 0px;
+    margin-top: 10px;
+}

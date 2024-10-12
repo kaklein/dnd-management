@@ -155,6 +155,7 @@ function AddItems ({pcData, queryClient, pcList, selectedPc, userRole}: Props) {
           formData={summonableFormData}
           setFormData={setSummonableFormData}
           showSection={{data: showSection, setFunction: setShowSection}}
+          pcData={pcData}
         />
       </Card>
 

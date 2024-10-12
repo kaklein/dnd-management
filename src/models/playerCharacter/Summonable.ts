@@ -1,5 +1,3 @@
-import { RestType } from "@models/enum/RestType";
-
 export interface Summonable {
   id: string;
   data: {
@@ -15,9 +13,6 @@ export interface Summonable {
       max: number;
       current: number;
     };
-    maxUses?: number;
-    currentUses?: number;
-    refresh?: RestType;
     armorClass: number;
     summoned: boolean;
   };  

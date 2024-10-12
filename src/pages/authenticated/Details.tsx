@@ -198,6 +198,7 @@ function Details({pcData, pcList, selectedPc, queryClient, userRole}: Props) {
                 }}
                 setFormData={setEditModalFormData}
                 handleCancel={() => { setEditModalFormData(emptyEditModalData)}}
+                pcData={pcData}
             />
 
             {showSuccessAlert && <SuccessAlert/>}
@@ -411,8 +412,6 @@ function Details({pcData, pcList, selectedPc, queryClient, userRole}: Props) {
                                                     sourceName: s.data.source.name,
                                                     hitPointMaximum: String(s.data.hitPoints.max),
                                                     hitPointsCurrent: String(s.data.hitPoints.current),
-                                                    maxUses: s.data.maxUses ? String(s.data.maxUses) : '',
-                                                    refresh: s.data.refresh ?? '',
                                                     armorClass: String(s.data.armorClass),
                                                     summoned: s.data.summoned ? "true" : "false"
                                                 })
@@ -425,9 +424,6 @@ function Details({pcData, pcList, selectedPc, queryClient, userRole}: Props) {
                                     <p><b>Description: </b>{s.data.description}</p>
                                     <p><b>Source: </b>{s.data.source.name} ({capitalize(s.data.source.type)})</p>
                                     <p><b>Max HP: </b>{s.data.hitPoints.max}</p>
-                                    {s.data.maxUses &&
-                                        <p><b>Max uses per {s.data.refresh} rest: </b>{s.data.maxUses}</p>
-                                    }
                                     <p><b>Armor Class: </b>{s.data.armorClass}</p>
                                 </div>                            
                             </Card>

@@ -7,6 +7,7 @@ import SummonableForm from "@components/updateForms/baseForms/SummonableForm";
 import WeaponForm from "@components/updateForms/baseForms/WeaponForm";
 import { capitalize } from "@components/utils";
 import { emptyEditModalData } from "@data/emptyFormData";
+import { PlayerCharacter } from "@models/playerCharacter/PlayerCharacter";
 import { ReactNode } from "react";
 
 interface Props {
@@ -21,9 +22,10 @@ interface Props {
   ) => void;
   setFormData: (data: any) => void;
   handleCancel: () => void;
+  pcData: PlayerCharacter;
 }
 
-function EditModal ({ formType, formData, handleChange, handleSubmit, handleCancel, setFormData}: Props) {
+function EditModal ({ formType, formData, handleChange, handleSubmit, handleCancel, setFormData, pcData}: Props) {
   let form: ReactNode;
   switch (formType) {
     case 'spell': {
@@ -52,6 +54,7 @@ function EditModal ({ formType, formData, handleChange, handleSubmit, handleCanc
         handleSubmit={handleSubmit}
         formData={formData}
         setFormData={setFormData}
+        pcData={pcData}
         modalDismiss={true}
       />
       break;
