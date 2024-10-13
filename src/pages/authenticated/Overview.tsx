@@ -86,6 +86,7 @@ function Overview({pcData, pcList, selectedPc, userRole, queryClient}: Props) {
             }}
             setFormData={setEditModalFormData}
             handleCancel={() => setEditModalFormData(emptyEditModalData)}
+            pcData={pcData}
         />
         {showSuccessAlert && <SuccessAlert/>}
 
