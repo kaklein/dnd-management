@@ -117,7 +117,10 @@ function SummonableForm ({handleChange, handleSubmit, formData, setFormData, pcD
             setFormData={setFormData}
             name="sourceName"
             options={
-              pcData.baseDetails.spells?.map((s) => ({
+              pcData.baseDetails.spells?.sort((a, b) => {
+                if (a.name < b.name) return -1;
+                return 1;
+              }).map((s) => ({
                 text: s.name,
                 value: s.name
               })) ?? []
@@ -139,7 +142,10 @@ function SummonableForm ({handleChange, handleSubmit, formData, setFormData, pcD
             setFormData={setFormData}
             name="sourceName"
             options={
-              pcData.features?.map((f) => ({
+              pcData.features?.sort((a, b) => {
+                if (a.data.name < b.data.name) return -1;
+                return 1;
+              }).map((f) => ({
                 text: f.data.name,
                 value: f.data.name
               })) ?? []

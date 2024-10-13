@@ -29,9 +29,10 @@ import WeaponContentPopover from "@components/popovers/WeaponPopoverContent";
 import AboutFooter from "@components/AboutFooter";
 import SpellsTrackerComponent from "@components/SpellsTrackerComponent";
 import { RestType } from "@models/enum/RestType";
-import SummonableModal from "@components/modals/SummonableModal";
 import ConfirmDismissSummonModal from "@components/modals/ConfirmDismissSummonModal";
 import { useSearchParams } from "react-router-dom";
+import SummonableActionModal from "@components/modals/SummonableActionModal";
+import SummonableDrawer from "@components/modals/SummonableDrawer";
 
 interface Props {
     pcData: PlayerCharacter;
@@ -47,6 +48,10 @@ function Tracker({pcData, queryClient, pcList, selectedPc, userRole}: Props) {
     const [showSuccessAlert, setShowSuccessAlert] = useState(false);
 
     const [searchParams] = useSearchParams();
+
+    const [disableBackdrop, setDisableBackdrop] = useState(false);
+
+    const [summonableAction, setSummonableAction] = useState('');
     
     const [formData, setFormData] = useState(getDefaultFormData(pcData));
     const [limitedUseFeatures, setLimitedUseFeatures] = useState(getLimitedUseFeatures(pcData));
@@ -66,12 +71,10 @@ function Tracker({pcData, queryClient, pcList, selectedPc, userRole}: Props) {
     }
 
     const handleSubmit = async (event: any, explicitFormData?: any) => {
-        console.log(formData);
         event.preventDefault();
         const baseDetailsUpdates = formatBaseDetailsUpdates(explicitFormData ?? formData);
         const featuresUpdates = formatFeaturesUpdates(explicitFormData ?? formData);
         const summonablesUpdates = formatSummonablesUpdates(explicitFormData ?? formData);
-        console.log(summonablesUpdates);
         const spellSlotsUpdate = formatSpellSlotsUpdates(explicitFormData ?? formData);
 
         try {
@@ -93,6 +96,11 @@ function Tracker({pcData, queryClient, pcList, selectedPc, userRole}: Props) {
 
     return (
         <>
+        {
+            (summonedItem.data.summoned && disableBackdrop) &&
+            <div className="overlay-backdrop">I'M HERE!! {disableBackdrop == true ? "true" : "false"}</div>
+        }
+
         <div className="main-body">
             <Navbar isSelectedPc={!!selectedPc.pcId} userRole={userRole}/>
 
@@ -118,6 +126,7 @@ function Tracker({pcData, queryClient, pcList, selectedPc, userRole}: Props) {
                 action={goldModalAction}
                 currentGold={pcData.baseDetails.usableResources.gold}
             />
+
             <ConfirmDismissSummonModal
                 summonable={summonedItem}
                 handleDismiss={() => {
@@ -128,15 +137,30 @@ function Tracker({pcData, queryClient, pcList, selectedPc, userRole}: Props) {
                     triggerSuccessAlert(setShowSuccessAlert);
                 }}
             />
+            <SummonableActionModal
+                action={summonableAction}
+                summonable={summonedItem}
+                setShowSuccessAlert={setShowSuccessAlert}
+                queryClient={queryClient}
+                searchParams={searchParams}
+                setDisableBackdrop={setDisableBackdrop}
+            />
 
             {
                 summonedItem.data.summoned &&
-                <SummonableModal
+                <SummonableDrawer
                     pcData={pcData}
                     setFormData={setFormData}
                     summonable={summonedItem}
                     searchParams={searchParams}
+                    setSummonableAction={setSummonableAction}
+                    setDisableBackdrop={setDisableBackdrop}
+                    disableBackdrop={disableBackdrop}
                 />
+            }
+
+            {
+
             }
 
             <form onSubmit={handleSubmit}>
@@ -354,28 +378,35 @@ function Tracker({pcData, queryClient, pcList, selectedPc, userRole}: Props) {
 
                                         {
                                             s.data.source.type == 'spell' &&
-                                            <p className="update-form-description">Must use the {s.data.source.name} spell in order to summon.</p>
+                                            <p className="center">Must use the {s.data.source.name} spell in order to summon.</p>
                                         }
                                         {
                                             (s.data.source.type == 'feature' && pcData.features.filter(f => f.data.name === s.data.source.name)[0].data.maxUses) &&
-                                            <p className="update-form-description">Must use the {s.data.source.name} feature under the Abilities section in order to summon.</p>
-                                        }                                                                                                                
+                                            <p className="center">Must use the {s.data.source.name} feature under the Abilities section in order to summon.</p>
+                                        }                                     
                                         <button
-                                            className="btn btn-info"
+                                            className={`btn btn-${(summonedItem.id == s.id && summonedItem.data.summoned) ? 'success' : 'info'}`}
                                             type="button"
-                                            data-bs-target="#summonableDrawer"
-                                            aria-controls="summonableDrawer"
+                                            data-bs-toggle="modal"
+                                            data-bs-target="#summonableActionModal"
+                                            // data-bs-target="#summonableDrawer"
+                                            // aria-controls="summonableDrawer"
                                             onClick={() => {
-                                                setSummonedItem(s);                                                                                      
-                                                updateById(CollectionName.SUMMONABLES, s.id, { summoned: true });
-                                                queryClient.invalidateQueries();
-                                                setFormData(getDefaultFormData(pcData));
-                                                searchParams.set("showSummonable", "true");
+                                                
+                                                setSummonedItem(s);
+                                                setSummonableAction('summon');
                                             }}
-                                            disabled={s.data.summoned === true}
+                                            disabled={s.data.summoned === true || summonedItem.data.summoned === true}
                                         >
-                                            {s.data.summoned === false ? "Summon" : "Summoned"}
+                                            {
+                                            s.data.summoned === true ? "Summoned" :
+                                            "Summon"
+                                            }
                                         </button>
+                                        {
+                                            (summonedItem.id !== s.id && summonedItem.data.summoned === true) &&
+                                            <p className="center update-form-description">Cannot summon until the currently summoned item is dismissed</p>
+                                        }
                                     </Card>
                                 ))
                             }
