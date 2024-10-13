@@ -3,6 +3,7 @@ import { AbilityScores } from "@models/playerCharacter/AbilityScores";
 import { Feature } from "@models/playerCharacter/Feature";
 import { PlayerCharacter } from "@models/playerCharacter/PlayerCharacter";
 import { Spell } from "@models/playerCharacter/Spell";
+import { Summonable } from "@models/playerCharacter/Summonable";
 import { SpellSlot } from "@models/playerCharacter/usableResources/SpellSlot";
 import { Weapon } from "@models/playerCharacter/Weapon";
 import { determineAttackBonus, formatBonus } from "@pages/utils";
@@ -64,6 +65,17 @@ export const getFeatureFormData = (features: Feature[]) => {
     return Object.fromEntries(array);
 };
 
+export const buildSummonableSummonedKey = (summonable: Summonable) => {
+    return `summonable_${summonable.id}_summoned`
+}
+
+export const getSummonablesSummoned = (summonables: Summonable[]) => {
+    const array = summonables.map(s => (
+        [buildSummonableSummonedKey(s), s.data.summoned]
+    ));
+    return Object.fromEntries(array);
+}
+
 export const buildSpellSlotsCurrentKey = (spellSlot: SpellSlot) => {
     return `spellSlot_${spellSlot.id}_current`;
 };
@@ -80,6 +92,21 @@ export const formatFeaturesUpdates = (formData: any): {docId: string, updates: {
     const featureKeys = keys.filter(k => k.substring(0,7) === 'feature'); // full keys e.g. feature_1234567_currentUses
     let updates = [];
     for (const key of featureKeys) {
+        updates.push({
+            docId: key.split('_')[1],
+            updates: {
+                currentUses: Number(formData[key])
+            }
+        })
+    }
+    return updates;
+}
+
+export const formatSummonablesUpdates = (formData: any): {docId: string, updates: {currentUses: number}}[] => {
+    const keys = Object.keys(formData);
+    const currentUsesKeys = keys.filter(k => (k.substring(0, 10) === 'summonable' && k.substring(k.length - 11) === 'currentUses'));
+    let updates = [];
+    for (const key of currentUsesKeys) {
         updates.push({
             docId: key.split('_')[1],
             updates: {

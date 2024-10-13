@@ -45,6 +45,22 @@ export const defaultFeatureFormData = {
   sourceUrl: ''
 };
 
+export const defaultSummonableFormData = {
+  updateType: UpdateType.SUMMONABLES,
+  type: '',
+  name: '',
+  description: '',
+  sourceType: '',
+  sourceName: '',
+  hitPointMaximum: '',
+  hitPointsCurrent: '',
+  maxUses: '',
+  currentUses: '',
+  refresh: '',
+  armorClass: '',
+  summoned: ''
+}
+
 export const defaultEquipmentFormData = {
   updateType: UpdateType.EQUIPMENT,
   type: '',
@@ -153,6 +169,7 @@ export const defaultCreateCharacterFormData: CreateCharacterFormData = {
 export const emptyShowConfirmDeleteData: ShowConfirmDeleteData = {
   displayName: '',
   featureId: '',
+  summonableId: '',
   objectArrayFieldName: '',
   objectArrayExistingItems: [],
   objectArrayFullItem: {},
@@ -170,6 +187,9 @@ export const emptyEditModalData = {
   sourceUrl: '', // spells, features
   type: '', // weapons, equipment
   level: '', // spells, character
+  maxUses: '', // features, summonables
+  refresh: '', // features, summonables
+  armorClass: '', // character, summonables
 
   // equipment
   equipmentId: '',
@@ -181,8 +201,6 @@ export const emptyEditModalData = {
   // features
   featureId: '',
   source: '',
-  maxUses: '',
-  refresh: '',
   saveDC: '',
 
   // weapons
@@ -204,11 +222,18 @@ export const emptyEditModalData = {
   race: '',
   background: '',
   alignment: '',
-  armorClass: '',
   maxHP: '',
   speed: '',
   xp: '',
-  hitDiceType: ''
+  hitDiceType: '',
+
+  // summonable
+  summonableId: '',
+  sourceType: '',
+  sourceName: '',
+  hitPointMaximum: '',
+  hitPointsCurrent: '',
+  summoned: ''
 };
 
 export const emptyShowSectionData = {
@@ -219,18 +244,20 @@ export const emptyShowSectionData = {
   languages: false,
   proficiencies: false,
   notes: false,
-  spellSlots: false
+  spellSlots: false,
+  summonables: false
 };
 
 export const buildEmptyShowSectionData = (searchParams: URLSearchParams) => {
   return {
-    spells: searchParams.get("spells") == "true" ? true: false,
-    weapons: searchParams.get("weapons") == "true" ? true: false,
-    features: searchParams.get("features") == "true" ? true: false,
-    equipment: searchParams.get("equipment") == "true" ? true: false,
-    languages: searchParams.get("languages") == "true" ? true: false,
-    proficiencies: searchParams.get("proficiencies") == "true" ? true: false,
-    notes: searchParams.get("notes") == "true" ? true: false,
-    spellSlots: searchParams.get("spellSlots") == "true" ? true: false
+    spells: searchParams.get("spells") == "true" ? true : false,
+    weapons: searchParams.get("weapons") == "true" ? true : false,
+    features: searchParams.get("features") == "true" ? true : false,
+    equipment: searchParams.get("equipment") == "true" ? true : false,
+    languages: searchParams.get("languages") == "true" ? true : false,
+    proficiencies: searchParams.get("proficiencies") == "true" ? true : false,
+    notes: searchParams.get("notes") == "true" ? true : false,
+    spellSlots: searchParams.get("spellSlots") == "true" ? true : false,
+    summonables: searchParams.get("summonables") == "true" ? true : false
   }
 }
