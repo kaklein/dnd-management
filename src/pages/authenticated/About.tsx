@@ -60,6 +60,15 @@ function About ({selectedPc, userRole}: Props) {
                 <div className="col-2 small-text"><b>Release Date</b></div>
                 <div className="col-8 small-text"><b>Release Notes</b></div>
               </div>
+              <ReleaseNote version="1.3.0" releaseDate="2024-10-14"
+                releaseNotes={
+                  <>
+                    <p>Added Summonable item type for controllable items and creatures (such as familiars), 
+                      which can be managed during sessions on the Tracker page.</p>
+                    <p>Minor UI enhancements.</p>
+                  </>
+                }
+              />
               <ReleaseNote version="1.2.0" releaseDate="2024-10-06"
                 releaseNotes={
                   <>

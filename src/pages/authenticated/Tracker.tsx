@@ -7,7 +7,8 @@ import {
     formatBaseDetailsUpdates, 
     formatFeaturesUpdates, 
     formatSpellSlotsUpdates,
-    removeWhiteSpaceAndConvertToLowerCase 
+    formatSummonablesUpdates,
+    removeWhiteSpaceAndConvertToLowerCase, 
 } from "@components/utils";
 import { useEffect, useState} from "react";
 import { HashLink as Link } from 'react-router-hash-link';
@@ -16,7 +17,7 @@ import ItemUseToggle from "@components/ItemUseToggle";
 import { BaseDetails, PlayerCharacter } from "@models/playerCharacter/PlayerCharacter";
 import { QueryClient } from "@tanstack/react-query";
 import { CollectionName } from "@services/firestore/enum/CollectionName";
-import { determineAttackBonus, formatBonus, formatWeaponDisplayTitle, getDefaultFormData, getHPRange, getLimitedUseFeatures, triggerSuccessAlert } from "../utils";
+import { determineAttackBonus, formatBonus, formatWeaponDisplayTitle, getDefaultFormData, getHPRange, getLimitedUseFeatures, getSummonedItem, triggerSuccessAlert } from "../utils";
 import PageHeaderBarPC from "@components/headerBars/PageHeaderBarPC";
 import QuickNav from "@components/QuickNav";
 import SuccessAlert from "@components/alerts/SuccessAlert";
@@ -28,6 +29,10 @@ import WeaponContentPopover from "@components/popovers/WeaponPopoverContent";
 import AboutFooter from "@components/AboutFooter";
 import SpellsTrackerComponent from "@components/SpellsTrackerComponent";
 import { RestType } from "@models/enum/RestType";
+import ConfirmDismissSummonModal from "@components/modals/ConfirmDismissSummonModal";
+import { useSearchParams } from "react-router-dom";
+import SummonableActionModal from "@components/modals/SummonableActionModal";
+import SummonableDrawer from "@components/modals/SummonableDrawer";
 
 interface Props {
     pcData: PlayerCharacter;
@@ -41,15 +46,23 @@ function Tracker({pcData, queryClient, pcList, selectedPc, userRole}: Props) {
     const conModifier = pcData.abilityScores.data.constitution.modifier;
    
     const [showSuccessAlert, setShowSuccessAlert] = useState(false);
+
+    const [searchParams] = useSearchParams();
+
+    const [disableBackdrop, setDisableBackdrop] = useState(false);
+
+    const [summonableAction, setSummonableAction] = useState('');
     
     const [formData, setFormData] = useState(getDefaultFormData(pcData));
     const [limitedUseFeatures, setLimitedUseFeatures] = useState(getLimitedUseFeatures(pcData));
     const [hpModalAction, setHPModalAction] = useState('');
     const [goldModalAction, setGoldModalAction] = useState('');
+    const [summonedItem, setSummonedItem] = useState(getSummonedItem(pcData));
 
     useEffect(() => {
         setLimitedUseFeatures(getLimitedUseFeatures(pcData));
         setFormData(getDefaultFormData(pcData));
+        setSummonedItem(getSummonedItem(pcData));
     }, [pcData]);
 
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -61,13 +74,15 @@ function Tracker({pcData, queryClient, pcList, selectedPc, userRole}: Props) {
         event.preventDefault();
         const baseDetailsUpdates = formatBaseDetailsUpdates(explicitFormData ?? formData);
         const featuresUpdates = formatFeaturesUpdates(explicitFormData ?? formData);
+        const summonablesUpdates = formatSummonablesUpdates(explicitFormData ?? formData);
         const spellSlotsUpdate = formatSpellSlotsUpdates(explicitFormData ?? formData);
 
         try {
             await Promise.all([
                 updateDataByPcId(CollectionName.PC_BASE_DETAILS, pcData.baseDetails.pcId, baseDetailsUpdates),
                 ...featuresUpdates.map(f => updateById(CollectionName.FEATURES, f.docId, f.updates)),
-                ...spellSlotsUpdate.map(s => updateById(CollectionName.SPELL_SLOTS, s.docId, s.updates))
+                ...spellSlotsUpdate.map(s => updateById(CollectionName.SPELL_SLOTS, s.docId, s.updates)),
+                ...summonablesUpdates.map(s => updateById(CollectionName.SUMMONABLES, s.docId, s.updates))
             ]).then();
         } catch (e: any) {
             console.error(e);
@@ -81,6 +96,11 @@ function Tracker({pcData, queryClient, pcList, selectedPc, userRole}: Props) {
 
     return (
         <>
+        {
+            (summonedItem.data.summoned && disableBackdrop) &&
+            <div className="overlay-backdrop">I'M HERE!! {disableBackdrop == true ? "true" : "false"}</div>
+        }
+
         <div className="main-body">
             <Navbar isSelectedPc={!!selectedPc.pcId} userRole={userRole}/>
 
@@ -106,6 +126,42 @@ function Tracker({pcData, queryClient, pcList, selectedPc, userRole}: Props) {
                 action={goldModalAction}
                 currentGold={pcData.baseDetails.usableResources.gold}
             />
+
+            <ConfirmDismissSummonModal
+                summonable={summonedItem}
+                handleDismiss={() => {
+                    updateById(CollectionName.SUMMONABLES, summonedItem.id, {summoned: false});
+                    queryClient.invalidateQueries();
+                    setFormData(getDefaultFormData(pcData));
+                    setSummonedItem(getSummonedItem(pcData));
+                    triggerSuccessAlert(setShowSuccessAlert);
+                }}
+            />
+            <SummonableActionModal
+                action={summonableAction}
+                summonable={summonedItem}
+                setShowSuccessAlert={setShowSuccessAlert}
+                queryClient={queryClient}
+                searchParams={searchParams}
+                setDisableBackdrop={setDisableBackdrop}
+            />
+
+            {
+                summonedItem.data.summoned &&
+                <SummonableDrawer
+                    pcData={pcData}
+                    setFormData={setFormData}
+                    summonable={summonedItem}
+                    searchParams={searchParams}
+                    setSummonableAction={setSummonableAction}
+                    setDisableBackdrop={setDisableBackdrop}
+                    disableBackdrop={disableBackdrop}
+                />
+            }
+
+            {
+
+            }
 
             <form onSubmit={handleSubmit}>
                 <div>
@@ -172,14 +228,14 @@ function Tracker({pcData, queryClient, pcList, selectedPc, userRole}: Props) {
                                                     If {pcData.baseDetails.name.firstName} has Temporary HP,
                                                     any damage taken will be subtracted from Temporary HP first.
                                                 </p>
-                                                <p>
+                                                <div>
                                                     Temporary HP:
                                                     <ul>
                                                         <li>Lasts until depleted or until after the next long rest, unless there is a specified duration</li>
                                                         <li>Cannot be replenished with healing</li>
                                                         <li>Can only be used from one source at a time</li>
                                                     </ul>
-                                               </p>                                        
+                                               </div>                                        
                                             </div>
                                         }
                                     >
@@ -303,8 +359,54 @@ function Tracker({pcData, queryClient, pcList, selectedPc, userRole}: Props) {
                                             currentUses={formData[buildFeatureCurrentUsesKey(feature)]}
                                             formData={formData}
                                             handleSubmit={handleSubmit}
-                                        />
+                                        />                                        
                                         <Refresh refreshRestType={feature.data.refresh!}/>
+                                    </Card>
+                                ))
+                            }
+                        </Card>
+                    }
+
+                    {
+                        (pcData.summonables && pcData.summonables.length > 0) &&
+                        <Card>
+                            <h3 className="section-header">Summonables</h3>
+                            {
+                                pcData.summonables.map(s => (
+                                    <Card key={s.id}>
+                                        <Link className="text-link" to={'/details?summonables=true#' + s.id}><h4>{s.data.name ? `${s.data.name} (${s.data.type})` : s.data.type}</h4></Link>
+
+                                        {
+                                            s.data.source.type == 'spell' &&
+                                            <p className="center">Must use the {s.data.source.name} spell in order to summon.</p>
+                                        }
+                                        {
+                                            (s.data.source.type == 'feature' && pcData.features.filter(f => f.data.name === s.data.source.name)[0].data.maxUses) &&
+                                            <p className="center">Must use the {s.data.source.name} feature under the Abilities section in order to summon.</p>
+                                        }                                     
+                                        <button
+                                            className={`btn btn-${(summonedItem.id == s.id && summonedItem.data.summoned) ? 'success' : 'info'}`}
+                                            type="button"
+                                            data-bs-toggle="modal"
+                                            data-bs-target="#summonableActionModal"
+                                            // data-bs-target="#summonableDrawer"
+                                            // aria-controls="summonableDrawer"
+                                            onClick={() => {
+                                                
+                                                setSummonedItem(s);
+                                                setSummonableAction('summon');
+                                            }}
+                                            disabled={s.data.summoned === true || summonedItem.data.summoned === true}
+                                        >
+                                            {
+                                            s.data.summoned === true ? "Summoned" :
+                                            "Summon"
+                                            }
+                                        </button>
+                                        {
+                                            (summonedItem.id !== s.id && summonedItem.data.summoned === true) &&
+                                            <p className="center update-form-description">Cannot summon until the currently summoned item is dismissed</p>
+                                        }
                                     </Card>
                                 ))
                             }
@@ -462,7 +564,6 @@ function Tracker({pcData, queryClient, pcList, selectedPc, userRole}: Props) {
                                                 ...limitedUseFeatures.filter(f => f.data.refresh == RestType.SHORT).reduce((obj, item) => Object.assign(obj, { [buildFeatureCurrentUsesKey(item)]: item.data.maxUses }), {}),
                                                 deathSavesSuccesses: 3,
                                                 deathSavesFailures: 3,
-                                                // TODO: only do default spell slots if isWarlock is true...
                                                 ...(pcData.baseDetails.class.toUpperCase() === 'WARLOCK' && {...pcData.spellSlots?.reduce((obj, item) => Object.assign(obj, { [buildSpellSlotsCurrentKey(item)]: item.data.max }), {})}),
                                             });
                                         }}

@@ -4,13 +4,15 @@ import { Spell } from "@models/playerCharacter/Spell";
 import { Equipment } from "@models/playerCharacter/Equipment";
 import { Feature } from "@models/playerCharacter/Feature";
 import { UsableResources } from "@models/playerCharacter/usableResources/UsableResources";
-import { SpellSlot } from "./usableResources/SpellSlot";
+import { SpellSlot } from "@models/playerCharacter/usableResources/SpellSlot";
+import { Summonable } from "@models/playerCharacter/Summonable";
 
 export interface PlayerCharacter {
     baseDetails: BaseDetails;
     abilityScores: AbilityScores;
     features: Feature[];
     spellSlots?: SpellSlot[];
+    summonables?: Summonable[];
 }
 
 export interface BaseDetails {

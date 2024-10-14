@@ -12,6 +12,7 @@ import { RestType } from "@models/enum/RestType";
 import { BaseDetails, PlayerCharacter } from "@models/playerCharacter/PlayerCharacter";
 import { AbilityScores } from "@models/playerCharacter/AbilityScores";
 import { v4 as uuidv4 } from "uuid";
+import { Summonable } from "@models/playerCharacter/Summonable";
 
 
 export const transformFormDataForUpdate = (pcData: PlayerCharacter, data: {updateType: UpdateType, [key: string]: string | number | object}): {
@@ -25,7 +26,7 @@ export const transformFormDataForUpdate = (pcData: PlayerCharacter, data: {updat
     updateObject: {[key: string]: string | number | object }
   };
   create?: {
-    dataObject: {[key: string]: string | number | object }
+    dataObject: {[key: string]: string | number | object | boolean }
   }
 } => { 
   const { updateType, ...updates } = data;
@@ -182,6 +183,36 @@ export const transformFormDataForUpdate = (pcData: PlayerCharacter, data: {updat
         collectionName: CollectionName.FEATURES,
         create: {
           dataObject: newFeature.data
+        }
+      }
+    }
+    case UpdateType.SUMMONABLES: {
+      const newSummonable: Summonable = {
+        id: '',
+        data: {
+          pcId: pcData.baseDetails.pcId,
+          type: String(updates.type),
+          ...(updates.name && {name: String(updates.name)}),
+          description: String(updates.description),
+          source: {
+            type: String(updates.sourceType),
+            name: String(updates.sourceName)
+          },
+          hitPoints: {
+            max: Number(updates.hitPointMaximum),
+            current: Number(updates.hitPointMaximum)
+          },
+          ...(updates.maxUses && {maxUses: Number(updates.maxUses)}),
+          ...(updates.maxUses && {currentUses: Number(updates.maxUses)}),
+          ...(updates.refresh && {refresh: String(updates.refresh) as RestType}),
+          armorClass: Number(updates.armorClass),
+          summoned: false
+        }
+      };
+      return {
+        collectionName: CollectionName.SUMMONABLES,
+        create: {
+          dataObject: newSummonable.data
         }
       }
     }

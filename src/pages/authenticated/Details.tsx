@@ -1,6 +1,6 @@
 import Navbar from "@components/Navbar";
 import Card from "@components/cards/Card";
-import { formatDataAsTable, orderAndFormatWeaponElements, removeWhiteSpaceAndConvertToLowerCase } from "@components/utils";
+import { capitalize, formatDataAsTable, orderAndFormatWeaponElements, removeWhiteSpaceAndConvertToLowerCase } from "@components/utils";
 import { Spell } from "@models/playerCharacter/Spell";
 import { BaseDetails, PlayerCharacter } from "@models/playerCharacter/PlayerCharacter";
 import PageHeaderBarPC from "@components/headerBars/PageHeaderBarPC";
@@ -43,6 +43,11 @@ function Details({pcData, pcList, selectedPc, queryClient, userRole}: Props) {
     const [editable, setEditable] = useState(false);
     const handleDeleteFeature = async (featureId: string) => {
         await deleteItemById(CollectionName.FEATURES, featureId);
+        queryClient.invalidateQueries();
+        triggerSuccessAlert(setShowSuccessAlert);
+    }
+    const handleDeleteSummonable = async (summonableId: string) => {
+        await deleteItemById(CollectionName.SUMMONABLES, summonableId);
         queryClient.invalidateQueries();
         triggerSuccessAlert(setShowSuccessAlert);
     }
@@ -168,6 +173,8 @@ function Details({pcData, pcList, selectedPc, queryClient, userRole}: Props) {
                         handleDeleteObjectArrayItem(showConfirmDelete.data.objectArrayFieldName, showConfirmDelete.data.objectArrayFullItem, showConfirmDelete.data.objectArrayExistingItems);
                     } else if (showConfirmDelete.data.stringArrayFieldName) {
                         handleDeleteStringArrayItem(showConfirmDelete.data.stringArrayFieldName, showConfirmDelete.data.stringArrayItemName);
+                    } else if (showConfirmDelete.data.summonableId) {
+                        handleDeleteSummonable(showConfirmDelete.data.summonableId);
                     } else {
                         console.error('Unprocessable data in state object.');
                         alert('Error deleting item. Please refresh the page and try again.');
@@ -191,6 +198,7 @@ function Details({pcData, pcList, selectedPc, queryClient, userRole}: Props) {
                 }}
                 setFormData={setEditModalFormData}
                 handleCancel={() => { setEditModalFormData(emptyEditModalData)}}
+                pcData={pcData}
             />
 
             {showSuccessAlert && <SuccessAlert/>}
@@ -345,6 +353,78 @@ function Details({pcData, pcList, selectedPc, queryClient, userRole}: Props) {
                                     { feature.data.damage && <p><b>Damage: </b>{feature.data.damage} {feature.data.damageType}</p>}
                                     { feature.data.saveDC && <p><b>Spell Save DC: </b>{feature.data.saveDC}</p>}
                                     { feature.data.sourceUrl && <p><b>Source URL: </b><a href={feature.data.sourceUrl} target="_blank">{feature.data.sourceUrl}</a></p>}
+                                </div>                            
+                            </Card>
+                        ))
+                    }
+                </Card>
+            }
+
+            {
+                (pcData.summonables && pcData.summonables.length > 0) &&
+                <Card>
+                    <FormHeader
+                        anchorTag="summonables"
+                        formTitle="Summonables"
+                        onClick={() => {
+                            setShowSection({...emptyShowSectionData, summonables: !showSection.summonables});
+                            setSearchParams();
+                        }}
+                        showForm={showSection.summonables}
+                    />
+                    {
+                        showSection.summonables &&
+                        pcData.summonables?.sort((a,b) => {
+                            const aComparable = a.data.name ?? a.data.type;
+                            const bComparable = b.data.name ?? b.data.type;
+                            if (aComparable < bComparable) return -1;
+                            return 1;
+                        }).map(s => (
+                            <Card key={s.id}>
+                                <a id={s.id}></a>
+                                <TitleButtonRow
+                                    text={s.data.name ? `${s.data.name} (${s.data.type})` : s.data.type}
+                                    buttons={
+                                        <>
+                                        <DeleteItemButton
+                                            editable={editable}
+                                            handleDelete={() => setShowConfirmDelete({
+                                                show: true,
+                                                data: {
+                                                    ...emptyShowConfirmDeleteData,
+                                                    summonableId: s.id,
+                                                    displayName: s.data.name ? `${s.data.name} (${s.data.type})` : s.data.type
+                                                }
+                                            })}
+                                        />
+                                        <EditItemButton
+                                            editable={editable}
+                                            handleEdit={() => {
+                                                setEditModalFormData({
+                                                    ...emptyEditModalData,
+                                                    formType: 'summonable',
+                                                    displayName: s.data.name ? `${s.data.name} (${s.data.type})` : s.data.type,
+                                                    summonableId: s.id,
+                                                    type: s.data.type,
+                                                    name: s.data.name ?? '',
+                                                    description: s.data.description,
+                                                    sourceType: s.data.source.type,
+                                                    sourceName: s.data.source.name,
+                                                    hitPointMaximum: String(s.data.hitPoints.max),
+                                                    hitPointsCurrent: String(s.data.hitPoints.current),
+                                                    armorClass: String(s.data.armorClass),
+                                                    summoned: s.data.summoned ? "true" : "false"
+                                                })
+                                            }}
+                                        />
+                                        </>
+                                    }
+                                />
+                                <div className="content">
+                                    <p><b>Description: </b>{s.data.description}</p>
+                                    <p><b>Source: </b>{s.data.source.name} ({capitalize(s.data.source.type)})</p>
+                                    <p><b>Max HP: </b>{s.data.hitPoints.max}</p>
+                                    <p><b>Armor Class: </b>{s.data.armorClass}</p>
                                 </div>                            
                             </Card>
                         ))
