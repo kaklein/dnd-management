@@ -36,7 +36,10 @@ function AddItems ({pcData, queryClient, pcList, selectedPc, userRole}: Props) {
 
   // Form Data
   const [weaponFormData, setWeaponFormData] = useState(defaultWeaponFormData);
+  
   const [spellFormData, setSpellFormData] = useState(defaultSpellFormData);
+  const [initialEditorContent, setInitialEditorContent] = useState(spellFormData.description);
+
   const [spellSlotFormData, setSpellSlotFormData] = useState(defaultSpellSlotFormData);
   const [featureFormData, setFeatureFormData] = useState(defaultFeatureFormData);
   const [equipmentFormData, setEquipmentFormData] = useState(defaultEquipmentFormData);
@@ -114,6 +117,8 @@ function AddItems ({pcData, queryClient, pcList, selectedPc, userRole}: Props) {
           handleSubmit={handleSubmit}
           formData={spellFormData}
           setFormData={setSpellFormData}
+          initialEditorContent={initialEditorContent}
+          setInitialEditorContent={setInitialEditorContent}
           showSection={{data: showSection, setFunction: setShowSection}}
         />
       </Card>
@@ -196,6 +201,7 @@ function AddItems ({pcData, queryClient, pcList, selectedPc, userRole}: Props) {
           showSection={{data: showSection, setFunction: setShowSection}}
         />
       </Card>
+
       <AboutFooter/>   
     </div>
     <QuickNav/>

@@ -21,11 +21,26 @@ interface Props {
     clearedFormData: any
   ) => void;
   setFormData: (data: any) => void;
+  initialEditorContent?: string;
+  setInitialEditorContent?: (content: string) => void;
   handleCancel: () => void;
   pcData: PlayerCharacter;
 }
 
-function EditModal ({ formType, formData, handleChange, handleSubmit, handleCancel, setFormData, pcData}: Props) {
+const checkRequiredContent = (formType: string, content?: string, setContent?: (content: string) => void) => {
+  if (formType === 'spell') {
+    if (!content || !setContent) throw Error('Spell form is missing required initialEditorContent and/or setInitialEditorContent');
+    return {
+      content: content,
+      setContent: setContent
+    };
+  }
+  return undefined;  
+}
+
+function EditModal ({ formType, formData, handleChange, handleSubmit, handleCancel, setFormData, initialEditorContent, setInitialEditorContent, pcData}: Props) {
+  const editorContent = checkRequiredContent(formType, initialEditorContent, setInitialEditorContent);
+  
   let form: ReactNode;
   switch (formType) {
     case 'spell': {
@@ -35,6 +50,8 @@ function EditModal ({ formType, formData, handleChange, handleSubmit, handleCanc
         formData={formData}
         setFormData={setFormData}
         modalDismiss={true}
+        initialEditorContent={editorContent!.content}
+        setInitialEditorContent={editorContent!.setContent}
       />
       break;
     }
@@ -122,7 +139,10 @@ function EditModal ({ formType, formData, handleChange, handleSubmit, handleCanc
             {form}
           </div>
           <div className="modal-footer">
-            <button type="button" className="btn btn-secondary" onClick={handleCancel} data-bs-dismiss="modal">Cancel</button>
+            <button type="button" className="btn btn-secondary" onClick={() => {
+              handleCancel;
+
+            }} data-bs-dismiss="modal">Cancel</button>
           </div>
         </div>
       </div>

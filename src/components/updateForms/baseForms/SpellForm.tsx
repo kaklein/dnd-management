@@ -5,6 +5,7 @@ import { DamageType } from "@models/enum/DamageType";
 import { SpellLevel } from "@models/playerCharacter/Spell";
 import { useState } from "react";
 import Button, { ButtonType } from "@components/Button";
+import TextEditor from "@components/TextEditor";
 
 interface Props {
   handleChange: (event: any, setFunction: (prevFormData: any) => void) => void;
@@ -15,11 +16,13 @@ interface Props {
     clearedFormData: any
   ) => void;
   formData: any;
+  initialEditorContent: string;
+  setInitialEditorContent: (content: string) => void; 
   setFormData: (data: any) => void;
   modalDismiss?: boolean;
 }
 
-function SpellForm ({handleChange, handleSubmit, formData, setFormData, modalDismiss=false}: Props) {
+function SpellForm ({handleChange, handleSubmit, formData, setFormData, initialEditorContent, setInitialEditorContent, modalDismiss=false}: Props) {
   const [showDamageFields, setShowDamageFields] = useState(formData.damage ? true : false);
   const handleDamageCheckboxChange = () => {
     const newVal = !showDamageFields;
@@ -29,9 +32,12 @@ function SpellForm ({handleChange, handleSubmit, formData, setFormData, modalDis
       handleChange({target: {name: 'damageType', value: ''}}, setFormData);
     }
   }
-  
+
   return (
-      <form onSubmit={(event) => {handleSubmit(event, formData, setFormData, defaultSpellFormData)}}>
+      <form onSubmit={(event) => {
+        handleSubmit(event, formData, setFormData, defaultSpellFormData);
+        setInitialEditorContent('<p></p>');
+      }}>
         <div className="update-form-field">
           <label className="update-form-label" htmlFor="name">Name</label>
           <input
@@ -47,17 +53,11 @@ function SpellForm ({handleChange, handleSubmit, formData, setFormData, modalDis
         <div className="update-form-field">
           <label className="update-form-label" htmlFor="description">Description</label>
           <p className="update-form-description">
-            Copy/paste the full spell description from your source, including Casting Time, 
-            Range, Target, Components, Duration, Classes, and Description. This will be displayed on the Details page for easy reference.
+            Copy/paste the full spell description here. This will be displayed on the Details page for easy reference.
           </p>
-          <textarea
-            className="update-form-input"
-            id="description"
-            name="description"
-            onChange={(event) => {handleChange(event, setFormData)}}
-            value={formData.description}
-            required
-          />
+          <TextEditor initialEditorContent={initialEditorContent}  handleChange={(value: string) => {
+            handleChange({ target: { name: 'description', value: value }}, setFormData);
+          }}/>
         </div>
         <div className="update-form-field">
           <label className="update-form-label" htmlFor="level">Spell Level</label>

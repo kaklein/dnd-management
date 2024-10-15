@@ -71,7 +71,8 @@ function Details({pcData, pcList, selectedPc, queryClient, userRole}: Props) {
     };
 
     const [showConfirmDelete, setShowConfirmDelete] = useState({show: false, data: emptyShowConfirmDeleteData});
-    const [editModalFormData, setEditModalFormData] = useState(emptyEditModalData)
+    const [editModalFormData, setEditModalFormData] = useState(emptyEditModalData);
+    const [initialEditorContent, setInitialEditorContent] = useState(editModalFormData.description);
 
     const mapSpells = (
         spells: Spell[], 
@@ -118,15 +119,17 @@ function Details({pcData, pcList, selectedPc, queryClient, userRole}: Props) {
                                         sourceUrl: spell.sourceUrl ?? '',
                                         level: spell.level,
                                         spellCastingAbility: spell.spellCastingAbility
-                                    })
+                                    });
+                                    setInitialEditorContent(spell.description);
                                 }}
                             />
                             </>
                         }
                     />
                     <div className="content">                   
-                        <p><b>Description: </b>{spell.description}</p>
-        
+                        <div className="long-text-display left-justify" dangerouslySetInnerHTML={{__html: spell.description}}/>
+                        <hr/>
+
                         <p><b>Type: </b>{spell.level}</p>
         
                         {spell.damage &&
@@ -190,6 +193,7 @@ function Details({pcData, pcList, selectedPc, queryClient, userRole}: Props) {
                     try {
                         await handleSubmitEdit(event, editModalFormData, pcData);
                         queryClient.invalidateQueries();
+                        setEditModalFormData(emptyEditModalData);
                         triggerSuccessAlert(setShowSuccessAlert);
                     } catch (e) {
                         console.error(`Error submitting changes: ${e}`);
@@ -197,7 +201,11 @@ function Details({pcData, pcList, selectedPc, queryClient, userRole}: Props) {
                     }
                 }}
                 setFormData={setEditModalFormData}
-                handleCancel={() => { setEditModalFormData(emptyEditModalData)}}
+                initialEditorContent={initialEditorContent}
+                setInitialEditorContent={setInitialEditorContent}
+                handleCancel={() => {
+                    setEditModalFormData(emptyEditModalData);
+                }}
                 pcData={pcData}
             />
 

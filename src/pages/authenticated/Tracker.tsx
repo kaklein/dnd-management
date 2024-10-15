@@ -389,8 +389,6 @@ function Tracker({pcData, queryClient, pcList, selectedPc, userRole}: Props) {
                                             type="button"
                                             data-bs-toggle="modal"
                                             data-bs-target="#summonableActionModal"
-                                            // data-bs-target="#summonableDrawer"
-                                            // aria-controls="summonableDrawer"
                                             onClick={() => {
                                                 
                                                 setSummonedItem(s);
