@@ -16,16 +16,19 @@ interface Props {
   setFormData: (data: any) => void;
   defaultFormData: any;
   useTextArea?: boolean;
+  initialEditorContent?: string;
+  setInitialEditorContent?: (content: string) => void;
   showSection: {data: any, setFunction: (newValues: any) => void};
 }
 
-function AddItemToArrayField ({fieldName, handleChange, handleSubmit, formData, setFormData, defaultFormData, description="", useTextArea=false, showSection}: Props) {
+function AddItemToArrayField ({fieldName, handleChange, handleSubmit, formData, setFormData, defaultFormData, initialEditorContent, setInitialEditorContent, description="", useTextArea=false, showSection}: Props) {
   const arrayFieldName = 
     fieldName == 'language' ? 'languages' : 
     fieldName == 'proficiency' ? 'proficiencies' : 
     fieldName == 'note' ? 'notes' :
     undefined;
   if(!arrayFieldName) throw Error (`Unknown array field  name: ${fieldName}`);
+  if(arrayFieldName === 'notes' && (!initialEditorContent || !setInitialEditorContent)) throw Error('Missing required initialEditorContent param for notes');
   const showForm = showSection.data[arrayFieldName];
 
   return (
@@ -50,6 +53,8 @@ function AddItemToArrayField ({fieldName, handleChange, handleSubmit, formData, 
         formData={formData}
         setFormData={setFormData}
         defaultFormData={defaultFormData}
+        initialEditorContent={initialEditorContent}
+        setInitialEditorContent={setInitialEditorContent}
         useTextArea={useTextArea}
       />
     }

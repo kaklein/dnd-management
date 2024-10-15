@@ -49,7 +49,8 @@ function Overview({pcData, pcList, selectedPc, userRole, queryClient}: Props) {
         navigate(`/home?deleted=${pcData.baseDetails.name.firstName}_${pcData.baseDetails.name.lastName}`);
         location.reload();
     }
-    const [editModalFormData, setEditModalFormData] = useState(emptyEditModalData)
+    const [editModalFormData, setEditModalFormData] = useState(emptyEditModalData);
+    const [initialEditorContent, setInitialEditorContent] = useState(editModalFormData.description);
     const [showSuccessAlert, setShowSuccessAlert] = useState(false);
     const handleChange = (
         event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>, 
@@ -77,6 +78,7 @@ function Overview({pcData, pcList, selectedPc, userRole, queryClient}: Props) {
                 try {
                     await handleSubmitEdit(event, editModalFormData, pcData);
                     queryClient.invalidateQueries();
+                    setEditModalFormData(emptyEditModalData);
                     setEditable(false);
                     triggerSuccessAlert(setShowSuccessAlert);
                 } catch (e) {
@@ -85,6 +87,8 @@ function Overview({pcData, pcList, selectedPc, userRole, queryClient}: Props) {
                 }
             }}
             setFormData={setEditModalFormData}
+            initialEditorContent={initialEditorContent}
+            setInitialEditorContent={setInitialEditorContent}
             handleCancel={() => setEditModalFormData(emptyEditModalData)}
             pcData={pcData}
         />
@@ -130,7 +134,8 @@ function Overview({pcData, pcList, selectedPc, userRole, queryClient}: Props) {
                                         speed: String(pcData.baseDetails.speed),
                                         xp: String(pcData.baseDetails.xp) ?? '',
                                         hitDiceType: pcData.baseDetails.usableResources.hitDice.type,
-                                    });
+                                    });     
+                                    setInitialEditorContent(pcData.baseDetails.description ?? '<p></p>');
                                 }}
                             />
                             </>
@@ -147,7 +152,7 @@ function Overview({pcData, pcList, selectedPc, userRole, queryClient}: Props) {
                     
                     {
                         pcData.baseDetails.description &&
-                        <p className="card-text bottom-border">{pcData.baseDetails.description}</p>                        
+                        <div className="long-text-display card-text bottom-border" dangerouslySetInnerHTML={{__html: pcData.baseDetails.description}}/>
                     }
 
                     {formatDataAsTable(listCardObject)}

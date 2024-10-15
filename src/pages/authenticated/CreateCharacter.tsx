@@ -23,6 +23,7 @@ function CreateCharacter ({queryClient, setSelectedPcId, userRole}: Props) {
   const navigate = useNavigate();
 
   const [formData, setFormData] = useState(defaultCreateCharacterFormData);
+  const [initialEditorContent, setInitialEditorContent] = useState(formData.description ?? '<p></p>');
 
   const handleChange = (
     event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>, 
@@ -78,6 +79,8 @@ function CreateCharacter ({queryClient, setSelectedPcId, userRole}: Props) {
           handleSubmit={handleSubmit}
           formData={formData}
           setFormData={setFormData}
+          initialEditorContent={initialEditorContent}
+          setInitialEditorContent={setInitialEditorContent}
         />
       </Card>
     </div>

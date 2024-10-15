@@ -28,8 +28,8 @@ interface Props {
 }
 
 const checkRequiredContent = (formType: string, content?: string, setContent?: (content: string) => void) => {
-  if (formType === 'spell') {
-    if (!content || !setContent) throw Error('Spell form is missing required initialEditorContent and/or setInitialEditorContent');
+  if (['spell', 'weapon', 'feature', 'equipment', 'summonable', 'note', 'character'].includes(formType)) {
+    if (!content || !setContent) throw Error(formType + ' form is missing required initialEditorContent and/or setInitialEditorContent');
     return {
       content: content,
       setContent: setContent
@@ -62,6 +62,8 @@ function EditModal ({ formType, formData, handleChange, handleSubmit, handleCanc
         formData={formData}
         setFormData={setFormData}
         modalDismiss={true}
+        initialEditorContent={editorContent!.content}
+        setInitialEditorContent={editorContent!.setContent}
       />
       break;
     }
@@ -73,6 +75,8 @@ function EditModal ({ formType, formData, handleChange, handleSubmit, handleCanc
         setFormData={setFormData}
         pcData={pcData}
         modalDismiss={true}
+        initialEditorContent={editorContent!.content}
+        setInitialEditorContent={editorContent!.setContent}
       />
       break;
     }
@@ -83,6 +87,8 @@ function EditModal ({ formType, formData, handleChange, handleSubmit, handleCanc
         formData={formData}
         setFormData={setFormData}
         modalDismiss={true}
+        initialEditorContent={editorContent!.content}
+        setInitialEditorContent={editorContent!.setContent}
       />
       break;
     }
@@ -93,6 +99,8 @@ function EditModal ({ formType, formData, handleChange, handleSubmit, handleCanc
         formData={formData}
         setFormData={setFormData}
         modalDismiss={true}
+        initialEditorContent={editorContent!.content}
+        setInitialEditorContent={editorContent!.setContent}
       />
       break;
     }
@@ -106,6 +114,8 @@ function EditModal ({ formType, formData, handleChange, handleSubmit, handleCanc
         formData={formData}
         setFormData={setFormData}
         useTextArea={formData.useTextArea}
+        initialEditorContent={editorContent!.content}
+        setInitialEditorContent={editorContent!.setContent}
         defaultFormData={emptyEditModalData}
         modalDismiss={true}
       />
@@ -117,6 +127,8 @@ function EditModal ({ formType, formData, handleChange, handleSubmit, handleCanc
         handleSubmit={handleSubmit}
         formData={formData}
         setFormData={setFormData}
+        initialEditorContent={editorContent!.content}
+        setInitialEditorContent={editorContent!.setContent}
         modalDismiss={true}
       />
       break;

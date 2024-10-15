@@ -1,6 +1,7 @@
 import Button, { ButtonType } from "@components/Button";
 import Card from "@components/cards/Card";
 import FormSelect from "@components/FormSelect";
+import TextEditor from "@components/TextEditor";
 import { buildProficiencyForms } from "@components/utils";
 import { Alignment } from "@models/enum/Alignment";
 import { HitDiceType } from "@models/enum/HitDiceType";
@@ -15,16 +16,21 @@ interface Props {
     clearedFormData: any
   ) => void;
   formData: any;
+  initialEditorContent: string;
+  setInitialEditorContent: (content: string) => void;
   setFormData: (data: any) => void;
 }
 
-function CreateCharacterForm ({handleChange, handleSubmit, formData, setFormData}: Props) {
+function CreateCharacterForm ({handleChange, handleSubmit, formData, initialEditorContent, setInitialEditorContent, setFormData}: Props) {
   const [showBaseDetails, setShowBaseDetails] = useState(true);
   const [showAbilityScores, setShowAbilityScores] = useState(false);
   
   return (
     <div>
-      <form className="update-pc-form" onSubmit={(event) => handleSubmit(event, formData, setFormData, formData)}>
+      <form className="update-pc-form" onSubmit={(event) => {
+        setInitialEditorContent('<p></p>');
+        handleSubmit(event, formData, setFormData, formData)
+      }}>
         {
           showBaseDetails &&
           <>
@@ -56,12 +62,11 @@ function CreateCharacterForm ({handleChange, handleSubmit, formData, setFormData
             </div>
             <div className="update-form-field">
               <label className="update-form-label" htmlFor="description">Description (Optional)</label>
-              <textarea
-                className="update-form-input"
-                id="description"
-                name="description"
-                onChange={(event) => {handleChange(event, setFormData)}}
-                value={formData.description || ""}
+              <TextEditor
+                initialEditorContent={initialEditorContent}
+                handleChange={(value: string) => {
+                  handleChange({ target: { name: 'description', value: value }}, setFormData);
+                }}
               />
             </div>
             <div className="update-form-field">

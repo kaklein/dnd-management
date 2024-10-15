@@ -6,6 +6,7 @@ import { SpellLevel } from "@models/playerCharacter/Spell";
 import { useState } from "react";
 import Button, { ButtonType } from "@components/Button";
 import TextEditor from "@components/TextEditor";
+import { validateRequiredFields } from "../utils";
 
 interface Props {
   handleChange: (event: any, setFunction: (prevFormData: any) => void) => void;
@@ -16,9 +17,9 @@ interface Props {
     clearedFormData: any
   ) => void;
   formData: any;
+  setFormData: (data: any) => void;
   initialEditorContent: string;
   setInitialEditorContent: (content: string) => void; 
-  setFormData: (data: any) => void;
   modalDismiss?: boolean;
 }
 
@@ -35,8 +36,15 @@ function SpellForm ({handleChange, handleSubmit, formData, setFormData, initialE
 
   return (
       <form onSubmit={(event) => {
-        handleSubmit(event, formData, setFormData, defaultSpellFormData);
-        setInitialEditorContent('<p></p>');
+        const { valid, errorMessage } = validateRequiredFields(['description'], formData);
+        if (!valid) {
+          event.preventDefault();
+          alert(errorMessage);
+          return;
+        } else {
+          setInitialEditorContent('<p></p>');
+          handleSubmit(event, formData, setFormData, defaultSpellFormData);
+        }
       }}>
         <div className="update-form-field">
           <label className="update-form-label" htmlFor="name">Name</label>
@@ -55,9 +63,12 @@ function SpellForm ({handleChange, handleSubmit, formData, setFormData, initialE
           <p className="update-form-description">
             Copy/paste the full spell description here. This will be displayed on the Details page for easy reference.
           </p>
-          <TextEditor initialEditorContent={initialEditorContent}  handleChange={(value: string) => {
-            handleChange({ target: { name: 'description', value: value }}, setFormData);
-          }}/>
+          <TextEditor
+            initialEditorContent={initialEditorContent}
+            handleChange={(value: string) => {
+              handleChange({ target: { name: 'description', value: value }}, setFormData);
+            }}
+          />
         </div>
         <div className="update-form-field">
           <label className="update-form-label" htmlFor="level">Spell Level</label>

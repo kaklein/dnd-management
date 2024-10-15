@@ -372,7 +372,12 @@ function Tracker({pcData, queryClient, pcList, selectedPc, userRole}: Props) {
                         <Card>
                             <h3 className="section-header">Summonables</h3>
                             {
-                                pcData.summonables.map(s => (
+                                pcData.summonables.sort((a,b) => {
+                                    const aComparable = a.data.name ?? a.data.type;
+                                    const bComparable = b.data.name ?? b.data.type;
+                                    if (aComparable < bComparable) return -1;
+                                    return 1;
+                                }).map(s => (
                                     <Card key={s.id}>
                                         <Link className="text-link" to={'/details?summonables=true#' + s.id}><h4>{s.data.name ? `${s.data.name} (${s.data.type})` : s.data.type}</h4></Link>
 

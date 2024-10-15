@@ -4,6 +4,8 @@ import { DamageType } from "@models/enum/DamageType";
 import { RestType } from "@models/enum/RestType";
 import { useState } from "react";
 import Button, { ButtonType } from "@components/Button";
+import { validateRequiredFields } from "../utils";
+import TextEditor from "@components/TextEditor";
 
 interface Props {
   handleChange: (event: any, setFunction: (prevFormData: any) => void) => void;
@@ -15,10 +17,12 @@ interface Props {
   ) => void;
   formData: any;
   setFormData: (data: any) => void;
+  initialEditorContent: string;
+  setInitialEditorContent: (content: string) => void; 
   modalDismiss?: boolean;
 }
 
-function FeatureForm ({handleChange, handleSubmit, formData, setFormData, modalDismiss=false}: Props) {
+function FeatureForm ({handleChange, handleSubmit, formData, setFormData, initialEditorContent, setInitialEditorContent, modalDismiss=false}: Props) {
   const [showLimitedUseFields, setShowLimitedUseFields] = useState(formData.maxUses ? true : false);
   const handleLimitedUseCheckboxChange = () => {
     const newVal = !showLimitedUseFields;
@@ -49,7 +53,17 @@ function FeatureForm ({handleChange, handleSubmit, formData, setFormData, modalD
   }
   
   return (
-    <form onSubmit={(event) => {handleSubmit(event, formData, setFormData, defaultFeatureFormData)}}>     
+    <form onSubmit={(event) => {
+      const { valid, errorMessage } = validateRequiredFields(['description'], formData);
+        if (!valid) {
+          event.preventDefault();
+          alert(errorMessage);
+          return;
+        } else {
+          setInitialEditorContent('<p></p>');
+          handleSubmit(event, formData, setFormData, defaultFeatureFormData);
+        }
+    }}>     
       <div className="update-form-field">
         <label className="update-form-label" htmlFor="name">Name</label>
         <input
@@ -64,13 +78,11 @@ function FeatureForm ({handleChange, handleSubmit, formData, setFormData, modalD
       </div>
       <div className="update-form-field">
         <label className="update-form-label" htmlFor="description">Description</label>
-        <textarea
-          className="update-form-input"
-          id="description"
-          name="description"
-          onChange={(event) => {handleChange(event, setFormData)}}
-          value={formData.description}
-          required
+        <TextEditor
+          initialEditorContent={initialEditorContent}
+          handleChange={(value: string) => {
+            handleChange({ target: { name: 'description', value: value }}, setFormData);
+          }}
         />          
       </div>
       <div className="update-form-field">

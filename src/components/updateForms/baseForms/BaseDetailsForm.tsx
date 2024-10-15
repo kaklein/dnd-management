@@ -1,5 +1,6 @@
 import Button, { ButtonType } from "@components/Button";
 import FormSelect from "@components/FormSelect";
+import TextEditor from "@components/TextEditor";
 import { Alignment } from "@models/enum/Alignment";
 import { HitDiceType } from "@models/enum/HitDiceType";
 
@@ -13,12 +14,17 @@ interface Props {
   ) => void;
   formData: any;
   setFormData: (data: any) => void;
+  initialEditorContent: string;
+  setInitialEditorContent: (content: string) => void;
   modalDismiss?: boolean;
 }
 
-function BaseDetailsForm ({handleChange, handleSubmit, formData, setFormData, modalDismiss}: Props) {
+function BaseDetailsForm ({handleChange, handleSubmit, formData, setFormData, initialEditorContent, setInitialEditorContent, modalDismiss}: Props) {
   return (
-    <form onSubmit={(event) => {handleSubmit(event, formData, setFormData, {})}}>
+    <form onSubmit={(event) => {
+      setInitialEditorContent('<p></p>');
+      handleSubmit(event, formData, setFormData, {});
+    }}>
       <div className="update-form-field">
         <label className="update-form-label" htmlFor="level">Level</label>
         <input
@@ -62,12 +68,11 @@ function BaseDetailsForm ({handleChange, handleSubmit, formData, setFormData, mo
       </div>
       <div className="update-form-field">
         <label className="update-form-label" htmlFor="description">Description (Optional)</label>
-        <textarea
-          className="update-form-input"
-          id="description"
-          name="description"
-          onChange={(event) => {handleChange(event, setFormData)}}
-          value={formData.description}
+        <TextEditor
+          initialEditorContent={initialEditorContent}
+          handleChange={(value: string) => {
+            handleChange({ target: { name: 'description', value: value }}, setFormData);
+          }}
         />
       </div>
       <div className="update-form-field">
@@ -98,7 +103,7 @@ function BaseDetailsForm ({handleChange, handleSubmit, formData, setFormData, mo
           }
           required
         />              
-      </div> 
+      </div>
       <div className="update-form-field">
         <label className="update-form-label" htmlFor="subclass">Subclass (Optional)</label>
         <input
