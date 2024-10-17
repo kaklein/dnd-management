@@ -1,6 +1,6 @@
 import { defaultEquipmentFormData } from "@data/emptyFormData";
 import Button, { ButtonType } from "@components/Button";
-import TextEditor from "@components/TextEditor";
+import TextEditor, { buildEditor } from "@components/TextEditor";
 
 interface Props {
   handleChange: (event: any, setFunction: (prevFormData: any) => void) => void;
@@ -9,19 +9,23 @@ interface Props {
     data: any, 
     clearForm: (data: any) => void,
     clearedFormData: any
-  ) => void;
+  ) => Promise<void>;
   formData: any;
   setFormData: (data: any) => void;
   initialEditorContent: string;
-  setInitialEditorContent: (content: string) => void;
   modalDismiss?: boolean;
 }
 
-function EquipmentForm ({handleChange, handleSubmit, formData, setFormData, initialEditorContent, setInitialEditorContent, modalDismiss=false}: Props) { 
+function EquipmentForm ({handleChange, handleSubmit, formData, setFormData, initialEditorContent, modalDismiss=false}: Props) { 
+  const editor = buildEditor(initialEditorContent, (value: string) => {
+    handleChange({ target: { name: 'description', value: value }}, setFormData);
+  });
+  
   return (
-    <form onSubmit={(event) => {
-      setInitialEditorContent('<p></p>');
-      handleSubmit(event, formData, setFormData, defaultEquipmentFormData)
+    editor &&
+    <form onSubmit={async (event) => {
+      await handleSubmit(event, formData, setFormData, defaultEquipmentFormData);
+      editor.commands.clearContent();
     }}>
       <div className="update-form-field">
         <label className="update-form-label" htmlFor="type">Name</label>
@@ -38,10 +42,7 @@ function EquipmentForm ({handleChange, handleSubmit, formData, setFormData, init
       <div className="update-form-field">
         <label className="update-form-label" htmlFor="description">Description (Optional)</label>
         <TextEditor
-          initialEditorContent={initialEditorContent}
-          handleChange={(value: string) => {
-            handleChange({ target: { name: 'description', value: value }}, setFormData);
-          }}
+          editor={editor}
         />
       </div>
         

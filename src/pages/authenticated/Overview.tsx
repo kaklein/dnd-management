@@ -15,7 +15,7 @@ import { useNavigate } from "react-router-dom";
 import EditItemButton from "@components/EditItemButton";
 import EditModal from "@components/modals/EditModal";
 import { emptyEditModalData } from "@data/emptyFormData";
-import { handleSubmitEdit, triggerSuccessAlert } from "@pages/utils";
+import { emptyRichTextContent, handleSubmitEdit, triggerSuccessAlert } from "@pages/utils";
 import { QueryClient } from "@tanstack/react-query";
 import SuccessAlert from "@components/alerts/SuccessAlert";
 import AboutFooter from "@components/AboutFooter";
@@ -88,7 +88,6 @@ function Overview({pcData, pcList, selectedPc, userRole, queryClient}: Props) {
             }}
             setFormData={setEditModalFormData}
             initialEditorContent={initialEditorContent}
-            setInitialEditorContent={setInitialEditorContent}
             handleCancel={() => setEditModalFormData(emptyEditModalData)}
             pcData={pcData}
         />
@@ -135,7 +134,7 @@ function Overview({pcData, pcList, selectedPc, userRole, queryClient}: Props) {
                                         xp: String(pcData.baseDetails.xp) ?? '',
                                         hitDiceType: pcData.baseDetails.usableResources.hitDice.type,
                                     });     
-                                    setInitialEditorContent(pcData.baseDetails.description ?? '<p></p>');
+                                    setInitialEditorContent(pcData.baseDetails.description ?? emptyRichTextContent);
                                 }}
                             />
                             </>
@@ -151,7 +150,7 @@ function Overview({pcData, pcList, selectedPc, userRole, queryClient}: Props) {
                     </div>
                     
                     {
-                        pcData.baseDetails.description &&
+                        (pcData.baseDetails.description && pcData.baseDetails.description != emptyRichTextContent)  &&
                         <div className="long-text-display card-text bottom-border" dangerouslySetInnerHTML={{__html: pcData.baseDetails.description}}/>
                     }
 

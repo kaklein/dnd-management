@@ -38,8 +38,6 @@ function AddItems ({pcData, queryClient, pcList, selectedPc, userRole}: Props) {
   const [weaponFormData, setWeaponFormData] = useState(defaultWeaponFormData);
   
   const [spellFormData, setSpellFormData] = useState(defaultSpellFormData);
-  const [initialEditorContent, setInitialEditorContent] = useState('<p></p>');
-
   const [spellSlotFormData, setSpellSlotFormData] = useState(defaultSpellSlotFormData);
   const [featureFormData, setFeatureFormData] = useState(defaultFeatureFormData);
   const [equipmentFormData, setEquipmentFormData] = useState(defaultEquipmentFormData);
@@ -47,6 +45,8 @@ function AddItems ({pcData, queryClient, pcList, selectedPc, userRole}: Props) {
   const [languageFormData, setLanguageFormData] = useState(defaultLanguageFormData);
   const [noteFormData, setNoteFormData] = useState(defaultNoteFormData);
   const [summonableFormData, setSummonableFormData] = useState(defaultSummonableFormData);
+
+  const initialEditorContent = '';
 
   const handleChange = (
     event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>, 
@@ -118,7 +118,6 @@ function AddItems ({pcData, queryClient, pcList, selectedPc, userRole}: Props) {
           formData={spellFormData}
           setFormData={setSpellFormData}
           initialEditorContent={initialEditorContent}
-          setInitialEditorContent={setInitialEditorContent}
           showSection={{data: showSection, setFunction: setShowSection}}
         />
       </Card>
@@ -130,7 +129,6 @@ function AddItems ({pcData, queryClient, pcList, selectedPc, userRole}: Props) {
           formData={weaponFormData}
           setFormData={setWeaponFormData}
           initialEditorContent={initialEditorContent}
-          setInitialEditorContent={setInitialEditorContent}
           showSection={{data: showSection, setFunction: setShowSection}}
         />
       </Card>
@@ -142,7 +140,6 @@ function AddItems ({pcData, queryClient, pcList, selectedPc, userRole}: Props) {
           formData={featureFormData}
           setFormData={setFeatureFormData}
           initialEditorContent={initialEditorContent}
-          setInitialEditorContent={setInitialEditorContent}
           showSection={{data: showSection, setFunction: setShowSection}}
         />
       </Card>
@@ -154,7 +151,6 @@ function AddItems ({pcData, queryClient, pcList, selectedPc, userRole}: Props) {
           formData={equipmentFormData}
           setFormData={setEquipmentFormData}
           initialEditorContent={initialEditorContent}
-          setInitialEditorContent={setInitialEditorContent}
           showSection={{data: showSection, setFunction: setShowSection}}
         />
       </Card>
@@ -166,7 +162,6 @@ function AddItems ({pcData, queryClient, pcList, selectedPc, userRole}: Props) {
           formData={summonableFormData}
           setFormData={setSummonableFormData}
           initialEditorContent={initialEditorContent}
-          setInitialEditorContent={setInitialEditorContent}
           showSection={{data: showSection, setFunction: setShowSection}}
           pcData={pcData}
         />
@@ -207,7 +202,6 @@ function AddItems ({pcData, queryClient, pcList, selectedPc, userRole}: Props) {
           defaultFormData={defaultNoteFormData}
           useTextArea={true}
           initialEditorContent={initialEditorContent}
-          setInitialEditorContent={setInitialEditorContent}
           showSection={{data: showSection, setFunction: setShowSection}}
         />
       </Card>

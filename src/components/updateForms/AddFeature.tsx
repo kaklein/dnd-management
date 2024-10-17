@@ -9,14 +9,14 @@ interface Props {
     data: any, 
     clearForm: (data: any) => void,
     clearedFormData: any
-  ) => void;  formData: any;
+  ) => Promise<void>;
+  formData: any;
   setFormData: (data: any) => void;
   initialEditorContent: string;
-  setInitialEditorContent: (content: string) => void;
   showSection: {data: any, setFunction: (newValues: any) => void};
 }
 
-function AddFeature ({handleChange, handleSubmit, formData, setFormData, initialEditorContent, setInitialEditorContent, showSection}: Props) {
+function AddFeature ({handleChange, handleSubmit, formData, setFormData, initialEditorContent, showSection}: Props) {
   const showForm = showSection.data.features;
 
   return (
@@ -41,7 +41,6 @@ function AddFeature ({handleChange, handleSubmit, formData, setFormData, initial
         formData={formData}
         setFormData={setFormData}
         initialEditorContent={initialEditorContent}
-        setInitialEditorContent={setInitialEditorContent}
       />
       </>
     }

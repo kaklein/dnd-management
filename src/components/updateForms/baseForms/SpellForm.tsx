@@ -5,7 +5,7 @@ import { DamageType } from "@models/enum/DamageType";
 import { SpellLevel } from "@models/playerCharacter/Spell";
 import { useState } from "react";
 import Button, { ButtonType } from "@components/Button";
-import TextEditor from "@components/TextEditor";
+import TextEditor, { buildEditor } from "@components/TextEditor";
 import { validateRequiredFields } from "../utils";
 
 interface Props {
@@ -15,15 +15,14 @@ interface Props {
     data: any, 
     clearForm: (data: any) => void,
     clearedFormData: any
-  ) => void;
+  ) => Promise<void>;
   formData: any;
   setFormData: (data: any) => void;
   initialEditorContent: string;
-  setInitialEditorContent: (content: string) => void; 
   modalDismiss?: boolean;
 }
 
-function SpellForm ({handleChange, handleSubmit, formData, setFormData, initialEditorContent, setInitialEditorContent, modalDismiss=false}: Props) {
+function SpellForm ({handleChange, handleSubmit, formData, setFormData, initialEditorContent, modalDismiss=false}: Props) {
   const [showDamageFields, setShowDamageFields] = useState(formData.damage ? true : false);
   const handleDamageCheckboxChange = () => {
     const newVal = !showDamageFields;
@@ -34,16 +33,21 @@ function SpellForm ({handleChange, handleSubmit, formData, setFormData, initialE
     }
   }
 
+  const editor = buildEditor(initialEditorContent, (value: string) => {
+    handleChange({ target: { name: 'description', value: value }}, setFormData);
+  });
+
   return (
-      <form onSubmit={(event) => {
+      editor &&
+      <form onSubmit={async (event) => {
         const { valid, errorMessage } = validateRequiredFields(['description'], formData);
         if (!valid) {
           event.preventDefault();
           alert(errorMessage);
           return;
         } else {
-          setInitialEditorContent('<p></p>');
-          handleSubmit(event, formData, setFormData, defaultSpellFormData);
+          await handleSubmit(event, formData, setFormData, defaultSpellFormData);
+          editor.commands.clearContent();
         }
       }}>
         <div className="update-form-field">
@@ -64,10 +68,7 @@ function SpellForm ({handleChange, handleSubmit, formData, setFormData, initialE
             Copy/paste the full spell description here. This will be displayed on the Details page for easy reference.
           </p>
           <TextEditor
-            initialEditorContent={initialEditorContent}
-            handleChange={(value: string) => {
-              handleChange({ target: { name: 'description', value: value }}, setFormData);
-            }}
+            editor={editor}
           />
         </div>
         <div className="update-form-field">
@@ -177,7 +178,7 @@ function SpellForm ({handleChange, handleSubmit, formData, setFormData, initialE
           onClick={() => {}}
           modalDismiss={modalDismiss}
         />
-      </form>
+      </form>      
   )
 }
 

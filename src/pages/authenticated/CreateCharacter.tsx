@@ -6,6 +6,7 @@ import CreateCharacterForm from "@components/updateForms/CreateCharacterForm";
 import { isFormDataValid } from "@components/updateForms/utils";
 import { defaultCreateCharacterFormData } from "@data/emptyFormData";
 import { getAuth } from "@firebase/auth";
+import { emptyRichTextContent } from "@pages/utils";
 import { createCharacter } from "@services/firestore/createCharacter";
 import { UserRole } from "@services/firestore/enum/UserRole";
 import { QueryClient } from "@tanstack/react-query";
@@ -23,7 +24,7 @@ function CreateCharacter ({queryClient, setSelectedPcId, userRole}: Props) {
   const navigate = useNavigate();
 
   const [formData, setFormData] = useState(defaultCreateCharacterFormData);
-  const [initialEditorContent, setInitialEditorContent] = useState(formData.description ?? '<p></p>');
+  const [initialEditorContent, setInitialEditorContent] = useState(formData.description ?? emptyRichTextContent);
 
   const handleChange = (
     event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>, 

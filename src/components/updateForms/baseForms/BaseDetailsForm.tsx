@@ -1,6 +1,6 @@
 import Button, { ButtonType } from "@components/Button";
 import FormSelect from "@components/FormSelect";
-import TextEditor from "@components/TextEditor";
+import TextEditor, { buildEditor } from "@components/TextEditor";
 import { Alignment } from "@models/enum/Alignment";
 import { HitDiceType } from "@models/enum/HitDiceType";
 
@@ -11,19 +11,23 @@ interface Props {
     data: any, 
     clearForm: (data: any) => void,
     clearedFormData: any
-  ) => void;
+  ) => Promise<void>;
   formData: any;
   setFormData: (data: any) => void;
   initialEditorContent: string;
-  setInitialEditorContent: (content: string) => void;
   modalDismiss?: boolean;
 }
 
-function BaseDetailsForm ({handleChange, handleSubmit, formData, setFormData, initialEditorContent, setInitialEditorContent, modalDismiss}: Props) {
+function BaseDetailsForm ({handleChange, handleSubmit, formData, setFormData, initialEditorContent, modalDismiss}: Props) {
+  const editor = buildEditor(initialEditorContent, (value: string) => {
+    handleChange({ target: { name: 'description', value: value }}, setFormData);
+  });
+
   return (
-    <form onSubmit={(event) => {
-      setInitialEditorContent('<p></p>');
-      handleSubmit(event, formData, setFormData, {});
+    editor &&
+    <form onSubmit={async (event) => {
+      await handleSubmit(event, formData, setFormData, {});
+      editor.commands.clearContent();
     }}>
       <div className="update-form-field">
         <label className="update-form-label" htmlFor="level">Level</label>
@@ -69,10 +73,7 @@ function BaseDetailsForm ({handleChange, handleSubmit, formData, setFormData, in
       <div className="update-form-field">
         <label className="update-form-label" htmlFor="description">Description (Optional)</label>
         <TextEditor
-          initialEditorContent={initialEditorContent}
-          handleChange={(value: string) => {
-            handleChange({ target: { name: 'description', value: value }}, setFormData);
-          }}
+          editor={editor}
         />
       </div>
       <div className="update-form-field">

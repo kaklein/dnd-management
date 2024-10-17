@@ -1,7 +1,7 @@
 import Button, { ButtonType } from "@components/Button";
 import Card from "@components/cards/Card";
 import FormSelect from "@components/FormSelect";
-import TextEditor from "@components/TextEditor";
+import TextEditor, { buildEditor } from "@components/TextEditor";
 import { buildProficiencyForms } from "@components/utils";
 import { Alignment } from "@models/enum/Alignment";
 import { HitDiceType } from "@models/enum/HitDiceType";
@@ -14,22 +14,26 @@ interface Props {
     data: any, 
     clearForm: (data: any) => void,
     clearedFormData: any
-  ) => void;
+  ) => Promise<void>;
   formData: any;
   initialEditorContent: string;
   setInitialEditorContent: (content: string) => void;
   setFormData: (data: any) => void;
 }
 
-function CreateCharacterForm ({handleChange, handleSubmit, formData, initialEditorContent, setInitialEditorContent, setFormData}: Props) {
+function CreateCharacterForm ({handleChange, handleSubmit, formData, initialEditorContent, setFormData}: Props) {
   const [showBaseDetails, setShowBaseDetails] = useState(true);
   const [showAbilityScores, setShowAbilityScores] = useState(false);
+  const editor = buildEditor(initialEditorContent, (value: string) => {
+    handleChange({ target: { name: 'description', value: value }}, setFormData);
+  });
   
   return (
+    editor &&
     <div>
-      <form className="update-pc-form" onSubmit={(event) => {
-        setInitialEditorContent('<p></p>');
-        handleSubmit(event, formData, setFormData, formData)
+      <form className="update-pc-form" onSubmit={async (event) => {
+        await handleSubmit(event, formData, setFormData, formData);
+        editor.commands.clearContent();
       }}>
         {
           showBaseDetails &&
@@ -63,10 +67,7 @@ function CreateCharacterForm ({handleChange, handleSubmit, formData, initialEdit
             <div className="update-form-field">
               <label className="update-form-label" htmlFor="description">Description (Optional)</label>
               <TextEditor
-                initialEditorContent={initialEditorContent}
-                handleChange={(value: string) => {
-                  handleChange({ target: { name: 'description', value: value }}, setFormData);
-                }}
+                editor={editor}
               />
             </div>
             <div className="update-form-field">

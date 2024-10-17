@@ -13,7 +13,7 @@ import ConfirmDelete from "@components/modals/ConfirmDelete";
 import { TitleButtonRow } from "@components/TitleButtonRow";
 import DeleteItemButton from "@components/DeleteItemButton";
 import QuickNav from "@components/QuickNav";
-import { formatWeaponDisplayTitle, handleSubmitEdit, pcHasDetailsPageItems, triggerSuccessAlert } from "@pages/utils";
+import { emptyRichTextContent, formatWeaponDisplayTitle, handleSubmitEdit, pcHasDetailsPageItems, triggerSuccessAlert } from "@pages/utils";
 import SuccessAlert from "@components/alerts/SuccessAlert";
 import EditItemButton from "@components/EditItemButton";
 import EditModal from "@components/modals/EditModal";
@@ -202,7 +202,6 @@ function Details({pcData, pcList, selectedPc, queryClient, userRole}: Props) {
                 }}
                 setFormData={setEditModalFormData}
                 initialEditorContent={initialEditorContent}
-                setInitialEditorContent={setInitialEditorContent}
                 handleCancel={() => {
                     setEditModalFormData(emptyEditModalData);
                 }}
@@ -285,7 +284,7 @@ function Details({pcData, pcList, selectedPc, queryClient, userRole}: Props) {
                                                 modifierProperty: weapon.modifierProperty,
                                                 magic: weapon.magic ? "true" : "false",
                                             });
-                                            setInitialEditorContent(weapon.description ?? '<p></p>');
+                                            setInitialEditorContent(weapon.description ?? emptyRichTextContent);
                                         }}
                                     />    
                                     </>                               
@@ -490,14 +489,17 @@ function Details({pcData, pcList, selectedPc, queryClient, userRole}: Props) {
                                                 type: item.type,
                                                 description: item.description ?? '',
                                             });
-                                            setInitialEditorContent(item.description ?? '<p></p>');
+                                            setInitialEditorContent(item.description ?? emptyRichTextContent);
                                         }}
                                     />
                                     </>
                                 }
                             />
                             <div className="content">
-                                {item.description && <div className="long-text-display left-justify" dangerouslySetInnerHTML={{__html: item.description}}/>}
+                                {
+                                (item.description && item.description != emptyRichTextContent) &&
+                                <div className="long-text-display left-justify" dangerouslySetInnerHTML={{__html: item.description}}/>
+                                }
                             </div>
                         </Card>
                     )

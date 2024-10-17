@@ -1,7 +1,7 @@
 import { capitalize } from "@components/utils";
 import Button, { ButtonType } from "@components/Button";
 import { validateRequiredFields } from "../utils";
-import TextEditor from "@components/TextEditor";
+import TextEditor, { buildEditor } from "@components/TextEditor";
 
 interface Props {
   fieldName: string;
@@ -11,29 +11,32 @@ interface Props {
     data: any, 
     clearForm: (data: any) => void,
     clearedFormData: any
-  ) => void;
+  ) => Promise<void>;
   formData: any;
   setFormData: (data: any) => void;
   defaultFormData: any;
   initialEditorContent?: string;
-  setInitialEditorContent?: (content: string) => void;
   useTextArea?: boolean;
   modalDismiss?: boolean;
 }
 
-function ArrayItemForm ({fieldName, handleChange, handleSubmit, formData, setFormData, defaultFormData, initialEditorContent, setInitialEditorContent, useTextArea=false, modalDismiss=false}: Props) {
+function ArrayItemForm ({fieldName, handleChange, handleSubmit, formData, setFormData, defaultFormData, initialEditorContent, useTextArea=false, modalDismiss=false}: Props) {
+  const editor = buildEditor(initialEditorContent ?? '', (value: string) => {
+    handleChange({ target: { name: 'note', value: value }}, setFormData);
+  });
+
   return (
-    <form onSubmit={(event) => {
-      if (fieldName == 'notes') {
-        if (!setInitialEditorContent) throw Error('Failed to submit form');
+    editor &&
+    <form onSubmit={async (event) => {
+      if (fieldName == 'note') {
         const { valid, errorMessage } = validateRequiredFields(['note'], formData);
         if (!valid) {
           event.preventDefault();
           alert(errorMessage);
           return;
         } else {
-          setInitialEditorContent('<p></p>');
-          handleSubmit(event, formData, setFormData, defaultFormData);
+          await handleSubmit(event, formData, setFormData, defaultFormData);
+          editor.commands.clearContent();
         }
       } else {
         handleSubmit(event, formData, setFormData, defaultFormData);
@@ -56,10 +59,7 @@ function ArrayItemForm ({fieldName, handleChange, handleSubmit, formData, setFor
         {
           useTextArea &&
           <TextEditor
-            initialEditorContent={initialEditorContent!}
-            handleChange={(value: string) => {
-              handleChange({ target: { name: 'note', value: value }}, setFormData);
-            }}
+            editor={editor}
           />
         }
         

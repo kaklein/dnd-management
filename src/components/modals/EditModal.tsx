@@ -19,17 +19,16 @@ interface Props {
     data: any, 
     clearForm: (data: any) => void,
     clearedFormData: any
-  ) => void;
+  ) => Promise<void>;
   setFormData: (data: any) => void;
   initialEditorContent?: string;
-  setInitialEditorContent?: (content: string) => void;
   handleCancel: () => void;
   pcData: PlayerCharacter;
 }
 
 const checkRequiredContent = (formType: string, content?: string, setContent?: (content: string) => void) => {
   if (['spell', 'weapon', 'feature', 'equipment', 'summonable', 'note', 'character'].includes(formType)) {
-    if (!content || !setContent) throw Error(formType + ' form is missing required initialEditorContent and/or setInitialEditorContent');
+    if (content == undefined) throw Error(formType + ' form is missing required initialEditorContent and/or setInitialEditorContent');
     return {
       content: content,
       setContent: setContent
@@ -38,8 +37,8 @@ const checkRequiredContent = (formType: string, content?: string, setContent?: (
   return undefined;  
 }
 
-function EditModal ({ formType, formData, handleChange, handleSubmit, handleCancel, setFormData, initialEditorContent, setInitialEditorContent, pcData}: Props) {
-  const editorContent = checkRequiredContent(formType, initialEditorContent, setInitialEditorContent);
+function EditModal ({ formType, formData, handleChange, handleSubmit, handleCancel, setFormData, initialEditorContent, pcData}: Props) {
+  const editorContent = checkRequiredContent(formType, initialEditorContent);
   
   let form: ReactNode;
   switch (formType) {
@@ -51,7 +50,6 @@ function EditModal ({ formType, formData, handleChange, handleSubmit, handleCanc
         setFormData={setFormData}
         modalDismiss={true}
         initialEditorContent={editorContent!.content}
-        setInitialEditorContent={editorContent!.setContent}
       />
       break;
     }
@@ -63,7 +61,6 @@ function EditModal ({ formType, formData, handleChange, handleSubmit, handleCanc
         setFormData={setFormData}
         modalDismiss={true}
         initialEditorContent={editorContent!.content}
-        setInitialEditorContent={editorContent!.setContent}
       />
       break;
     }
@@ -76,7 +73,6 @@ function EditModal ({ formType, formData, handleChange, handleSubmit, handleCanc
         pcData={pcData}
         modalDismiss={true}
         initialEditorContent={editorContent!.content}
-        setInitialEditorContent={editorContent!.setContent}
       />
       break;
     }
@@ -88,7 +84,6 @@ function EditModal ({ formType, formData, handleChange, handleSubmit, handleCanc
         setFormData={setFormData}
         modalDismiss={true}
         initialEditorContent={editorContent!.content}
-        setInitialEditorContent={editorContent!.setContent}
       />
       break;
     }
@@ -100,12 +95,10 @@ function EditModal ({ formType, formData, handleChange, handleSubmit, handleCanc
         setFormData={setFormData}
         modalDismiss={true}
         initialEditorContent={editorContent!.content}
-        setInitialEditorContent={editorContent!.setContent}
       />
       break;
     }
     case 'language':
-    case 'note':
     case 'proficiency': {
       form = <ArrayItemForm
         fieldName={formData.formType}
@@ -114,8 +107,20 @@ function EditModal ({ formType, formData, handleChange, handleSubmit, handleCanc
         formData={formData}
         setFormData={setFormData}
         useTextArea={formData.useTextArea}
+        defaultFormData={emptyEditModalData}
+        modalDismiss={true}
+      />
+      break;
+    }
+    case 'note': {
+      form = <ArrayItemForm
+        fieldName={formData.formType}
+        handleChange={handleChange}
+        handleSubmit={handleSubmit}
+        formData={formData}
+        setFormData={setFormData}
+        useTextArea={formData.useTextArea}
         initialEditorContent={editorContent!.content}
-        setInitialEditorContent={editorContent!.setContent}
         defaultFormData={emptyEditModalData}
         modalDismiss={true}
       />
@@ -128,7 +133,6 @@ function EditModal ({ formType, formData, handleChange, handleSubmit, handleCanc
         formData={formData}
         setFormData={setFormData}
         initialEditorContent={editorContent!.content}
-        setInitialEditorContent={editorContent!.setContent}
         modalDismiss={true}
       />
       break;

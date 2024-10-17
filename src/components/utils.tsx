@@ -6,7 +6,7 @@ import { Spell } from "@models/playerCharacter/Spell";
 import { Summonable } from "@models/playerCharacter/Summonable";
 import { SpellSlot } from "@models/playerCharacter/usableResources/SpellSlot";
 import { Weapon } from "@models/playerCharacter/Weapon";
-import { determineAttackBonus, formatBonus } from "@pages/utils";
+import { determineAttackBonus, emptyRichTextContent, formatBonus } from "@pages/utils";
 
 export const replaceBooleans = (data: object) => {
     const entries = Object.entries(data);
@@ -140,7 +140,7 @@ export const orderAndFormatWeaponElements = (weapon: Weapon, pcData: PlayerChara
         ['damage type']: weapon.damageType,
         ['modifier property']: weapon.modifierProperty.toLowerCase(),
         magic: weapon.magic,
-        ...(weapon.description  && {description: <div className="long-text-display left-justify" dangerouslySetInnerHTML={{__html: weapon.description}}/>
+        ...((weapon.description && weapon.description != emptyRichTextContent) && {description: <div className="long-text-display left-justify" dangerouslySetInnerHTML={{__html: weapon.description}}/>
         })
     }
 }

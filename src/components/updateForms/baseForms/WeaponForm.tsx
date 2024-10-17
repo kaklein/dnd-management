@@ -4,7 +4,7 @@ import { DamageType } from "@models/enum/DamageType"
 import { WeaponModifierProperty } from "@models/enum/WeaponModifierProperty"
 import { Link } from "react-router-dom"
 import Button, { ButtonType } from "@components/Button";
-import TextEditor from "@components/TextEditor";
+import TextEditor, { buildEditor } from "@components/TextEditor";
 
 interface Props {
   handleChange: (event: any, setFunction: (prevFormData: any) => void) => void;
@@ -13,19 +13,23 @@ interface Props {
     data: any, 
     clearForm: (data: any) => void,
     clearedFormData: any
-  ) => void;
+  ) => Promise<void>;
   formData: any;
   setFormData: (data: any) => void;
   initialEditorContent: string;
-  setInitialEditorContent: (content: string) => void;
   modalDismiss?: boolean;
 }
 
-function WeaponForm ({handleChange, handleSubmit, formData, setFormData, initialEditorContent, setInitialEditorContent, modalDismiss=false}: Props) { 
+function WeaponForm ({handleChange, handleSubmit, formData, setFormData, initialEditorContent, modalDismiss=false}: Props) { 
+  const editor = buildEditor(initialEditorContent, (value: string) => {
+    handleChange({ target: { name: 'description', value: value }}, setFormData);
+  });
+
   return (
-    <form onSubmit={(event) => {
-      setInitialEditorContent('<p></p>');
-      handleSubmit(event, formData, setFormData, defaultWeaponFormData);
+    editor &&
+    <form onSubmit={async (event) => {
+      await handleSubmit(event, formData, setFormData, defaultWeaponFormData);
+      editor.commands.clearContent();
     }}>
       <div className="update-form-field">
         <label className="update-form-label" htmlFor="type">Type</label>
@@ -137,10 +141,7 @@ function WeaponForm ({handleChange, handleSubmit, formData, setFormData, initial
       <div className="update-form-field">
         <label className="update-form-label" htmlFor="description">Description (Optional)</label>
         <TextEditor
-          initialEditorContent={initialEditorContent}
-          handleChange={(value: string) => {
-            handleChange({ target: { name: 'description', value: value }}, setFormData);
-          }}
+          editor={editor}
         />
       </div>
       

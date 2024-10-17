@@ -1,18 +1,16 @@
-import { useEditor, EditorContent, BubbleMenu } from '@tiptap/react'
+import { useEditor, EditorContent, BubbleMenu, Editor } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
-import { useEffect } from 'react';
 
 interface Props {
-  initialEditorContent: string;
-  handleChange: (value: string) => void;
+  editor: Editor;
 }
 
-export default ({ initialEditorContent, handleChange }: Props) => {    
+export const buildEditor = (content: string, handleChange: (value: string) => void) => {
   const editor = useEditor({
     extensions: [
       StarterKit
     ],
-    content: initialEditorContent,
+    content,
     onUpdate({editor}) {
       const updatedContent = editor.getHTML();
       handleChange(updatedContent);
@@ -22,14 +20,12 @@ export default ({ initialEditorContent, handleChange }: Props) => {
         spellcheck: 'false',
       },
     },
-  });
+  }, [content]);
 
+  return editor;
+}
 
-  useEffect(() => {
-    if (!editor) return;
-    editor.commands.setContent(initialEditorContent);
-  }, [editor, initialEditorContent]);
-
+function TextEditor ({ editor }: Props) {
   return (
     <div>
       <div>
@@ -94,3 +90,5 @@ export default ({ initialEditorContent, handleChange }: Props) => {
     </div>
   )
 }
+
+export default TextEditor;

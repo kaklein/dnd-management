@@ -322,3 +322,5 @@ export const getSummonedItem = (pcData: PlayerCharacter) => {
     return summoned;
   }
 }
+
+export const emptyRichTextContent = '<p></p>';
