@@ -1,5 +1,7 @@
+import { capitalize } from "@components/utils";
 import { CreateCharacterFormData } from "@models/CreateCharacterFormData";
 import { RequiredCharacterCreateFields } from "@models/enum/RequiredCharacterCreateFields";
+import { emptyRichTextContent } from "@pages/utils";
 
 export const isFormDataValid = (formData: CreateCharacterFormData): {
   isValid: boolean,
@@ -20,4 +22,22 @@ export const isFormDataValid = (formData: CreateCharacterFormData): {
     isValid,
     missingFields
   };
+};
+
+export const validateRequiredFields = (
+  requiredFields: string[],
+  formData: any
+): { valid: boolean, errorMessage?: string } => {
+  let missingFields: string[] = [];
+  for (const field of requiredFields) {
+    if (!formData[field] || formData[field] == '' || formData[field] == emptyRichTextContent) {
+      missingFields.push(field);
+    };
+  };
+  if (missingFields.length > 0) {
+    const message = 'Please fill out required field(s): ' + missingFields.map(f => capitalize(f));
+    return { valid: false, errorMessage: message }
+  } else {
+    return { valid: true }
+  }
 }

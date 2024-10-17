@@ -9,14 +9,16 @@ interface Props {
     data: any, 
     clearForm: (data: any) => void,
     clearedFormData: any
-  ) => void;  formData: any;
+  ) => Promise<void>;
+  formData: any;
+  initialEditorContent: string;
   setFormData: (data: any) => void;
   showSection: {data: any, setFunction: (newValues: any) => void};
 }
 
-function AddSpell ({handleChange, handleSubmit, formData, setFormData, showSection}: Props) { 
+function AddSpell ({handleChange, handleSubmit, formData, setFormData, initialEditorContent, showSection}: Props) { 
   const showForm = showSection.data.spells;
-  
+
   return (
     <div>
       <FormHeader
@@ -33,6 +35,7 @@ function AddSpell ({handleChange, handleSubmit, formData, setFormData, showSecti
         handleSubmit={handleSubmit}
         formData={formData}
         setFormData={setFormData}
+        initialEditorContent={initialEditorContent}
       />
     }
     </div>

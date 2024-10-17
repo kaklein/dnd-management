@@ -10,13 +10,15 @@ interface Props {
     data: any, 
     clearForm: (data: any) => void,
     clearedFormData: any
-  ) => void;  formData: any;
+  ) => Promise<void>;
+  formData: any;
   setFormData: (data: any) => void;
+  initialEditorContent: string;
   showSection: {data: any, setFunction: (newValues: any) => void};
   pcData: PlayerCharacter;
 }
 
-function AddSummonable ({handleChange, handleSubmit, formData, setFormData, showSection, pcData}: Props) {
+function AddSummonable ({handleChange, handleSubmit, formData, setFormData, showSection, initialEditorContent, pcData}: Props) {
   const showForm = showSection.data.summonables;
 
   return (
@@ -42,6 +44,7 @@ function AddSummonable ({handleChange, handleSubmit, formData, setFormData, show
         formData={formData}
         setFormData={setFormData}
         pcData={pcData}
+        initialEditorContent={initialEditorContent}
       />
       </>
     }

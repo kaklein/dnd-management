@@ -1,5 +1,6 @@
 import { defaultEquipmentFormData } from "@data/emptyFormData";
 import Button, { ButtonType } from "@components/Button";
+import TextEditor, { buildEditor } from "@components/TextEditor";
 
 interface Props {
   handleChange: (event: any, setFunction: (prevFormData: any) => void) => void;
@@ -8,15 +9,24 @@ interface Props {
     data: any, 
     clearForm: (data: any) => void,
     clearedFormData: any
-  ) => void;
+  ) => Promise<void>;
   formData: any;
   setFormData: (data: any) => void;
+  initialEditorContent: string;
   modalDismiss?: boolean;
 }
 
-function EquipmentForm ({handleChange, handleSubmit, formData, setFormData, modalDismiss=false}: Props) { 
+function EquipmentForm ({handleChange, handleSubmit, formData, setFormData, initialEditorContent, modalDismiss=false}: Props) { 
+  const editor = buildEditor(initialEditorContent, (value: string) => {
+    handleChange({ target: { name: 'description', value: value }}, setFormData);
+  });
+  
   return (
-    <form onSubmit={(event) => {handleSubmit(event, formData, setFormData, defaultEquipmentFormData)}}>
+    editor &&
+    <form onSubmit={async (event) => {
+      await handleSubmit(event, formData, setFormData, defaultEquipmentFormData);
+      editor.commands.clearContent();
+    }}>
       <div className="update-form-field">
         <label className="update-form-label" htmlFor="type">Name</label>
         <input
@@ -31,12 +41,8 @@ function EquipmentForm ({handleChange, handleSubmit, formData, setFormData, moda
       </div>
       <div className="update-form-field">
         <label className="update-form-label" htmlFor="description">Description (Optional)</label>
-        <textarea
-          className="update-form-input"
-          id="description"
-          name="description"
-          onChange={(event) => {handleChange(event, setFormData)}}
-          value={formData.description}
+        <TextEditor
+          editor={editor}
         />
       </div>
         

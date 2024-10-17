@@ -15,7 +15,7 @@ import { QueryClient } from "@tanstack/react-query";
 import PageHeaderBarPC from "@components/headerBars/PageHeaderBarPC";
 import { useSearchParams } from "react-router-dom";
 import QuickNav from "@components/QuickNav";
-import { triggerSuccessAlert } from "@pages/utils";
+import { emptyRichTextContent, triggerSuccessAlert } from "@pages/utils";
 import SuccessAlert from "@components/alerts/SuccessAlert";
 import { UserRole } from "@services/firestore/enum/UserRole";
 import AboutFooter from "@components/AboutFooter";
@@ -44,6 +44,8 @@ function AddItems ({pcData, queryClient, pcList, selectedPc, userRole}: Props) {
   const [languageFormData, setLanguageFormData] = useState(defaultLanguageFormData);
   const [noteFormData, setNoteFormData] = useState(defaultNoteFormData);
   const [summonableFormData, setSummonableFormData] = useState(defaultSummonableFormData);
+
+  const initialEditorContent = emptyRichTextContent;
 
   const handleChange = (
     event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>, 
@@ -114,6 +116,7 @@ function AddItems ({pcData, queryClient, pcList, selectedPc, userRole}: Props) {
           handleSubmit={handleSubmit}
           formData={spellFormData}
           setFormData={setSpellFormData}
+          initialEditorContent={initialEditorContent}
           showSection={{data: showSection, setFunction: setShowSection}}
         />
       </Card>
@@ -124,6 +127,7 @@ function AddItems ({pcData, queryClient, pcList, selectedPc, userRole}: Props) {
           handleSubmit={handleSubmit}
           formData={weaponFormData}
           setFormData={setWeaponFormData}
+          initialEditorContent={initialEditorContent}
           showSection={{data: showSection, setFunction: setShowSection}}
         />
       </Card>
@@ -134,6 +138,7 @@ function AddItems ({pcData, queryClient, pcList, selectedPc, userRole}: Props) {
           handleSubmit={handleSubmit}
           formData={featureFormData}
           setFormData={setFeatureFormData}
+          initialEditorContent={initialEditorContent}
           showSection={{data: showSection, setFunction: setShowSection}}
         />
       </Card>
@@ -144,6 +149,7 @@ function AddItems ({pcData, queryClient, pcList, selectedPc, userRole}: Props) {
           handleSubmit={handleSubmit}
           formData={equipmentFormData}
           setFormData={setEquipmentFormData}
+          initialEditorContent={initialEditorContent}
           showSection={{data: showSection, setFunction: setShowSection}}
         />
       </Card>
@@ -154,6 +160,7 @@ function AddItems ({pcData, queryClient, pcList, selectedPc, userRole}: Props) {
           handleSubmit={handleSubmit}
           formData={summonableFormData}
           setFormData={setSummonableFormData}
+          initialEditorContent={initialEditorContent}
           showSection={{data: showSection, setFunction: setShowSection}}
           pcData={pcData}
         />
@@ -193,6 +200,7 @@ function AddItems ({pcData, queryClient, pcList, selectedPc, userRole}: Props) {
           setFormData={setNoteFormData}
           defaultFormData={defaultNoteFormData}
           useTextArea={true}
+          initialEditorContent={initialEditorContent}
           showSection={{data: showSection, setFunction: setShowSection}}
         />
       </Card>

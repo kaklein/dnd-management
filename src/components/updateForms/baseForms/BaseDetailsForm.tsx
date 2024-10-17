@@ -1,5 +1,6 @@
 import Button, { ButtonType } from "@components/Button";
 import FormSelect from "@components/FormSelect";
+import TextEditor, { buildEditor } from "@components/TextEditor";
 import { Alignment } from "@models/enum/Alignment";
 import { HitDiceType } from "@models/enum/HitDiceType";
 
@@ -10,15 +11,24 @@ interface Props {
     data: any, 
     clearForm: (data: any) => void,
     clearedFormData: any
-  ) => void;
+  ) => Promise<void>;
   formData: any;
   setFormData: (data: any) => void;
+  initialEditorContent: string;
   modalDismiss?: boolean;
 }
 
-function BaseDetailsForm ({handleChange, handleSubmit, formData, setFormData, modalDismiss}: Props) {
+function BaseDetailsForm ({handleChange, handleSubmit, formData, setFormData, initialEditorContent, modalDismiss}: Props) {
+  const editor = buildEditor(initialEditorContent, (value: string) => {
+    handleChange({ target: { name: 'description', value: value }}, setFormData);
+  });
+
   return (
-    <form onSubmit={(event) => {handleSubmit(event, formData, setFormData, {})}}>
+    editor &&
+    <form onSubmit={async (event) => {
+      await handleSubmit(event, formData, setFormData, {});
+      editor.commands.clearContent();
+    }}>
       <div className="update-form-field">
         <label className="update-form-label" htmlFor="level">Level</label>
         <input
@@ -62,12 +72,8 @@ function BaseDetailsForm ({handleChange, handleSubmit, formData, setFormData, mo
       </div>
       <div className="update-form-field">
         <label className="update-form-label" htmlFor="description">Description (Optional)</label>
-        <textarea
-          className="update-form-input"
-          id="description"
-          name="description"
-          onChange={(event) => {handleChange(event, setFormData)}}
-          value={formData.description}
+        <TextEditor
+          editor={editor}
         />
       </div>
       <div className="update-form-field">
@@ -98,7 +104,7 @@ function BaseDetailsForm ({handleChange, handleSubmit, formData, setFormData, mo
           }
           required
         />              
-      </div> 
+      </div>
       <div className="update-form-field">
         <label className="update-form-label" htmlFor="subclass">Subclass (Optional)</label>
         <input

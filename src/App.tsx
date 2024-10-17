@@ -33,7 +33,7 @@ function App() {
 }
 
 function MainApp() {
-    // /* Check for user and redirect if needed */
+    /* Check for user and redirect if needed */
     const loggedIn = useFirebaseAuthentication();
 
     const [selectedPcId, setSelectedPcId] = useLocalStorage('selectedPcId');
