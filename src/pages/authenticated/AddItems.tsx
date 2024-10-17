@@ -15,7 +15,7 @@ import { QueryClient } from "@tanstack/react-query";
 import PageHeaderBarPC from "@components/headerBars/PageHeaderBarPC";
 import { useSearchParams } from "react-router-dom";
 import QuickNav from "@components/QuickNav";
-import { triggerSuccessAlert } from "@pages/utils";
+import { emptyRichTextContent, triggerSuccessAlert } from "@pages/utils";
 import SuccessAlert from "@components/alerts/SuccessAlert";
 import { UserRole } from "@services/firestore/enum/UserRole";
 import AboutFooter from "@components/AboutFooter";
@@ -36,7 +36,6 @@ function AddItems ({pcData, queryClient, pcList, selectedPc, userRole}: Props) {
 
   // Form Data
   const [weaponFormData, setWeaponFormData] = useState(defaultWeaponFormData);
-  
   const [spellFormData, setSpellFormData] = useState(defaultSpellFormData);
   const [spellSlotFormData, setSpellSlotFormData] = useState(defaultSpellSlotFormData);
   const [featureFormData, setFeatureFormData] = useState(defaultFeatureFormData);
@@ -46,7 +45,7 @@ function AddItems ({pcData, queryClient, pcList, selectedPc, userRole}: Props) {
   const [noteFormData, setNoteFormData] = useState(defaultNoteFormData);
   const [summonableFormData, setSummonableFormData] = useState(defaultSummonableFormData);
 
-  const initialEditorContent = '';
+  const initialEditorContent = emptyRichTextContent;
 
   const handleChange = (
     event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>, 
@@ -205,7 +204,6 @@ function AddItems ({pcData, queryClient, pcList, selectedPc, userRole}: Props) {
           showSection={{data: showSection, setFunction: setShowSection}}
         />
       </Card>
-
       <AboutFooter/>   
     </div>
     <QuickNav/>

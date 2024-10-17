@@ -140,7 +140,7 @@ export const orderAndFormatWeaponElements = (weapon: Weapon, pcData: PlayerChara
         ['damage type']: weapon.damageType,
         ['modifier property']: weapon.modifierProperty.toLowerCase(),
         magic: weapon.magic,
-        ...((weapon.description && weapon.description != emptyRichTextContent) && {description: <div className="long-text-display left-justify" dangerouslySetInnerHTML={{__html: weapon.description}}/>
+        ...((weapon.description && weapon.description != emptyRichTextContent) && {description: <div className="long-text-display no-overflow left-justify" dangerouslySetInnerHTML={{__html: weapon.description}}/>
         })
     }
 }

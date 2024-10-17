@@ -17,7 +17,6 @@ interface Props {
   ) => Promise<void>;
   formData: any;
   initialEditorContent: string;
-  setInitialEditorContent: (content: string) => void;
   setFormData: (data: any) => void;
 }
 

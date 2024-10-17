@@ -24,7 +24,7 @@ function CreateCharacter ({queryClient, setSelectedPcId, userRole}: Props) {
   const navigate = useNavigate();
 
   const [formData, setFormData] = useState(defaultCreateCharacterFormData);
-  const [initialEditorContent, setInitialEditorContent] = useState(formData.description ?? emptyRichTextContent);
+  const initialEditorContent = formData.description ?? emptyRichTextContent;
 
   const handleChange = (
     event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>, 
@@ -81,7 +81,6 @@ function CreateCharacter ({queryClient, setSelectedPcId, userRole}: Props) {
           formData={formData}
           setFormData={setFormData}
           initialEditorContent={initialEditorContent}
-          setInitialEditorContent={setInitialEditorContent}
         />
       </Card>
     </div>

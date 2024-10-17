@@ -1,6 +1,7 @@
 import { capitalize } from "@components/utils";
 import { CreateCharacterFormData } from "@models/CreateCharacterFormData";
 import { RequiredCharacterCreateFields } from "@models/enum/RequiredCharacterCreateFields";
+import { emptyRichTextContent } from "@pages/utils";
 
 export const isFormDataValid = (formData: CreateCharacterFormData): {
   isValid: boolean,
@@ -29,7 +30,7 @@ export const validateRequiredFields = (
 ): { valid: boolean, errorMessage?: string } => {
   let missingFields: string[] = [];
   for (const field of requiredFields) {
-    if (!formData[field] || formData[field] == '' || formData[field] == '<p></p>') {
+    if (!formData[field] || formData[field] == '' || formData[field] == emptyRichTextContent) {
       missingFields.push(field);
     };
   };

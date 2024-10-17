@@ -26,12 +26,11 @@ interface Props {
   pcData: PlayerCharacter;
 }
 
-const checkRequiredContent = (formType: string, content?: string, setContent?: (content: string) => void) => {
+const checkRequiredContent = (formType: string, content?: string) => {
   if (['spell', 'weapon', 'feature', 'equipment', 'summonable', 'note', 'character'].includes(formType)) {
-    if (content == undefined) throw Error(formType + ' form is missing required initialEditorContent and/or setInitialEditorContent');
+    if (content == undefined) throw Error(formType + ' form is missing required initialEditorContent');
     return {
       content: content,
-      setContent: setContent
     };
   }
   return undefined;  
@@ -155,10 +154,7 @@ function EditModal ({ formType, formData, handleChange, handleSubmit, handleCanc
             {form}
           </div>
           <div className="modal-footer">
-            <button type="button" className="btn btn-secondary" onClick={() => {
-              handleCancel;
-
-            }} data-bs-dismiss="modal">Cancel</button>
+            <button type="button" className="btn btn-secondary" onClick={handleCancel} data-bs-dismiss="modal">Cancel</button>
           </div>
         </div>
       </div>
