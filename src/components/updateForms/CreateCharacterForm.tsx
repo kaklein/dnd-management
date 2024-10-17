@@ -165,7 +165,7 @@ function CreateCharacterForm ({handleChange, handleSubmit, formData, initialEdit
                 id="xp"
                 name="xp"
                 onChange={(event) => {handleChange(event, setFormData)}}
-                value={formData.xp || "0"}
+                value={formData.xp || ""}
               />
             </div>
             <div className="update-form-field">
