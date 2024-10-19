@@ -92,7 +92,7 @@ function MainApp() {
         )
     }
 
-    if (loggedIn && verifiedUserQuery.data == false) return <VerifyEmail/>
+    if (loggedIn && verifiedUserQuery.data == false) return <VerifyEmail queryClient={queryClient}/>
 
     if (loggedIn && (pcQuery.isLoading || roleQuery.isLoading || verifiedUserQuery.isLoading)) return <Loading/>
 
