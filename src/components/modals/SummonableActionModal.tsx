@@ -12,9 +12,10 @@ interface Props {
   queryClient: QueryClient;
   searchParams: URLSearchParams;
   setDisableBackdrop: (newValue: boolean) => void;
+  pcId: string;
 }
 
-function SummonableActionModal ({ action, summonable, setShowSuccessAlert, queryClient, searchParams, setDisableBackdrop }: Props) { 
+function SummonableActionModal ({ action, summonable, setShowSuccessAlert, queryClient, searchParams, setDisableBackdrop, pcId }: Props) { 
   const itemDisplayName = summonable.data.name ?? summonable.data.type;
   const title = action == 'takeDamage' ? itemDisplayName + " Damage Amount:" :
     action == 'gainHP' ? itemDisplayName + " Gained HP Amount:" : 
@@ -69,7 +70,7 @@ function SummonableActionModal ({ action, summonable, setShowSuccessAlert, query
           throw Error ('Unknown action in summon modal: ' + action);
         }
         setModalFormData(emptyModalData);
-        queryClient.invalidateQueries();
+        queryClient.refetchQueries({ queryKey: ['pcData', pcId]});
         triggerSuccessAlert(setShowSuccessAlert);       
       }}>
       <div className="modal-dialog">

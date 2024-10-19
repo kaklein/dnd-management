@@ -50,7 +50,7 @@ function Stats({pcData, pcList, selectedPc, queryClient, userRole}: Props) {
         }
         setEditable(false);
 
-        queryClient.invalidateQueries();
+        queryClient.refetchQueries({ queryKey: ['pcData', pcData.baseDetails.pcId]});
         triggerSuccessAlert(setShowSuccessAlert);
     }
     

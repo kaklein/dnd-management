@@ -60,6 +60,13 @@ function About ({selectedPc, userRole}: Props) {
                 <div className="col-2 small-text"><b>Release Date</b></div>
                 <div className="col-8 small-text"><b>Release Notes</b></div>
               </div>
+              <ReleaseNote version="1.3.1" releaseDate="2024-10-19"
+                releaseNotes={
+                  <>
+                    <p>Data caching improvements</p>
+                  </>
+                }
+              />
               <ReleaseNote version="1.3.0" releaseDate="2024-10-14"
                 releaseNotes={
                   <>
