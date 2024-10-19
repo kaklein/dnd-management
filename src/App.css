@@ -849,6 +849,12 @@ img {
 
 .version-table {
     border: 1px solid lightgray;
+    max-height: 500px;
+    overflow: scroll;
+}
+
+.version-table p {
+    margin-bottom: 5px;
 }
 
 .release-notes-header {
