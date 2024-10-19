@@ -77,7 +77,6 @@ function MainApp() {
             }
         },
         enabled: !!loggedIn,
-        refetchOnWindowFocus: false,
     });
 
     if (!loggedIn) {
