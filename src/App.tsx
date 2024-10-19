@@ -23,6 +23,10 @@ import About from '@pages/authenticated/About';
 
 const queryClient = new QueryClient();
 
+const getMillis = (minutes: number) => {
+    return minutes * 60000;
+}
+
 function App() {
     return (
         <QueryClientProvider client={queryClient}>
@@ -42,14 +46,18 @@ function MainApp() {
     const pcQuery = useQuery({
         queryKey: ['pcData', selectedPcId],
         queryFn: () => loadData(selectedPcId),
-        enabled: !!loggedIn
+        enabled: !!loggedIn,
+        refetchOnWindowFocus: false,
+        staleTime: getMillis(30)
     });
 
     /* Look up user role */
     const roleQuery = useQuery({
         queryKey: ['userRole'],
         queryFn: () => getUserRole(),
-        enabled: !!loggedIn
+        enabled: !!loggedIn,
+        refetchOnWindowFocus: false,
+        staleTime: getMillis(30)
     });
 
     /* Check if user has verified email */
@@ -68,7 +76,8 @@ function MainApp() {
                 return verified;
             }
         },
-        enabled: !!loggedIn
+        enabled: !!loggedIn,
+        refetchOnWindowFocus: false,
     });
 
     if (!loggedIn) {

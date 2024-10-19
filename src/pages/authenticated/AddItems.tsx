@@ -68,7 +68,7 @@ function AddItems ({pcData, queryClient, pcList, selectedPc, userRole}: Props) {
       return;
     }
     clearForm(clearedFormData);
-    queryClient.invalidateQueries();
+    queryClient.refetchQueries({ queryKey: ['pcData', pcData.baseDetails.pcId]});
     triggerSuccessAlert(setShowSuccessAlert);
   }
 
