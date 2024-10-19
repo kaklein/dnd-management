@@ -49,7 +49,7 @@ function CreateCharacter ({queryClient, setSelectedPcId, userRole}: Props) {
     const uid = getAuth().currentUser!.uid;
     try {
       await createCharacter(uid, pcId, formData);
-      queryClient.invalidateQueries();
+      queryClient.refetchQueries({ queryKey: ['pcData', pcId]});
       setSelectedPcId(pcId);
       navigate('/add?created=true');
     } catch (e: any) {

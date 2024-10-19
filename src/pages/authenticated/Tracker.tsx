@@ -89,7 +89,7 @@ function Tracker({pcData, queryClient, pcList, selectedPc, userRole}: Props) {
             alert('We encountered an error saving your changes. Please refresh the page and try again.');
             return;
         }
-        queryClient.invalidateQueries();
+        queryClient.refetchQueries({ queryKey: ['pcData', pcData.baseDetails.pcId]});
         setFormData(getDefaultFormData(pcData));
         triggerSuccessAlert(setShowSuccessAlert);
     }
@@ -131,7 +131,7 @@ function Tracker({pcData, queryClient, pcList, selectedPc, userRole}: Props) {
                 summonable={summonedItem}
                 handleDismiss={() => {
                     updateById(CollectionName.SUMMONABLES, summonedItem.id, {summoned: false});
-                    queryClient.invalidateQueries();
+                    queryClient.refetchQueries({ queryKey: ['pcData', pcData.baseDetails.pcId]});
                     setFormData(getDefaultFormData(pcData));
                     setSummonedItem(getSummonedItem(pcData));
                     triggerSuccessAlert(setShowSuccessAlert);
@@ -144,6 +144,7 @@ function Tracker({pcData, queryClient, pcList, selectedPc, userRole}: Props) {
                 queryClient={queryClient}
                 searchParams={searchParams}
                 setDisableBackdrop={setDisableBackdrop}
+                pcId={pcData.baseDetails.pcId}
             />
 
             {

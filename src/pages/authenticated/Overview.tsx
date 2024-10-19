@@ -77,7 +77,7 @@ function Overview({pcData, pcList, selectedPc, userRole, queryClient}: Props) {
             handleSubmit={async (event: any) => {
                 try {
                     await handleSubmitEdit(event, editModalFormData, pcData);
-                    queryClient.invalidateQueries();
+                    queryClient.refetchQueries({ queryKey: ['pcData', pcData.baseDetails.pcId]});
                     setEditModalFormData(emptyEditModalData);
                     setEditable(false);
                     triggerSuccessAlert(setShowSuccessAlert);
