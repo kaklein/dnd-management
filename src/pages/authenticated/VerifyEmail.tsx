@@ -4,7 +4,6 @@ import PageHeaderBar from "@components/headerBars/PageHeaderBar";
 import Navbar from "@components/Navbar";
 import { getAuth } from "@firebase/auth";
 import { QueryClient } from "@tanstack/react-query";
-import { query } from "firebase/firestore";
 
 const writeNStrings = (s: string, n: number) => {
   return Array(n + 1).join(s);
