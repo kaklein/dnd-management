@@ -26,11 +26,11 @@ interface Props {
     selectedPc: {pcId: string | null, setSelectedPcId: (pcId: string) => void}
     userRole: UserRole | undefined;
     queryClient: QueryClient;
+    imageUrl: string;
 }
 
-function Overview({pcData, pcList, selectedPc, userRole, queryClient}: Props) {
+function Overview({pcData, pcList, selectedPc, userRole, queryClient, imageUrl}: Props) {
     const navigate = useNavigate();
-    const pcImagePath = pcData.baseDetails.imagePaths?.avatar;
     const pcFullName = `${pcData.baseDetails.name.firstName} ${pcData.baseDetails.name.lastName}`
     const listCardObject = {
         class: pcData.baseDetails.class,
@@ -102,7 +102,13 @@ function Overview({pcData, pcList, selectedPc, userRole, queryClient}: Props) {
                 selectedPc={selectedPc}
             />
             <Card>
-                {pcImagePath && <img src={`/images/playerCharacters/${pcImagePath}`} className="card-img-top" alt={pcFullName}/>}
+                {
+                imageUrl && 
+                <div className="pc-image-container">
+                    <img src={imageUrl} id="pc-image-display" className="card-img-top" alt={pcFullName}/>
+                </div>
+                }
+                <p>{pcData.baseDetails.imagePath}</p>
                 <div className="card-body">
                     <TitleButtonRow
                         text={pcFullName}
@@ -122,6 +128,7 @@ function Overview({pcData, pcList, selectedPc, userRole, queryClient}: Props) {
                                         ...emptyEditModalData,
                                         formType: 'character',
                                         description: pcData.baseDetails.description ?? '',
+                                        imagePath: pcData.baseDetails.imagePath ?? '',
                                         class: pcData.baseDetails.class,
                                         subclass: pcData.baseDetails.subclass ?? '',
                                         race: pcData.baseDetails.race,

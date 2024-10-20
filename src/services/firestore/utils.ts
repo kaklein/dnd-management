@@ -390,7 +390,7 @@ export const transformBaseDetailsForCharacterCreation = (uid: string, pcId: stri
     ...(formData.description && {description: formData.description}),
     ...(formData.subclass && {subclass: formData.subclass}),
     ...(formData.xp && {xp: Number(formData.xp)}),
-    ...(formData.avatarUrl && {imagePaths: {avatar: formData.avatarUrl}})
+    ...(formData.imagePath && {imagePath: formData.imagePath}),
   };
 }
 

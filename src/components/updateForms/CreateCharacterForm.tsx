@@ -6,14 +6,17 @@ import { buildProficiencyForms } from "@components/utils";
 import { Alignment } from "@models/enum/Alignment";
 import { HitDiceType } from "@models/enum/HitDiceType";
 import { useState } from "react";
+import { uploadImage } from "@services/firebaseStorage/write";
+import ImageInput from "@components/ImageInput";
+import { FileNameUtil } from "@services/firebaseStorage/util";
+import { v4 as uuidv4 } from "uuid";
 
 interface Props {
   handleChange: (event: any, setFunction: (prevFormData: any) => void) => void;
   handleSubmit: (
     event: any, 
     data: any, 
-    clearForm: (data: any) => void,
-    clearedFormData: any
+    generatedPcId: string
   ) => Promise<void>;
   formData: any;
   initialEditorContent: string;
@@ -26,13 +29,28 @@ function CreateCharacterForm ({handleChange, handleSubmit, formData, initialEdit
   const editor = buildEditor(initialEditorContent, (value: string) => {
     handleChange({ target: { name: 'description', value: value }}, setFormData);
   });
+
+  const [imageUploadElement, setImageUploadElement] = useState(document.getElementById("uploadFile") as HTMLInputElement);
+  const generatedPcId = uuidv4();
+  const fileNameUtil = new FileNameUtil(generatedPcId);
   
   return (
     editor &&
     <div>
       <form className="update-pc-form" onSubmit={async (event) => {
-        await handleSubmit(event, formData, setFormData, formData);
-        editor.commands.clearContent();
+        event.preventDefault();
+        if (formData.imagePath) {
+          try {
+            await uploadImage(imageUploadElement, fileNameUtil);
+            await handleSubmit(event, formData, generatedPcId);
+            editor.commands.clearContent();
+          } catch (e: any) {
+            console.error(e);
+          }
+        } else {
+          await handleSubmit(event, formData, generatedPcId);
+          editor.commands.clearContent();
+        }
       }}>
         {
           showBaseDetails &&
@@ -69,6 +87,15 @@ function CreateCharacterForm ({handleChange, handleSubmit, formData, initialEdit
                 editor={editor}
               />
             </div>
+            <ImageInput
+              maxFileSizeMB={1}
+              formData={{
+                data: formData,
+                set: setFormData
+              }}
+              fileNameUtil={fileNameUtil}
+              setImageUploadElement={setImageUploadElement}
+            />
             <div className="update-form-field">
               <label className="update-form-label" htmlFor="class">Class</label>
               <input

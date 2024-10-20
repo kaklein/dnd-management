@@ -12,11 +12,6 @@
     --inspiration-pink: #d68ff2;
 }
 
-.card-img-top {
-    width: 75%;
-    max-width: 400px;
-}
-
 .card {
     margin: auto;
     width: fit-content;
@@ -1111,28 +1106,44 @@ img {
     box-shadow: 1px 1px 1px 1px var(--very-light-gray);
     display: flex;
     padding: 0.2rem;
-  
-    button {
-      background-color: unset;
-      border: 0px;
-      border-radius: 5px;
-      height: fit-content;
 
-      ul, ol {
+    button {
+        background-color: unset;
+        border: 0px;
+        border-radius: 5px;
+        height: fit-content;
+
+        ul, ol {
         margin-bottom: 0px;
         padding-left: 17px;
-      }
-
-      &:hover {
-        background-color: lightgray;
-      }
-  
-      &.is-active {
-        background-color: var(--success-light);
-  
-        &:hover {
-          background-color: #76cc76;
         }
-      }
+
+        &:hover {
+        background-color: lightgray;
+        }
+
+        &.is-active {
+        background-color: var(--success-light);
+
+        &:hover {
+            background-color: #76cc76;
+        }
+        }
     }
-  }
+}
+
+.alert-text-warning {
+color: crimson;
+}
+
+.alert-text-ok {
+color: var(--success-dark);
+}
+
+.pc-image-container {
+    width: 90vw;
+    max-width: 400px;
+    max-height: 600px;
+    overflow: hidden;
+    margin: auto;
+}

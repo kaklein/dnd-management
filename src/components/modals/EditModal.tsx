@@ -133,6 +133,8 @@ function EditModal ({ formType, formData, handleChange, handleSubmit, handleCanc
         setFormData={setFormData}
         initialEditorContent={editorContent!.content}
         modalDismiss={true}
+        pcImagePath={pcData.baseDetails.imagePath ?? ''}
+        pcId={pcData.baseDetails.pcId}
       />
       break;
     }
