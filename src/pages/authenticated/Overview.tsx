@@ -90,6 +90,7 @@ function Overview({pcData, pcList, selectedPc, userRole, queryClient, imageUrl}:
             initialEditorContent={initialEditorContent}
             handleCancel={() => setEditModalFormData(emptyEditModalData)}
             pcData={pcData}
+            imageUrl={imageUrl}
         />
         {showSuccessAlert && <SuccessAlert/>}
 
@@ -102,13 +103,6 @@ function Overview({pcData, pcList, selectedPc, userRole, queryClient, imageUrl}:
                 selectedPc={selectedPc}
             />
             <Card>
-                {
-                imageUrl && 
-                <div className="pc-image-container">
-                    <img src={imageUrl} id="pc-image-display" className="card-img-top" alt={pcFullName}/>
-                </div>
-                }
-                <p>{pcData.baseDetails.imagePath}</p>
                 <div className="card-body">
                     <TitleButtonRow
                         text={pcFullName}
@@ -127,6 +121,8 @@ function Overview({pcData, pcList, selectedPc, userRole, queryClient, imageUrl}:
                                     setEditModalFormData({
                                         ...emptyEditModalData,
                                         formType: 'character',
+                                        firstName: pcData.baseDetails.name.firstName,
+                                        lastName: pcData.baseDetails.name.lastName,
                                         description: pcData.baseDetails.description ?? '',
                                         imagePath: pcData.baseDetails.imagePath ?? '',
                                         class: pcData.baseDetails.class,
@@ -147,6 +143,12 @@ function Overview({pcData, pcList, selectedPc, userRole, queryClient, imageUrl}:
                             </>
                         }
                     />
+                    {
+                    imageUrl && 
+                    <div className="pc-image-container">
+                        <img src={imageUrl} id="pc-image-display" className="card-img-top" alt={pcFullName}/>
+                    </div>
+                    }
                     <div className="overview-top">
                         <h5 className="left-justify">Level: {pcData.baseDetails.level}</h5>
                         {

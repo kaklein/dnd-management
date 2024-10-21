@@ -44,8 +44,8 @@ export const validateRequiredFields = (
 
 export const getFileSizeDisplay = (fileSizeBytes: number): string => {
   if (fileSizeBytes > 1000000) {
-    return `${(fileSizeBytes / 1000000).toPrecision(4)}MB`;
+    return `${(fileSizeBytes / 1000000).toFixed(2)}MB`;
   } else {
-    return `${(fileSizeBytes / 1000).toPrecision(4)}KB`;
+    return `${(fileSizeBytes / 1000).toFixed(2)}KB`;
   }
 }

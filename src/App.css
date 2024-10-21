@@ -252,6 +252,23 @@ img {
     margin: auto;
 }
 
+.update-form-field-group {
+    background-color: var(--near-white);
+    border-radius: 10px;
+    margin-left: 20px;
+    margin-right: 20px;
+    margin-bottom: 10px;
+    padding: 10px;
+}
+
+.disabled {
+    background-color: lightgray;
+}
+
+.disabled p {
+    color: gray;
+}
+
 .update-form-label {
     margin-left: 10px;
     margin-right: 10px;
@@ -272,6 +289,10 @@ img {
     border-radius: 10px;
     border: 1px solid darkgray;
     display: block;
+}
+
+.update-form-input-wide {
+    width: 100%;
 }
 
 .update-form-description {
@@ -447,6 +468,10 @@ img {
     margin: 0px;
     padding: 3px;
     text-align: left;
+}
+
+.title-button-row-center {
+    text-align: center;
 }
 
 .title-button-row Button {
@@ -748,6 +773,11 @@ img {
     width: 100%;
 }
 
+.center-button {
+    margin: auto;
+    width: fit-content;
+}
+
 .display-item-row {
     background-color: var(--near-white);
     border-radius: 5px;
@@ -767,36 +797,6 @@ img {
 
 .text-green {
     color: green;
-}
-
-.inline {
-    display: inline
-}
-
-.center {
-    margin: auto;
-    text-align: center;
-}
-
-.float-right {
-    float: right;
-}
-
-.fit-content {
-    width: fit-content;
-}
-
-.margin-auto {
-    margin: auto;
-}
-
-.max-width-800 {
-    width: 90%;
-    max-width: 900px;
-}
-
-.gray-bg {
-    background-color: darkgray;
 }
 
 .about-footer {
@@ -928,6 +928,7 @@ img {
     padding-left: 25px;
     padding-right: 25px;
     border-bottom: 1px solid var(--near-black);
+    border-top: 1px solid var(--near-black);
 }
 
 .card-text {
@@ -1133,17 +1134,67 @@ img {
 }
 
 .alert-text-warning {
-color: crimson;
+    color: crimson;
+    font-weight: bold;
 }
 
 .alert-text-ok {
-color: var(--success-dark);
+    color: var(--success-dark);
+    font-weight: bold;
+}
+
+.alert-text-description {
+    font-weight: normal;
+    font-style: italic;
+}
+
+.pc-image-container, .pc-image-container-preview {
+    overflow: hidden;
+    margin: auto;
+    margin-bottom: 10px;
+    margin-top: 10px;
+    border-radius: 5px;
 }
 
 .pc-image-container {
-    width: 90vw;
-    max-width: 400px;
-    max-height: 600px;
-    overflow: hidden;
+    width: fit-content;
+    max-width: 700px;
+    max-height: 700px;
+}
+
+.pc-image-container-preview {
+    width: 150px;
+    max-height: 300px;
+}
+
+
+/* Overrides */
+.inline {
+    display: inline
+}
+
+.center {
     margin: auto;
+    text-align: center;
+}
+
+.float-right {
+    float: right;
+}
+
+.fit-content {
+    width: fit-content;
+}
+
+.margin-auto {
+    margin: auto;
+}
+
+.max-width-800 {
+    width: 90%;
+    max-width: 900px;
+}
+
+.gray-bg {
+    background-color: darkgray;
 }

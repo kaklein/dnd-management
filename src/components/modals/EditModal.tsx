@@ -24,6 +24,7 @@ interface Props {
   initialEditorContent?: string;
   handleCancel: () => void;
   pcData: PlayerCharacter;
+  imageUrl: string;
 }
 
 const checkRequiredContent = (formType: string, content?: string) => {
@@ -36,7 +37,7 @@ const checkRequiredContent = (formType: string, content?: string) => {
   return undefined;  
 }
 
-function EditModal ({ formType, formData, handleChange, handleSubmit, handleCancel, setFormData, initialEditorContent, pcData}: Props) {
+function EditModal ({ formType, formData, handleChange, handleSubmit, handleCancel, setFormData, initialEditorContent, pcData, imageUrl}: Props) {
   const editorContent = checkRequiredContent(formType, initialEditorContent);
   
   let form: ReactNode;
@@ -133,7 +134,10 @@ function EditModal ({ formType, formData, handleChange, handleSubmit, handleCanc
         setFormData={setFormData}
         initialEditorContent={editorContent!.content}
         modalDismiss={true}
-        pcImagePath={pcData.baseDetails.imagePath ?? ''}
+        existingPCImage={{
+          path: pcData.baseDetails.imagePath ?? '',
+          url: imageUrl
+        }}
         pcId={pcData.baseDetails.pcId}
       />
       break;

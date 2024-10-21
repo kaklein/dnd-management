@@ -21,11 +21,14 @@ interface Props {
   setFormData: (data: any) => void;
   initialEditorContent: string;
   modalDismiss?: boolean;
-  pcImagePath: string;
+  existingPCImage: {
+    path: string;
+    url: string;
+  };
   pcId: string;
 }
 
-function BaseDetailsForm ({handleChange, handleSubmit, formData, setFormData, initialEditorContent, modalDismiss, pcImagePath, pcId}: Props) {
+function BaseDetailsForm ({handleChange, handleSubmit, formData, setFormData, initialEditorContent, modalDismiss, existingPCImage, pcId}: Props) {
   const editor = buildEditor(initialEditorContent, (value: string) => {
     handleChange({ target: { name: 'description', value: value }}, setFormData);
   });
@@ -39,21 +42,21 @@ function BaseDetailsForm ({handleChange, handleSubmit, formData, setFormData, in
       if (formData.imagePath) {
         // Add new image to bucket and update path in pc data
         try {
-          await uploadImage(imageUploadElement, fileNameUtil, pcImagePath);
+          await uploadImage(imageUploadElement, fileNameUtil, existingPCImage.path);
           await handleSubmit(event, formData, setFormData, formData);
-          if (pcImagePath) {
+          if (existingPCImage.path) {
             // Delete old image, if applicable
-            await deleteImage(pcImagePath, fileNameUtil);
+            await deleteImage(existingPCImage.path, fileNameUtil);
           }
           editor.commands.clearContent();
         } catch (e: any) {
           console.error(e);
           alert ('Sorry, an error occurred saving your changes. Please refresh the page and try again.');
         }
-      } else if (pcImagePath && !formData.imagePath) {
+      } else if (existingPCImage.path && !formData.imagePath) {
         // Delete old photo
         try {
-          await deleteImage(pcImagePath, fileNameUtil);
+          await deleteImage(existingPCImage.path, fileNameUtil);
           await handleSubmit(event, formData, setFormData, formData);
           editor.commands.clearContent();
         } catch (e: any) {
@@ -65,6 +68,30 @@ function BaseDetailsForm ({handleChange, handleSubmit, formData, setFormData, in
         editor.commands.clearContent();
       }
     }}>
+      <div className="update-form-field">
+        <label className="update-form-label" htmlFor="firstName">First Name</label>
+        <input
+          className="update-form-input"
+          type="text"          
+          id="firstName"
+          name="firstName"
+          onChange={(event) => {handleChange(event, setFormData)}}
+          value={formData.firstName}
+          required
+        />
+      </div>
+      <div className="update-form-field">
+        <label className="update-form-label" htmlFor="lastName">Last Name</label>
+        <input
+          className="update-form-input"
+          type="text"          
+          id="lastName"
+          name="lastName"
+          onChange={(event) => {handleChange(event, setFormData)}}
+          value={formData.lastName}
+          required
+        />
+      </div>
       <div className="update-form-field">
         <label className="update-form-label" htmlFor="level">Level</label>
         <input
@@ -119,7 +146,8 @@ function BaseDetailsForm ({handleChange, handleSubmit, formData, setFormData, in
           set: setFormData
         }}
         fileNameUtil={fileNameUtil}
-        existingImagePath={pcImagePath}
+        existingImagePath={existingPCImage.path}
+        existingImageUrl={existingPCImage.url}
         setImageUploadElement={setImageUploadElement}
       />
       <div className="update-form-field">

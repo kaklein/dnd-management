@@ -206,6 +206,8 @@ export const handleSubmitEdit = async (
     );            
   } else if (formData.formType === 'character') {
     const update = {
+      'name.firstName': formData.firstName,
+      'name.lastName': formData.lastName,
       description: formData.description,
       imagePath: formData.imagePath,
       class: formData.class,
