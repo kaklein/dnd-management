@@ -1081,10 +1081,6 @@ img {
     padding-left: 2px;
 }
 
-.long-text-display p, .ProseMirror p {
-    margin-bottom: 0px;
-}
-
 .long-text-display ul li p, .long-text-display ol li p, .ProseMirror ul li p, .ProseMirror ol li p {
     margin-bottom: 0px;
 }
