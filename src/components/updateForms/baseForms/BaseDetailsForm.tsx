@@ -39,7 +39,7 @@ function BaseDetailsForm ({handleChange, handleSubmit, formData, setFormData, in
     editor &&
     <form onSubmit={async (event) => {
       event.preventDefault();
-      if (formData.imagePath) {
+      if (formData.imagePath && formData.imagePath !== existingPCImage.path) {
         // Add new image to bucket and update path in pc data
         try {
           await uploadImage(imageUploadElement, fileNameUtil, existingPCImage.path);
