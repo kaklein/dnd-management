@@ -139,7 +139,7 @@ function EditModal ({ formType, formData, handleChange, handleSubmit, handleCanc
         modalDismiss={true}
         existingPCImage={{
           path: pcData.baseDetails.imagePath ?? '',
-          url: imageUrl
+          url: imageUrl!
         }}
         pcId={pcData.baseDetails.pcId}
       />
