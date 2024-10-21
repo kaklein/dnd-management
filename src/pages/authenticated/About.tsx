@@ -29,7 +29,7 @@ function About ({selectedPc, userRole}: Props) {
           <p className="dark-purple"><b>
             Never worry about forgetting your character sheet or calculating damage again!
           </b></p>
-          <p>
+          <div className="left-justify">
             Start by creating your character and adding relevant items. Then you'll be able to:
             <ul>
               <li><b>Make easy skill checks</b> by referencing the Ability Scores page</li>
@@ -38,7 +38,7 @@ function About ({selectedPc, userRole}: Props) {
               <li><b>Level up your character</b> by making updates on the Overview page</li>
               <li><b>Add new weapons, spells, and more</b> on the Add Items page</li>
             </ul>
-          </p>
+          </div>
           <Button
             buttonType={ButtonType.INFO}
             text="Let's get started!"
@@ -60,6 +60,13 @@ function About ({selectedPc, userRole}: Props) {
                 <div className="col-2 small-text"><b>Release Date</b></div>
                 <div className="col-8 small-text"><b>Release Notes</b></div>
               </div>
+              <ReleaseNote version="1.3.1" releaseDate="2024-10-19"
+                releaseNotes={
+                  <>
+                    <p>Data caching improvements</p>
+                  </>
+                }
+              />
               <ReleaseNote version="1.3.0" releaseDate="2024-10-14"
                 releaseNotes={
                   <>

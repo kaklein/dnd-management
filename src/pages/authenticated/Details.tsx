@@ -43,22 +43,22 @@ function Details({pcData, pcList, selectedPc, queryClient, userRole}: Props) {
     const [editable, setEditable] = useState(false);
     const handleDeleteFeature = async (featureId: string) => {
         await deleteItemById(CollectionName.FEATURES, featureId);
-        queryClient.invalidateQueries();
+        queryClient.refetchQueries({ queryKey: ['pcData', pcData.baseDetails.pcId]});
         triggerSuccessAlert(setShowSuccessAlert);
     }
     const handleDeleteSummonable = async (summonableId: string) => {
         await deleteItemById(CollectionName.SUMMONABLES, summonableId);
-        queryClient.invalidateQueries();
+        queryClient.refetchQueries({ queryKey: ['pcData', pcData.baseDetails.pcId]});
         triggerSuccessAlert(setShowSuccessAlert);
     }
     const handleDeleteObjectArrayItem = async (arrayName: string, item: any, existingItems: any[]) => {
         await deleteItemFromArrayById(CollectionName.PC_BASE_DETAILS, pcData.baseDetails.pcId, arrayName, existingItems, item);
-        queryClient.invalidateQueries();
+        queryClient.refetchQueries({ queryKey: ['pcData', pcData.baseDetails.pcId]});
         triggerSuccessAlert(setShowSuccessAlert);
     }
     const handleDeleteStringArrayItem = async (arrayName: string, item: string) => {
         await deleteItemFromStringArray(CollectionName.PC_BASE_DETAILS, pcData.baseDetails.pcId, arrayName, item);
-        queryClient.invalidateQueries();
+        queryClient.refetchQueries({ queryKey: ['pcData', pcData.baseDetails.pcId]});
         triggerSuccessAlert(setShowSuccessAlert);
     }
 
@@ -192,7 +192,7 @@ function Details({pcData, pcList, selectedPc, queryClient, userRole}: Props) {
                 handleSubmit={async (event: any) => {
                     try {
                         await handleSubmitEdit(event, editModalFormData, pcData);
-                        queryClient.invalidateQueries();
+                        queryClient.refetchQueries({ queryKey: ['pcData', pcData.baseDetails.pcId]});
                         setEditModalFormData(emptyEditModalData);
                         triggerSuccessAlert(setShowSuccessAlert);
                     } catch (e) {

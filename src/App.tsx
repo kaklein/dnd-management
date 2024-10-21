@@ -5,7 +5,7 @@ import Stats from "./pages/authenticated/Stats";
 import Tracker from "./pages/authenticated/Tracker";
 import Details from "./pages/authenticated/Details";
 import { QueryClient, QueryClientProvider, useQuery } from '@tanstack/react-query'
-import { loadData } from '@services/firestore/loadData';
+import { getImageUrl, loadData } from '@services/firestore/loadData';
 import Login from '@pages/unauthenticated/Login';
 import SignUp from '@pages/unauthenticated/SignUp';
 import useFirebaseAuthentication from '@services/firebaseAuth/utils';
@@ -22,6 +22,10 @@ import VerifyEmail from '@pages/authenticated/VerifyEmail';
 import About from '@pages/authenticated/About';
 
 const queryClient = new QueryClient();
+
+const getMillis = (minutes: number) => {
+    return minutes * 60000;
+}
 
 function App() {
     return (
@@ -42,14 +46,27 @@ function MainApp() {
     const pcQuery = useQuery({
         queryKey: ['pcData', selectedPcId],
         queryFn: () => loadData(selectedPcId),
-        enabled: !!loggedIn
+        enabled: !!loggedIn,
+        refetchOnWindowFocus: false,
+        staleTime: getMillis(30)
+    });
+
+    /* Load PC image, if available */
+    const imageQuery = useQuery({
+        queryKey: ['imageUrl', pcQuery.data?.selectedPcData?.baseDetails.imagePath],
+        queryFn: () => getImageUrl(pcQuery.data?.selectedPcData?.baseDetails.imagePath ?? '', pcQuery.data?.selectedPcData?.baseDetails.pcId ?? ''),
+        enabled: !!loggedIn,
+        refetchOnWindowFocus: false,
+        staleTime: getMillis(120)
     });
 
     /* Look up user role */
     const roleQuery = useQuery({
         queryKey: ['userRole'],
         queryFn: () => getUserRole(),
-        enabled: !!loggedIn
+        enabled: !!loggedIn,
+        refetchOnWindowFocus: false,
+        staleTime: getMillis(30)
     });
 
     /* Check if user has verified email */
@@ -68,7 +85,7 @@ function MainApp() {
                 return verified;
             }
         },
-        enabled: !!loggedIn
+        enabled: !!loggedIn,
     });
 
     if (!loggedIn) {
@@ -84,7 +101,7 @@ function MainApp() {
         )
     }
 
-    if (loggedIn && verifiedUserQuery.data == false) return <VerifyEmail/>
+    if (loggedIn && verifiedUserQuery.data == false) return <VerifyEmail queryClient={queryClient}/>
 
     if (loggedIn && (pcQuery.isLoading || roleQuery.isLoading || verifiedUserQuery.isLoading)) return <Loading/>
 
@@ -109,9 +126,9 @@ function MainApp() {
     return (
         <BrowserRouter>
             <Routes>
-                <Route index element={<Overview pcData={pcQuery.data.selectedPcData} pcList={pcQuery.data.pcList} selectedPc={{pcId: selectedPcId, setSelectedPcId: setSelectedPcId}} userRole={roleQuery.data} queryClient={queryClient}/>}/>
+                <Route index element={<Overview pcData={pcQuery.data.selectedPcData} pcList={pcQuery.data.pcList} imageUrl={imageQuery.data ?? ''} selectedPc={{pcId: selectedPcId, setSelectedPcId: setSelectedPcId}} userRole={roleQuery.data} queryClient={queryClient}/>}/>
                 <Route path="/home" element={<Home pcList={pcQuery.data.pcList} setSelectedPcId={setSelectedPcId} userRole={roleQuery.data}/>}/>
-                <Route path="/overview" element={<Overview pcData={pcQuery.data.selectedPcData} pcList={pcQuery.data.pcList} selectedPc={{pcId: selectedPcId, setSelectedPcId: setSelectedPcId}} userRole={roleQuery.data} queryClient={queryClient}/>}/>
+                <Route path="/overview" element={<Overview pcData={pcQuery.data.selectedPcData} pcList={pcQuery.data.pcList} imageUrl={imageQuery.data ?? ''} selectedPc={{pcId: selectedPcId, setSelectedPcId: setSelectedPcId}} userRole={roleQuery.data} queryClient={queryClient}/>}/>
                 <Route path="/stats" element={<Stats pcData={pcQuery.data.selectedPcData} pcList={pcQuery.data.pcList} selectedPc={{pcId: selectedPcId, setSelectedPcId: setSelectedPcId}} queryClient={queryClient} userRole={roleQuery.data}/>}/>
                 <Route path="/tracker" element={<Tracker pcData={pcQuery.data.selectedPcData} queryClient={queryClient} pcList={pcQuery.data.pcList} selectedPc={{pcId: selectedPcId, setSelectedPcId: setSelectedPcId}} userRole={roleQuery.data}/>}/>
                 <Route path="/details" element={<Details pcData={pcQuery.data.selectedPcData} pcList={pcQuery.data.pcList} selectedPc={{pcId: selectedPcId, setSelectedPcId: setSelectedPcId}} queryClient={queryClient} userRole={roleQuery.data}/>}/>

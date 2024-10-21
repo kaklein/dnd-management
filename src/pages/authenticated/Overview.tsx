@@ -26,11 +26,11 @@ interface Props {
     selectedPc: {pcId: string | null, setSelectedPcId: (pcId: string) => void}
     userRole: UserRole | undefined;
     queryClient: QueryClient;
+    imageUrl: string;
 }
 
-function Overview({pcData, pcList, selectedPc, userRole, queryClient}: Props) {
+function Overview({pcData, pcList, selectedPc, userRole, queryClient, imageUrl}: Props) {
     const navigate = useNavigate();
-    const pcImagePath = pcData.baseDetails.imagePaths?.avatar;
     const pcFullName = `${pcData.baseDetails.name.firstName} ${pcData.baseDetails.name.lastName}`
     const listCardObject = {
         class: pcData.baseDetails.class,
@@ -77,7 +77,7 @@ function Overview({pcData, pcList, selectedPc, userRole, queryClient}: Props) {
             handleSubmit={async (event: any) => {
                 try {
                     await handleSubmitEdit(event, editModalFormData, pcData);
-                    queryClient.invalidateQueries();
+                    queryClient.refetchQueries({ queryKey: ['pcData', pcData.baseDetails.pcId]});
                     setEditModalFormData(emptyEditModalData);
                     setEditable(false);
                     triggerSuccessAlert(setShowSuccessAlert);
@@ -90,6 +90,7 @@ function Overview({pcData, pcList, selectedPc, userRole, queryClient}: Props) {
             initialEditorContent={initialEditorContent}
             handleCancel={() => setEditModalFormData(emptyEditModalData)}
             pcData={pcData}
+            imageUrl={imageUrl}
         />
         {showSuccessAlert && <SuccessAlert/>}
 
@@ -102,7 +103,6 @@ function Overview({pcData, pcList, selectedPc, userRole, queryClient}: Props) {
                 selectedPc={selectedPc}
             />
             <Card>
-                {pcImagePath && <img src={`/images/playerCharacters/${pcImagePath}`} className="card-img-top" alt={pcFullName}/>}
                 <div className="card-body">
                     <TitleButtonRow
                         text={pcFullName}
@@ -121,7 +121,10 @@ function Overview({pcData, pcList, selectedPc, userRole, queryClient}: Props) {
                                     setEditModalFormData({
                                         ...emptyEditModalData,
                                         formType: 'character',
+                                        firstName: pcData.baseDetails.name.firstName,
+                                        lastName: pcData.baseDetails.name.lastName,
                                         description: pcData.baseDetails.description ?? '',
+                                        imagePath: pcData.baseDetails.imagePath ?? '',
                                         class: pcData.baseDetails.class,
                                         subclass: pcData.baseDetails.subclass ?? '',
                                         race: pcData.baseDetails.race,
@@ -140,6 +143,12 @@ function Overview({pcData, pcList, selectedPc, userRole, queryClient}: Props) {
                             </>
                         }
                     />
+                    {
+                    imageUrl && 
+                    <div className="pc-image-container">
+                        <img src={imageUrl} id="pc-image-display" className="card-img-top" alt={pcFullName}/>
+                    </div>
+                    }
                     <div className="overview-top">
                         <h5 className="left-justify">Level: {pcData.baseDetails.level}</h5>
                         {

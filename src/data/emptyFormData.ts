@@ -226,6 +226,9 @@ export const emptyEditModalData = {
   speed: '',
   xp: '',
   hitDiceType: '',
+  imagePath: '',
+  firstName: '',
+  lastName: '',
 
   // summonable
   summonableId: '',

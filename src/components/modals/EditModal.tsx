@@ -24,19 +24,23 @@ interface Props {
   initialEditorContent?: string;
   handleCancel: () => void;
   pcData: PlayerCharacter;
+  imageUrl?: string;
 }
 
-const checkRequiredContent = (formType: string, content?: string) => {
+const checkRequiredContent = (formType: string, content?: string, imageUrl?: string) => {
   if (['spell', 'weapon', 'feature', 'equipment', 'summonable', 'note', 'character'].includes(formType)) {
     if (content == undefined) throw Error(formType + ' form is missing required initialEditorContent');
     return {
       content: content,
     };
   }
+  if (['character'].includes(formType)) {
+    if (imageUrl == undefined) throw Error(formType + ' form is missing required imageUrl');
+  }
   return undefined;  
 }
 
-function EditModal ({ formType, formData, handleChange, handleSubmit, handleCancel, setFormData, initialEditorContent, pcData}: Props) {
+function EditModal ({ formType, formData, handleChange, handleSubmit, handleCancel, setFormData, initialEditorContent, pcData, imageUrl}: Props) {
   const editorContent = checkRequiredContent(formType, initialEditorContent);
   
   let form: ReactNode;
@@ -133,6 +137,11 @@ function EditModal ({ formType, formData, handleChange, handleSubmit, handleCanc
         setFormData={setFormData}
         initialEditorContent={editorContent!.content}
         modalDismiss={true}
+        existingPCImage={{
+          path: pcData.baseDetails.imagePath ?? '',
+          url: imageUrl!
+        }}
+        pcId={pcData.baseDetails.pcId}
       />
       break;
     }
