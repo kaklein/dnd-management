@@ -1,7 +1,13 @@
 import Button, { ButtonType } from "@components/Button";
 import FormSelect from "@components/FormSelect";
+import ImageInput from "@components/ImageInput";
+import TextEditor, { buildEditor } from "@components/TextEditor";
 import { Alignment } from "@models/enum/Alignment";
 import { HitDiceType } from "@models/enum/HitDiceType";
+import { deleteImage } from "@services/firebaseStorage/delete";
+import { FileNameUtil } from "@services/firebaseStorage/util";
+import { uploadImage } from "@services/firebaseStorage/write";
+import { useState } from "react";
 
 interface Props {
   handleChange: (event: any, setFunction: (prevFormData: any) => void) => void;
@@ -10,15 +16,82 @@ interface Props {
     data: any, 
     clearForm: (data: any) => void,
     clearedFormData: any
-  ) => void;
+  ) => Promise<void>;
   formData: any;
   setFormData: (data: any) => void;
+  initialEditorContent: string;
   modalDismiss?: boolean;
+  existingPCImage: {
+    path: string;
+    url: string;
+  };
+  pcId: string;
 }
 
-function BaseDetailsForm ({handleChange, handleSubmit, formData, setFormData, modalDismiss}: Props) {
+function BaseDetailsForm ({handleChange, handleSubmit, formData, setFormData, initialEditorContent, modalDismiss, existingPCImage, pcId}: Props) {
+  const editor = buildEditor(initialEditorContent, (value: string) => {
+    handleChange({ target: { name: 'description', value: value }}, setFormData);
+  });
+  const [imageUploadElement, setImageUploadElement] = useState(document.getElementById("uploadFile") as HTMLInputElement);
+  const fileNameUtil = new FileNameUtil(pcId);
+
   return (
-    <form onSubmit={(event) => {handleSubmit(event, formData, setFormData, {})}}>
+    editor &&
+    <form onSubmit={async (event) => {
+      event.preventDefault();
+      if (formData.imagePath) {
+        // Add new image to bucket and update path in pc data
+        try {
+          await uploadImage(imageUploadElement, fileNameUtil, existingPCImage.path);
+          await handleSubmit(event, formData, setFormData, formData);
+          if (existingPCImage.path) {
+            // Delete old image, if applicable
+            await deleteImage(existingPCImage.path, fileNameUtil);
+          }
+          editor.commands.clearContent();
+        } catch (e: any) {
+          console.error(e);
+          alert ('Sorry, an error occurred saving your changes. Please refresh the page and try again.');
+        }
+      } else if (existingPCImage.path && !formData.imagePath) {
+        // Delete old photo
+        try {
+          await deleteImage(existingPCImage.path, fileNameUtil);
+          await handleSubmit(event, formData, setFormData, formData);
+          editor.commands.clearContent();
+        } catch (e: any) {
+          console.error(e);
+          alert ('Sorry, an error occurred saving your changes. Please refresh the page and try again.');
+        }
+      } else {
+        await handleSubmit(event, formData, setFormData, {});
+        editor.commands.clearContent();
+      }
+    }}>
+      <div className="update-form-field">
+        <label className="update-form-label" htmlFor="firstName">First Name</label>
+        <input
+          className="update-form-input"
+          type="text"          
+          id="firstName"
+          name="firstName"
+          onChange={(event) => {handleChange(event, setFormData)}}
+          value={formData.firstName}
+          required
+        />
+      </div>
+      <div className="update-form-field">
+        <label className="update-form-label" htmlFor="lastName">Last Name</label>
+        <input
+          className="update-form-input"
+          type="text"          
+          id="lastName"
+          name="lastName"
+          onChange={(event) => {handleChange(event, setFormData)}}
+          value={formData.lastName}
+          required
+        />
+      </div>
       <div className="update-form-field">
         <label className="update-form-label" htmlFor="level">Level</label>
         <input
@@ -62,14 +135,21 @@ function BaseDetailsForm ({handleChange, handleSubmit, formData, setFormData, mo
       </div>
       <div className="update-form-field">
         <label className="update-form-label" htmlFor="description">Description (Optional)</label>
-        <textarea
-          className="update-form-input"
-          id="description"
-          name="description"
-          onChange={(event) => {handleChange(event, setFormData)}}
-          value={formData.description}
+        <TextEditor
+          editor={editor}
         />
       </div>
+      <ImageInput
+        maxFileSizeMB={1}
+        formData={{
+          data: formData,
+          set: setFormData
+        }}
+        fileNameUtil={fileNameUtil}
+        existingImagePath={existingPCImage.path}
+        existingImageUrl={existingPCImage.url}
+        setImageUploadElement={setImageUploadElement}
+      />
       <div className="update-form-field">
         <label className="update-form-label" htmlFor="class">Class</label>
         <input
@@ -98,7 +178,7 @@ function BaseDetailsForm ({handleChange, handleSubmit, formData, setFormData, mo
           }
           required
         />              
-      </div> 
+      </div>
       <div className="update-form-field">
         <label className="update-form-label" htmlFor="subclass">Subclass (Optional)</label>
         <input

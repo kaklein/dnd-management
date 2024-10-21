@@ -9,13 +9,14 @@ interface Props {
     data: any, 
     clearForm: (data: any) => void,
     clearedFormData: any
-  ) => void;
+  ) => Promise<void>;
   formData: any;
   setFormData: (data: any) => void;
+  initialEditorContent: string;
   showSection: {data: any, setFunction: (newValues: any) => void};
 }
 
-function AddWeapon ({handleChange, handleSubmit, formData, setFormData, showSection}: Props) {  
+function AddWeapon ({handleChange, handleSubmit, formData, setFormData, initialEditorContent, showSection}: Props) {  
   const showForm = showSection.data.weapons;
   
   return (
@@ -34,6 +35,7 @@ function AddWeapon ({handleChange, handleSubmit, formData, setFormData, showSect
         handleSubmit={handleSubmit}
         formData={formData}
         setFormData={setFormData}
+        initialEditorContent={initialEditorContent}
       />
     }
     </div>

@@ -1,30 +1,57 @@
 import Button, { ButtonType } from "@components/Button";
 import Card from "@components/cards/Card";
 import FormSelect from "@components/FormSelect";
+import TextEditor, { buildEditor } from "@components/TextEditor";
 import { buildProficiencyForms } from "@components/utils";
 import { Alignment } from "@models/enum/Alignment";
 import { HitDiceType } from "@models/enum/HitDiceType";
 import { useState } from "react";
+import { uploadImage } from "@services/firebaseStorage/write";
+import ImageInput from "@components/ImageInput";
+import { FileNameUtil } from "@services/firebaseStorage/util";
+import { v4 as uuidv4 } from "uuid";
 
 interface Props {
   handleChange: (event: any, setFunction: (prevFormData: any) => void) => void;
   handleSubmit: (
     event: any, 
     data: any, 
-    clearForm: (data: any) => void,
-    clearedFormData: any
-  ) => void;
+    generatedPcId: string
+  ) => Promise<void>;
   formData: any;
+  initialEditorContent: string;
   setFormData: (data: any) => void;
 }
 
-function CreateCharacterForm ({handleChange, handleSubmit, formData, setFormData}: Props) {
+function CreateCharacterForm ({handleChange, handleSubmit, formData, initialEditorContent, setFormData}: Props) {
   const [showBaseDetails, setShowBaseDetails] = useState(true);
   const [showAbilityScores, setShowAbilityScores] = useState(false);
+  const editor = buildEditor(initialEditorContent, (value: string) => {
+    handleChange({ target: { name: 'description', value: value }}, setFormData);
+  });
+
+  const [imageUploadElement, setImageUploadElement] = useState(document.getElementById("uploadFile") as HTMLInputElement);
+  const generatedPcId = uuidv4();
+  const fileNameUtil = new FileNameUtil(generatedPcId);
   
   return (
+    editor &&
     <div>
-      <form className="update-pc-form" onSubmit={(event) => handleSubmit(event, formData, setFormData, formData)}>
+      <form className="update-pc-form" onSubmit={async (event) => {
+        event.preventDefault();
+        if (formData.imagePath) {
+          try {
+            await uploadImage(imageUploadElement, fileNameUtil);
+            await handleSubmit(event, formData, generatedPcId);
+            editor.commands.clearContent();
+          } catch (e: any) {
+            console.error(e);
+          }
+        } else {
+          await handleSubmit(event, formData, generatedPcId);
+          editor.commands.clearContent();
+        }
+      }}>
         {
           showBaseDetails &&
           <>
@@ -56,14 +83,19 @@ function CreateCharacterForm ({handleChange, handleSubmit, formData, setFormData
             </div>
             <div className="update-form-field">
               <label className="update-form-label" htmlFor="description">Description (Optional)</label>
-              <textarea
-                className="update-form-input"
-                id="description"
-                name="description"
-                onChange={(event) => {handleChange(event, setFormData)}}
-                value={formData.description || ""}
+              <TextEditor
+                editor={editor}
               />
             </div>
+            <ImageInput
+              maxFileSizeMB={1}
+              formData={{
+                data: formData,
+                set: setFormData
+              }}
+              fileNameUtil={fileNameUtil}
+              setImageUploadElement={setImageUploadElement}
+            />
             <div className="update-form-field">
               <label className="update-form-label" htmlFor="class">Class</label>
               <input
@@ -159,7 +191,7 @@ function CreateCharacterForm ({handleChange, handleSubmit, formData, setFormData
                 id="xp"
                 name="xp"
                 onChange={(event) => {handleChange(event, setFormData)}}
-                value={formData.xp || "0"}
+                value={formData.xp || ""}
               />
             </div>
             <div className="update-form-field">

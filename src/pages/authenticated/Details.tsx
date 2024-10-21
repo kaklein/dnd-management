@@ -13,7 +13,7 @@ import ConfirmDelete from "@components/modals/ConfirmDelete";
 import { TitleButtonRow } from "@components/TitleButtonRow";
 import DeleteItemButton from "@components/DeleteItemButton";
 import QuickNav from "@components/QuickNav";
-import { formatWeaponDisplayTitle, handleSubmitEdit, pcHasDetailsPageItems, triggerSuccessAlert } from "@pages/utils";
+import { emptyRichTextContent, formatWeaponDisplayTitle, handleSubmitEdit, pcHasDetailsPageItems, triggerSuccessAlert } from "@pages/utils";
 import SuccessAlert from "@components/alerts/SuccessAlert";
 import EditItemButton from "@components/EditItemButton";
 import EditModal from "@components/modals/EditModal";
@@ -71,7 +71,8 @@ function Details({pcData, pcList, selectedPc, queryClient, userRole}: Props) {
     };
 
     const [showConfirmDelete, setShowConfirmDelete] = useState({show: false, data: emptyShowConfirmDeleteData});
-    const [editModalFormData, setEditModalFormData] = useState(emptyEditModalData)
+    const [editModalFormData, setEditModalFormData] = useState(emptyEditModalData);
+    const [initialEditorContent, setInitialEditorContent] = useState(editModalFormData.description);
 
     const mapSpells = (
         spells: Spell[], 
@@ -118,15 +119,17 @@ function Details({pcData, pcList, selectedPc, queryClient, userRole}: Props) {
                                         sourceUrl: spell.sourceUrl ?? '',
                                         level: spell.level,
                                         spellCastingAbility: spell.spellCastingAbility
-                                    })
+                                    });
+                                    setInitialEditorContent(spell.description);
                                 }}
                             />
                             </>
                         }
                     />
                     <div className="content">                   
-                        <p><b>Description: </b>{spell.description}</p>
-        
+                        <div className="long-text-display left-justify" dangerouslySetInnerHTML={{__html: spell.description}}/>
+                        <hr/>
+
                         <p><b>Type: </b>{spell.level}</p>
         
                         {spell.damage &&
@@ -198,7 +201,10 @@ function Details({pcData, pcList, selectedPc, queryClient, userRole}: Props) {
                     }
                 }}
                 setFormData={setEditModalFormData}
-                handleCancel={() => { setEditModalFormData(emptyEditModalData)}}
+                initialEditorContent={initialEditorContent}
+                handleCancel={() => {
+                    setEditModalFormData(emptyEditModalData);
+                }}
                 pcData={pcData}
             />
 
@@ -277,7 +283,8 @@ function Details({pcData, pcList, selectedPc, queryClient, userRole}: Props) {
                                                 type: weapon.type,
                                                 modifierProperty: weapon.modifierProperty,
                                                 magic: weapon.magic ? "true" : "false",
-                                            })
+                                            });
+                                            setInitialEditorContent(weapon.description ?? emptyRichTextContent);
                                         }}
                                     />    
                                     </>                               
@@ -342,15 +349,16 @@ function Details({pcData, pcList, selectedPc, queryClient, userRole}: Props) {
                                                     maxUses: feature.data.maxUses ? String(feature.data.maxUses) : '',
                                                     refresh: feature.data.refresh ?? '',
                                                     saveDC: feature.data.saveDC ? String(feature.data.saveDC) : ''
-                                                })
+                                                });
+                                                setInitialEditorContent(feature.data.description);
                                             }}
                                         />
                                         </>
                                     }
                                 />
                                 <div className="content">
-                                    <p><b>Description: </b>{feature.data.description}</p>
-                                    <p><b>Source: </b>{feature.data.source}</p>
+                                <div className="long-text-display left-justify" dangerouslySetInnerHTML={{__html: feature.data.description}}/>
+                                <p><b>Source: </b>{feature.data.source}</p>
                                     { feature.data.damage && <p><b>Damage: </b>{feature.data.damage} {feature.data.damageType}</p>}
                                     { feature.data.saveDC && <p><b>Spell Save DC: </b>{feature.data.saveDC}</p>}
                                     { feature.data.sourceUrl && <p><b>Source URL: </b><a href={feature.data.sourceUrl} target="_blank">{feature.data.sourceUrl}</a></p>}
@@ -415,14 +423,15 @@ function Details({pcData, pcList, selectedPc, queryClient, userRole}: Props) {
                                                     hitPointsCurrent: String(s.data.hitPoints.current),
                                                     armorClass: String(s.data.armorClass),
                                                     summoned: s.data.summoned ? "true" : "false"
-                                                })
+                                                });
+                                                setInitialEditorContent(s.data.description);
                                             }}
                                         />
                                         </>
                                     }
                                 />
                                 <div className="content">
-                                    <p><b>Description: </b>{s.data.description}</p>
+                                    <div className="long-text-display left-justify" dangerouslySetInnerHTML={{__html: s.data.description}}/>
                                     <p><b>Source: </b>{s.data.source.name} ({capitalize(s.data.source.type)})</p>
                                     <p><b>Max HP: </b>{s.data.hitPoints.max}</p>
                                     <p><b>Armor Class: </b>{s.data.armorClass}</p>
@@ -479,14 +488,18 @@ function Details({pcData, pcList, selectedPc, queryClient, userRole}: Props) {
                                                 displayName: item.type,
                                                 type: item.type,
                                                 description: item.description ?? '',
-                                            })
+                                            });
+                                            setInitialEditorContent(item.description ?? emptyRichTextContent);
                                         }}
                                     />
                                     </>
                                 }
                             />
                             <div className="content">
-                                {item.description && <p><i>{item.description}</i></p>}
+                                {
+                                (item.description && item.description != emptyRichTextContent) &&
+                                <div className="long-text-display left-justify" dangerouslySetInnerHTML={{__html: item.description}}/>
+                                }
                             </div>
                         </Card>
                     )
@@ -647,14 +660,15 @@ function Details({pcData, pcList, selectedPc, queryClient, userRole}: Props) {
                                                 note: note,
                                                 originalItem: note,
                                                 useTextArea: true
-                                            })
+                                            });
+                                            setInitialEditorContent(note);
                                         }}
                                     />
                                     </>
                                 }
                             />
                             <div className="content">
-                                <p>{note}</p>
+                                <div className="long-text-display left-justify" dangerouslySetInnerHTML={{__html: note}}/>
                             </div>
                         </Card>
                     ))

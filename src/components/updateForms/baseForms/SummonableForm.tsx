@@ -1,7 +1,9 @@
 import Button, { ButtonType } from "@components/Button";
 import FormSelect from "@components/FormSelect";
+import TextEditor, { buildEditor } from "@components/TextEditor";
 import { defaultSummonableFormData } from "@data/emptyFormData";
 import { PlayerCharacter } from "@models/playerCharacter/PlayerCharacter";
+import { validateRequiredFields } from "../utils";
 
 interface Props {
   handleChange: (event: any, setFunction: (prevFormData: any) => void) => void;
@@ -10,16 +12,32 @@ interface Props {
     data: any, 
     clearForm: (data: any) => void,
     clearedFormData: any
-  ) => void;
+  ) => Promise<void>;
   formData: any;
   setFormData: (data: any) => void;
+  initialEditorContent: string;
   pcData: PlayerCharacter;
   modalDismiss?: boolean;
 }
 
-function SummonableForm ({handleChange, handleSubmit, formData, setFormData, pcData, modalDismiss=false}: Props) {
+function SummonableForm ({handleChange, handleSubmit, formData, setFormData, initialEditorContent, pcData, modalDismiss=false}: Props) {
+  const editor = buildEditor(initialEditorContent, (value: string) => {
+    handleChange({ target: { name: 'description', value: value }}, setFormData);
+  });
+  
   return (
-    <form onSubmit={(event) => {handleSubmit(event, formData, setFormData, defaultSummonableFormData)}}>     
+    editor &&
+    <form onSubmit={async (event) => {
+      const { valid, errorMessage } = validateRequiredFields(['description'], formData);
+        if (!valid) {
+          event.preventDefault();
+          alert(errorMessage);
+          return;
+        } else {
+          await handleSubmit(event, formData, setFormData, defaultSummonableFormData);
+          editor.commands.clearContent();
+        }
+    }}>     
       <div className="update-form-field">
         <label className="update-form-label" htmlFor="name">Type</label>
         <input
@@ -47,13 +65,8 @@ function SummonableForm ({handleChange, handleSubmit, formData, setFormData, pcD
       </div>
       <div className="update-form-field">
         <label className="update-form-label" htmlFor="description">Description</label>
-        <textarea
-          className="update-form-input"
-          id="description"
-          name="description"
-          onChange={(event) => {handleChange(event, setFormData)}}
-          value={formData.description}
-          required
+        <TextEditor
+          editor={editor}
         />          
       </div>
 

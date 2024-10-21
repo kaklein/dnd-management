@@ -9,6 +9,8 @@ import { UserRole } from './enum/UserRole';
 import { getAuth } from '@firebase/auth';
 import { getUserRole } from './getUserRole';
 import { Summonable } from '@models/playerCharacter/Summonable';
+import { readFromBucket } from '@services/firebaseStorage/read';
+import { FileNameUtil } from '@services/firebaseStorage/util';
 
 const loadPcData = async (pcId: string): Promise<PlayerCharacter> => {
   // Get base character details
@@ -74,5 +76,16 @@ export const loadData = async (selectedPcId: string | null): Promise<{
       pcList: baseDetails,
       selectedPcData: undefined
     }
+  }
+};
+
+export const getImageUrl = async (imagePath: string, pcId: string): Promise<string> => {
+  if (imagePath) {
+    if(!pcId) throw Error('No pcId');
+    const fileNameUtil = new FileNameUtil(pcId);
+    const url = await readFromBucket(imagePath, fileNameUtil);
+    return url;
+  } else {
+    return '';
   }
 };

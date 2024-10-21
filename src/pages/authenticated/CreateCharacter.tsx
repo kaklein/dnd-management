@@ -6,12 +6,12 @@ import CreateCharacterForm from "@components/updateForms/CreateCharacterForm";
 import { isFormDataValid } from "@components/updateForms/utils";
 import { defaultCreateCharacterFormData } from "@data/emptyFormData";
 import { getAuth } from "@firebase/auth";
+import { emptyRichTextContent } from "@pages/utils";
 import { createCharacter } from "@services/firestore/createCharacter";
 import { UserRole } from "@services/firestore/enum/UserRole";
 import { QueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { v4 as uuidv4 } from "uuid";
 
 interface Props {
   queryClient: QueryClient;
@@ -23,6 +23,7 @@ function CreateCharacter ({queryClient, setSelectedPcId, userRole}: Props) {
   const navigate = useNavigate();
 
   const [formData, setFormData] = useState(defaultCreateCharacterFormData);
+  const initialEditorContent = emptyRichTextContent;
 
   const handleChange = (
     event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>, 
@@ -34,7 +35,8 @@ function CreateCharacter ({queryClient, setSelectedPcId, userRole}: Props) {
 
   const handleSubmit = async (
     event: React.ChangeEvent<HTMLInputElement>, 
-    formData: any
+    formData: any,
+    generatedPcId: string
   ) => {
     event.preventDefault();
     const validation = isFormDataValid(formData);
@@ -43,12 +45,11 @@ function CreateCharacter ({queryClient, setSelectedPcId, userRole}: Props) {
       alert(`Missing the following fields: ${JSON.stringify(validation.missingFields)}. Please fill out all required fields before submitting.`);
       return;
     }
-    const pcId = uuidv4();
     const uid = getAuth().currentUser!.uid;
     try {
-      await createCharacter(uid, pcId, formData);
-      queryClient.refetchQueries({ queryKey: ['pcData', pcId]});
-      setSelectedPcId(pcId);
+      await createCharacter(uid, generatedPcId, formData);
+      queryClient.refetchQueries({ queryKey: ['pcData', generatedPcId]});
+      setSelectedPcId(generatedPcId);
       navigate('/add?created=true');
     } catch (e: any) {
       console.error(e);
@@ -78,6 +79,7 @@ function CreateCharacter ({queryClient, setSelectedPcId, userRole}: Props) {
           handleSubmit={handleSubmit}
           formData={formData}
           setFormData={setFormData}
+          initialEditorContent={initialEditorContent}
         />
       </Card>
     </div>

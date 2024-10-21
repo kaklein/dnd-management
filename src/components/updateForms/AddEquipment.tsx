@@ -9,12 +9,14 @@ interface Props {
     data: any, 
     clearForm: (data: any) => void,
     clearedFormData: any
-  ) => void;  formData: any;
+  ) => Promise<void>;
+  formData: any;
   setFormData: (data: any) => void;
+  initialEditorContent: string;
   showSection: {data: any, setFunction: (newValues: any) => void};
 }
 
-function AddEquipment ({handleChange, handleSubmit, formData, setFormData, showSection}: Props) {
+function AddEquipment ({handleChange, handleSubmit, formData, setFormData, initialEditorContent, showSection}: Props) {
   const showForm = showSection.data.equipment;
   
   return (
@@ -33,6 +35,7 @@ function AddEquipment ({handleChange, handleSubmit, formData, setFormData, showS
         handleSubmit={handleSubmit}
         formData={formData}
         setFormData={setFormData}
+        initialEditorContent={initialEditorContent}
       />
     }
     </div>
