@@ -60,6 +60,15 @@ function About ({selectedPc, userRole}: Props) {
                 <div className="col-2 small-text"><b>Release Date</b></div>
                 <div className="col-8 small-text"><b>Release Notes</b></div>
               </div>
+              <ReleaseNote version="1.4.0" releaseDate="2024-10-20"
+                releaseNotes={
+                  <>
+                    <p>Enabled rich text editing for descriptions on items such as spells and features.</p>
+                    <p>Added the ability to upload an image of your character.</p>
+                    <p>Created a custom icon that will be used when the app is bookmarked on the home screen of mobile devices.</p>
+                  </>
+                }
+              />
               <ReleaseNote version="1.3.1" releaseDate="2024-10-19"
                 releaseNotes={
                   <>
