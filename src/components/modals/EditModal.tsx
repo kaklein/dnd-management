@@ -24,15 +24,18 @@ interface Props {
   initialEditorContent?: string;
   handleCancel: () => void;
   pcData: PlayerCharacter;
-  imageUrl: string;
+  imageUrl?: string;
 }
 
-const checkRequiredContent = (formType: string, content?: string) => {
+const checkRequiredContent = (formType: string, content?: string, imageUrl?: string) => {
   if (['spell', 'weapon', 'feature', 'equipment', 'summonable', 'note', 'character'].includes(formType)) {
     if (content == undefined) throw Error(formType + ' form is missing required initialEditorContent');
     return {
       content: content,
     };
+  }
+  if (['character'].includes(formType)) {
+    if (imageUrl == undefined) throw Error(formType + ' form is missing required imageUrl');
   }
   return undefined;  
 }
