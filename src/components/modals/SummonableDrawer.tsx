@@ -18,26 +18,39 @@ function SummonableDrawer ({summonable, pcData, setFormData, searchParams, setSu
   if (!summonable.id) return;
   let className = "col-auto collapse collapse-horizontal drawer-body popup";
   className = searchParams.get("showSummonable") == "true" ? className.concat(" show") : className;
+
   return (
-    <div className="container-fluid summonable">
-      <div className="row">       
-        
-        
+    <div className="container-fluid summonable" id="top">
+      <div className="row">
         <div className={className} id="collapseExample">
-          <div className="summonable-content">
-            {summonable.data.name &&
-            <>
-              <h4 className="section-header summonable-title">{summonable.data.name}</h4>
-              <h5 className="summonable-subtitle"><i>{summonable.data.type}</i></h5>
-            </>
-            }
-            {
-              !summonable.data.name &&
-              <h4 className="section-header">{summonable.data.type}</h4>
-            }
+          <div className="summonable-content" style={{width: "93vw"}}>
+            {/* Title bar and collapse button */}
+            <div className="summonable-title-row">
+              <div className="summonable-title row">
+                <div className="col-10 no-padding">
+                  <h4 className={`summonable-title-header ${summonable.data.name ? "summonable-title-header-flat-bottom" : ""}`}>{summonable.data.name ? summonable.data.name : summonable.data.type}</h4>
+                </div>
+                {
+                  disableBackdrop &&
+                  <div className="col-2 no-padding">
+                    <button className="btn drawer-handle-btn handle-inline" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample"
+                      onClick={() => {
+                        setDisableBackdrop(false);
+                      }}
+                    >
+                      <img alt="collapse summoned item" src="/images/icons/summonable-collapse-icon-white.png" width="30px"/>
+                    </button>
+                  </div>
+                }                
+              </div>
+              {
+                summonable.data.name &&
+                <h5 className="summonable-subtitle"><i>{summonable.data.type}</i></h5>
+              }
+            </div>
 
             {/* Hit Points display */}
-            <Card customClass="">
+            <Card>
                 <h3 className="section-header">Hit Points</h3>
                 <div className="hp container-fluid">
                     <div className="row">
@@ -82,39 +95,111 @@ function SummonableDrawer ({summonable, pcData, setFormData, searchParams, setSu
                         </div>
                     </div>                  
                 </div>
-            </Card> 
+            </Card>
 
-            {/* AC display */}
-            <h5 className="center summonable-ac">AC: {summonable.data.armorClass}</h5>                    
+            <Card>
+              <h4 className="section-header">Stats</h4>
+              {/* AC display */}
+              <h5 className="center summonable-ac">AC: {summonable.data.armorClass}</h5>                    
 
-            {/* Dismiss button */}
+              {/* Stat Block display */}
+              {/* TODO: populate values from data */}
+              <div className="mini-stat-block center">
+                <div className="stat-block-item">
+                  <div className="stat-block-item-title"><b>STR</b></div>
+                  <p>2 (-4)</p>
+                </div>
+                <div className="stat-block-item">
+                  <div className="stat-block-item-title"><b>DEX</b></div>
+                  <p>14 (+2)</p>
+                </div>
+                <div className="stat-block-item">
+                  <div className="stat-block-item-title"><b>CON</b></div>
+                  <p>8 (-1)</p>
+                </div>
+                <div className="stat-block-item">
+                  <div className="stat-block-item-title"><b>INT</b></div>
+                  <p>2 (-4)</p>
+                </div>
+                <div className="stat-block-item">
+                  <div className="stat-block-item-title"><b>WIS</b></div>
+                  <p>12 (+1)</p>
+                </div>
+                <div className="stat-block-item">
+                  <div className="stat-block-item-title"><b>CHA</b></div>
+                  <p>6 (-2)</p>
+                </div>
+              </div>
+            </Card>
+            
+
+            {/* Attacks display (if any) */}
+            {/* TODO: populate based on array of attacks from summonable */}
+            <Card>
+              <h4 className="section-header">Attacks</h4>
+              <div className="display-item-row left-justify">
+                <div className="summonable-attack-name">BEAK &nbsp;&nbsp;</div>
+                <div className="summonable-attack-content">
+                  Attack bonus: +4 &nbsp;&nbsp; Damage: 1d1 piercing
+                </div>
+              </div>
+              <div className="display-item-row left-justify">
+                <div className="summonable-attack-name">CAW &nbsp;&nbsp;</div>
+                <div className="summonable-attack-content">
+                  Attack bonus: +1 &nbsp;&nbsp; Damage: 1d1 psychic
+                </div>
+              </div>
+            </Card>
+
+            {/* Dismiss button and collapse button */}
             <Card customClass="no-border no-padding">
-              <button
-                type="button"
-                className="btn btn-danger"
-                data-bs-toggle="modal"
-                data-bs-target="#confirmDismissSummonModal"
-                onClick={() => { 
+              <div className="summonable-title row summonable-bottom-btn-container">
+                <div className="col-10 no-padding">
+                <div className="summonable-title-header-bottom">
+                  <button
+                  type="button"
+                  className="btn btn-danger"
+                  data-bs-toggle="modal"
+                  data-bs-target="#confirmDismissSummonModal"
+                  onClick={() => {
                     setFormData({
                         ...getDefaultFormData(pcData),
                         [buildSummonableSummonedKey(summonable)]: false,
                     });
-                }}
-              >
-                Dismiss
-              </button>  
+                  }}
+                >
+                  Dismiss
+                </button>
+              </div>
+              </div>
+              {
+                disableBackdrop &&
+                <div className="col-2 no-padding">
+                  <button className="btn drawer-handle-btn handle-inline" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample"
+                    onClick={() => {
+                      setDisableBackdrop(false);
+                    }}
+                  >
+                    <img alt="collapse summoned item" src="/images/icons/summonable-collapse-icon-white.png" width="30px"/>
+                  </button>
+                </div>
+              }
+              </div>
             </Card>                      
           </div>
         </div>
-        <div className="col-auto drawer-handle">
-            <button className="btn drawer-handle-btn" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample"
-            onClick={() => {
-              setDisableBackdrop(!disableBackdrop);
-            }}>
-              { !disableBackdrop && <img alt="open summoned item" src="/images/icons/summonable-icon.png" width="40px"/>}
-              { disableBackdrop && <img alt="collapse summoned item" src="/images/icons/summonable-collapse-icon.png" width="40px"/>}
-            </button>
-        </div>
+        {
+          !disableBackdrop &&
+          <div className="col-auto drawer-handle">
+              <button className="btn drawer-handle-btn" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample"
+              onClick={() => {
+                setDisableBackdrop(!disableBackdrop);
+              }}>
+                <a href="#top">{ !disableBackdrop && <img alt="open summoned item" src="/images/icons/summonable-icon.png" width="40px"/>}</a>
+              </button>
+          </div>
+        }
+        
       </div>
     </div>
   )

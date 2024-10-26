@@ -95,13 +95,26 @@ function Tracker({pcData, queryClient, pcList, selectedPc, userRole}: Props) {
     }
 
     return (
-        <>
+        <div className={`tracker-body${disableBackdrop ? '-disable-scroll' : ''}`}>
         {
             (summonedItem.data.summoned && disableBackdrop) &&
-            <div className="overlay-backdrop">I'M HERE!! {disableBackdrop == true ? "true" : "false"}</div>
+            <div className="overlay-backdrop"/>
         }
 
         <div className="main-body">
+            {
+                summonedItem.data.summoned &&
+                <SummonableDrawer
+                    pcData={pcData}
+                    setFormData={setFormData}
+                    summonable={summonedItem}
+                    searchParams={searchParams}
+                    setSummonableAction={setSummonableAction}
+                    setDisableBackdrop={setDisableBackdrop}
+                    disableBackdrop={disableBackdrop}
+                />
+            }
+            
             <Navbar isSelectedPc={!!selectedPc.pcId} userRole={userRole}/>
 
             <PageHeaderBarPC 
@@ -130,6 +143,7 @@ function Tracker({pcData, queryClient, pcList, selectedPc, userRole}: Props) {
             <ConfirmDismissSummonModal
                 summonable={summonedItem}
                 handleDismiss={() => {
+                    setDisableBackdrop(false);
                     updateById(CollectionName.SUMMONABLES, summonedItem.id, {summoned: false});
                     queryClient.refetchQueries({ queryKey: ['pcData', pcData.baseDetails.pcId]});
                     setFormData(getDefaultFormData(pcData));
@@ -146,19 +160,6 @@ function Tracker({pcData, queryClient, pcList, selectedPc, userRole}: Props) {
                 setDisableBackdrop={setDisableBackdrop}
                 pcId={pcData.baseDetails.pcId}
             />
-
-            {
-                summonedItem.data.summoned &&
-                <SummonableDrawer
-                    pcData={pcData}
-                    setFormData={setFormData}
-                    summonable={summonedItem}
-                    searchParams={searchParams}
-                    setSummonableAction={setSummonableAction}
-                    setDisableBackdrop={setDisableBackdrop}
-                    disableBackdrop={disableBackdrop}
-                />
-            }
 
             {
 
@@ -389,14 +390,13 @@ function Tracker({pcData, queryClient, pcList, selectedPc, userRole}: Props) {
                                         {
                                             (s.data.source.type == 'feature' && pcData.features.filter(f => f.data.name === s.data.source.name)[0].data.maxUses) &&
                                             <p className="center">Must use the {s.data.source.name} feature under the Abilities section in order to summon.</p>
-                                        }                                     
+                                        }
                                         <button
                                             className={`btn btn-${(summonedItem.id == s.id && summonedItem.data.summoned) ? 'success' : 'info'}`}
                                             type="button"
                                             data-bs-toggle="modal"
                                             data-bs-target="#summonableActionModal"
-                                            onClick={() => {
-                                                
+                                            onClick={() => {                                                
                                                 setSummonedItem(s);
                                                 setSummonableAction('summon');
                                             }}
@@ -607,7 +607,7 @@ function Tracker({pcData, queryClient, pcList, selectedPc, userRole}: Props) {
             <AboutFooter/>
         </div>
         <QuickNav/>
-        </>
+        </div>
     )
 }
 
