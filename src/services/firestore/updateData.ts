@@ -20,6 +20,6 @@ export const transformAndUpdate = async (pcData: PlayerCharacter, data: any) => 
       transformedUpdates.updateByDocId.updateObject
     );
   } else {
-    console.log('No update or create');
+    console.warn('No update or create');
   }
 }

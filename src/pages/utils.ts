@@ -90,6 +90,19 @@ export const handleSubmitEdit = async (
     // update attacks array
     const attacks: SummonableAttack[] = formData.attacks as SummonableAttack[];
 
+    // update abilityScores
+    const abilityScores = getBool(formData.useAbilityScores) ? {
+      strength: Number(formData.strengthScore),
+      dexterity: Number(formData.dexterityScore),
+      constitution: Number(formData.constitutionScore),
+      intelligence: Number(formData.intelligenceScore),
+      wisdom: Number(formData.wisdomScore),
+      charisma: Number(formData.charismaScore),
+      ...(formData.proficiencyBonus && {
+        proficiencyBonus: Number(formData.proficiencyBonus)
+      })
+    } : {};
+
     const updatedSummonable: Summonable = {
         id: '',
         data: {
@@ -114,6 +127,7 @@ export const handleSubmitEdit = async (
               ...(a.damage && { damage: a.damage }),
               ...(a.damageType && { damageType: a.damageType }),
             })) : [],
+            abilityScores
         }
     }
     await updateById(CollectionName.SUMMONABLES, formData.summonableId, updatedSummonable.data);

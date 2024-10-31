@@ -215,7 +215,20 @@ export const transformFormDataForUpdate = (pcData: PlayerCharacter, data: {updat
             ...(a.damageType && { damageType: a.damageType }),
           })) : [],
           armorClass: Number(updates.armorClass),
-          summoned: false
+          summoned: false,
+          ...(getBool(String(updates.useAbilityScores)) && {
+            abilityScores: {
+              strength: Number(updates.strengthScore),
+              dexterity: Number(updates.dexterityScore),
+              constitution: Number(updates.constitutionScore),
+              intelligence: Number(updates.intelligenceScore),
+              wisdom: Number(updates.wisdomScore),
+              charisma: Number(updates.charismaScore),
+              ...(updates.proficiencyBonus && {
+                proficiencyBonus: Number(updates.proficiencyBonus)
+              })
+            }
+          })
         }
       };
       return {
@@ -405,6 +418,11 @@ export const transformBaseDetailsForCharacterCreation = (uid: string, pcId: stri
 
 export const getModifier = (baseScore: number): number => {
   return Math.floor((baseScore - 10) / 2);
+}
+
+export const getModifierFormatted = (baseScore: number): string => {
+  const modifier = getModifier(baseScore);
+  return modifier > 0 ? `+${modifier}` : String(modifier);
 }
 
 export const getBool = (asString: string) => {

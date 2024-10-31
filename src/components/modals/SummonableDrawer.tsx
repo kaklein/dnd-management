@@ -4,6 +4,8 @@ import { PlayerCharacter } from "@models/playerCharacter/PlayerCharacter";
 import { Summonable } from "@models/playerCharacter/Summonable";
 import { getDefaultFormData, getHPRange } from "@pages/utils";
 import Popover from "./Popover";
+import { getModifierFormatted } from "@services/firestore/utils";
+import { DamageType } from "@models/enum/DamageType";
 
 interface Props {
   summonable: Summonable;
@@ -52,7 +54,7 @@ function SummonableDrawer ({summonable, pcData, setFormData, searchParams, setSu
 
             {/* Hit Points display */}
             <Card>
-                <h3 className="section-header">Hit Points</h3>
+                <h4 className="section-header">Hit Points</h4>
                 <div className="hp container-fluid">
                     <div className="row">
                         <div className="col-6 hp-col">
@@ -98,42 +100,6 @@ function SummonableDrawer ({summonable, pcData, setFormData, searchParams, setSu
                 </div>
             </Card>
 
-            <Card>
-              <h4 className="section-header">Stats</h4>
-              {/* AC display */}
-              <h5 className="center summonable-ac">AC: {summonable.data.armorClass}</h5>                    
-
-              {/* Stat Block display */}
-              {/* TODO: populate values from data */}
-              {/* <div className="mini-stat-block center">
-                <div className="stat-block-item">
-                  <div className="stat-block-item-title"><b>STR</b></div>
-                  <p>2 (-4)</p>
-                </div>
-                <div className="stat-block-item">
-                  <div className="stat-block-item-title"><b>DEX</b></div>
-                  <p>14 (+2)</p>
-                </div>
-                <div className="stat-block-item">
-                  <div className="stat-block-item-title"><b>CON</b></div>
-                  <p>8 (-1)</p>
-                </div>
-                <div className="stat-block-item">
-                  <div className="stat-block-item-title"><b>INT</b></div>
-                  <p>2 (-4)</p>
-                </div>
-                <div className="stat-block-item">
-                  <div className="stat-block-item-title"><b>WIS</b></div>
-                  <p>12 (+1)</p>
-                </div>
-                <div className="stat-block-item">
-                  <div className="stat-block-item-title"><b>CHA</b></div>
-                  <p>6 (-2)</p>
-                </div>
-              </div> */}
-            </Card>
-            
-
             {/* Attacks display (if any) */}
             {
               (summonable.data.attacks && summonable.data.attacks.length > 0) &&
@@ -154,7 +120,7 @@ function SummonableDrawer ({summonable, pcData, setFormData, searchParams, setSu
                       {
                         s.damage &&
                         <div className="summonable-attack-content">
-                          Damage: {s.damage} {s.damageType}
+                          {s.damageType === DamageType.HEALING ? 'Effect:' : 'Damage:'} {s.damage} {s.damageType}
                         </div>
                       }
                     </div>          
@@ -162,7 +128,58 @@ function SummonableDrawer ({summonable, pcData, setFormData, searchParams, setSu
                   ))
                 }
               </Card>
-            }            
+            } 
+
+            <Card>
+              <h4 className="section-header">Stats</h4>
+              {/* AC display */}
+              <div className="container-fluid">
+                <div className="row">
+                  <div className="col summonable-stat">
+                    <p className="center">AC:</p>
+                    <h5>{summonable.data.armorClass}</h5>
+                  </div>
+                  {
+                    summonable.data.abilityScores?.proficiencyBonus &&
+                    <div className="col summonable-stat">
+                      <p className="center">Proficiency Bonus:</p>
+                      <h5>+{summonable.data.abilityScores?.proficiencyBonus}</h5>
+                    </div>
+                  }
+                </div>
+              </div>
+
+              {/* Stat Block display */}
+              {
+                (summonable.data.abilityScores && summonable.data.abilityScores.strength >= 0) &&
+                <div className="mini-stat-block center">
+                  <div className="stat-block-item">
+                    <div className="stat-block-item-title"><b>STR</b></div>
+                    <p>{summonable.data.abilityScores.strength} ({getModifierFormatted(summonable.data.abilityScores.strength)})</p>
+                  </div>
+                  <div className="stat-block-item">
+                    <div className="stat-block-item-title"><b>DEX</b></div>
+                    <p>{summonable.data.abilityScores.dexterity} ({getModifierFormatted(summonable.data.abilityScores.dexterity)})</p>
+                  </div>
+                  <div className="stat-block-item">
+                    <div className="stat-block-item-title"><b>CON</b></div>
+                    <p>{summonable.data.abilityScores.constitution} ({getModifierFormatted(summonable.data.abilityScores.constitution)})</p>
+                  </div>
+                  <div className="stat-block-item">
+                    <div className="stat-block-item-title"><b>INT</b></div>
+                    <p>{summonable.data.abilityScores.intelligence} ({getModifierFormatted(summonable.data.abilityScores.intelligence)})</p>
+                  </div>
+                  <div className="stat-block-item">
+                    <div className="stat-block-item-title"><b>WIS</b></div>
+                    <p>{summonable.data.abilityScores.wisdom} ({getModifierFormatted(summonable.data.abilityScores.wisdom)})</p>
+                  </div>
+                  <div className="stat-block-item">
+                    <div className="stat-block-item-title"><b>CHA</b></div>
+                    <p>{summonable.data.abilityScores.charisma} ({getModifierFormatted(summonable.data.abilityScores.charisma)})</p>
+                  </div>
+                </div>
+              }
+            </Card>           
 
             {/* Dismiss button and collapse button */}
             <Card customClass="no-border no-padding">

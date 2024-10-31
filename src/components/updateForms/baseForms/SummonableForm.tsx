@@ -9,6 +9,8 @@ import { useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 import { SummonableAttack } from "@models/playerCharacter/SummonableAttack";
 import { emptyRichTextContent } from "@pages/utils";
+import Card from "@components/cards/Card";
+import { getBool, getModifierFormatted } from "@services/firestore/utils";
 
 interface Props {
   handleChange: (event: any, setFunction: (prevFormData: any) => void) => void;
@@ -33,13 +35,45 @@ function SummonableForm ({handleChange, handleSubmit, formData, setFormData, ini
   const emptyAttacks: string[] = [];
   const [attacks, setAttacks] = useState((formData.attacks && formData.attacks.length > 0) ? formData.attacks.map((a: SummonableAttack) => a.id) as string[] : emptyAttacks);
   
+  const [showStatsFields, setShowStatsFields] = useState(getBool(formData.useAbilityScores));
+  const handleStatsFieldCheckboxChange = () => {
+    const newVal = !showStatsFields;
+    setShowStatsFields(newVal);
+    if (!newVal) {
+      setFormData({
+        ...formData,
+        useAbilityScores: 'false',
+        strengthScore: '',
+        dexterityScore: '',
+        constitutionScore: '',
+        intelligenceScore: '',
+        wisdomScore: '',
+        charismaScore: '',
+        proficiencyBonus: ''
+    });
+    } else {
+      setFormData({
+        ...formData,
+        useAbilityScores: 'true',
+        strengthScore: '10',
+        dexterityScore: '10',
+        constitutionScore: '10',
+        intelligenceScore: '10',
+        wisdomScore: '10',
+        charismaScore: '10',
+        proficiencyBonus: ''
+    });
+  }
+}
+
   const summonableId = formData.summonableId;
 
   return (
     summonableDescriptionEditor &&
     <form onSubmit={async (event) => {
-      // todo - figure out how to validate dynamic attack description fields...
-      const { valid, errorMessage } = validateRequiredFields(['description'], formData);
+      const requiredFields = ['description'];
+      const requiredArrayFields = attacks && attacks.length > 0 ? ['attacks.description'] : undefined;
+      const { valid, errorMessage } = validateRequiredFields(requiredFields, formData, requiredArrayFields);
         if (!valid) {
           event.preventDefault();
           alert(errorMessage);
@@ -48,6 +82,7 @@ function SummonableForm ({handleChange, handleSubmit, formData, setFormData, ini
           await handleSubmit(event, formData, setFormData, defaultSummonableFormData);
           summonableDescriptionEditor.commands.clearContent();
           setAttacks(emptyAttacks);
+          setFormData(defaultSummonableFormData);
         }
     }}>
       <div className="update-form-field">
@@ -180,6 +215,172 @@ function SummonableForm ({handleChange, handleSubmit, formData, setFormData, ini
         </div>
       }
 
+      {/* Stat Block */}
+      <div>
+        <div className="update-form-conditional">
+          <p>Do you want to add this Summonable's stat block?</p>
+          <label htmlFor="statBlockCheckbox">Yes</label>
+          <input
+            id="statBlockCheckbox"
+            type="checkbox"
+            checked={showStatsFields}
+            onChange={handleStatsFieldCheckboxChange}
+          />
+        </div>
+        
+        { showStatsFields &&
+        <>
+            <Card>
+              <div className="container-fluid test">
+                <div className="row display-item-row left-justify">
+                  <div className="col update-form-field">
+                    <label className="update-form-label" htmlFor="strengthScore">Strength</label>
+                    <input
+                      className="update-form-input update-form-input-narrow inline"
+                      type="number"
+                      min="1"
+                      max="30"
+                      id="strengthScore"
+                      name="strengthScore"
+                      onChange={(event) => {handleChange(event, setFormData)}}
+                      value={formData.strengthScore}
+                      required
+                      autoFocus
+                    />
+                    {
+                      formData.strengthScore &&
+                      <p className="inline">({getModifierFormatted(formData.strengthScore)})</p>
+                    }
+                  </div>
+                </div>
+
+                <div className="row display-item-row left-justify">
+                  <div className="col update-form-field">
+                    <label className="update-form-label" htmlFor="dexterityScore">Dexterity</label>
+                    <input
+                      className="update-form-input update-form-input-narrow inline"
+                      type="number"
+                      min="1"
+                      max="30"
+                      id="dexterityScore"
+                      name="dexterityScore"
+                      onChange={(event) => {handleChange(event, setFormData)}}
+                      value={formData.dexterityScore}
+                      required
+                    />
+                    {
+                      formData.dexterityScore &&
+                      <p className="inline">({getModifierFormatted(formData.dexterityScore)})</p>
+                    }
+                  </div>
+                </div>
+
+                <div className="row display-item-row left-justify">
+                  <div className="col update-form-field">
+                    <label className="update-form-label" htmlFor="constitutionScore">Constitution</label>
+                    <input
+                      className="update-form-input update-form-input-narrow inline"
+                      type="number"
+                      min="1"
+                      max="30"
+                      id="constitutionScore"
+                      name="constitutionScore"
+                      onChange={(event) => {handleChange(event, setFormData)}}
+                      value={formData.constitutionScore}
+                      required
+                    />
+                    {
+                      formData.constitutionScore &&
+                      <p className="inline">({getModifierFormatted(formData.constitutionScore)})</p>
+                    }
+                  </div>
+                </div>
+
+                <div className="row display-item-row left-justify">
+                  <div className="col update-form-field">
+                    <label className="update-form-label" htmlFor="intelligenceScore">Intelligence</label>
+                    <input
+                      className="update-form-input update-form-input-narrow inline"
+                      type="number"
+                      min="1"
+                      max="30"
+                      id="intelligenceScore"
+                      name="intelligenceScore"
+                      onChange={(event) => {handleChange(event, setFormData)}}
+                      value={formData.intelligenceScore}
+                      required
+                    />
+                    {
+                      formData.intelligenceScore &&
+                      <p className="inline">({getModifierFormatted(formData.intelligenceScore)})</p>
+                    }
+                  </div>                  
+                </div>
+
+                <div className="row display-item-row left-justify">
+                  <div className="col update-form-field">
+                    <label className="update-form-label" htmlFor="wisdomScore">Wisdom</label>
+                    <input
+                      className="update-form-input update-form-input-narrow inline"
+                      type="number"
+                      min="1"
+                      max="30"
+                      id="wisdomScore"
+                      name="wisdomScore"
+                      onChange={(event) => {handleChange(event, setFormData)}}
+                      value={formData.wisdomScore}
+                      required
+                    />
+                    {
+                      formData.wisdomScore &&
+                      <p className="inline">({getModifierFormatted(formData.wisdomScore)})</p>
+                    }
+                  </div>
+                </div>
+
+                <div className="row display-item-row left-justify">
+                  <div className="col update-form-field">
+                    <label className="update-form-label" htmlFor="charismaScore">Charisma</label>
+                    <input
+                      className="update-form-input update-form-input-narrow inline"
+                      type="number"
+                      min="1"
+                      max="30"
+                      id="charismaScore"
+                      name="charismaScore"
+                      onChange={(event) => {handleChange(event, setFormData)}}
+                      value={formData.charismaScore}
+                      required
+                    />
+                    {
+                      formData.charismaScore &&
+                      <p className="inline">({getModifierFormatted(formData.charismaScore)})</p>
+                    }
+                  </div>
+                </div>
+
+                <div className="row left-justify update-form-field">
+                  <div className="col update-form-field">
+                    <label className="update-form-label" htmlFor="proficiencyBonus">Proficiency Bonus (Optional)</label>
+                    <input
+                      className="update-form-input update-form-input-narrow inline"
+                      type="number"
+                      min="0"
+                      max="10"
+                      id="proficiencyBonus"
+                      name="proficiencyBonus"
+                      onChange={(event) => {handleChange(event, setFormData)}}
+                      value={formData.proficiencyBonus}
+                    />
+                  </div>
+                </div>
+              </div>
+            </Card>
+            <br/>
+        </>
+        }
+      </div>
+
       {/* Attacks */}
       <div className="update-form-field multi-item-form-field">
         <h5 className="section-header">Attacks & Actions (Optional)</h5>
@@ -199,8 +400,7 @@ function SummonableForm ({handleChange, handleSubmit, formData, setFormData, ini
                 const updatedAttacks = formData.attacks.filter((attack: SummonableAttack) => attack.id != a);
                 setFormData({
                   ...formData,
-                  attacks: updatedAttacks,
-                  newField: 'bogusValue'
+                  attacks: updatedAttacks
                 });
               }}
               summonable={pcData.summonables?.find(s => s.id == summonableId)}

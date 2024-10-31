@@ -295,6 +295,10 @@ img {
     width: 100%;
 }
 
+.update-form-input-narrow {
+    width: fit-content;
+}
+
 .update-form-description {
     display: block;
     text-align: left;
@@ -1104,13 +1108,11 @@ img {
     padding: 0px;
 }
 
-.summonable-ac {
-    padding: 10px;
+.summonable-stat {
     background-color: var(--near-white);
     border: 1px solid gray;
     border-radius: 5px;
     width: fit-content;
-    margin-top: 10px !important;
 }
 
 .summonable-attack {

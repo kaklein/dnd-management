@@ -10,7 +10,7 @@ interface Props {
   formData: any;
   setFormData: (data: any) => void;
   removeAttack: () => void;
-  initialEditorContent?: any; // TODO delete or make required as a string again
+  initialEditorContent: string;
   summonable: Summonable | undefined;
   attackId: string;
 }

@@ -47,4 +47,5 @@ export interface EditModalFormData {
   hitPointsCurrent?: string;
   summoned?: string;
   attacks?: SummonableAttack[];
+  [key: string]: string | number | object | boolean | undefined;
 }

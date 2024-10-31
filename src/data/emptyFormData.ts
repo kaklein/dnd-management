@@ -60,7 +60,8 @@ export const defaultSummonableFormData = {
   refresh: '',
   armorClass: '',
   summoned: '',
-  attacks: []
+  attacks: [],
+  useAbilityScores: 'false'
 }
 
 export const defaultEquipmentFormData = {
