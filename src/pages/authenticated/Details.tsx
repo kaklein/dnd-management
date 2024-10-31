@@ -422,7 +422,8 @@ function Details({pcData, pcList, selectedPc, queryClient, userRole}: Props) {
                                                     hitPointMaximum: String(s.data.hitPoints.max),
                                                     hitPointsCurrent: String(s.data.hitPoints.current),
                                                     armorClass: String(s.data.armorClass),
-                                                    summoned: s.data.summoned ? "true" : "false"
+                                                    summoned: s.data.summoned ? "true" : "false",
+                                                    attacks: s.data.attacks ?? []
                                                 });
                                                 setInitialEditorContent(s.data.description);
                                             }}
@@ -435,6 +436,25 @@ function Details({pcData, pcList, selectedPc, queryClient, userRole}: Props) {
                                     <p><b>Source: </b>{s.data.source.name} ({capitalize(s.data.source.type)})</p>
                                     <p><b>Max HP: </b>{s.data.hitPoints.max}</p>
                                     <p><b>Armor Class: </b>{s.data.armorClass}</p>
+                                    {
+                                        s.data.attacks &&
+                                        <div>
+                                            <h5 className="left-justify section-header gray-bg">Attacks & Actions</h5>
+                                            {
+                                                s.data.attacks.sort((a, b) => {
+                                                    if (a.name < b.name) return -1;
+                                                    return 1
+                                                }).map(a => (
+                                                    <div key={a.id} className="display-item-row">
+                                                        <p><b>{a.name.toUpperCase()}</b></p>
+                                                        <div dangerouslySetInnerHTML={{ __html: a.description}}/>
+                                                    </div>
+                                                ))
+                                            }
+                                        </div>
+                                        
+                                    }
+                                    {/* TODO: Display ability scores if present */}
                                 </div>                            
                             </Card>
                         ))

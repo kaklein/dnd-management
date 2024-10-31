@@ -13,9 +13,10 @@ import { BaseDetails, PlayerCharacter } from "@models/playerCharacter/PlayerChar
 import { AbilityScores } from "@models/playerCharacter/AbilityScores";
 import { v4 as uuidv4 } from "uuid";
 import { Summonable } from "@models/playerCharacter/Summonable";
+import { SummonableAttack } from "@models/playerCharacter/SummonableAttack";
 
 
-export const transformFormDataForUpdate = (pcData: PlayerCharacter, data: {updateType: UpdateType, [key: string]: string | number | object}): {
+export const transformFormDataForUpdate = (pcData: PlayerCharacter, data: {updateType: UpdateType, [key: string]: string | number | object | any[]}): {
   collectionName: CollectionName;
   update?: { 
     pcId: string;
@@ -187,6 +188,7 @@ export const transformFormDataForUpdate = (pcData: PlayerCharacter, data: {updat
       }
     }
     case UpdateType.SUMMONABLES: {
+      const attacks: SummonableAttack[] = updates.attacks as SummonableAttack[];
       const newSummonable: Summonable = {
         id: '',
         data: {
@@ -205,6 +207,13 @@ export const transformFormDataForUpdate = (pcData: PlayerCharacter, data: {updat
           ...(updates.maxUses && {maxUses: Number(updates.maxUses)}),
           ...(updates.maxUses && {currentUses: Number(updates.maxUses)}),
           ...(updates.refresh && {refresh: String(updates.refresh) as RestType}),
+          attacks: attacks && attacks.length > 0 ? attacks.map(a => ({
+            id: a.id,
+            name: a.name,
+            description: a.description,
+            ...(a.damage && { damage: a.damage }),
+            ...(a.damageType && { damageType: a.damageType }),
+          })) : [],
           armorClass: Number(updates.armorClass),
           summoned: false
         }

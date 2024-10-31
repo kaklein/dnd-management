@@ -3,6 +3,7 @@ import { WeaponModifierProperty } from "@models/enum/WeaponModifierProperty";
 import { Feature } from "@models/playerCharacter/Feature";
 import { PlayerCharacter } from "@models/playerCharacter/PlayerCharacter";
 import { Summonable } from "@models/playerCharacter/Summonable";
+import { SummonableAttack } from "@models/playerCharacter/SummonableAttack";
 import { Weapon } from "@models/playerCharacter/Weapon";
 import { updateArrayObjectItem, updateById, updateDataByPcId, updateStringArrayItem } from "@services/firestore/crud/update";
 import { CollectionName } from "@services/firestore/enum/CollectionName";
@@ -86,6 +87,9 @@ export const handleSubmitEdit = async (
     const lostHP = existingSummonable.data.hitPoints.max - existingSummonable.data.hitPoints.current;
     const hitPointsCurrent = Math.max(Number(formData.hitPointMaximum) - lostHP, 0);
     
+    // update attacks array
+    const attacks: SummonableAttack[] = formData.attacks as SummonableAttack[];
+
     const updatedSummonable: Summonable = {
         id: '',
         data: {
@@ -102,7 +106,14 @@ export const handleSubmitEdit = async (
               current: hitPointsCurrent
             },
             armorClass: Number(formData.armorClass),
-            summoned: existingSummonable.data.summoned
+            summoned: existingSummonable.data.summoned,
+            attacks: attacks && attacks.length > 0 ? attacks.map(a => ({
+              id: a.id,
+              name: a.name,
+              description: a.description,
+              ...(a.damage && { damage: a.damage }),
+              ...(a.damageType && { damageType: a.damageType }),
+            })) : [],
         }
     }
     await updateById(CollectionName.SUMMONABLES, formData.summonableId, updatedSummonable.data);

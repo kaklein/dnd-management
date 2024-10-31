@@ -161,10 +161,6 @@ function Tracker({pcData, queryClient, pcList, selectedPc, userRole}: Props) {
                 pcId={pcData.baseDetails.pcId}
             />
 
-            {
-
-            }
-
             <form onSubmit={handleSubmit}>
                 <div>
                     {showSuccessAlert && <SuccessAlert/>}
@@ -600,9 +596,21 @@ function Tracker({pcData, queryClient, pcList, selectedPc, userRole}: Props) {
                                 </div>
                             </div>
                         </div>
-                    </Card>                    
+                    </Card>                
                 </div>                          
             </form>
+
+            {
+                (summonedItem.data.summoned && !disableBackdrop) &&
+                <div className="col-auto drawer-handle">
+                    <button className="btn drawer-handle-btn" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample"
+                    onClick={() => {
+                        setDisableBackdrop(!disableBackdrop);
+                    }}>
+                        <a href="#top">{ !disableBackdrop && <img alt="open summoned item" src="/images/icons/summonable-icon.png" width="40px"/>}</a>
+                    </button>
+                </div>                
+            }
 
             <AboutFooter/>
         </div>

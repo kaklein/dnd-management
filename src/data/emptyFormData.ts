@@ -1,5 +1,6 @@
 import { replaceBooleans } from "@components/utils";
 import { CreateCharacterFormData } from "@models/CreateCharacterFormData";
+import { EditModalFormData } from "@models/EditModalFormData";
 import { UpdateType } from "@models/enum/service/UpdateType";
 import { AbilityScores } from "@models/playerCharacter/AbilityScores";
 import { ShowConfirmDeleteData } from "@models/ShowConfirmDeleteData";
@@ -58,7 +59,8 @@ export const defaultSummonableFormData = {
   currentUses: '',
   refresh: '',
   armorClass: '',
-  summoned: ''
+  summoned: '',
+  attacks: []
 }
 
 export const defaultEquipmentFormData = {
@@ -177,7 +179,7 @@ export const emptyShowConfirmDeleteData: ShowConfirmDeleteData = {
   stringArrayFieldName: ''
 };
 
-export const emptyEditModalData = {
+export const emptyEditModalData: EditModalFormData = {
   formType: '',
   displayName: '',
   name: '', // weapons, spells, features
@@ -236,7 +238,8 @@ export const emptyEditModalData = {
   sourceName: '',
   hitPointMaximum: '',
   hitPointsCurrent: '',
-  summoned: ''
+  summoned: '',
+  attacks: []
 };
 
 export const emptyShowSectionData = {

@@ -4,6 +4,11 @@ import TextEditor, { buildEditor } from "@components/TextEditor";
 import { defaultSummonableFormData } from "@data/emptyFormData";
 import { PlayerCharacter } from "@models/playerCharacter/PlayerCharacter";
 import { validateRequiredFields } from "../utils";
+import SummonableAttackForm from "./SummonableAttackForm";
+import { useState } from "react";
+import { v4 as uuidv4 } from "uuid";
+import { SummonableAttack } from "@models/playerCharacter/SummonableAttack";
+import { emptyRichTextContent } from "@pages/utils";
 
 interface Props {
   handleChange: (event: any, setFunction: (prevFormData: any) => void) => void;
@@ -21,13 +26,19 @@ interface Props {
 }
 
 function SummonableForm ({handleChange, handleSubmit, formData, setFormData, initialEditorContent, pcData, modalDismiss=false}: Props) {
-  const editor = buildEditor(initialEditorContent, (value: string) => {
+  const summonableDescriptionEditor = buildEditor(initialEditorContent, (value: string) => {
     handleChange({ target: { name: 'description', value: value }}, setFormData);
   });
+
+  const emptyAttacks: string[] = [];
+  const [attacks, setAttacks] = useState((formData.attacks && formData.attacks.length > 0) ? formData.attacks.map((a: SummonableAttack) => a.id) as string[] : emptyAttacks);
   
+  const summonableId = formData.summonableId;
+
   return (
-    editor &&
+    summonableDescriptionEditor &&
     <form onSubmit={async (event) => {
+      // todo - figure out how to validate dynamic attack description fields...
       const { valid, errorMessage } = validateRequiredFields(['description'], formData);
         if (!valid) {
           event.preventDefault();
@@ -35,9 +46,10 @@ function SummonableForm ({handleChange, handleSubmit, formData, setFormData, ini
           return;
         } else {
           await handleSubmit(event, formData, setFormData, defaultSummonableFormData);
-          editor.commands.clearContent();
+          summonableDescriptionEditor.commands.clearContent();
+          setAttacks(emptyAttacks);
         }
-    }}>     
+    }}>
       <div className="update-form-field">
         <label className="update-form-label" htmlFor="name">Type</label>
         <input
@@ -66,7 +78,7 @@ function SummonableForm ({handleChange, handleSubmit, formData, setFormData, ini
       <div className="update-form-field">
         <label className="update-form-label" htmlFor="description">Description</label>
         <TextEditor
-          editor={editor}
+          editor={summonableDescriptionEditor}
         />          
       </div>
 
@@ -167,8 +179,45 @@ function SummonableForm ({handleChange, handleSubmit, formData, setFormData, ini
           />      
         </div>
       }
-             
 
+      {/* Attacks */}
+      <div className="update-form-field multi-item-form-field">
+        <h5 className="section-header">Attacks & Actions (Optional)</h5>
+        <div className="multi-item-form-group">
+          {
+            attacks.map(a => (
+            <SummonableAttackForm
+              key={a}
+              attackId={a}
+              initialEditorContent={
+                pcData.summonables?.find(s => s.id == summonableId)?.data.attacks?.find(attack => attack.id == a)?.description ?? emptyRichTextContent
+              }
+              formData={formData}
+              setFormData={setFormData}
+              removeAttack={() => {
+                setAttacks(attacks.filter(attack => attack != a));
+                const updatedAttacks = formData.attacks.filter((attack: SummonableAttack) => attack.id != a);
+                setFormData({
+                  ...formData,
+                  attacks: updatedAttacks,
+                  newField: 'bogusValue'
+                });
+              }}
+              summonable={pcData.summonables?.find(s => s.id == summonableId)}
+            />
+            ))
+          }
+        </div>
+        <Button
+          buttonType={ButtonType.SUCCESS}
+          text="+ Add"
+          onClick={() => {
+            const newId = uuidv4();
+            setAttacks([...attacks, newId])
+          }}
+        />
+      </div>
+                         
       <Button
         text="Save"
         customClass="float-right"

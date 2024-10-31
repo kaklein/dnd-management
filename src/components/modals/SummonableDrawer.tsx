@@ -3,6 +3,7 @@ import { buildSummonableSummonedKey } from "@components/utils";
 import { PlayerCharacter } from "@models/playerCharacter/PlayerCharacter";
 import { Summonable } from "@models/playerCharacter/Summonable";
 import { getDefaultFormData, getHPRange } from "@pages/utils";
+import Popover from "./Popover";
 
 interface Props {
   summonable: Summonable;
@@ -22,7 +23,7 @@ function SummonableDrawer ({summonable, pcData, setFormData, searchParams, setSu
   return (
     <div className="container-fluid summonable" id="top">
       <div className="row">
-        <div className={className} id="collapseExample">
+        <div className={className} id="collapseExample">          
           <div className="summonable-content" style={{width: "93vw"}}>
             {/* Title bar and collapse button */}
             <div className="summonable-title-row">
@@ -104,7 +105,7 @@ function SummonableDrawer ({summonable, pcData, setFormData, searchParams, setSu
 
               {/* Stat Block display */}
               {/* TODO: populate values from data */}
-              <div className="mini-stat-block center">
+              {/* <div className="mini-stat-block center">
                 <div className="stat-block-item">
                   <div className="stat-block-item-title"><b>STR</b></div>
                   <p>2 (-4)</p>
@@ -129,27 +130,39 @@ function SummonableDrawer ({summonable, pcData, setFormData, searchParams, setSu
                   <div className="stat-block-item-title"><b>CHA</b></div>
                   <p>6 (-2)</p>
                 </div>
-              </div>
+              </div> */}
             </Card>
             
 
             {/* Attacks display (if any) */}
-            {/* TODO: populate based on array of attacks from summonable */}
-            <Card>
-              <h4 className="section-header">Attacks</h4>
-              <div className="display-item-row left-justify">
-                <div className="summonable-attack-name">BEAK &nbsp;&nbsp;</div>
-                <div className="summonable-attack-content">
-                  Attack bonus: +4 &nbsp;&nbsp; Damage: 1d1 piercing
-                </div>
-              </div>
-              <div className="display-item-row left-justify">
-                <div className="summonable-attack-name">CAW &nbsp;&nbsp;</div>
-                <div className="summonable-attack-content">
-                  Attack bonus: +1 &nbsp;&nbsp; Damage: 1d1 psychic
-                </div>
-              </div>
-            </Card>
+            {
+              (summonable.data.attacks && summonable.data.attacks.length > 0) &&
+              <Card>
+                <h4 className="section-header">Attacks & Actions</h4>
+                
+                {
+                  summonable.data.attacks.map(s => (
+                    <Popover
+                      key={s.id}
+                      popoverBody={
+                        <div dangerouslySetInnerHTML={{__html: s.description}}/>
+                      }
+                      customClass="left-justify display-item-row"
+                    >
+                    <div>
+                      <div className="summonable-attack-name">{s.name.toUpperCase()} &nbsp;&nbsp;</div>
+                      {
+                        s.damage &&
+                        <div className="summonable-attack-content">
+                          Damage: {s.damage} {s.damageType}
+                        </div>
+                      }
+                    </div>          
+                    </Popover>
+                  ))
+                }
+              </Card>
+            }            
 
             {/* Dismiss button and collapse button */}
             <Card customClass="no-border no-padding">
@@ -187,19 +200,7 @@ function SummonableDrawer ({summonable, pcData, setFormData, searchParams, setSu
               </div>
             </Card>                      
           </div>
-        </div>
-        {
-          !disableBackdrop &&
-          <div className="col-auto drawer-handle">
-              <button className="btn drawer-handle-btn" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample"
-              onClick={() => {
-                setDisableBackdrop(!disableBackdrop);
-              }}>
-                <a href="#top">{ !disableBackdrop && <img alt="open summoned item" src="/images/icons/summonable-icon.png" width="40px"/>}</a>
-              </button>
-          </div>
-        }
-        
+        </div>        
       </div>
     </div>
   )

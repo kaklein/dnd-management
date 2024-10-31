@@ -994,6 +994,9 @@ img {
 }
 
 .drawer-handle {
+    position: fixed;
+    bottom: 101px;
+    z-index: 100;
     background-color: white;
     height: 60px;
     box-shadow: 2px 2px 2px 2px lightgray;
@@ -1114,6 +1117,13 @@ img {
     width: 100%;
     border: 1px solid gray;
     text-align: left;
+}
+
+.summonable-attack-form {
+    border: 1px solid gray;
+    border-radius: 5px;
+    margin-top: 10px;
+    margin-bottom: 10px;
 }
 
 .summonable-attack-name {
@@ -1259,6 +1269,17 @@ img {
     max-height: 300px;
 }
 
+.multi-item-form-field {
+    border: 1px solid gray;
+    border-radius: 5px;
+    background-color: var(--very-light-gray);
+}
+
+.multi-item-form-group {
+    margin-left: 10px;
+    margin-right: 10px;
+    background-color: white;
+}
 
 /* Overrides */
 .inline {
@@ -1289,6 +1310,7 @@ img {
 
 .gray-bg {
     background-color: darkgray;
+    color: black;
 }
 
 .bold {

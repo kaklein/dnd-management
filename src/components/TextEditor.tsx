@@ -5,7 +5,7 @@ interface Props {
   editor: Editor;
 }
 
-export const buildEditor = (content: string, handleChange: (value: string) => void) => {
+export const buildEditor = (content: string, handleChange: (value: string) => void, dependOnInitialContent=true) => {
   const editor = useEditor({
     extensions: [
       StarterKit
@@ -20,12 +20,12 @@ export const buildEditor = (content: string, handleChange: (value: string) => vo
         spellcheck: 'false',
       },
     },
-  }, [content]);
+  }, [dependOnInitialContent ? content : undefined]);
 
   return editor;
 }
 
-function TextEditor ({ editor }: Props) {
+function TextEditor ({ editor, }: Props) {
   return (
     <div>
       <div>
