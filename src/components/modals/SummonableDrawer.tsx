@@ -115,11 +115,11 @@ function SummonableDrawer ({summonable, pcData, setFormData, searchParams, setSu
                       }
                       customClass="left-justify display-item-row"
                     >
-                    <div>
-                      <div className="summonable-attack-name">{s.name.toUpperCase()} &nbsp;&nbsp;</div>
+                    <div className="row">
+                      <div className="col summonable-attack-name">{s.name.toUpperCase()} &nbsp;&nbsp;</div>
                       {
                         s.damage &&
-                        <div className="summonable-attack-content">
+                        <div className="col summonable-attack-content">
                           {s.damageType === DamageType.HEALING ? 'Effect:' : 'Damage:'} {s.damage} {s.damageType}
                         </div>
                       }
