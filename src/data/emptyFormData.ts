@@ -183,12 +183,12 @@ export const emptyShowConfirmDeleteData: ShowConfirmDeleteData = {
 export const emptyEditModalData: EditModalFormData = {
   formType: '',
   displayName: '',
-  name: '', // weapons, spells, features
-  description: '', // weapons, spells, features, equipment, base details
+  name: '', // weapons, spells, features, summonables
+  description: '', // weapons, spells, features, equipment, base details, summonables
   damage: '', // weapons, spells, features
   damageType: '', // weapons, spells, features
   sourceUrl: '', // spells, features
-  type: '', // weapons, equipment
+  type: '', // weapons, equipment, summonables
   level: '', // spells, character
   maxUses: '', // features, summonables
   refresh: '', // features, summonables
@@ -240,7 +240,14 @@ export const emptyEditModalData: EditModalFormData = {
   hitPointMaximum: '',
   hitPointsCurrent: '',
   summoned: '',
-  attacks: []
+  attacks: [],
+  strengthScore: '',
+  dexterityScore: '',
+  constitutionScore: '',
+  intelligenceScore: '',
+  wisdomScore: '',
+  charismaScore: '',
+  proficiencyBonus: ''
 };
 
 export const emptyShowSectionData = {

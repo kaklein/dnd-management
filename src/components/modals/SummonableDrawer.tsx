@@ -140,12 +140,12 @@ function SummonableDrawer ({summonable, pcData, setFormData, searchParams, setSu
                     <h5>{summonable.data.armorClass}</h5>
                   </div>
                   {
-                    summonable.data.abilityScores?.proficiencyBonus &&
+                    Number(summonable.data.abilityScores?.proficiencyBonus) > 0 &&
                     <div className="col summonable-stat">
                       <p className="center">Proficiency Bonus:</p>
                       <h5>+{summonable.data.abilityScores?.proficiencyBonus}</h5>
                     </div>
-                  }
+                  }                  
                 </div>
               </div>
 

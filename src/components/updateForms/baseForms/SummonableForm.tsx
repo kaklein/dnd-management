@@ -148,7 +148,7 @@ function SummonableForm ({handleChange, handleSubmit, formData, setFormData, ini
       </div>
 
       <div className="update-form-field">
-        <label className="update-form-label" htmlFor="sourceName">Source - Spell or Feature?</label>
+        <label className="update-form-label" htmlFor="sourceType">Source - Spell or Feature?</label>
         <FormSelect
           className="update-form-input"
           value={formData.sourceType}

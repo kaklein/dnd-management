@@ -91,24 +91,25 @@ export const handleSubmitEdit = async (
     const attacks: SummonableAttack[] = formData.attacks as SummonableAttack[];
 
     // update abilityScores
-    const abilityScores = getBool(formData.useAbilityScores) ? {
-      strength: Number(formData.strengthScore),
-      dexterity: Number(formData.dexterityScore),
-      constitution: Number(formData.constitutionScore),
-      intelligence: Number(formData.intelligenceScore),
-      wisdom: Number(formData.wisdomScore),
-      charisma: Number(formData.charismaScore),
-      ...(formData.proficiencyBonus && {
-        proficiencyBonus: Number(formData.proficiencyBonus)
-      })
-    } : {};
+    let abilityScores;
+    if (getBool(formData.useAbilityScores)) {
+      abilityScores = {
+        strength: Number(formData.strengthScore),
+        dexterity: Number(formData.dexterityScore),
+        constitution: Number(formData.constitutionScore),
+        intelligence: Number(formData.intelligenceScore),
+        wisdom: Number(formData.wisdomScore),
+        charisma: Number(formData.charismaScore),
+        proficiencyBonus: formData.proficiencyBonus ? Number(formData.proficiencyBonus) : 0      
+      };
+    }
 
     const updatedSummonable: Summonable = {
         id: '',
         data: {
             pcId: pcData.baseDetails.pcId,
             type: formData.type,
-            ...(formData.name && {name: formData.name}),
+            name: formData.name,
             description: formData.description,
             source: {
               type: formData.sourceType,
