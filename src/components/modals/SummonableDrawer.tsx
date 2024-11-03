@@ -3,6 +3,9 @@ import { buildSummonableSummonedKey } from "@components/utils";
 import { PlayerCharacter } from "@models/playerCharacter/PlayerCharacter";
 import { Summonable } from "@models/playerCharacter/Summonable";
 import { getDefaultFormData, getHPRange } from "@pages/utils";
+import Popover from "./Popover";
+import { getModifierFormatted } from "@services/firestore/utils";
+import { DamageType } from "@models/enum/DamageType";
 
 interface Props {
   summonable: Summonable;
@@ -18,27 +21,40 @@ function SummonableDrawer ({summonable, pcData, setFormData, searchParams, setSu
   if (!summonable.id) return;
   let className = "col-auto collapse collapse-horizontal drawer-body popup";
   className = searchParams.get("showSummonable") == "true" ? className.concat(" show") : className;
+
   return (
-    <div className="container-fluid summonable">
-      <div className="row">       
-        
-        
-        <div className={className} id="collapseExample">
-          <div className="summonable-content">
-            {summonable.data.name &&
-            <>
-              <h4 className="section-header summonable-title">{summonable.data.name}</h4>
-              <h5 className="summonable-subtitle"><i>{summonable.data.type}</i></h5>
-            </>
-            }
-            {
-              !summonable.data.name &&
-              <h4 className="section-header">{summonable.data.type}</h4>
-            }
+    <div className="container-fluid summonable" id="top">
+      <div className="row">
+        <div className={className} id="collapseExample">          
+          <div className="summonable-content" style={{width: "93vw"}}>
+            {/* Title bar and collapse button */}
+            <div className="summonable-title-row">
+              <div className="summonable-title row">
+                <div className="col-10 no-padding">
+                  <h4 className={`summonable-title-header ${summonable.data.name ? "summonable-title-header-flat-bottom" : ""}`}>{summonable.data.name ? summonable.data.name : summonable.data.type}</h4>
+                </div>
+                {
+                  disableBackdrop &&
+                  <div className="col-2 no-padding">
+                    <button className="btn drawer-handle-btn handle-inline" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample"
+                      onClick={() => {
+                        setDisableBackdrop(false);
+                      }}
+                    >
+                      <img alt="collapse summoned item" src="/images/icons/summonable-collapse-icon-white.png" width="30px"/>
+                    </button>
+                  </div>
+                }                
+              </div>
+              {
+                summonable.data.name &&
+                <h5 className="summonable-subtitle"><i>{summonable.data.type}</i></h5>
+              }
+            </div>
 
             {/* Hit Points display */}
-            <Card customClass="">
-                <h3 className="section-header">Hit Points</h3>
+            <Card>
+                <h4 className="section-header">Hit Points</h4>
                 <div className="hp container-fluid">
                     <div className="row">
                         <div className="col-6 hp-col">
@@ -82,39 +98,126 @@ function SummonableDrawer ({summonable, pcData, setFormData, searchParams, setSu
                         </div>
                     </div>                  
                 </div>
-            </Card> 
+            </Card>
 
-            {/* AC display */}
-            <h5 className="center summonable-ac">AC: {summonable.data.armorClass}</h5>                    
+            {/* Attacks display (if any) */}
+            {
+              (summonable.data.attacks && summonable.data.attacks.length > 0) &&
+              <Card>
+                <h4 className="section-header">Attacks & Actions</h4>
+                
+                {
+                  summonable.data.attacks.map(s => (
+                    <Popover
+                      key={s.id}
+                      popoverBody={
+                        <div dangerouslySetInnerHTML={{__html: s.description}}/>
+                      }
+                      customClass="left-justify display-item-row"
+                    >
+                    <div className="row">
+                      <div className="col summonable-attack-name">{s.name.toUpperCase()} &nbsp;&nbsp;</div>
+                      {
+                        s.damage &&
+                        <div className="col summonable-attack-content">
+                          {s.damageType === DamageType.HEALING ? 'Effect:' : 'Damage:'} {s.damage} {s.damageType}
+                        </div>
+                      }
+                    </div>          
+                    </Popover>
+                  ))
+                }
+              </Card>
+            } 
 
-            {/* Dismiss button */}
+            <Card>
+              <h4 className="section-header">Stats</h4>
+              {/* AC display */}
+              <div className="container-fluid">
+                <div className="row">
+                  <div className="col summonable-stat">
+                    <p className="center">AC:</p>
+                    <h5>{summonable.data.armorClass}</h5>
+                  </div>
+                  {
+                    summonable.data.abilityScores?.proficiencyBonus &&
+                    <div className="col summonable-stat">
+                      <p className="center">Proficiency Bonus:</p>
+                      <h5>+{summonable.data.abilityScores?.proficiencyBonus}</h5>
+                    </div>
+                  }
+                </div>
+              </div>
+
+              {/* Stat Block display */}
+              {
+                (summonable.data.abilityScores && summonable.data.abilityScores.strength >= 0) &&
+                <div className="mini-stat-block center">
+                  <div className="stat-block-item">
+                    <div className="stat-block-item-title"><b>STR</b></div>
+                    <p>{summonable.data.abilityScores.strength} ({getModifierFormatted(summonable.data.abilityScores.strength)})</p>
+                  </div>
+                  <div className="stat-block-item">
+                    <div className="stat-block-item-title"><b>DEX</b></div>
+                    <p>{summonable.data.abilityScores.dexterity} ({getModifierFormatted(summonable.data.abilityScores.dexterity)})</p>
+                  </div>
+                  <div className="stat-block-item">
+                    <div className="stat-block-item-title"><b>CON</b></div>
+                    <p>{summonable.data.abilityScores.constitution} ({getModifierFormatted(summonable.data.abilityScores.constitution)})</p>
+                  </div>
+                  <div className="stat-block-item">
+                    <div className="stat-block-item-title"><b>INT</b></div>
+                    <p>{summonable.data.abilityScores.intelligence} ({getModifierFormatted(summonable.data.abilityScores.intelligence)})</p>
+                  </div>
+                  <div className="stat-block-item">
+                    <div className="stat-block-item-title"><b>WIS</b></div>
+                    <p>{summonable.data.abilityScores.wisdom} ({getModifierFormatted(summonable.data.abilityScores.wisdom)})</p>
+                  </div>
+                  <div className="stat-block-item">
+                    <div className="stat-block-item-title"><b>CHA</b></div>
+                    <p>{summonable.data.abilityScores.charisma} ({getModifierFormatted(summonable.data.abilityScores.charisma)})</p>
+                  </div>
+                </div>
+              }
+            </Card>           
+
+            {/* Dismiss button and collapse button */}
             <Card customClass="no-border no-padding">
-              <button
-                type="button"
-                className="btn btn-danger"
-                data-bs-toggle="modal"
-                data-bs-target="#confirmDismissSummonModal"
-                onClick={() => { 
+              <div className="summonable-title row summonable-bottom-btn-container">
+                <div className="col-10 no-padding">
+                <div className="summonable-title-header-bottom">
+                  <button
+                  type="button"
+                  className="btn btn-danger"
+                  data-bs-toggle="modal"
+                  data-bs-target="#confirmDismissSummonModal"
+                  onClick={() => {
                     setFormData({
                         ...getDefaultFormData(pcData),
                         [buildSummonableSummonedKey(summonable)]: false,
                     });
-                }}
-              >
-                Dismiss
-              </button>  
+                  }}
+                >
+                  Dismiss
+                </button>
+              </div>
+              </div>
+              {
+                disableBackdrop &&
+                <div className="col-2 no-padding">
+                  <button className="btn drawer-handle-btn handle-inline" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample"
+                    onClick={() => {
+                      setDisableBackdrop(false);
+                    }}
+                  >
+                    <img alt="collapse summoned item" src="/images/icons/summonable-collapse-icon-white.png" width="30px"/>
+                  </button>
+                </div>
+              }
+              </div>
             </Card>                      
           </div>
-        </div>
-        <div className="col-auto drawer-handle">
-            <button className="btn drawer-handle-btn" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample"
-            onClick={() => {
-              setDisableBackdrop(!disableBackdrop);
-            }}>
-              { !disableBackdrop && <img alt="open summoned item" src="/images/icons/summonable-icon.png" width="40px"/>}
-              { disableBackdrop && <img alt="collapse summoned item" src="/images/icons/summonable-collapse-icon.png" width="40px"/>}
-            </button>
-        </div>
+        </div>        
       </div>
     </div>
   )
