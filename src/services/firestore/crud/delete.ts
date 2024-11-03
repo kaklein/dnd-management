@@ -49,8 +49,9 @@ export const deletePC = async (pcId: string) => {
     const abilityScoresQ = query(collection(db, CollectionName.ABILITY_SCORES), ...buildWhereClauses({pcId: pcId}));
     const spellSlotsQ = query(collection(db, CollectionName.SPELL_SLOTS), ...buildWhereClauses({pcId: pcId}));
     const featuresQ = query(collection(db, CollectionName.FEATURES), ...buildWhereClauses({pcId: pcId}));
+    const summonablesQ = query(collection(db, CollectionName.SUMMONABLES), ...buildWhereClauses({pcId: pcId}));
 
-    const queries = [baseDetailsQ, abilityScoresQ, spellSlotsQ, featuresQ];
+    const queries = [baseDetailsQ, abilityScoresQ, spellSlotsQ, featuresQ, summonablesQ];
 
     let snapshot;
     for (const q of queries) {
