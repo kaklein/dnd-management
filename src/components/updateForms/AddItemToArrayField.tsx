@@ -35,7 +35,7 @@ function AddItemToArrayField ({fieldName, handleChange, handleSubmit, formData, 
     <div>
       <FormHeader
         anchorTag={arrayFieldName}
-        formTitle={capitalize(fieldName)}
+        formTitle={capitalize(fieldName) ?? ''}
         onClick={() => showSection.setFunction({...emptyShowSectionData, [arrayFieldName]: !showSection.data[arrayFieldName]})}
         showForm={showForm}
       />

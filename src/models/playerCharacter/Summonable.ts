@@ -1,3 +1,5 @@
+import { SummonableAttack } from "./SummonableAttack";
+
 export interface Summonable {
   id: string;
   data: {
@@ -14,6 +16,16 @@ export interface Summonable {
       current: number;
     };
     armorClass: number;
+    abilityScores?: {
+      strength: number;
+      dexterity: number;
+      constitution: number;
+      intelligence: number;
+      wisdom: number;
+      charisma: number;
+      proficiencyBonus?: number | '';
+    };
+    attacks?: SummonableAttack[];
     summoned: boolean;
-  };  
+  };
 }

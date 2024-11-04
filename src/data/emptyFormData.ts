@@ -1,5 +1,6 @@
 import { replaceBooleans } from "@components/utils";
 import { CreateCharacterFormData } from "@models/CreateCharacterFormData";
+import { EditModalFormData } from "@models/EditModalFormData";
 import { UpdateType } from "@models/enum/service/UpdateType";
 import { AbilityScores } from "@models/playerCharacter/AbilityScores";
 import { ShowConfirmDeleteData } from "@models/ShowConfirmDeleteData";
@@ -58,7 +59,9 @@ export const defaultSummonableFormData = {
   currentUses: '',
   refresh: '',
   armorClass: '',
-  summoned: ''
+  summoned: '',
+  attacks: [],
+  useAbilityScores: 'false'
 }
 
 export const defaultEquipmentFormData = {
@@ -177,15 +180,15 @@ export const emptyShowConfirmDeleteData: ShowConfirmDeleteData = {
   stringArrayFieldName: ''
 };
 
-export const emptyEditModalData = {
+export const emptyEditModalData: EditModalFormData = {
   formType: '',
   displayName: '',
-  name: '', // weapons, spells, features
-  description: '', // weapons, spells, features, equipment, base details
+  name: '', // weapons, spells, features, summonables
+  description: '', // weapons, spells, features, equipment, base details, summonables
   damage: '', // weapons, spells, features
   damageType: '', // weapons, spells, features
   sourceUrl: '', // spells, features
-  type: '', // weapons, equipment
+  type: '', // weapons, equipment, summonables
   level: '', // spells, character
   maxUses: '', // features, summonables
   refresh: '', // features, summonables
@@ -236,7 +239,15 @@ export const emptyEditModalData = {
   sourceName: '',
   hitPointMaximum: '',
   hitPointsCurrent: '',
-  summoned: ''
+  summoned: '',
+  attacks: [],
+  strengthScore: '',
+  dexterityScore: '',
+  constitutionScore: '',
+  intelligenceScore: '',
+  wisdomScore: '',
+  charismaScore: '',
+  proficiencyBonus: ''
 };
 
 export const emptyShowSectionData = {

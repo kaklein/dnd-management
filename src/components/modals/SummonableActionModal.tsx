@@ -38,7 +38,7 @@ function SummonableActionModal ({ action, summonable, setShowSuccessAlert, query
   const gainHP = (gainedHP: number): number => {
     return Math.min(summonable.data.hitPoints.current + gainedHP, summonable.data.hitPoints.max);
   }
-  
+ 
   return (
     <div className={className} id="summonableActionModal" autoFocus={false} tabIndex={-1} aria-labelledby="summonableActionModalLabel" aria-hidden="true">
       <form onSubmit={async (event) => {   
@@ -149,15 +149,13 @@ function SummonableActionModal ({ action, summonable, setShowSuccessAlert, query
             }
             {
               action === 'summon' &&
-              <>
               <button
                 type="submit"
                 className="btn btn-success"
                 data-bs-dismiss="modal"
               >
-                Yes, call them forth
+                Yes, call them forth!
               </button>
-              </>
             }           
           </div>
         </div>

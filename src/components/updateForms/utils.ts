@@ -1,4 +1,3 @@
-import { capitalize } from "@components/utils";
 import { CreateCharacterFormData } from "@models/CreateCharacterFormData";
 import { RequiredCharacterCreateFields } from "@models/enum/RequiredCharacterCreateFields";
 import { emptyRichTextContent } from "@pages/utils";
@@ -26,16 +25,37 @@ export const isFormDataValid = (formData: CreateCharacterFormData): {
 
 export const validateRequiredFields = (
   requiredFields: string[],
-  formData: any
+  formData: any,
+  requiredArrayFields?: string[] | undefined,
 ): { valid: boolean, errorMessage?: string } => {
   let missingFields: string[] = [];
   for (const field of requiredFields) {
-    if (!formData[field] || formData[field] == '' || formData[field] == emptyRichTextContent) {
+    const value = field.split('.').reduce((prev, cur) => prev[cur], formData);
+
+    if (!value || value == '' || value == emptyRichTextContent) {
       missingFields.push(field);
     };
   };
+
+  if (requiredArrayFields) {
+    let splitField;
+    let arr;
+    let fieldName;
+    for (const field of requiredArrayFields) {
+      splitField = field.split('.');
+      arr = formData[splitField[0]];
+      fieldName = splitField[1];
+      for (const i of arr) {
+        if (!i[fieldName] || i[fieldName] == '' || i[fieldName] == emptyRichTextContent) {
+          missingFields.push(field);
+          break;
+        }
+      }
+    }
+  }
+
   if (missingFields.length > 0) {
-    const message = 'Please fill out required field(s): ' + missingFields.map(f => capitalize(f));
+    const message = 'Please fill out required field(s): ' + missingFields;
     return { valid: false, errorMessage: message }
   } else {
     return { valid: true }

@@ -295,6 +295,10 @@ img {
     width: 100%;
 }
 
+.update-form-input-narrow {
+    width: fit-content;
+}
+
 .update-form-description {
     display: block;
     text-align: left;
@@ -983,6 +987,7 @@ img {
 
 .summonable {
     z-index: 100;
+    margin-top: 10px;
     position: fixed;
 }
 
@@ -993,6 +998,9 @@ img {
 }
 
 .drawer-handle {
+    position: fixed;
+    bottom: 101px;
+    z-index: 100;
     background-color: white;
     height: 60px;
     box-shadow: 2px 2px 2px 2px lightgray;
@@ -1000,10 +1008,47 @@ img {
     border-bottom-right-radius: 5px;
 }
 
+.summonable-title-row {
+    margin-bottom: 10px;
+}
+
+.summonable-bottom-btn-container {
+    width: 100%;
+    background-color: lightgray;
+    border-radius: 5px;
+    margin-top: 10px !important;
+    margin-bottom: 10px !important;
+}
+
+.summonable-bottom-btn-container button {
+    margin: 0px;
+    width: 100%;
+}
+
 .summonable-content {
     padding-top: 10px;
-    width: 75vw;
     max-width: 500px;
+    max-height: 97vh;
+    overflow: scroll;
+}
+
+.mini-stat-block {
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
+.mini-stat-block p {
+    text-align: center;
+}
+
+.stat-block-item {
+    width: 4.8em;
+    display: inline-block;
+    border: 1px solid lightgray;
+}
+
+.stat-block-item-title {
+    background-color: lightgray;
 }
 
 .drawer-handle-btn {
@@ -1013,8 +1058,37 @@ img {
     padding: 0px !important;
 }
 
+.handle-inline {
+    background-color: gray !important;
+    margin: 0px;
+    height: 100%;
+    width: 100%;
+    border-radius: 0px !important;
+    border: 2px solid var(--dark-gray) !important;
+    border-top-right-radius: 5px !important;
+    border-bottom-right-radius: 5px !important;
+}
+
 .summonable-title {
-    margin-bottom: 0px;
+    margin-left: auto !important;
+    margin-right: auto !important;
+    display: inline;
+}
+
+.summonable-title-header, .summonable-title-header-bottom {
+    border-top-left-radius: 5px;
+    border-bottom-left-radius: 5px;
+    color: white;
+    padding: 10px;
+    margin: 0px;
+}
+
+.summonable-title-header-flat-bottom {
+    border-bottom-left-radius: 0px;
+}
+
+.summonable-title-header {
+    background-color: var(--dark-purple);
 }
 
 .summonable-subtitle {
@@ -1022,6 +1096,8 @@ img {
     padding: 5px;
     padding-left: 10px;
     margin-top: 0px;
+    border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 5px;
 }
 
 .no-border {
@@ -1032,13 +1108,40 @@ img {
     padding: 0px;
 }
 
-.summonable-ac {
-    padding: 10px;
+.summonable-stat {
     background-color: var(--near-white);
     border: 1px solid gray;
     border-radius: 5px;
     width: fit-content;
-    margin-top: 15px;
+}
+
+.summonable-attack {
+    width: 100%;
+    border: 1px solid gray;
+    text-align: left;
+}
+
+.summonable-attack-form {
+    border: 1px solid gray;
+    border-radius: 5px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.summonable-attack-name {
+    font-weight: bold;
+    color: var(--dark-purple);
+    width: fit-content;
+    padding-left: 5px;
+    padding-right: 5px;
+    padding-top: 2px;
+    padding-bottom: 2px;
+    display: inline;
+}
+
+.summonable-attack-content {
+    display: inline;
+    width: fit-content;
 }
 
 .overlay-backdrop {
@@ -1048,6 +1151,11 @@ img {
     z-index: 50;
     position: fixed;
     opacity: .5;
+}
+
+.tracker-body-disable-scroll {
+    overflow: hidden;
+    height: 100vh;
 }
 
 .text-editor {
@@ -1079,10 +1187,6 @@ img {
 .long-text-display h4, .ProseMirror h4 {
     text-align: left;
     padding-left: 2px;
-}
-
-.long-text-display p, .ProseMirror p {
-    margin-bottom: 0px;
 }
 
 .long-text-display ul li p, .long-text-display ol li p, .ProseMirror ul li p, .ProseMirror ol li p {
@@ -1167,10 +1271,21 @@ img {
     max-height: 300px;
 }
 
+.multi-item-form-field {
+    border: 1px solid gray;
+    border-radius: 5px;
+    background-color: var(--very-light-gray);
+}
+
+.multi-item-form-group {
+    margin-left: 10px;
+    margin-right: 10px;
+    background-color: white;
+}
 
 /* Overrides */
 .inline {
-    display: inline
+    display: inline;
 }
 
 .center {
@@ -1197,4 +1312,17 @@ img {
 
 .gray-bg {
     background-color: darkgray;
+    color: black;
+}
+
+.bold {
+    font-weight: bold;
+}
+
+.no-padding {
+    padding: 0px !important;
+}
+
+.white-bg {
+    background-color: white;
 }
