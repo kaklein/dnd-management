@@ -60,6 +60,14 @@ function About ({selectedPc, userRole}: Props) {
                 <div className="col-2 small-text"><b>Release Date</b></div>
                 <div className="col-8 small-text"><b>Release Notes</b></div>
               </div>
+              <ReleaseNote version="1.4.1" releaseDate="2024-11-03"
+                releaseNotes={
+                  <>
+                    <p>Can now add attacks/actions and a stat block to Summonable items</p>
+                    <p>Minor UI enhancements</p>
+                  </>
+                }
+              />
               <ReleaseNote version="1.4.0" releaseDate="2024-10-20"
                 releaseNotes={
                   <>
