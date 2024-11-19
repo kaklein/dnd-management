@@ -19,6 +19,7 @@ import { emptyRichTextContent, handleSubmitEdit, triggerSuccessAlert } from "@pa
 import { QueryClient } from "@tanstack/react-query";
 import SuccessAlert from "@components/alerts/SuccessAlert";
 import AboutFooter from "@components/AboutFooter";
+import { Alignment } from "@models/enum/Alignment";
 
 interface Props {
     pcData: PlayerCharacter;
@@ -27,6 +28,11 @@ interface Props {
     userRole: UserRole | undefined;
     queryClient: QueryClient;
     imageUrl: string;
+}
+
+const getValidAlignment = (alignment: string): string => {
+    if (Object.values(Alignment).includes(alignment as any)) return alignment;
+    return Alignment.N_A;
 }
 
 function Overview({pcData, pcList, selectedPc, userRole, queryClient, imageUrl}: Props) {
@@ -129,7 +135,7 @@ function Overview({pcData, pcList, selectedPc, userRole, queryClient, imageUrl}:
                                         subclass: pcData.baseDetails.subclass ?? '',
                                         race: pcData.baseDetails.race,
                                         background: pcData.baseDetails.background,
-                                        alignment: pcData.baseDetails.alignment,
+                                        alignment: getValidAlignment(pcData.baseDetails.alignment),
                                         level: String(pcData.baseDetails.level),
                                         maxHP: String(pcData.baseDetails.usableResources.hitPoints.max),
                                         armorClass: String(pcData.baseDetails.armorClass),
