@@ -166,8 +166,9 @@ export const handleSubmitEdit = async (
                 damageType: formData.damageType,
                 modifierProperty: formData.modifierProperty,
                 magic: getBool(formData.magic),
-                description: formData.description
-            }
+                description: formData.description,
+                equipped: existingArray.find(w => w.id == formData.weaponId)?.equipped ?? false
+            };
             break;
         }
         case 'equipment': {
@@ -321,7 +322,7 @@ export const getDefaultFormData = (pcData: PlayerCharacter) => {
       ...getFeatureFormData(getLimitedUseFeatures(pcData)),
       ...getSummonablesSummoned(pcData.summonables ?? [])
   }
-}
+};
 
 export const getSummonedItem = (pcData: PlayerCharacter) => {
   const summonables = pcData.summonables;

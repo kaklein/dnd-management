@@ -10,4 +10,5 @@ export interface Weapon {
     modifierProperty: WeaponModifierProperty;
     magic: boolean;
     description?: string;
+    equipped?: boolean;
 }

@@ -13,7 +13,8 @@ export const defaultWeaponFormData = {
   damageType: '',
   modifierProperty: '',
   magic: "false",
-  description: ''
+  description: '',
+  equipped: "false"
 };
 
 export const defaultSpellFormData = {

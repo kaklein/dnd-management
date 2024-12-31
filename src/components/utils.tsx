@@ -66,15 +66,15 @@ export const getFeatureFormData = (features: Feature[]) => {
 };
 
 export const buildSummonableSummonedKey = (summonable: Summonable) => {
-    return `summonable_${summonable.id}_summoned`
-}
+    return `summonable_${summonable.id}_summoned`;
+};
 
 export const getSummonablesSummoned = (summonables: Summonable[]) => {
     const array = summonables.map(s => (
         [buildSummonableSummonedKey(s), s.data.summoned]
     ));
     return Object.fromEntries(array);
-}
+};
 
 export const buildSpellSlotsCurrentKey = (spellSlot: SpellSlot) => {
     return `spellSlot_${spellSlot.id}_current`;
@@ -131,7 +131,6 @@ export const formatSpellSlotsUpdates = (formData: any): {docId: string, updates:
     }
     return updates;
 }
-
 
 export const orderAndFormatWeaponElements = (weapon: Weapon, pcData: PlayerCharacter) => {
     return {

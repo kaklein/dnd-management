@@ -33,6 +33,7 @@ import ConfirmDismissSummonModal from "@components/modals/ConfirmDismissSummonMo
 import { useSearchParams } from "react-router-dom";
 import SummonableActionModal from "@components/modals/SummonableActionModal";
 import SummonableDrawer from "@components/modals/SummonableDrawer";
+import { Weapon } from "@models/playerCharacter/Weapon";
 
 interface Props {
     pcData: PlayerCharacter;
@@ -43,6 +44,8 @@ interface Props {
 }
 
 function Tracker({pcData, queryClient, pcList, selectedPc, userRole}: Props) {
+    const SAVE_CHANGES_ERROR = 'We encountered an error saving your changes. Please refresh the page and try again.';
+    
     const conModifier = pcData.abilityScores.data.constitution.modifier;
    
     const [showSuccessAlert, setShowSuccessAlert] = useState(false);
@@ -54,6 +57,7 @@ function Tracker({pcData, queryClient, pcList, selectedPc, userRole}: Props) {
     const [summonableAction, setSummonableAction] = useState('');
     
     const [formData, setFormData] = useState(getDefaultFormData(pcData));
+    const [weaponFormData, setWeaponFormData] = useState(pcData.baseDetails.weapons);
     const [limitedUseFeatures, setLimitedUseFeatures] = useState(getLimitedUseFeatures(pcData));
     const [hpModalAction, setHPModalAction] = useState('');
     const [goldModalAction, setGoldModalAction] = useState('');
@@ -69,6 +73,21 @@ function Tracker({pcData, queryClient, pcList, selectedPc, userRole}: Props) {
         const { name, value } = event.target;
         setFormData((prevFormData: any) => ({...prevFormData, [name]: value}));
     }
+
+    const handleSubmitWeaponEquip = async (event: any, weaponFormData: Weapon[]) => {
+        event.preventDefault();
+
+        try {
+            await updateDataByPcId(CollectionName.PC_BASE_DETAILS, pcData.baseDetails.pcId, { weapons: weaponFormData });
+        } catch (e: any) {
+            console.error(e);
+            alert(SAVE_CHANGES_ERROR);
+            return;
+        }
+        queryClient.refetchQueries({ queryKey: ['pcData', pcData.baseDetails.pcId]});
+        setFormData(getDefaultFormData(pcData));
+        triggerSuccessAlert(setShowSuccessAlert);
+    };
 
     const handleSubmit = async (event: any, explicitFormData?: any) => {
         event.preventDefault();
@@ -86,7 +105,7 @@ function Tracker({pcData, queryClient, pcList, selectedPc, userRole}: Props) {
             ]).then();
         } catch (e: any) {
             console.error(e);
-            alert('We encountered an error saving your changes. Please refresh the page and try again.');
+            alert(SAVE_CHANGES_ERROR);
             return;
         }
         queryClient.refetchQueries({ queryKey: ['pcData', pcData.baseDetails.pcId]});
@@ -301,39 +320,73 @@ function Tracker({pcData, queryClient, pcList, selectedPc, userRole}: Props) {
                         <Card>
                             <h3 className="section-header">Weapons</h3>
                             {
-                                pcData.baseDetails.weapons.map((weapon, i) => (
+                                pcData.baseDetails.weapons.sort((a,b) => {
+                                    const aCompName = formatWeaponDisplayTitle(a.type, a.name);
+                                    const bCompName = formatWeaponDisplayTitle(b.type, b.name);
+                                    if (a.equipped && !b.equipped) return -1;
+                                    if (b.equipped && !a.equipped) return 1;
+                                    if (aCompName < bCompName) return -1;
+                                    return 1;
+                                }).map((weapon, i) => (
                                     <Card key={i}>
-                                        <div className="center-table">
+                                        <div className={`center-table ${weapon.equipped ? "weapon-equipped" : ""}`}>
                                         <div className="container-fluid left-justify" key={i}>
                                             <div className="row">
-                                                <Link className="text-link center" to={'/details?weapons=true#' + weapon.id}><h4>{formatWeaponDisplayTitle(weapon.type, weapon.name)}</h4></Link>
-                                            </div>
-                                            <div className="row display-item-row">
-                                                <div className="col-5">
-                                                    Attack Bonus: 
+                                                <div className="col">
+                                                    <Link className="text-link" to={'/details?weapons=true#' + weapon.id}><h4>{formatWeaponDisplayTitle(weapon.type, weapon.name)}</h4></Link>
                                                 </div>
-                                                <div className="col-7">
-                                                    <Popover
-                                                        popoverBody={<WeaponContentPopover weapon={weapon} pcData={pcData} attribute="attack bonus"/>}
-                                                        fitContent={true}
-                                                    >
-                                                        <span><b>{formatBonus(determineAttackBonus(weapon, pcData) + pcData.baseDetails.proficiencyBonus)}</b></span>
-                                                    </Popover>
-                                                </div>
-                                            </div>
-                                            <div className="row display-item-row">
-                                                <div className="col-5">
-                                                    Damage:
-                                                </div>
-                                                <div className="col-7">
-                                                    <Popover
-                                                        popoverBody={<WeaponContentPopover weapon={weapon} pcData={pcData} attribute="damage"/>}
-                                                        fitContent={true}
-                                                    >
-                                                        <span><b>{weapon.damage} {formatBonus(determineAttackBonus(weapon, pcData), false)}</b> {weapon.damageType.toLowerCase()}</span>
-                                                    </Popover>
+                                                {/* EQUIP/UNEQUIP TOGGLE */}
+                                                <div className="col-auto">
+                                                    <input
+                                                        className="inline"
+                                                        type="checkbox"
+                                                        checked={weaponFormData.find(w => w.id == weapon.id)?.equipped ? true : false}
+                                                        onChange={(event) => {
+                                                            const newValue = !weaponFormData.find(w => w.id == weapon.id)?.equipped;
+                                                            setWeaponFormData(weaponFormData.map(w => {
+                                                                if (w.id == weapon.id) return { ...w, equipped: newValue }
+                                                                else return w;
+                                                            }));
+                                                            handleSubmitWeaponEquip(event, weaponFormData.map(w => {
+                                                                if (w.id == weapon.id) return { ...w, equipped: newValue }
+                                                                else return w;
+                                                            }));
+                                                        }}
+                                                    />
+                                                    <p className="inline small-text">EQUIPPED</p>
                                                 </div>
                                             </div>
+                                            {
+                                                weapon.equipped &&
+                                                <>
+                                                    <div className="row display-item-row">
+                                                    <div className="col-5">
+                                                        Attack Bonus: 
+                                                    </div>
+                                                    <div className="col-7">
+                                                        <Popover
+                                                            popoverBody={<WeaponContentPopover weapon={weapon} pcData={pcData} attribute="attack bonus"/>}
+                                                            fitContent={true}
+                                                        >
+                                                            <span><b>{formatBonus(determineAttackBonus(weapon, pcData) + pcData.baseDetails.proficiencyBonus)}</b></span>
+                                                        </Popover>
+                                                    </div>
+                                                    </div>
+                                                    <div className="row display-item-row">
+                                                        <div className="col-5">
+                                                            Damage:
+                                                        </div>
+                                                        <div className="col-7">
+                                                            <Popover
+                                                                popoverBody={<WeaponContentPopover weapon={weapon} pcData={pcData} attribute="damage"/>}
+                                                                fitContent={true}
+                                                            >
+                                                                <span><b>{weapon.damage} {formatBonus(determineAttackBonus(weapon, pcData), false)}</b> {weapon.damageType.toLowerCase()}</span>
+                                                            </Popover>
+                                                        </div>
+                                                    </div>
+                                                </>
+                                            }                                            
                                         </div>
                                         </div>
                                     </Card>
