@@ -789,6 +789,12 @@ img {
     padding: 5px;
 }
 
+.weapon-equipped {
+    border: 2px solid var(--dark-purple);
+    border-radius: 5px;
+    padding: 5px;
+}
+
 .popover-main-content {
     padding-left: 5px;
     padding-right: 5px;
@@ -1325,4 +1331,8 @@ img {
 
 .white-bg {
     background-color: white;
+}
+
+.small-text {
+    font-size: small;
 }
