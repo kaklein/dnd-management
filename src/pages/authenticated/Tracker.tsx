@@ -338,7 +338,7 @@ function Tracker({pcData, queryClient, pcList, selectedPc, userRole}: Props) {
                                                 {/* EQUIP/UNEQUIP TOGGLE */}
                                                 <div className="col-auto">
                                                     <input
-                                                        className="inline form-check-input"
+                                                        className="inline"
                                                         type="checkbox"
                                                         checked={weaponFormData.find(w => w.id == weapon.id)?.equipped ? true : false}
                                                         onChange={(event) => {
