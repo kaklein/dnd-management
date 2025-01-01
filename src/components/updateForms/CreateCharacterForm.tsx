@@ -10,6 +10,8 @@ import { uploadImage } from "@services/firebaseStorage/write";
 import ImageInput from "@components/ImageInput";
 import { FileNameUtil } from "@services/firebaseStorage/util";
 import { v4 as uuidv4 } from "uuid";
+import { Ability } from "@models/enum/Ability";
+import Popover from "@components/modals/Popover";
 
 interface Props {
   handleChange: (event: any, setFunction: (prevFormData: any) => void) => void;
@@ -163,6 +165,38 @@ function CreateCharacterForm ({handleChange, handleSubmit, formData, initialEdit
                 required
                 placeholder="Charlatan"
               />
+            </div>
+            <div className="update-form-field">
+              <label className="update-form-label" htmlFor="defaultSpellCastingAbility">
+                Spellcasting Ability (Optional)
+                {
+                  <Popover
+                  customClass="inline"
+                  popoverBody={
+                    <p>
+                      This usually depends on your character's class. Not all classes have a spellcasting ability.
+                    </p>
+                  }
+                  fitContent={true}
+                >
+                  <p className="inline">&#9432;</p>
+                </Popover>
+                }
+              </label>
+              <FormSelect
+                className="update-form-input"
+                value={formData.defaultSpellCastingAbility}
+                handleChange={handleChange}
+                setFormData={setFormData}
+                name="defaultSpellCastingAbility"
+                options={
+                  Object.values(Ability).map((option) => ({
+                    text: option.toUpperCase(),
+                    value: option
+                  }))
+                }
+                defaultOptionText="-- None --"              
+              />              
             </div>
 
             <h4 className="form-sub-heading">Base Stats</h4>

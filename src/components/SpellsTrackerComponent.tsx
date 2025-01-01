@@ -99,22 +99,20 @@ function SpellsTrackerComponent ({pcData, formData, handleSubmit}: Props) {
                             </div>
                             <div className="col-7">
                                 {
+                                  s.hasAttack &&
+                                  <Popover
+                                      popoverBody={<PopoverContentSpell pcData={pcData} spell={s} displayType="attack bonus"/>}
+                                      fitContent={true}
+                                    >
+                                      <span>ATK: <b>+{pcData.abilityScores.data[s.spellCastingAbility].modifier + pcData.baseDetails.proficiencyBonus}</b></span>
+                                  </Popover>
+                                }
+                                {
                                   s.damage &&
-                                  <>
-                                    {
-                                      s.damageType != DamageType.HEALING &&
-                                      <Popover
-                                        popoverBody={<PopoverContentSpell pcData={pcData} spell={s} displayType="attack bonus"/>}
-                                        fitContent={true}
-                                      >
-                                        <span>ATK: <b>+{pcData.abilityScores.data[s.spellCastingAbility].modifier + pcData.baseDetails.proficiencyBonus}</b></span>
-                                      </Popover>
-                                    }                                                                       
                                     <div className="popover-main-content"><span>{s.damageType == DamageType.HEALING ? 'EFFECT:' : 'DMG:'} {s.damage} {s.damageType}</span></div>
-                                  </>
                                 }   
                                 {
-                                 !s.damage &&
+                                 s.hasSaveDC &&
                                  <Popover
                                     popoverBody={<PopoverContentSpell pcData={pcData} spell={s} displayType="save DC"/>}
                                     fitContent={true}

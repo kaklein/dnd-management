@@ -42,7 +42,8 @@ export interface CreateCharacterFormData {
   performance: "true" | "false";
   persuasion: "true" | "false";
   // optional fields
-  description?: string // optional
+  description?: string
   subclass?: string;
   xp?: number;
+  defaultSpellCastingAbility?: string;
 }

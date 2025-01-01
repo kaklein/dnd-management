@@ -148,6 +148,8 @@ export const handleSubmitEdit = async (
                 description: formData.description,
                 level: formData.level,
                 spellCastingAbility: formData.spellCastingAbility,
+                hasAttack: formData.hasAttack,
+                hasSaveDC: formData.hasSaveDC,
                 damage: formData.damage,
                 damageType: formData.damageType,
                 saveDC: formData.saveDC,
@@ -251,7 +253,8 @@ export const handleSubmitEdit = async (
       armorClass: Number(formData.armorClass),
       xp: formData.xp ? Number(formData.xp) : '',
       speed: Number(formData.speed),
-      'usableResources.hitDice.type': formData.hitDiceType
+      'usableResources.hitDice.type': formData.hitDiceType,
+      defaultSpellCastingAbility: formData.defaultSpellCastingAbility
     };
     await (updateDataByPcId(CollectionName.PC_BASE_DETAILS, pcData.baseDetails.pcId, update));
   } else {

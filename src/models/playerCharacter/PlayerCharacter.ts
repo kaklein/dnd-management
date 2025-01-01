@@ -6,6 +6,7 @@ import { Feature } from "@models/playerCharacter/Feature";
 import { UsableResources } from "@models/playerCharacter/usableResources/UsableResources";
 import { SpellSlot } from "@models/playerCharacter/usableResources/SpellSlot";
 import { Summonable } from "@models/playerCharacter/Summonable";
+import { Ability } from "@models/enum/Ability";
 
 export interface PlayerCharacter {
     baseDetails: BaseDetails;
@@ -42,4 +43,5 @@ export interface BaseDetails {
     notes?: string[];
     languages: string[];
     proficiencies: string[];
+    defaultSpellCastingAbility?: Ability;
 }
