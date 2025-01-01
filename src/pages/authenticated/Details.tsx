@@ -1,6 +1,12 @@
 import Navbar from "@components/Navbar";
 import Card from "@components/cards/Card";
-import { capitalize, formatDataAsTable, orderAndFormatWeaponElements, removeWhiteSpaceAndConvertToLowerCase } from "@components/utils";
+import { 
+    capitalize,
+    formatDataAsTable,
+    getSpellSaveDC,
+    orderAndFormatWeaponElements,
+    removeWhiteSpaceAndConvertToLowerCase
+} from "@components/utils";
 import { Spell } from "@models/playerCharacter/Spell";
 import { BaseDetails, PlayerCharacter } from "@models/playerCharacter/PlayerCharacter";
 import PageHeaderBarPC from "@components/headerBars/PageHeaderBarPC";
@@ -115,6 +121,8 @@ function Details({pcData, pcList, selectedPc, queryClient, userRole}: Props) {
                                         displayName: spell.name,
                                         name: spell.name,
                                         description: spell.description,
+                                        hasAttack: spell.hasAttack ?? false,
+                                        hasSaveDC: spell.hasSaveDC ?? false,
                                         damage: spell.damage ?? '',
                                         damageType: spell.damageType ?? '',
                                         sourceUrl: spell.sourceUrl ?? '',
@@ -137,8 +145,8 @@ function Details({pcData, pcList, selectedPc, queryClient, userRole}: Props) {
                             <p><b>{spell.damageType == DamageType.HEALING ? 'Effect:' : 'Damage:'} </b>{spell.damage} {spell.damageType}</p>
                         }
         
-                        {spell.saveDC &&
-                            <p><b>Spell Save DC: </b>{spell.saveDC}</p>
+                        {spell.hasSaveDC &&
+                            <p><b>Spell Save DC: </b>{getSpellSaveDC(pcData, spell)}</p>
                         }
         
                         {spell.spellCastingAbility &&

@@ -6,7 +6,7 @@ import { UserRole } from "@services/firestore/enum/UserRole";
 import Button, { ButtonType } from "@components/Button";
 import { useState } from "react";
 import Card from "@components/cards/Card";
-import { formatDataAsTable } from "@components/utils";
+import { capitalize, formatDataAsTable } from "@components/utils";
 import TitleButtonRow from "@components/TitleButtonRow";
 import DeleteItemButton from "@components/DeleteItemButton";
 import DeletePC from "@components/modals/DeletePC";
@@ -46,6 +46,7 @@ function Overview({pcData, pcList, selectedPc, userRole, queryClient, imageUrl}:
         speed: pcData.baseDetails.speed,
         background: pcData.baseDetails.background,
         alignment: pcData.baseDetails.alignment,
+        ...(pcData.baseDetails.defaultSpellCastingAbility && {['Spellcasting Ability']: capitalize(pcData.baseDetails.defaultSpellCastingAbility)})
     };
     const [editable, setEditable] = useState(false);
     const [showPCDelete, setShowPCDelete] = useState('');
@@ -136,6 +137,7 @@ function Overview({pcData, pcList, selectedPc, userRole, queryClient, imageUrl}:
                                         race: pcData.baseDetails.race,
                                         background: pcData.baseDetails.background,
                                         alignment: getValidAlignment(pcData.baseDetails.alignment),
+                                        defaultSpellCastingAbility: pcData.baseDetails.defaultSpellCastingAbility ?? '',
                                         level: String(pcData.baseDetails.level),
                                         maxHP: String(pcData.baseDetails.usableResources.hitPoints.max),
                                         armorClass: String(pcData.baseDetails.armorClass),

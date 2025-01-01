@@ -3,6 +3,7 @@ import { CreateCharacterFormData } from "@models/CreateCharacterFormData";
 import { EditModalFormData } from "@models/EditModalFormData";
 import { UpdateType } from "@models/enum/service/UpdateType";
 import { AbilityScores } from "@models/playerCharacter/AbilityScores";
+import { PlayerCharacter } from "@models/playerCharacter/PlayerCharacter";
 import { ShowConfirmDeleteData } from "@models/ShowConfirmDeleteData";
 
 export const defaultWeaponFormData = {
@@ -17,15 +18,19 @@ export const defaultWeaponFormData = {
   equipped: "false"
 };
 
-export const defaultSpellFormData = {
-  updateType: UpdateType.SPELLS,
-  name: '',
-  description: '',
-  level: '',
-  spellCastingAbility: '',
-  damageType: '',
-  damage: '',
-  sourceUrl: ''
+export const getDefaultSpellFormData = (pcData: PlayerCharacter) => {
+  return {
+    updateType: UpdateType.SPELLS,
+    name: '',
+    description: '',
+    level: '',
+    spellCastingAbility: pcData.baseDetails.defaultSpellCastingAbility ?? '',
+    hasAttack: false,
+    hasSaveDC: false,
+    damageType: '',
+    damage: '',
+    sourceUrl: ''
+  }
 };
 
 export const defaultSpellSlotFormData = {
@@ -233,6 +238,7 @@ export const emptyEditModalData: EditModalFormData = {
   imagePath: '',
   firstName: '',
   lastName: '',
+  defaultSpellCastingAbility: '',
 
   // summonable
   summonableId: '',

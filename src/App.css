@@ -362,6 +362,15 @@ img {
     padding-top: 20px;
 }
 
+.form-section {
+    margin-top: 15px;
+    margin-bottom: 15px;
+}
+
+.form-sub-section {
+    padding-left: 15px;
+}
+
 .expand-collapse-btn {
     width: 80%;
 }
@@ -1335,4 +1344,14 @@ img {
 
 .small-text {
     font-size: small;
+}
+
+.gray-text {
+    font-style: italic;
+    color: var(--dark-gray);
+    font-weight: normal;
+}
+
+.no-bottom-margin {
+    margin-bottom: 0px;
 }

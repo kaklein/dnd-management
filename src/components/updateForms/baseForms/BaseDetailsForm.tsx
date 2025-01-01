@@ -2,6 +2,7 @@ import Button, { ButtonType } from "@components/Button";
 import FormSelect from "@components/FormSelect";
 import ImageInput from "@components/ImageInput";
 import TextEditor, { buildEditor } from "@components/TextEditor";
+import { Ability } from "@models/enum/Ability";
 import { Alignment } from "@models/enum/Alignment";
 import { HitDiceType } from "@models/enum/HitDiceType";
 import { deleteImage } from "@services/firebaseStorage/delete";
@@ -244,7 +245,24 @@ function BaseDetailsForm ({handleChange, handleSubmit, formData, setFormData, in
           }
           required
         />        
-      </div>      
+      </div>
+      <div className="update-form-field">
+        <label className="update-form-label" htmlFor="defaultSpellCastingAbility">Spellcasting Ability (Optional)</label>
+        <FormSelect
+          className="update-form-input"
+          value={formData.defaultSpellCastingAbility}
+          handleChange={handleChange}
+          setFormData={setFormData}
+          name="defaultSpellCastingAbility"
+          options={
+            Object.values(Ability).map((option) => ({
+              text: option.toUpperCase(),
+              value: option
+            }))
+          }
+          defaultOptionText="-- None --"
+        />        
+      </div>
       
       <Button
           text="Save"
