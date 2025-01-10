@@ -1,18 +1,25 @@
 import { Spell, SpellLevel } from "@models/playerCharacter/Spell";
 import { SpellSlot } from "@models/playerCharacter/usableResources/SpellSlot";
 import Card from "@components/cards/Card";
-import ItemUseToggle from "./ItemUseToggle";
-import { buildSpellSlotsCurrentKey, getSpellSaveDC, removeWhiteSpaceAndConvertToLowerCase } from "./utils";
+import { getSpellSaveDC } from "./utils";
 import { Link } from "react-router-dom";
 import Popover from "./modals/Popover";
 import PopoverContentSpell from "./popovers/SpellPopoverContent";
 import { PlayerCharacter } from "@models/playerCharacter/PlayerCharacter";
 import { DamageType } from "@models/enum/DamageType";
+import Button, { ButtonType } from "./Button";
+import SpellUseModal from "./modals/SpellUseModal";
+import { useState } from "react";
+import { emptySpellFormData } from "@pages/utils";
+import { buildDefaultSpellSlotFormData } from "@data/emptyFormData";
 
 interface Props {
   pcData: PlayerCharacter;
-  formData: any;
-  handleSubmit: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  spellSlotLevel: {
+    selected: SpellLevel;
+    setSelected: (level: SpellLevel) => void;
+  }
+  handleSubmit: (event: any, updates: any) => void;
 }
 
 interface SpellDisplay {
@@ -50,91 +57,129 @@ const mergeSpellsAndSlots = (spellSlots: SpellSlot[], spells: Spell[]): SpellDis
   return spellDisplays;
 }
 
-function SpellsTrackerComponent ({pcData, formData, handleSubmit}: Props) {
+function SpellsTrackerComponent ({pcData, spellSlotLevel, handleSubmit}: Props) {
+  const [spellToCast, setSpellToCast] = useState(emptySpellFormData);
+  
   const spellSlots = pcData.spellSlots ?? [];
   const spells = pcData.baseDetails.spells ?? [];
-  
+  const [spellSlotFormData, setSpellSlotFormData] = useState(buildDefaultSpellSlotFormData(spellToCast, spellSlots));
+
   if (spellSlots.length < 1 && spells.length < 1) return;
 
   const spellDisplays = mergeSpellsAndSlots(spellSlots, spells);
 
   return (
+    <>
+    <SpellUseModal
+        spell={spellToCast}
+        spellSlots={spellSlots}
+        spellSlotLevel={spellSlotLevel}
+        spellSlotFormData={spellSlotFormData}
+        setSpellSlotFormData={setSpellSlotFormData}
+        handleSubmit={handleSubmit}
+    />
     <Card>
-      <h3 className="section-header">Spells</h3>
-        {
-          spellDisplays.sort((a,b) => {
-            if (a.level < b.level) return -1;
-            return 1;
-          }).map((d, index) => (
-            <Card key={index}>
-            <div className="spell-display center-table">
-              <h3>{d.level === SpellLevel.CANTRIP ? 'Cantrips' : d.level}</h3>
+    <h3 className="section-header">Spells</h3>
+      {
+        spellDisplays.sort((a,b) => {
+          if (a.level < b.level) return -1;
+          return 1;
+        }).map((d, index) => (
+          <Card key={index}>
+          <div className="spell-display center-table">
+            <div className="row">
+              <div className="col">
+                <h3>{d.level === SpellLevel.CANTRIP ? 'Cantrips' : d.level}</h3>
+              </div>
               {
                 d.spellSlot &&
-                <ItemUseToggle
-                  itemLabel={removeWhiteSpaceAndConvertToLowerCase(d.spellSlot.data.level)}
-                  formDataName={buildSpellSlotsCurrentKey(d.spellSlot)}
-                  maxUses={d.spellSlot.data.max}
-                  currentUses={d.spellSlot.data.current}
-                  formData={formData}
-                  handleSubmit={handleSubmit} 
-                />
+                <div className="col-auto">
+                  <p className="center inline"><span className="small-text">SLOTS:</span> <b>{d.spellSlot.data.current} / {d.spellSlot.data.max}</b></p>
+                  <div className="inline">
+                  <Button
+                    buttonType={ButtonType.SECONDARY}
+                    text="Edit"
+                    onClick={() => {console.log("TODO: open edit modal for spell slot uses")}}
+                    customClass="inline"                    
+                  />
+                </div>   
+                </div>
               }
-              {
-                (!d.spellSlot && !(d.level === SpellLevel.CANTRIP))&&
-                <div><p className="center"><i>No {d.level} spell slots! Use the <a style={{fontWeight: 'bold'}} className="text-link" href="/add">Add Items</a> page to add them.</i></p></div>
-              }
+            </div>              
+            {
+              (!d.spellSlot && !(d.level === SpellLevel.CANTRIP))&&
+              <div><p className="center"><i>No {d.level} spell slots! Use the <a style={{fontWeight: 'bold'}} className="text-link" href="/add">Add Items</a> page to add them.</i></p></div>
+            }
 
-              {
-                (d.spells && d.spells.length > 0) &&
-                  
-                    d.spells.sort((a, b) => {
-                      if (a.name < b.name) return -1;
-                      return 1;
-                    }).map((s, i) => (
-                      <div className="container-fluid left-justify" key={i}>
-                        <div className="row display-item-row">
-                            <div className="col-5">
-                                <b><Link className="text-link" to={'/details?spells=true#' + s.id}>{s.name}</Link></b>
-                            </div>
-                            <div className="col-7">
-                                {
-                                  s.hasAttack &&
-                                  <Popover
-                                      popoverBody={<PopoverContentSpell pcData={pcData} spell={s} displayType="attack bonus"/>}
-                                      fitContent={true}
-                                    >
-                                      <span>ATK: <b>+{pcData.abilityScores.data[s.spellCastingAbility].modifier + pcData.baseDetails.proficiencyBonus}</b></span>
-                                  </Popover>
-                                }
-                                {
-                                  s.damage &&
-                                    <div className="popover-main-content"><span>{s.damageType == DamageType.HEALING ? 'EFFECT:' : 'DMG:'} {s.damage} {s.damageType}</span></div>
-                                }   
-                                {
-                                 s.hasSaveDC &&
-                                 <Popover
-                                    popoverBody={<PopoverContentSpell pcData={pcData} spell={s} displayType="save DC"/>}
-                                    fitContent={true}
-                                 >
-                                  <span>Save DC: <b>{getSpellSaveDC(pcData, s)}</b></span>
-                                 </Popover>
-                                }
-                            </div>
-                        </div>
-                    </div>
-                    ))
-                  }                
+            {
+              (d.spells && d.spells.length > 0) &&
                 
-              {
-                (!d.spells || d.spells.length < 1) &&
-                <div><p className="center"><i>No {d.level} spells! Use the <a style={{fontWeight: 'bold'}} className="text-link" href="/add">Add Items</a> page to add them.</i></p></div>
-              }
-            </div>
-            </Card>
-          ))
-        }
+                  d.spells.sort((a, b) => {
+                    if (a.name < b.name) return -1;
+                    return 1;
+                  }).map((s, i) => (
+                    <div className="container-fluid left-justify" key={i}>
+                      <div className="row display-item-row">
+                          <div className="col">
+                              <b><Link className="text-link" to={'/details?spells=true#' + s.id}>{s.name}</Link></b>
+                          </div>
+                          <div className="col">
+                              {
+                                s.hasAttack &&
+                                <Popover
+                                    popoverBody={<PopoverContentSpell pcData={pcData} spell={s} displayType="attack bonus"/>}
+                                    fitContent={true}
+                                  >
+                                    <span>ATK: <b>+{pcData.abilityScores.data[s.spellCastingAbility].modifier + pcData.baseDetails.proficiencyBonus}</b></span>
+                                </Popover>
+                              }
+                              {
+                                s.damage &&
+                                  <div className="popover-main-content"><span>{s.damageType == DamageType.HEALING ? 'EFFECT:' : 'DMG:'} {s.damage} {s.damageType}</span></div>
+                              }   
+                              {
+                                s.hasSaveDC &&
+                                <Popover
+                                  popoverBody={<PopoverContentSpell pcData={pcData} spell={s} displayType="save DC"/>}
+                                  fitContent={true}
+                                >
+                                <span>Save DC: <b>{getSpellSaveDC(pcData, s)}</b></span>
+                                </Popover>
+                              }
+                          </div>
+                          <div className="col-auto">
+                          {
+                            s.level !== SpellLevel.CANTRIP &&
+                              <button
+                                type="button"
+                                className="btn btn-success"
+                                data-bs-toggle="modal"
+                                data-bs-target="#spellUseModal"
+                                onClick={() => {
+                                  spellSlotLevel.setSelected(s.level);
+                                  setSpellToCast(s);
+                                  setSpellSlotFormData(buildDefaultSpellSlotFormData(s, spellSlots));
+                                }}
+                              >
+                                CAST
+                              </button>                              
+                          }
+                          </div>                         
+                      </div>
+                  </div>
+                  ))
+                }                
+              
+            {
+              (!d.spells || d.spells.length < 1) &&
+              <div><p className="center"><i>No {d.level} spells! Use the <a style={{fontWeight: 'bold'}} className="text-link" href="/add">Add Items</a> page to add them.</i></p></div>
+            }
+          </div>
+          </Card>
+        ))
+      }
     </Card>
+    </>
   )
 }
 

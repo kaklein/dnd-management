@@ -1,9 +1,11 @@
-import { replaceBooleans } from "@components/utils";
+import { buildSpellSlotsCurrentKey, replaceBooleans } from "@components/utils";
 import { CreateCharacterFormData } from "@models/CreateCharacterFormData";
 import { EditModalFormData } from "@models/EditModalFormData";
 import { UpdateType } from "@models/enum/service/UpdateType";
 import { AbilityScores } from "@models/playerCharacter/AbilityScores";
 import { PlayerCharacter } from "@models/playerCharacter/PlayerCharacter";
+import { Spell } from "@models/playerCharacter/Spell";
+import { SpellSlot } from "@models/playerCharacter/usableResources/SpellSlot";
 import { ShowConfirmDeleteData } from "@models/ShowConfirmDeleteData";
 
 export const defaultWeaponFormData = {
@@ -281,4 +283,13 @@ export const buildEmptyShowSectionData = (searchParams: URLSearchParams) => {
     spellSlots: searchParams.get("spellSlots") == "true" ? true : false,
     summonables: searchParams.get("summonables") == "true" ? true : false
   }
+}
+
+export const buildDefaultSpellSlotFormData = (spellToCast: Spell, spellSlots: SpellSlot[]) => {
+  const matchingSlot = spellSlots.filter(s => s.data.level == spellToCast.level)[0];
+  if (!matchingSlot) return {};
+
+  return {
+    [buildSpellSlotsCurrentKey(matchingSlot)]: matchingSlot.data.current - 1
+  };
 }

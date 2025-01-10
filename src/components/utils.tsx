@@ -2,7 +2,7 @@ import { Ability } from "@models/enum/Ability";
 import { AbilityScores } from "@models/playerCharacter/AbilityScores";
 import { Feature } from "@models/playerCharacter/Feature";
 import { PlayerCharacter } from "@models/playerCharacter/PlayerCharacter";
-import { Spell } from "@models/playerCharacter/Spell";
+import { Spell, SpellLevel } from "@models/playerCharacter/Spell";
 import { Summonable } from "@models/playerCharacter/Summonable";
 import { SpellSlot } from "@models/playerCharacter/usableResources/SpellSlot";
 import { Weapon } from "@models/playerCharacter/Weapon";
@@ -87,6 +87,10 @@ export const getSpellSlotFormData = (spellSlots: SpellSlot[]) => {
     return Object.fromEntries(array);
 };
 
+export const isSpellSlotKey = (k: string) => {
+    return k.substring(0,9) === 'spellSlot'; // full keys e.g. spellSlot_1234567_current
+};
+
 export const formatFeaturesUpdates = (formData: any): {docId: string, updates: { currentUses: number }}[] => {
     const keys = Object.keys(formData);
     const featureKeys = keys.filter(k => k.substring(0,7) === 'feature'); // full keys e.g. feature_1234567_currentUses
@@ -119,7 +123,7 @@ export const formatSummonablesUpdates = (formData: any): {docId: string, updates
 
 export const formatSpellSlotsUpdates = (formData: any): {docId: string, updates: { current: number }}[] => {
     const keys = Object.keys(formData);
-    const spellSlotKeys = keys.filter(k => k.substring(0,9) === 'spellSlot'); // full keys e.g. spellSlot_1234567_current
+    const spellSlotKeys = keys.filter(k => isSpellSlotKey(k));
     let updates = [];
     for (const key of spellSlotKeys) {
         updates.push({
@@ -353,4 +357,25 @@ export const buildProficiencyForms = (formData: any, abilityName: string, skills
 export const getSpellSaveDC = (pcData: PlayerCharacter, spell: Spell): number => {
     const mod = pcData.abilityScores.data[spell.spellCastingAbility].modifier;
     return 8 + mod + pcData.baseDetails.proficiencyBonus;
+}
+
+export const canCastSpell = (spell: Spell, spellSlots: SpellSlot[]) => {
+    // Can always cast a cantrip
+    if (spell.level == SpellLevel.CANTRIP) return true;
+
+    // If no slots exist and spell is not a cantrip, can never cast
+    if (spellSlots.length < 1) return false;
+
+    // Check available slots against spell level
+    const availableSlots = getAvailableSpellSlots(spell, spellSlots);
+    if (availableSlots.length > 0) return true;
+}
+
+export const getAvailableSpellSlots = (spell: Spell, spellSlots: SpellSlot[]) => {
+    const availableSlots = spellSlots.filter(slot =>
+        slot.data.level !== SpellLevel.CANTRIP && 
+        slot.data.level >= spell.level &&
+        slot.data.current > 0
+    );
+    return availableSlots;
 }
