@@ -129,7 +129,7 @@ export const formatSpellSlotsUpdates = (formData: any): {docId: string, updates:
         updates.push({
             docId: key.split('_')[1],
             updates: {
-                current: Number(formData[key])
+                current: Math.max(Number(formData[key]), 0)
             }
         })
     }
@@ -359,7 +359,7 @@ export const getSpellSaveDC = (pcData: PlayerCharacter, spell: Spell): number =>
     return 8 + mod + pcData.baseDetails.proficiencyBonus;
 }
 
-export const canCastSpell = (spell: Spell, spellSlots: SpellSlot[]) => {
+export const canCastSpell = (spell: Spell, spellSlots: SpellSlot[], selectedLevel?: SpellLevel) => {
     // Can always cast a cantrip
     if (spell.level == SpellLevel.CANTRIP) return true;
 
@@ -368,7 +368,9 @@ export const canCastSpell = (spell: Spell, spellSlots: SpellSlot[]) => {
 
     // Check available slots against spell level
     const availableSlots = getAvailableSpellSlots(spell, spellSlots);
-    if (availableSlots.length > 0) return true;
+    if (availableSlots.length < 1) return false;
+    if (selectedLevel && availableSlots.filter(s => s.data.level == selectedLevel).length == 0) return false;
+    return true;
 }
 
 export const getAvailableSpellSlots = (spell: Spell, spellSlots: SpellSlot[]) => {

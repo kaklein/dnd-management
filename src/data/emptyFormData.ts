@@ -285,8 +285,17 @@ export const buildEmptyShowSectionData = (searchParams: URLSearchParams) => {
   }
 }
 
+export const getMatchingSpellSlots = (spell: Spell, spellSlots: SpellSlot[]) => {
+  const matchingSlots = spellSlots.sort((a,b) => {
+    if (a.data.level < b.data.level) return -1;
+    return 1;
+  }).filter(s => s.data.level >= spell.level && s.data.current > 0);
+  return matchingSlots;
+};
+
 export const buildDefaultSpellSlotFormData = (spellToCast: Spell, spellSlots: SpellSlot[]) => {
-  const matchingSlot = spellSlots.filter(s => s.data.level == spellToCast.level)[0];
+  const matchingSlot = getMatchingSpellSlots(spellToCast, spellSlots)[0];
+
   if (!matchingSlot) return {};
 
   return {

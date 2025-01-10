@@ -1,7 +1,7 @@
 import { Spell, SpellLevel } from "@models/playerCharacter/Spell";
 import { SpellSlot } from "@models/playerCharacter/usableResources/SpellSlot";
 import Card from "@components/cards/Card";
-import { getSpellSaveDC } from "./utils";
+import { canCastSpell, getSpellSaveDC } from "./utils";
 import { Link } from "react-router-dom";
 import Popover from "./modals/Popover";
 import PopoverContentSpell from "./popovers/SpellPopoverContent";
@@ -11,7 +11,7 @@ import Button, { ButtonType } from "./Button";
 import SpellUseModal from "./modals/SpellUseModal";
 import { useState } from "react";
 import { emptySpellFormData } from "@pages/utils";
-import { buildDefaultSpellSlotFormData } from "@data/emptyFormData";
+import { buildDefaultSpellSlotFormData, getMatchingSpellSlots } from "@data/emptyFormData";
 
 interface Props {
   pcData: PlayerCharacter;
@@ -94,7 +94,7 @@ function SpellsTrackerComponent ({pcData, spellSlotLevel, handleSubmit}: Props) 
               {
                 d.spellSlot &&
                 <div className="col-auto">
-                  <p className="center inline"><span className="small-text">SLOTS:</span> <b>{d.spellSlot.data.current} / {d.spellSlot.data.max}</b></p>
+                  <p className="center inline spell-slot-count"><span className="small-text">SLOTS:</span> <b className={`${d.spellSlot.data.current == 0 ? "no-slots" : ""}`}>{d.spellSlot.data.current} / {d.spellSlot.data.max}</b></p>
                   <div className="inline">
                   <Button
                     buttonType={ButtonType.SECONDARY}
@@ -102,7 +102,7 @@ function SpellsTrackerComponent ({pcData, spellSlotLevel, handleSubmit}: Props) 
                     onClick={() => {console.log("TODO: open edit modal for spell slot uses")}}
                     customClass="inline"                    
                   />
-                </div>   
+                </div>
                 </div>
               }
             </div>              
@@ -155,8 +155,9 @@ function SpellsTrackerComponent ({pcData, spellSlotLevel, handleSubmit}: Props) 
                                 className="btn btn-success"
                                 data-bs-toggle="modal"
                                 data-bs-target="#spellUseModal"
+                                disabled={!canCastSpell(s, spellSlots)}
                                 onClick={() => {
-                                  spellSlotLevel.setSelected(s.level);
+                                  spellSlotLevel.setSelected(getMatchingSpellSlots(s, spellSlots)[0].data.level);
                                   setSpellToCast(s);
                                   setSpellSlotFormData(buildDefaultSpellSlotFormData(s, spellSlots));
                                 }}

@@ -20,13 +20,14 @@ function SpellUseModal ({spell, spellSlots, spellSlotLevel, spellSlotFormData, s
         <div>
             {
                 spellSlots.filter(slot => 
-                    (slot.data.level !== SpellLevel.CANTRIP && slot.data.level >= spell.level)
+                    (slot.data.level !== SpellLevel.CANTRIP && slot.data.level >= spell.level && slot.data.max > 0)
                 ).map(s => (
-                    <div key={s.id}>
+                    <div key={s.id} className={`${s.data.current < 1 ? "disabled-check-input" : ""}`}>
                         <input
                             className="inline"
                             type="checkbox"
                             checked={spellSlotLevel.selected == s.data.level}
+                            disabled={s.data.current < 1}
                             onChange={() => {
                                 const newCurrent = s.data.current - 1;
                                 setSpellSlotFormData({
@@ -35,7 +36,7 @@ function SpellUseModal ({spell, spellSlots, spellSlotLevel, spellSlotFormData, s
                                 spellSlotLevel.setSelected(s.data.level);
                             }}
                         />
-                        {s.data.level} - {s.data.current} / {s.data.max} slots remaining
+                        <b>{s.data.level}</b><span> ({s.data.current} / {s.data.max} slots available)</span>
                     </div>
                 ))
             }
@@ -56,7 +57,7 @@ function SpellUseModal ({spell, spellSlots, spellSlotLevel, spellSlotFormData, s
                         type="submit"
                         className="btn-btn-success"
                         data-bs-dismiss="modal"
-                        disabled={!canCastSpell(spell, spellSlots)}                        
+                        disabled={!canCastSpell(spell, spellSlots, spellSlotLevel.selected)}                        
                         onClick={(event) => {
                             handleSubmit(event, spellSlotFormData);
                         }}
