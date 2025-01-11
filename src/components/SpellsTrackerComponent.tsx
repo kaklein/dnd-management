@@ -1,17 +1,17 @@
 import { Spell, SpellLevel } from "@models/playerCharacter/Spell";
 import { SpellSlot } from "@models/playerCharacter/usableResources/SpellSlot";
 import Card from "@components/cards/Card";
-import { canCastSpell, getSpellSaveDC } from "./utils";
+import { buildSpellSlotsCurrentKey, canCastSpell, getSpellSaveDC } from "./utils";
 import { Link } from "react-router-dom";
 import Popover from "./modals/Popover";
 import PopoverContentSpell from "./popovers/SpellPopoverContent";
 import { PlayerCharacter } from "@models/playerCharacter/PlayerCharacter";
 import { DamageType } from "@models/enum/DamageType";
-import Button, { ButtonType } from "./Button";
 import SpellUseModal from "./modals/SpellUseModal";
 import { useState } from "react";
 import { emptySpellFormData } from "@pages/utils";
 import { buildDefaultSpellSlotFormData, getMatchingSpellSlots } from "@data/emptyFormData";
+import SpellSlotEditModal from "./modals/SpellSlotEditModal";
 
 interface Props {
   pcData: PlayerCharacter;
@@ -63,6 +63,15 @@ function SpellsTrackerComponent ({pcData, spellSlotLevel, handleSubmit}: Props) 
   const spellSlots = pcData.spellSlots ?? [];
   const spells = pcData.baseDetails.spells ?? [];
   const [spellSlotFormData, setSpellSlotFormData] = useState(buildDefaultSpellSlotFormData(spellToCast, spellSlots));
+  const [spellSlotToEdit, setSpellSlotToEdit] = useState({
+    id: '',
+    data: {
+      level: SpellLevel.CANTRIP,
+      current: 0,
+      max: 0,
+      pcId: pcData.baseDetails.pcId,
+    }
+  });
 
   if (spellSlots.length < 1 && spells.length < 1) return;
 
@@ -71,12 +80,18 @@ function SpellsTrackerComponent ({pcData, spellSlotLevel, handleSubmit}: Props) 
   return (
     <>
     <SpellUseModal
-        spell={spellToCast}
-        spellSlots={spellSlots}
-        spellSlotLevel={spellSlotLevel}
-        spellSlotFormData={spellSlotFormData}
-        setSpellSlotFormData={setSpellSlotFormData}
-        handleSubmit={handleSubmit}
+      spell={spellToCast}
+      spellSlots={spellSlots}
+      spellSlotLevel={spellSlotLevel}
+      spellSlotFormData={spellSlotFormData}
+      setSpellSlotFormData={setSpellSlotFormData}
+      handleSubmit={handleSubmit}
+    />
+    <SpellSlotEditModal
+      spellSlot={spellSlotToEdit}
+      spellSlotFormData={spellSlotFormData}
+      setSpellSlotFormData={setSpellSlotFormData}
+      handleSubmit={handleSubmit}
     />
     <Card>
     <h3 className="section-header">Spells</h3>
@@ -96,13 +111,22 @@ function SpellsTrackerComponent ({pcData, spellSlotLevel, handleSubmit}: Props) 
                 <div className="col-auto">
                   <p className="center inline spell-slot-count"><span className="small-text">SLOTS:</span> <b className={`${d.spellSlot.data.current == 0 ? "no-slots" : ""}`}>{d.spellSlot.data.current} / {d.spellSlot.data.max}</b></p>
                   <div className="inline">
-                  <Button
-                    buttonType={ButtonType.SECONDARY}
-                    text="Edit"
-                    onClick={() => {console.log("TODO: open edit modal for spell slot uses")}}
-                    customClass="inline"                    
-                  />
-                </div>
+                    <button
+                      type="button"
+                      className="btn btn-secondary inline flip-horizontal"
+                      data-bs-toggle="modal"
+                      data-bs-target="#spellSlotEditModal"
+                      onClick={() => {
+                        const definedSpellSlot = d.spellSlot as SpellSlot;
+                        setSpellSlotToEdit(definedSpellSlot);
+                        setSpellSlotFormData({
+                          [buildSpellSlotsCurrentKey(definedSpellSlot)] : undefined as unknown as number
+                        });
+                      }}
+                    >
+                      &#x270E;
+                    </button>
+                  </div>
                 </div>
               }
             </div>              

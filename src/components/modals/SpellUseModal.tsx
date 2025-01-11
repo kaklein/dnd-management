@@ -55,7 +55,7 @@ function SpellUseModal ({spell, spellSlots, spellSlotLevel, spellSlotFormData, s
                 <div>
                     <button
                         type="submit"
-                        className="btn-btn-success"
+                        className="btn btn-success"
                         data-bs-dismiss="modal"
                         disabled={!canCastSpell(spell, spellSlots, spellSlotLevel.selected)}                        
                         onClick={(event) => {
