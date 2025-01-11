@@ -1,4 +1,4 @@
-import { buildSpellSlotsCurrentKey, canCastSpell, capitalize } from "@components/utils";
+import { buildSpellSlotsCurrentKey, canCastSpell } from "@components/utils";
 import GenericModal from "./GenericModal";
 import { SpellSlot } from "@models/playerCharacter/usableResources/SpellSlot";
 import { Spell, SpellLevel } from "@models/playerCharacter/Spell";
@@ -36,7 +36,7 @@ function SpellUseModal ({spell, spellSlots, spellSlotLevel, spellSlotFormData, s
                                 spellSlotLevel.setSelected(s.data.level);
                             }}
                         />
-                        <b>{s.data.level}</b><span> ({s.data.current} / {s.data.max} slots available)</span>
+                        <b> {s.data.level}</b><span> ({s.data.current} / {s.data.max} slots available)</span>
                     </div>
                 ))
             }
@@ -46,25 +46,23 @@ function SpellUseModal ({spell, spellSlots, spellSlotLevel, spellSlotFormData, s
     return (
         <GenericModal
             modalName="spellUse"
-            title={`Cast ${spell.name}`}
+            title={`Cast ${spell.name} - ${spell.level} Spell`}
             onClose={() => {
                 setSpellSlotFormData({});
             }}
             modalBody={modalBody}
             modalFooter={
-                <div>
-                    <button
-                        type="submit"
-                        className="btn btn-success"
-                        data-bs-dismiss="modal"
-                        disabled={!canCastSpell(spell, spellSlots, spellSlotLevel.selected)}                        
-                        onClick={(event) => {
-                            handleSubmit(event, spellSlotFormData);
-                        }}
-                    >
-                        Cast {capitalize(spell.name)} as {spellSlotLevel.selected}
-                    </button>
-                </div>
+                <button
+                    type="submit"
+                    className="btn btn-success"
+                    data-bs-dismiss="modal"
+                    disabled={!canCastSpell(spell, spellSlots, spellSlotLevel.selected)}                        
+                    onClick={(event) => {
+                        handleSubmit(event, spellSlotFormData);
+                    }}
+                >
+                    {spell.level === spellSlotLevel.selected ? "Cast" : "Upcast"} as {spellSlotLevel.selected}
+                </button>
             }
         />
     )

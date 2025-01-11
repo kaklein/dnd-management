@@ -16,10 +16,10 @@ function SpellSlotEditModal ({ spellSlot, spellSlotFormData, setSpellSlotFormDat
     return (
         <GenericModal
           modalName="spellSlotEdit"
-          title={`${spellSlot?.data?.level} Spell Slots`}
+          title={`Edit ${spellSlot?.data?.level} Spell Slots`}
           onClose={() => {
             setSlotCount("");
-          }} 
+          }}
           modalBody={
             <div>
                 <p className="center gold-modal-text">Current: {spellSlot.data.current} / {spellSlot.data.max}</p>
