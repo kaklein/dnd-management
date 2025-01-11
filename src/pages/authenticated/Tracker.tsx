@@ -17,7 +17,7 @@ import ItemUseToggle from "@components/ItemUseToggle";
 import { BaseDetails, PlayerCharacter } from "@models/playerCharacter/PlayerCharacter";
 import { QueryClient } from "@tanstack/react-query";
 import { CollectionName } from "@services/firestore/enum/CollectionName";
-import { determineAttackBonus, formatBonus, formatWeaponDisplayTitle, getDefaultFormData, getHPRange, getLimitedUseFeatures, getSummonedItem, triggerSuccessAlert } from "../utils";
+import { determineAttackBonus, emptyRichTextContent, formatBonus, formatWeaponDisplayTitle, getDefaultFormData, getHPRange, getLimitedUseFeatures, getSummonedItem, triggerSuccessAlert } from "../utils";
 import PageHeaderBarPC from "@components/headerBars/PageHeaderBarPC";
 import QuickNav from "@components/QuickNav";
 import SuccessAlert from "@components/alerts/SuccessAlert";
@@ -35,6 +35,7 @@ import SummonableActionModal from "@components/modals/SummonableActionModal";
 import SummonableDrawer from "@components/modals/SummonableDrawer";
 import { Weapon } from "@models/playerCharacter/Weapon";
 import { SpellLevel } from "@models/playerCharacter/Spell";
+import GenericModal from "@components/modals/GenericModal";
 
 interface Props {
     pcData: PlayerCharacter;
@@ -64,6 +65,11 @@ function Tracker({pcData, queryClient, pcList, selectedPc, userRole}: Props) {
     const [goldModalAction, setGoldModalAction] = useState('');
     const [summonedItem, setSummonedItem] = useState(getSummonedItem(pcData));
     const [selectedSpellSlotLevel, setSelectedSpellSlotLevel] = useState(SpellLevel.L1);
+
+    const [descriptionModalData, setDescriptionModalData] = useState({
+        title: '',
+        content: emptyRichTextContent
+    });
 
     useEffect(() => {
         setLimitedUseFeatures(getLimitedUseFeatures(pcData));
@@ -194,6 +200,12 @@ function Tracker({pcData, queryClient, pcList, selectedPc, userRole}: Props) {
                 searchParams={searchParams}
                 setDisableBackdrop={setDisableBackdrop}
                 pcId={pcData.baseDetails.pcId}
+            />
+            <GenericModal
+                modalName="description"
+                title={descriptionModalData.title}
+                onClose={() => setDescriptionModalData({title: '', content: emptyRichTextContent})}
+                modalBody={<div dangerouslySetInnerHTML={{__html: descriptionModalData.content}}/>}
             />
 
             <form onSubmit={handleSubmit}>
@@ -352,7 +364,21 @@ function Tracker({pcData, queryClient, pcList, selectedPc, userRole}: Props) {
                                         <div className="container-fluid left-justify" key={i}>
                                             <div className="row">
                                                 <div className="col">
-                                                    <Link className="text-link" to={'/details?weapons=true#' + weapon.id}><h4>{formatWeaponDisplayTitle(weapon.type, weapon.name)}</h4></Link>
+                                                    <button
+                                                        type="button"
+                                                        className="text-link invisible-btn spell-display-name"
+                                                        data-bs-toggle="modal"
+                                                        data-bs-target="#descriptionModal"
+                                                        disabled={!weapon.description || weapon.description == emptyRichTextContent}
+                                                        onClick={() => {
+                                                                setDescriptionModalData({
+                                                                title: formatWeaponDisplayTitle(weapon.type, weapon.name),
+                                                                content: weapon.description ?? emptyRichTextContent
+                                                            });
+                                                        }}
+                                                    >
+                                                        <h4>{formatWeaponDisplayTitle(weapon.type, weapon.name)}</h4>
+                                                    </button>
                                                 </div>
                                                 {/* EQUIP/UNEQUIP TOGGLE */}
                                                 <div className="col-auto">
@@ -421,7 +447,21 @@ function Tracker({pcData, queryClient, pcList, selectedPc, userRole}: Props) {
                             {
                                 limitedUseFeatures.map(feature => (
                                     <Card key={feature.id}>
-                                        <Link className="text-link" to={'/details?features=true#' + removeWhiteSpaceAndConvertToLowerCase(feature.data.name)}><h4>{feature.data.name}</h4></Link>
+                                        <button
+                                            type="button"
+                                            className="text-link invisible-btn spell-display-name"
+                                            data-bs-toggle="modal"
+                                            data-bs-target="#descriptionModal"
+                                            disabled={!feature.data.description || feature.data.description == emptyRichTextContent}
+                                            onClick={() => {
+                                                    setDescriptionModalData({
+                                                    title: feature.data.name,
+                                                    content: feature.data.description
+                                                });
+                                            }}
+                                        >
+                                            <h4>{feature.data.name}</h4>
+                                        </button>
                                         <ItemUseToggle
                                             itemLabel={removeWhiteSpaceAndConvertToLowerCase(feature.data.name)}
                                             formDataName={buildFeatureCurrentUsesKey(feature)}
@@ -449,8 +489,21 @@ function Tracker({pcData, queryClient, pcList, selectedPc, userRole}: Props) {
                                     return 1;
                                 }).map(s => (
                                     <Card key={s.id}>
-                                        <Link className="text-link" to={'/details?summonables=true#' + s.id}><h4>{s.data.name ? `${s.data.name} (${s.data.type})` : s.data.type}</h4></Link>
-
+                                        <button
+                                            type="button"
+                                            className="text-link invisible-btn spell-display-name"
+                                            data-bs-toggle="modal"
+                                            data-bs-target="#descriptionModal"
+                                            disabled={!s.data.description || s.data.description == emptyRichTextContent}
+                                            onClick={() => {
+                                                    setDescriptionModalData({
+                                                    title: s.data.name ? `${s.data.name} (${s.data.type})` : s.data.type,
+                                                    content: s.data.description
+                                                });
+                                            }}
+                                        >
+                                            <h4>{s.data.name ? `${s.data.name} (${s.data.type})` : s.data.type}</h4>
+                                        </button>
                                         {
                                             s.data.source.type == 'spell' &&
                                             <p className="center">Must use the {s.data.source.name} spell in order to summon.</p>
