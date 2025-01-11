@@ -6,7 +6,6 @@ import { PlayerCharacter } from "@models/playerCharacter/PlayerCharacter";
 import { Spell, SpellLevel } from "@models/playerCharacter/Spell";
 import { Summonable } from "@models/playerCharacter/Summonable";
 import { SummonableAttack } from "@models/playerCharacter/SummonableAttack";
-import { SpellSlot } from "@models/playerCharacter/usableResources/SpellSlot";
 import { Weapon } from "@models/playerCharacter/Weapon";
 import { updateArrayObjectItem, updateById, updateDataByPcId, updateStringArrayItem } from "@services/firestore/crud/update";
 import { CollectionName } from "@services/firestore/enum/CollectionName";
