@@ -1,7 +1,9 @@
 import { getFeatureFormData, getSpellSlotFormData, getSummonablesSummoned } from "@components/utils";
+import { Ability } from "@models/enum/Ability";
 import { WeaponModifierProperty } from "@models/enum/WeaponModifierProperty";
 import { Feature } from "@models/playerCharacter/Feature";
 import { PlayerCharacter } from "@models/playerCharacter/PlayerCharacter";
+import { Spell, SpellLevel } from "@models/playerCharacter/Spell";
 import { Summonable } from "@models/playerCharacter/Summonable";
 import { SummonableAttack } from "@models/playerCharacter/SummonableAttack";
 import { Weapon } from "@models/playerCharacter/Weapon";
@@ -326,6 +328,14 @@ export const getDefaultFormData = (pcData: PlayerCharacter) => {
       ...getSummonablesSummoned(pcData.summonables ?? [])
   }
 };
+
+export const emptySpellFormData: Spell = {
+  id: '',
+  name: '',
+  description: '',
+  level: '' as SpellLevel,
+  spellCastingAbility: Ability.CHA
+}
 
 export const getSummonedItem = (pcData: PlayerCharacter) => {
   const summonables = pcData.summonables;

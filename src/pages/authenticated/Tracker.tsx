@@ -34,6 +34,7 @@ import { useSearchParams } from "react-router-dom";
 import SummonableActionModal from "@components/modals/SummonableActionModal";
 import SummonableDrawer from "@components/modals/SummonableDrawer";
 import { Weapon } from "@models/playerCharacter/Weapon";
+import { SpellLevel } from "@models/playerCharacter/Spell";
 
 interface Props {
     pcData: PlayerCharacter;
@@ -62,6 +63,7 @@ function Tracker({pcData, queryClient, pcList, selectedPc, userRole}: Props) {
     const [hpModalAction, setHPModalAction] = useState('');
     const [goldModalAction, setGoldModalAction] = useState('');
     const [summonedItem, setSummonedItem] = useState(getSummonedItem(pcData));
+    const [selectedSpellSlotLevel, setSelectedSpellSlotLevel] = useState(SpellLevel.L1);
 
     useEffect(() => {
         setLimitedUseFeatures(getLimitedUseFeatures(pcData));
@@ -88,6 +90,21 @@ function Tracker({pcData, queryClient, pcList, selectedPc, userRole}: Props) {
         setFormData(getDefaultFormData(pcData));
         triggerSuccessAlert(setShowSuccessAlert);
     };
+
+    const handleSubmitSpellSlotUpdate = async (event: any, spellSlotFormData: any) => {
+        event.preventDefault();
+        const spellSlotsUpdate = formatSpellSlotsUpdates(spellSlotFormData)[0];
+        try {
+            await updateById(CollectionName.SPELL_SLOTS, spellSlotsUpdate.docId, spellSlotsUpdate.updates);
+        } catch (e: any) {
+            console.error(e);
+            alert(SAVE_CHANGES_ERROR);
+            return;
+        }
+        queryClient.refetchQueries({ queryKey: ['pcData', pcData.baseDetails.pcId]});
+        setFormData(getDefaultFormData(pcData));
+        triggerSuccessAlert(setShowSuccessAlert);
+    }
 
     const handleSubmit = async (event: any, explicitFormData?: any) => {
         event.preventDefault();
@@ -158,7 +175,6 @@ function Tracker({pcData, queryClient, pcList, selectedPc, userRole}: Props) {
                 action={goldModalAction}
                 currentGold={pcData.baseDetails.usableResources.gold}
             />
-
             <ConfirmDismissSummonModal
                 summonable={summonedItem}
                 handleDismiss={() => {
@@ -310,8 +326,11 @@ function Tracker({pcData, queryClient, pcList, selectedPc, userRole}: Props) {
                         ) &&
                         <SpellsTrackerComponent
                             pcData={pcData}
-                            formData={formData}
-                            handleSubmit={handleSubmit}
+                            handleSubmit={handleSubmitSpellSlotUpdate}
+                            spellSlotLevel={{
+                                selected: selectedSpellSlotLevel,
+                                setSelected: setSelectedSpellSlotLevel
+                            }}
                         />
                     }
                 
