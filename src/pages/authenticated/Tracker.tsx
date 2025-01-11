@@ -11,7 +11,6 @@ import {
     removeWhiteSpaceAndConvertToLowerCase, 
 } from "@components/utils";
 import { useEffect, useState} from "react";
-import { HashLink as Link } from 'react-router-hash-link';
 import { updateById, updateDataByPcId } from "@services/firestore/crud/update";
 import ItemUseToggle from "@components/ItemUseToggle";
 import { BaseDetails, PlayerCharacter } from "@models/playerCharacter/PlayerCharacter";
