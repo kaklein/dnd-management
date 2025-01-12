@@ -60,11 +60,35 @@ function About ({selectedPc, userRole}: Props) {
                 <div className="col-2 small-text"><b>Release Date</b></div>
                 <div className="col-8 small-text"><b>Release Notes</b></div>
               </div>
+              <ReleaseNote version="1.5.0" releaseDate="2025-01-12"
+                releaseNotes={
+                  <>
+                    <div>
+                      <p>Added fields and functionality for spells:</p>
+                      <ul className="left-justify">
+                        <li>
+                          Revamped the way spells and spell slots are displayed on the Tracker page for more intuitive and useful spellcasting.
+                        </li>
+                        <li>
+                          When adding/editing a character, you can now provide a default spellcasting ability.
+                        </li>                        
+                        <li>
+                          Added fields on spell create/edit to make info displayed on the Tracker page more relevant.
+                        </li>
+                      </ul>
+                    </div>
+                    <p>On the Tracker page, you can now toggle weapons between equipped/unequipped.</p>
+                    <p>On the Tracker page, you can now click to view item descriptions (spells, weapons, abilities, and summonables) without being directed to a separate page.</p>                    
+                    <p>UI updates on Summonable display, including an emoticon whose level of distress corresponds to the summonable's HP.</p>
+                    <p>Minor UI bug fixes.</p>
+                  </>
+                }
+              />
               <ReleaseNote version="1.4.1" releaseDate="2024-11-03"
                 releaseNotes={
                   <>
-                    <p>Can now add attacks/actions and a stat block to Summonable items</p>
-                    <p>Minor UI enhancements</p>
+                    <p>Can now add attacks/actions and a stat block to Summonable items.</p>
+                    <p>Minor UI enhancements.</p>
                   </>
                 }
               />
@@ -80,7 +104,7 @@ function About ({selectedPc, userRole}: Props) {
               <ReleaseNote version="1.3.1" releaseDate="2024-10-19"
                 releaseNotes={
                   <>
-                    <p>Data caching improvements</p>
+                    <p>Data caching improvements.</p>
                   </>
                 }
               />
