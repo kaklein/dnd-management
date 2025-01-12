@@ -35,7 +35,7 @@ function SummonableDrawer ({summonable, pcData, setFormData, searchParams, setSu
                 </div>
                 {
                   disableBackdrop &&
-                  <div className="col-2 no-padding">
+                  <div className="col no-padding">
                     <button className="btn drawer-handle-btn handle-inline" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample"
                       onClick={() => {
                         setDisableBackdrop(false);
@@ -204,7 +204,7 @@ function SummonableDrawer ({summonable, pcData, setFormData, searchParams, setSu
               </div>
               {
                 disableBackdrop &&
-                <div className="col-2 no-padding">
+                <div className="col no-padding">
                   <button className="btn drawer-handle-btn handle-inline" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample"
                     onClick={() => {
                       setDisableBackdrop(false);
