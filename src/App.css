@@ -1093,6 +1093,7 @@ img {
     width: 100vw;
     max-width: 500px;
     max-height: 97vh;
+    max-height: 97dvh;
     overflow: scroll;
 }
 
