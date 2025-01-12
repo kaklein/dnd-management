@@ -313,6 +313,18 @@ export const getDefaultSummoned = (pcData: PlayerCharacter): {[key: string]: any
   return pcData.summonables!.map(s => ({[s.id] : false}));
 }
 
+export const getSummonableIconName = (s: Summonable): string => {
+  const hp = {
+    current: s.data.hitPoints.current,
+    max: s.data.hitPoints.max,
+  };
+  
+  if (hp.current > (hp.max / 2)) return 'summonable-icon';
+  if (hp.current > (hp.max / 4)) return 'summonable-icon-half-health';
+  if (hp.current >= 1) return 'summonable-icon-low-health';
+  return 'summonable-icon-downed';
+}
+
 export const getDefaultFormData = (pcData: PlayerCharacter) => {
   return {
       hitPointsCurrent: pcData.baseDetails.usableResources.hitPoints.current,
