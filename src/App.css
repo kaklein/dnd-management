@@ -1090,6 +1090,7 @@ img {
 
 .summonable-content {
     padding-top: 10px;
+    width: 100vw;
     max-width: 500px;
     max-height: 97vh;
     overflow: scroll;

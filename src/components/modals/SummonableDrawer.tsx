@@ -30,12 +30,12 @@ function SummonableDrawer ({summonable, pcData, setFormData, searchParams, setSu
             {/* Title bar and collapse button */}
             <div className="summonable-title-row">
               <div className="summonable-title row">
-                <div className="col-10 no-padding">
+                <div className="col no-padding">
                   <h4 className={`summonable-title-header ${summonable.data.name ? "summonable-title-header-flat-bottom" : ""}`}>{summonable.data.name ? summonable.data.name : summonable.data.type}</h4>
                 </div>
                 {
                   disableBackdrop &&
-                  <div className="col no-padding">
+                  <div className="col-auto no-padding">
                     <button className="btn drawer-handle-btn handle-inline" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample"
                       onClick={() => {
                         setDisableBackdrop(false);
@@ -184,7 +184,7 @@ function SummonableDrawer ({summonable, pcData, setFormData, searchParams, setSu
             {/* Dismiss button and collapse button */}
             <Card customClass="no-border no-padding">
               <div className="summonable-title row summonable-bottom-btn-container">
-                <div className="col-10 no-padding">
+                <div className="col no-padding">
                 <div className="summonable-title-header-bottom">
                   <button
                   type="button"
@@ -204,7 +204,7 @@ function SummonableDrawer ({summonable, pcData, setFormData, searchParams, setSu
               </div>
               {
                 disableBackdrop &&
-                <div className="col no-padding">
+                <div className="col-auto no-padding">
                   <button className="btn drawer-handle-btn handle-inline" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample"
                     onClick={() => {
                       setDisableBackdrop(false);
