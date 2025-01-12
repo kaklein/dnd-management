@@ -74,14 +74,14 @@ function TextEditor ({ editor, }: Props) {
             onClick={() => editor.chain().focus().toggleBulletList().run()}
             className={editor.isActive('bulletList') ? 'is-active text-editor-menu-btn' : 'text-editor-menu-btn'}
           >
-            <ul className="text-editor-menu-list"><li>List</li></ul>
+            <img src="public/images/icons/bullet-list.png" id="bullet-list" width="20px"/>
           </button>
           <button
             type="button"
             onClick={() => editor.chain().focus().toggleOrderedList().run()}
             className={editor.isActive('orderedList') ? 'is-active text-editor-menu-btn' : 'text-editor-menu-btn'}
           >
-            <ol className="text-editor-menu-list"><li>List</li></ol>
+            <img src="public/images/icons/numbered-list.png" id="ordered-list" width="20px"/>
           </button>
         </div>
       </BubbleMenu>
