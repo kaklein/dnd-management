@@ -16,7 +16,7 @@ import ItemUseToggle from "@components/ItemUseToggle";
 import { BaseDetails, PlayerCharacter } from "@models/playerCharacter/PlayerCharacter";
 import { QueryClient } from "@tanstack/react-query";
 import { CollectionName } from "@services/firestore/enum/CollectionName";
-import { determineAttackBonus, emptyRichTextContent, formatBonus, formatWeaponDisplayTitle, getDefaultFormData, getHPRange, getLimitedUseFeatures, getSummonedItem, triggerSuccessAlert } from "../utils";
+import { determineAttackBonus, emptyRichTextContent, formatBonus, formatWeaponDisplayTitle, getDefaultFormData, getHPRange, getLimitedUseFeatures, getSummonableIconName, getSummonedItem, triggerSuccessAlert } from "../utils";
 import PageHeaderBarPC from "@components/headerBars/PageHeaderBarPC";
 import QuickNav from "@components/QuickNav";
 import SuccessAlert from "@components/alerts/SuccessAlert";
@@ -731,7 +731,14 @@ function Tracker({pcData, queryClient, pcList, selectedPc, userRole}: Props) {
                     onClick={() => {
                         setDisableBackdrop(!disableBackdrop);
                     }}>
-                        <a href="#top">{ !disableBackdrop && <img alt="open summoned item" src="/images/icons/summonable-icon.png" width="40px"/>}</a>
+                        <a href="#top">
+                            { !disableBackdrop && 
+                            <img
+                                alt="open summoned item"
+                                src={`/images/icons/${getSummonableIconName(summonedItem)}.png`}
+                                width="40px"/>
+                            }
+                        </a>
                     </button>
                 </div>                
             }
