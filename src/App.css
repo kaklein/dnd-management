@@ -1090,8 +1090,10 @@ img {
 
 .summonable-content {
     padding-top: 10px;
+    width: 100vw;
     max-width: 500px;
     max-height: 97vh;
+    max-height: 97dvh;
     overflow: scroll;
 }
 
@@ -1121,6 +1123,29 @@ img {
     padding: 0px !important;
 }
 
+.collapse-icon {
+    font-size: x-large;
+}
+
+.collapse-btn {
+    text-align: right;
+    padding: 0px !important;
+}
+
+.collapse-btn button {
+    padding: 0px;
+    padding-right: 5px;
+    padding-left: 5px;
+    margin: 0px;
+    :hover {
+        color: gray;
+    }
+}
+
+.collapse-btn-bottom button {
+    margin-bottom: 10px;
+}
+
 .handle-inline {
     background-color: gray !important;
     margin: 0px;
@@ -1139,8 +1164,7 @@ img {
 }
 
 .summonable-title-header, .summonable-title-header-bottom {
-    border-top-left-radius: 5px;
-    border-bottom-left-radius: 5px;
+    border-radius: 5px;
     color: white;
     padding: 10px;
     margin: 0px;
@@ -1148,6 +1172,7 @@ img {
 
 .summonable-title-header-flat-bottom {
     border-bottom-left-radius: 0px;
+    border-bottom-right-radius: 0px;
 }
 
 .summonable-title-header {
