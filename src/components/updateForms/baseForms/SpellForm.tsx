@@ -1,5 +1,5 @@
 import FormSelect from "@components/FormSelect";
-import { defaultSpellFormData } from "@data/emptyFormData";
+import { getDefaultSpellFormData } from "@data/emptyFormData";
 import { Ability } from "@models/enum/Ability";
 import { DamageType } from "@models/enum/DamageType";
 import { SpellLevel } from "@models/playerCharacter/Spell";
@@ -7,6 +7,8 @@ import { useState } from "react";
 import Button, { ButtonType } from "@components/Button";
 import TextEditor, { buildEditor } from "@components/TextEditor";
 import { validateRequiredFields } from "../utils";
+import { PlayerCharacter } from "@models/playerCharacter/PlayerCharacter";
+import { capitalize } from "@components/utils";
 
 interface Props {
   handleChange: (event: any, setFunction: (prevFormData: any) => void) => void;
@@ -19,10 +21,11 @@ interface Props {
   formData: any;
   setFormData: (data: any) => void;
   initialEditorContent: string;
+  pcData: PlayerCharacter;
   modalDismiss?: boolean;
 }
 
-function SpellForm ({handleChange, handleSubmit, formData, setFormData, initialEditorContent, modalDismiss=false}: Props) {
+function SpellForm ({handleChange, handleSubmit, formData, setFormData, initialEditorContent, pcData, modalDismiss=false}: Props) {
   const [showDamageFields, setShowDamageFields] = useState(formData.damage ? true : false);
   const handleDamageCheckboxChange = () => {
     const newVal = !showDamageFields;
@@ -46,7 +49,7 @@ function SpellForm ({handleChange, handleSubmit, formData, setFormData, initialE
           alert(errorMessage);
           return;
         } else {
-          await handleSubmit(event, formData, setFormData, defaultSpellFormData);
+          await handleSubmit(event, formData, setFormData, getDefaultSpellFormData(pcData));
           editor.commands.clearContent();
         }
       }}>
@@ -90,6 +93,10 @@ function SpellForm ({handleChange, handleSubmit, formData, setFormData, initialE
         </div>
         <div className="update-form-field">
           <label className="update-form-label" htmlFor="spellCastingAbility">Spellcasting Ability</label>
+          {
+            pcData.baseDetails.defaultSpellCastingAbility &&
+            <p className="update-form-description">{`Character default: ${capitalize(pcData.baseDetails.defaultSpellCastingAbility)}`}</p>
+          }
           <FormSelect
             className="update-form-input"
             value={formData.spellCastingAbility}
@@ -103,57 +110,85 @@ function SpellForm ({handleChange, handleSubmit, formData, setFormData, initialE
               }))
             }
             required
-          />
+          />          
         </div>
 
-        <div>
-          <div className="update-form-conditional">
-            <p>Does this spell deal damage or provide healing?</p>
-            <label htmlFor="damageCheckBox">Yes</label>
-            <input
-              id="damageCheckbox"
-              type="checkbox"
-              checked={showDamageFields}
-              onChange={handleDamageCheckboxChange}
-            />
-          </div>
-          
-          { showDamageFields &&
-          <>
-            <div className="update-form-field">
-            <label className="update-form-label" htmlFor="damage">Damage/Healing Amount</label>
-            <input
-              className="update-form-input"
-              type="text"
-              id="damage"
-              name="damage"
-              placeholder="1d6"
-              onChange={(event) => {handleChange(event, setFormData)}}
-              value={formData.damage}
-              required
-            />
+        <div className="form-section">
+          <p className="update-form-label no-bottom-margin">Check all that apply:</p>
+          <div>
+            <div>
+              <div className="update-form-conditional">
+                <input
+                  id="attackCheckBox"
+                  type="checkbox"
+                  checked={formData.hasAttack}
+                  onChange={() => setFormData({...formData, hasAttack: !formData.hasAttack})}
+                />
+                <label htmlFor="attackCheckBox" className="inline-label">&nbsp; Spell includes making an <b>attack</b></label>
+              </div>
             </div>
-            <div className="update-form-field">
-              <label className="update-form-label" htmlFor="damageType">Damage Type</label>
-              <p className="update-form-description">Select damage type, or 'HEALING' for healing spells</p>
-              <FormSelect
-                className="update-form-input"
-                value={formData.damageType}
-                handleChange={handleChange}
-                setFormData={setFormData}
-                name="damageType"
-                options={
-                  Object.values(DamageType).sort().map((option) => ({
-                    text: option.toUpperCase(),
-                    value: option
-                  }))
-                }
-                required
-              />
-            </div> 
-          </>
-          }
-        </div>
+
+            <div>
+              <div className="update-form-conditional">
+                <input
+                  id="saveDCCheckbox"
+                  type="checkbox"
+                  checked={formData.hasSaveDC}
+                  onChange={() => setFormData({...formData, hasSaveDC: !formData.hasSaveDC})}
+                />
+                <label htmlFor="saveDCCheckbox" className="inline-label">&nbsp; Spell requires a <b>saving throw</b> by target(s)</label>
+              </div>
+            </div>
+
+            <div>
+              <div className="update-form-conditional">
+                <input
+                  id="damageCheckBox"
+                  type="checkbox"
+                  checked={showDamageFields}
+                  onChange={handleDamageCheckboxChange}
+                />
+                <label htmlFor="damageCheckBox" className="inline-label">&nbsp; Spell does <b>damage</b> or provides <b>healing</b></label>
+              </div>
+            
+              { showDamageFields &&
+              <div className="form-sub-section">
+                <div className="update-form-field">
+                <label className="update-form-label" htmlFor="damage">Damage/Healing Amount</label>
+                <input
+                  className="update-form-input"
+                  type="text"
+                  id="damage"
+                  name="damage"
+                  placeholder="1d6"
+                  onChange={(event) => {handleChange(event, setFormData)}}
+                  value={formData.damage}
+                  required
+                />
+                </div>
+                <div className="update-form-field">
+                  <label className="update-form-label" htmlFor="damageType">Damage Type</label>
+                  <p className="update-form-description">Select damage type, or 'HEALING' for healing spells</p>
+                  <FormSelect
+                    className="update-form-input"
+                    value={formData.damageType}
+                    handleChange={handleChange}
+                    setFormData={setFormData}
+                    name="damageType"
+                    options={
+                      Object.values(DamageType).sort().map((option) => ({
+                        text: option.toUpperCase(),
+                        value: option
+                      }))
+                    }
+                    required
+                  />
+                </div> 
+              </div>
+              }
+            </div>
+          </div>
+        </div>       
 
         <div className="update-form-field">
           <label className="update-form-label" htmlFor="sourceUrl">Source URL (Optional)</label>

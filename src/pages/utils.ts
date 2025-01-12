@@ -1,7 +1,9 @@
 import { getFeatureFormData, getSpellSlotFormData, getSummonablesSummoned } from "@components/utils";
+import { Ability } from "@models/enum/Ability";
 import { WeaponModifierProperty } from "@models/enum/WeaponModifierProperty";
 import { Feature } from "@models/playerCharacter/Feature";
 import { PlayerCharacter } from "@models/playerCharacter/PlayerCharacter";
+import { Spell, SpellLevel } from "@models/playerCharacter/Spell";
 import { Summonable } from "@models/playerCharacter/Summonable";
 import { SummonableAttack } from "@models/playerCharacter/SummonableAttack";
 import { Weapon } from "@models/playerCharacter/Weapon";
@@ -148,6 +150,8 @@ export const handleSubmitEdit = async (
                 description: formData.description,
                 level: formData.level,
                 spellCastingAbility: formData.spellCastingAbility,
+                hasAttack: formData.hasAttack,
+                hasSaveDC: formData.hasSaveDC,
                 damage: formData.damage,
                 damageType: formData.damageType,
                 saveDC: formData.saveDC,
@@ -166,8 +170,9 @@ export const handleSubmitEdit = async (
                 damageType: formData.damageType,
                 modifierProperty: formData.modifierProperty,
                 magic: getBool(formData.magic),
-                description: formData.description
-            }
+                description: formData.description,
+                equipped: existingArray.find(w => w.id == formData.weaponId)?.equipped ?? false
+            };
             break;
         }
         case 'equipment': {
@@ -250,7 +255,8 @@ export const handleSubmitEdit = async (
       armorClass: Number(formData.armorClass),
       xp: formData.xp ? Number(formData.xp) : '',
       speed: Number(formData.speed),
-      'usableResources.hitDice.type': formData.hitDiceType
+      'usableResources.hitDice.type': formData.hitDiceType,
+      defaultSpellCastingAbility: formData.defaultSpellCastingAbility
     };
     await (updateDataByPcId(CollectionName.PC_BASE_DETAILS, pcData.baseDetails.pcId, update));
   } else {
@@ -307,6 +313,18 @@ export const getDefaultSummoned = (pcData: PlayerCharacter): {[key: string]: any
   return pcData.summonables!.map(s => ({[s.id] : false}));
 }
 
+export const getSummonableIconName = (s: Summonable): string => {
+  const hp = {
+    current: s.data.hitPoints.current,
+    max: s.data.hitPoints.max,
+  };
+  
+  if (hp.current > (hp.max / 2)) return 'summonable-icon';
+  if (hp.current > (hp.max / 4)) return 'summonable-icon-half-health';
+  if (hp.current >= 1) return 'summonable-icon-low-health';
+  return 'summonable-icon-downed';
+}
+
 export const getDefaultFormData = (pcData: PlayerCharacter) => {
   return {
       hitPointsCurrent: pcData.baseDetails.usableResources.hitPoints.current,
@@ -321,6 +339,14 @@ export const getDefaultFormData = (pcData: PlayerCharacter) => {
       ...getFeatureFormData(getLimitedUseFeatures(pcData)),
       ...getSummonablesSummoned(pcData.summonables ?? [])
   }
+};
+
+export const emptySpellFormData: Spell = {
+  id: '',
+  name: '',
+  description: '',
+  level: '' as SpellLevel,
+  spellCastingAbility: Ability.CHA
 }
 
 export const getSummonedItem = (pcData: PlayerCharacter) => {

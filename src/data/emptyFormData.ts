@@ -1,8 +1,11 @@
-import { replaceBooleans } from "@components/utils";
+import { buildSpellSlotsCurrentKey, replaceBooleans } from "@components/utils";
 import { CreateCharacterFormData } from "@models/CreateCharacterFormData";
 import { EditModalFormData } from "@models/EditModalFormData";
 import { UpdateType } from "@models/enum/service/UpdateType";
 import { AbilityScores } from "@models/playerCharacter/AbilityScores";
+import { PlayerCharacter } from "@models/playerCharacter/PlayerCharacter";
+import { Spell } from "@models/playerCharacter/Spell";
+import { SpellSlot } from "@models/playerCharacter/usableResources/SpellSlot";
 import { ShowConfirmDeleteData } from "@models/ShowConfirmDeleteData";
 
 export const defaultWeaponFormData = {
@@ -13,18 +16,23 @@ export const defaultWeaponFormData = {
   damageType: '',
   modifierProperty: '',
   magic: "false",
-  description: ''
+  description: '',
+  equipped: "false"
 };
 
-export const defaultSpellFormData = {
-  updateType: UpdateType.SPELLS,
-  name: '',
-  description: '',
-  level: '',
-  spellCastingAbility: '',
-  damageType: '',
-  damage: '',
-  sourceUrl: ''
+export const getDefaultSpellFormData = (pcData: PlayerCharacter) => {
+  return {
+    updateType: UpdateType.SPELLS,
+    name: '',
+    description: '',
+    level: '',
+    spellCastingAbility: pcData.baseDetails.defaultSpellCastingAbility ?? '',
+    hasAttack: false,
+    hasSaveDC: false,
+    damageType: '',
+    damage: '',
+    sourceUrl: ''
+  }
 };
 
 export const defaultSpellSlotFormData = {
@@ -232,6 +240,7 @@ export const emptyEditModalData: EditModalFormData = {
   imagePath: '',
   firstName: '',
   lastName: '',
+  defaultSpellCastingAbility: '',
 
   // summonable
   summonableId: '',
@@ -274,4 +283,22 @@ export const buildEmptyShowSectionData = (searchParams: URLSearchParams) => {
     spellSlots: searchParams.get("spellSlots") == "true" ? true : false,
     summonables: searchParams.get("summonables") == "true" ? true : false
   }
+}
+
+export const getMatchingSpellSlots = (spell: Spell, spellSlots: SpellSlot[]) => {
+  const matchingSlots = spellSlots.sort((a,b) => {
+    if (a.data.level < b.data.level) return -1;
+    return 1;
+  }).filter(s => s.data.level >= spell.level && s.data.current > 0);
+  return matchingSlots;
+};
+
+export const buildDefaultSpellSlotFormData = (spellToCast: Spell, spellSlots: SpellSlot[]) => {
+  const matchingSlot = getMatchingSpellSlots(spellToCast, spellSlots)[0];
+
+  if (!matchingSlot) return {};
+
+  return {
+    [buildSpellSlotsCurrentKey(matchingSlot)]: matchingSlot.data.current - 1
+  };
 }

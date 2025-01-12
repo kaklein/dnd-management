@@ -8,7 +8,18 @@ import UpdateSpellSlot from "@components/updateForms/UpdateSpellSlot";
 import AddFeature from "@components/updateForms/AddFeature";
 import AddItemToArrayField from "@components/updateForms/AddItemToArrayField";
 import AddEquipment from "@components/updateForms/AddEquipment";
-import { defaultEquipmentFormData, defaultFeatureFormData, defaultLanguageFormData, defaultNoteFormData, defaultProficiencyFormData, defaultSpellFormData, defaultSpellSlotFormData, defaultSummonableFormData, defaultWeaponFormData, emptyShowSectionData } from "@data/emptyFormData";
+import { 
+  defaultEquipmentFormData,
+  defaultFeatureFormData,
+  defaultLanguageFormData,
+  defaultNoteFormData,
+  defaultProficiencyFormData,
+  getDefaultSpellFormData,
+  defaultSpellSlotFormData,
+  defaultSummonableFormData,
+  defaultWeaponFormData,
+  emptyShowSectionData
+} from "@data/emptyFormData";
 import { UpdateType } from "@models/enum/service/UpdateType";
 import { transformAndUpdate } from "@services/firestore/updateData";
 import { QueryClient } from "@tanstack/react-query";
@@ -36,7 +47,7 @@ function AddItems ({pcData, queryClient, pcList, selectedPc, userRole}: Props) {
 
   // Form Data
   const [weaponFormData, setWeaponFormData] = useState(defaultWeaponFormData);
-  const [spellFormData, setSpellFormData] = useState(defaultSpellFormData);
+  const [spellFormData, setSpellFormData] = useState(getDefaultSpellFormData(pcData));
   const [spellSlotFormData, setSpellSlotFormData] = useState(defaultSpellSlotFormData);
   const [featureFormData, setFeatureFormData] = useState(defaultFeatureFormData);
   const [equipmentFormData, setEquipmentFormData] = useState(defaultEquipmentFormData);
@@ -118,6 +129,7 @@ function AddItems ({pcData, queryClient, pcList, selectedPc, userRole}: Props) {
           setFormData={setSpellFormData}
           initialEditorContent={initialEditorContent}
           showSection={{data: showSection, setFunction: setShowSection}}
+          pcData={pcData}
         />
       </Card>
 

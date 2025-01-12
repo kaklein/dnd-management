@@ -53,6 +53,7 @@ function EditModal ({ formType, formData, handleChange, handleSubmit, handleCanc
         setFormData={setFormData}
         modalDismiss={true}
         initialEditorContent={editorContent!.content}
+        pcData={pcData}
       />
       break;
     }

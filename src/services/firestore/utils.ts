@@ -60,6 +60,7 @@ export const transformFormDataForUpdate = (pcData: PlayerCharacter, data: {updat
         damageType: String(updates.damageType) as DamageType,
         magic: isMagic,
         modifierProperty: String(updates.modifierProperty) as WeaponModifierProperty,
+        equipped: getBool(String(updates.equipped) ?? "false"),
         ...(updates.description && {description: String(updates.description)}),
       };
       return {
@@ -77,10 +78,10 @@ export const transformFormDataForUpdate = (pcData: PlayerCharacter, data: {updat
         description: String(updates.description),
         level: String(updates.level) as SpellLevel,
         spellCastingAbility: String(updates.spellCastingAbility) as Ability,
+        hasAttack: getBool(String(updates.hasAttack)),
+        hasSaveDC: getBool(String(updates.hasSaveDC)),
         ...(updates.damageType && {damageType: String(updates.damageType) as DamageType}),
         ...(updates.damage && {damage: String(updates.damage)}),
-        ...(updates.saveDC && {saveDC: Number(updates.saveDC)}),
-        ...(updates.attackBonus && {attackBonus: Number(updates.attackBonus)}),
         ...(updates.sourceUrl && {sourceUrl: String(updates.sourceUrl)})
       }
       return {
@@ -413,6 +414,7 @@ export const transformBaseDetailsForCharacterCreation = (uid: string, pcId: stri
     ...(formData.subclass && {subclass: formData.subclass}),
     ...(formData.xp && {xp: Number(formData.xp)}),
     ...(formData.imagePath && {imagePath: formData.imagePath}),
+    ...(formData.defaultSpellCastingAbility && {defaultSpellCastingAbility: formData.defaultSpellCastingAbility})
   };
 }
 

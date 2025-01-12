@@ -27,24 +27,26 @@ function SummonableDrawer ({summonable, pcData, setFormData, searchParams, setSu
       <div className="row">
         <div className={className} id="collapseExample">          
           <div className="summonable-content" style={{width: "93vw"}}>
-            {/* Title bar and collapse button */}
+            {/* Collapse button */}
+            {
+              disableBackdrop &&
+              <div className="collapse-btn collapse-btn-top">
+                <button className="btn" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample"
+                  onClick={() => {
+                    setDisableBackdrop(false);
+                  }}
+                >
+                  <p className="inline"><span className="collapse-icon">&lsaquo;</span> COLLAPSE</p>
+                </button>
+              </div>
+            }
+            
+            {/* Title bar */}
             <div className="summonable-title-row">
               <div className="summonable-title row">
-                <div className="col-10 no-padding">
+                <div className="col no-padding">
                   <h4 className={`summonable-title-header ${summonable.data.name ? "summonable-title-header-flat-bottom" : ""}`}>{summonable.data.name ? summonable.data.name : summonable.data.type}</h4>
-                </div>
-                {
-                  disableBackdrop &&
-                  <div className="col-2 no-padding">
-                    <button className="btn drawer-handle-btn handle-inline" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample"
-                      onClick={() => {
-                        setDisableBackdrop(false);
-                      }}
-                    >
-                      <img alt="collapse summoned item" src="/images/icons/summonable-collapse-icon-white.png" width="30px"/>
-                    </button>
-                  </div>
-                }                
+                </div>                                
               </div>
               {
                 summonable.data.name &&
@@ -184,37 +186,37 @@ function SummonableDrawer ({summonable, pcData, setFormData, searchParams, setSu
             {/* Dismiss button and collapse button */}
             <Card customClass="no-border no-padding">
               <div className="summonable-title row summonable-bottom-btn-container">
-                <div className="col-10 no-padding">
+                <div className="col no-padding">
                 <div className="summonable-title-header-bottom">
                   <button
-                  type="button"
-                  className="btn btn-danger"
-                  data-bs-toggle="modal"
-                  data-bs-target="#confirmDismissSummonModal"
-                  onClick={() => {
-                    setFormData({
-                        ...getDefaultFormData(pcData),
-                        [buildSummonableSummonedKey(summonable)]: false,
-                    });
-                  }}
-                >
-                  Dismiss
-                </button>
-              </div>
+                    type="button"
+                    className="btn btn-danger"
+                    data-bs-toggle="modal"
+                    data-bs-target="#confirmDismissSummonModal"
+                    onClick={() => {
+                      setFormData({
+                          ...getDefaultFormData(pcData),
+                          [buildSummonableSummonedKey(summonable)]: false,
+                      });
+                    }}
+                  >
+                    Dismiss
+                  </button>
+                </div>
+                </div>              
               </div>
               {
                 disableBackdrop &&
-                <div className="col-2 no-padding">
-                  <button className="btn drawer-handle-btn handle-inline" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample"
+                <div className="collapse-btn collapse-btn-bottom">
+                  <button className="btn" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample"
                     onClick={() => {
                       setDisableBackdrop(false);
                     }}
                   >
-                    <img alt="collapse summoned item" src="/images/icons/summonable-collapse-icon-white.png" width="30px"/>
+                    <p className="inline"><span className="collapse-icon">&lsaquo;</span> COLLAPSE</p>
                   </button>
                 </div>
               }
-              </div>
             </Card>                      
           </div>
         </div>        

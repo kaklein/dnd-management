@@ -11,13 +11,12 @@ import {
     removeWhiteSpaceAndConvertToLowerCase, 
 } from "@components/utils";
 import { useEffect, useState} from "react";
-import { HashLink as Link } from 'react-router-hash-link';
 import { updateById, updateDataByPcId } from "@services/firestore/crud/update";
 import ItemUseToggle from "@components/ItemUseToggle";
 import { BaseDetails, PlayerCharacter } from "@models/playerCharacter/PlayerCharacter";
 import { QueryClient } from "@tanstack/react-query";
 import { CollectionName } from "@services/firestore/enum/CollectionName";
-import { determineAttackBonus, formatBonus, formatWeaponDisplayTitle, getDefaultFormData, getHPRange, getLimitedUseFeatures, getSummonedItem, triggerSuccessAlert } from "../utils";
+import { determineAttackBonus, emptyRichTextContent, formatBonus, formatWeaponDisplayTitle, getDefaultFormData, getHPRange, getLimitedUseFeatures, getSummonableIconName, getSummonedItem, triggerSuccessAlert } from "../utils";
 import PageHeaderBarPC from "@components/headerBars/PageHeaderBarPC";
 import QuickNav from "@components/QuickNav";
 import SuccessAlert from "@components/alerts/SuccessAlert";
@@ -33,6 +32,9 @@ import ConfirmDismissSummonModal from "@components/modals/ConfirmDismissSummonMo
 import { useSearchParams } from "react-router-dom";
 import SummonableActionModal from "@components/modals/SummonableActionModal";
 import SummonableDrawer from "@components/modals/SummonableDrawer";
+import { Weapon } from "@models/playerCharacter/Weapon";
+import { SpellLevel } from "@models/playerCharacter/Spell";
+import GenericModal from "@components/modals/GenericModal";
 
 interface Props {
     pcData: PlayerCharacter;
@@ -43,6 +45,8 @@ interface Props {
 }
 
 function Tracker({pcData, queryClient, pcList, selectedPc, userRole}: Props) {
+    const SAVE_CHANGES_ERROR = 'We encountered an error saving your changes. Please refresh the page and try again.';
+    
     const conModifier = pcData.abilityScores.data.constitution.modifier;
    
     const [showSuccessAlert, setShowSuccessAlert] = useState(false);
@@ -54,10 +58,17 @@ function Tracker({pcData, queryClient, pcList, selectedPc, userRole}: Props) {
     const [summonableAction, setSummonableAction] = useState('');
     
     const [formData, setFormData] = useState(getDefaultFormData(pcData));
+    const [weaponFormData, setWeaponFormData] = useState(pcData.baseDetails.weapons);
     const [limitedUseFeatures, setLimitedUseFeatures] = useState(getLimitedUseFeatures(pcData));
     const [hpModalAction, setHPModalAction] = useState('');
     const [goldModalAction, setGoldModalAction] = useState('');
     const [summonedItem, setSummonedItem] = useState(getSummonedItem(pcData));
+    const [selectedSpellSlotLevel, setSelectedSpellSlotLevel] = useState(SpellLevel.L1);
+
+    const [descriptionModalData, setDescriptionModalData] = useState({
+        title: '',
+        content: emptyRichTextContent
+    });
 
     useEffect(() => {
         setLimitedUseFeatures(getLimitedUseFeatures(pcData));
@@ -68,6 +79,36 @@ function Tracker({pcData, queryClient, pcList, selectedPc, userRole}: Props) {
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = event.target;
         setFormData((prevFormData: any) => ({...prevFormData, [name]: value}));
+    }
+
+    const handleSubmitWeaponEquip = async (event: any, weaponFormData: Weapon[]) => {
+        event.preventDefault();
+
+        try {
+            await updateDataByPcId(CollectionName.PC_BASE_DETAILS, pcData.baseDetails.pcId, { weapons: weaponFormData });
+        } catch (e: any) {
+            console.error(e);
+            alert(SAVE_CHANGES_ERROR);
+            return;
+        }
+        queryClient.refetchQueries({ queryKey: ['pcData', pcData.baseDetails.pcId]});
+        setFormData(getDefaultFormData(pcData));
+        triggerSuccessAlert(setShowSuccessAlert);
+    };
+
+    const handleSubmitSpellSlotUpdate = async (event: any, spellSlotFormData: any) => {
+        event.preventDefault();
+        const spellSlotsUpdate = formatSpellSlotsUpdates(spellSlotFormData)[0];
+        try {
+            await updateById(CollectionName.SPELL_SLOTS, spellSlotsUpdate.docId, spellSlotsUpdate.updates);
+        } catch (e: any) {
+            console.error(e);
+            alert(SAVE_CHANGES_ERROR);
+            return;
+        }
+        queryClient.refetchQueries({ queryKey: ['pcData', pcData.baseDetails.pcId]});
+        setFormData(getDefaultFormData(pcData));
+        triggerSuccessAlert(setShowSuccessAlert);
     }
 
     const handleSubmit = async (event: any, explicitFormData?: any) => {
@@ -86,7 +127,7 @@ function Tracker({pcData, queryClient, pcList, selectedPc, userRole}: Props) {
             ]).then();
         } catch (e: any) {
             console.error(e);
-            alert('We encountered an error saving your changes. Please refresh the page and try again.');
+            alert(SAVE_CHANGES_ERROR);
             return;
         }
         queryClient.refetchQueries({ queryKey: ['pcData', pcData.baseDetails.pcId]});
@@ -139,7 +180,6 @@ function Tracker({pcData, queryClient, pcList, selectedPc, userRole}: Props) {
                 action={goldModalAction}
                 currentGold={pcData.baseDetails.usableResources.gold}
             />
-
             <ConfirmDismissSummonModal
                 summonable={summonedItem}
                 handleDismiss={() => {
@@ -159,6 +199,12 @@ function Tracker({pcData, queryClient, pcList, selectedPc, userRole}: Props) {
                 searchParams={searchParams}
                 setDisableBackdrop={setDisableBackdrop}
                 pcId={pcData.baseDetails.pcId}
+            />
+            <GenericModal
+                modalName="description"
+                title={descriptionModalData.title}
+                onClose={() => setDescriptionModalData({title: '', content: emptyRichTextContent})}
+                modalBody={<div dangerouslySetInnerHTML={{__html: descriptionModalData.content}}/>}
             />
 
             <form onSubmit={handleSubmit}>
@@ -291,8 +337,11 @@ function Tracker({pcData, queryClient, pcList, selectedPc, userRole}: Props) {
                         ) &&
                         <SpellsTrackerComponent
                             pcData={pcData}
-                            formData={formData}
-                            handleSubmit={handleSubmit}
+                            handleSubmit={handleSubmitSpellSlotUpdate}
+                            spellSlotLevel={{
+                                selected: selectedSpellSlotLevel,
+                                setSelected: setSelectedSpellSlotLevel
+                            }}
                         />
                     }
                 
@@ -301,39 +350,87 @@ function Tracker({pcData, queryClient, pcList, selectedPc, userRole}: Props) {
                         <Card>
                             <h3 className="section-header">Weapons</h3>
                             {
-                                pcData.baseDetails.weapons.map((weapon, i) => (
+                                pcData.baseDetails.weapons.sort((a,b) => {
+                                    const aCompName = formatWeaponDisplayTitle(a.type, a.name);
+                                    const bCompName = formatWeaponDisplayTitle(b.type, b.name);
+                                    if (a.equipped && !b.equipped) return -1;
+                                    if (b.equipped && !a.equipped) return 1;
+                                    if (aCompName < bCompName) return -1;
+                                    return 1;
+                                }).map((weapon, i) => (
                                     <Card key={i}>
-                                        <div className="center-table">
+                                        <div className={`center-table ${weapon.equipped ? "weapon-equipped" : ""}`}>
                                         <div className="container-fluid left-justify" key={i}>
                                             <div className="row">
-                                                <Link className="text-link center" to={'/details?weapons=true#' + weapon.id}><h4>{formatWeaponDisplayTitle(weapon.type, weapon.name)}</h4></Link>
-                                            </div>
-                                            <div className="row display-item-row">
-                                                <div className="col-5">
-                                                    Attack Bonus: 
-                                                </div>
-                                                <div className="col-7">
-                                                    <Popover
-                                                        popoverBody={<WeaponContentPopover weapon={weapon} pcData={pcData} attribute="attack bonus"/>}
-                                                        fitContent={true}
+                                                <div className="col">
+                                                    <button
+                                                        type="button"
+                                                        className="text-link invisible-btn spell-display-name"
+                                                        data-bs-toggle="modal"
+                                                        data-bs-target="#descriptionModal"
+                                                        disabled={!weapon.description || weapon.description == emptyRichTextContent}
+                                                        onClick={() => {
+                                                                setDescriptionModalData({
+                                                                title: formatWeaponDisplayTitle(weapon.type, weapon.name),
+                                                                content: weapon.description ?? emptyRichTextContent
+                                                            });
+                                                        }}
                                                     >
-                                                        <span><b>{formatBonus(determineAttackBonus(weapon, pcData) + pcData.baseDetails.proficiencyBonus)}</b></span>
-                                                    </Popover>
+                                                        <h4>{formatWeaponDisplayTitle(weapon.type, weapon.name)}</h4>
+                                                    </button>
+                                                </div>
+                                                {/* EQUIP/UNEQUIP TOGGLE */}
+                                                <div className="col-auto">
+                                                    <input
+                                                        className="inline"
+                                                        type="checkbox"
+                                                        checked={weaponFormData.find(w => w.id == weapon.id)?.equipped ? true : false}
+                                                        onChange={(event) => {
+                                                            const newValue = !weaponFormData.find(w => w.id == weapon.id)?.equipped;
+                                                            setWeaponFormData(weaponFormData.map(w => {
+                                                                if (w.id == weapon.id) return { ...w, equipped: newValue }
+                                                                else return w;
+                                                            }));
+                                                            handleSubmitWeaponEquip(event, weaponFormData.map(w => {
+                                                                if (w.id == weapon.id) return { ...w, equipped: newValue }
+                                                                else return w;
+                                                            }));
+                                                        }}
+                                                    />
+                                                    <p className="inline small-text">EQUIPPED</p>
                                                 </div>
                                             </div>
-                                            <div className="row display-item-row">
-                                                <div className="col-5">
-                                                    Damage:
-                                                </div>
-                                                <div className="col-7">
-                                                    <Popover
-                                                        popoverBody={<WeaponContentPopover weapon={weapon} pcData={pcData} attribute="damage"/>}
-                                                        fitContent={true}
-                                                    >
-                                                        <span><b>{weapon.damage} {formatBonus(determineAttackBonus(weapon, pcData), false)}</b> {weapon.damageType.toLowerCase()}</span>
-                                                    </Popover>
-                                                </div>
-                                            </div>
+                                            {
+                                                weapon.equipped &&
+                                                <>
+                                                    <div className="row display-item-row">
+                                                    <div className="col-5">
+                                                        Attack Bonus: 
+                                                    </div>
+                                                    <div className="col-7">
+                                                        <Popover
+                                                            popoverBody={<WeaponContentPopover weapon={weapon} pcData={pcData} attribute="attack bonus"/>}
+                                                            fitContent={true}
+                                                        >
+                                                            <span><b>{formatBonus(determineAttackBonus(weapon, pcData) + pcData.baseDetails.proficiencyBonus)}</b></span>
+                                                        </Popover>
+                                                    </div>
+                                                    </div>
+                                                    <div className="row display-item-row">
+                                                        <div className="col-5">
+                                                            Damage:
+                                                        </div>
+                                                        <div className="col-7">
+                                                            <Popover
+                                                                popoverBody={<WeaponContentPopover weapon={weapon} pcData={pcData} attribute="damage"/>}
+                                                                fitContent={true}
+                                                            >
+                                                                <span><b>{weapon.damage} {formatBonus(determineAttackBonus(weapon, pcData), false)}</b> {weapon.damageType.toLowerCase()}</span>
+                                                            </Popover>
+                                                        </div>
+                                                    </div>
+                                                </>
+                                            }                                            
                                         </div>
                                         </div>
                                     </Card>
@@ -349,7 +446,21 @@ function Tracker({pcData, queryClient, pcList, selectedPc, userRole}: Props) {
                             {
                                 limitedUseFeatures.map(feature => (
                                     <Card key={feature.id}>
-                                        <Link className="text-link" to={'/details?features=true#' + removeWhiteSpaceAndConvertToLowerCase(feature.data.name)}><h4>{feature.data.name}</h4></Link>
+                                        <button
+                                            type="button"
+                                            className="text-link invisible-btn spell-display-name"
+                                            data-bs-toggle="modal"
+                                            data-bs-target="#descriptionModal"
+                                            disabled={!feature.data.description || feature.data.description == emptyRichTextContent}
+                                            onClick={() => {
+                                                    setDescriptionModalData({
+                                                    title: feature.data.name,
+                                                    content: feature.data.description
+                                                });
+                                            }}
+                                        >
+                                            <h4>{feature.data.name}</h4>
+                                        </button>
                                         <ItemUseToggle
                                             itemLabel={removeWhiteSpaceAndConvertToLowerCase(feature.data.name)}
                                             formDataName={buildFeatureCurrentUsesKey(feature)}
@@ -377,8 +488,21 @@ function Tracker({pcData, queryClient, pcList, selectedPc, userRole}: Props) {
                                     return 1;
                                 }).map(s => (
                                     <Card key={s.id}>
-                                        <Link className="text-link" to={'/details?summonables=true#' + s.id}><h4>{s.data.name ? `${s.data.name} (${s.data.type})` : s.data.type}</h4></Link>
-
+                                        <button
+                                            type="button"
+                                            className="text-link invisible-btn spell-display-name"
+                                            data-bs-toggle="modal"
+                                            data-bs-target="#descriptionModal"
+                                            disabled={!s.data.description || s.data.description == emptyRichTextContent}
+                                            onClick={() => {
+                                                    setDescriptionModalData({
+                                                    title: s.data.name ? `${s.data.name} (${s.data.type})` : s.data.type,
+                                                    content: s.data.description
+                                                });
+                                            }}
+                                        >
+                                            <h4>{s.data.name ? `${s.data.name} (${s.data.type})` : s.data.type}</h4>
+                                        </button>
                                         {
                                             s.data.source.type == 'spell' &&
                                             <p className="center">Must use the {s.data.source.name} spell in order to summon.</p>
@@ -607,7 +731,14 @@ function Tracker({pcData, queryClient, pcList, selectedPc, userRole}: Props) {
                     onClick={() => {
                         setDisableBackdrop(!disableBackdrop);
                     }}>
-                        <a href="#top">{ !disableBackdrop && <img alt="open summoned item" src="/images/icons/summonable-icon.png" width="40px"/>}</a>
+                        <a href="#top">
+                            { !disableBackdrop && 
+                            <img
+                                alt="open summoned item"
+                                src={`/images/icons/${getSummonableIconName(summonedItem)}.png`}
+                                width="40px"/>
+                            }
+                        </a>
                     </button>
                 </div>                
             }

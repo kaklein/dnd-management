@@ -6,9 +6,10 @@ interface Props {
   options: { text: string, value: string }[];
   required?: boolean;
   className?: string;
+  defaultOptionText?: string;
 }
 
-function FormSelect ({value, handleChange, setFormData, name, options, required=false, className="form-input"}: Props) {
+function FormSelect ({value, handleChange, setFormData, name, options, required=false, className="form-input", defaultOptionText="-- Select --"}: Props) {
  
   return (
     <select
@@ -19,7 +20,7 @@ function FormSelect ({value, handleChange, setFormData, name, options, required=
       required={required}
       value={value}
     >
-      <option value="" key="blank-option">-- Select --</option>
+      <option value="" key="blank-option">{defaultOptionText}</option>
       {options.map((option, i) => (
         <option value={option.value} key={i}>{option.text}</option>
       ))}

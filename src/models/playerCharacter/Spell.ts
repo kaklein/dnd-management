@@ -9,7 +9,8 @@ export interface Spell {
     spellCastingAbility: Ability;
     damageType?: DamageType;
     damage?: string;
-    saveDC?: number;
+    hasSaveDC?: boolean;
+    hasAttack?: boolean;
     sourceUrl?: string;
 }
 
