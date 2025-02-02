@@ -179,7 +179,7 @@ function PrepareSpellsList ({pcData, queryClient, setShowSuccessAlert}: Props) {
                               </Popover>
                             }
                         </div>   
-                        <div className="col-auto light-purple-bg">
+                        <div className="col-auto light-purple-bg prepare-section">
                             <input
                                 className="inline"
                                 type="checkbox"
