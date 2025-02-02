@@ -10,6 +10,7 @@
     --dark-gray: #666666;
     --very-light-gray: #f0eeed;
     --inspiration-pink: #d68ff2;
+    --light-purple: #cec7d6;
 }
 
 .card {
@@ -212,6 +213,10 @@ img {
 .text-link {
     text-decoration: none;
     color: var(--dark-purple);
+}
+
+.text-link:hover {
+    cursor: pointer; 
 }
 
 /* Login Form */
@@ -613,6 +618,13 @@ img {
     border-top-right-radius: 15px;
 }
 
+.prepare-spells-button-display {
+    padding-top: 5px;
+    background-color: var(--light-purple);
+    margin-top: 0px;
+    margin-bottom: 10px;
+}
+
 .populated-field {
     font-style: italic;
 }
@@ -988,6 +1000,14 @@ img {
 
 .no-margin {
     margin: 0px;
+}
+
+.small-margin {
+    margin: 3px;
+}
+
+.large-top-margin {
+    margin-top: 40px;
 }
 
 .overview-top {
@@ -1379,12 +1399,12 @@ img {
 
 /* Overrides */
 .inline {
-    display: inline;
+    display: inline !important;
 }
 
 .center {
     margin: auto;
-    text-align: center;
+    text-align: center !important;
 }
 
 .float-right {
@@ -1406,6 +1426,16 @@ img {
 
 .gray-bg {
     background-color: darkgray;
+    color: black;
+}
+
+.light-gray-bg {
+    background-color: var(--very-light-gray) !important;
+    color: black;
+}
+
+.light-purple-bg {
+    background-color: var(--light-purple) !important;
     color: black;
 }
 
