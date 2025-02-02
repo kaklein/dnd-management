@@ -80,6 +80,7 @@ export const transformFormDataForUpdate = (pcData: PlayerCharacter, data: {updat
         spellCastingAbility: String(updates.spellCastingAbility) as Ability,
         hasAttack: getBool(String(updates.hasAttack)),
         hasSaveDC: getBool(String(updates.hasSaveDC)),
+        prepared: getBool(String(updates.prepared) ?? "true"),
         ...(updates.damageType && {damageType: String(updates.damageType) as DamageType}),
         ...(updates.damage && {damage: String(updates.damage)}),
         ...(updates.sourceUrl && {sourceUrl: String(updates.sourceUrl)})

@@ -10,6 +10,7 @@
     --dark-gray: #666666;
     --very-light-gray: #f0eeed;
     --inspiration-pink: #d68ff2;
+    --light-purple: #cec7d6;
 }
 
 .card {
@@ -212,6 +213,10 @@ img {
 .text-link {
     text-decoration: none;
     color: var(--dark-purple);
+}
+
+.text-link:hover {
+    cursor: pointer; 
 }
 
 /* Login Form */
@@ -613,6 +618,13 @@ img {
     border-top-right-radius: 15px;
 }
 
+.prepare-spells-button-display {
+    padding-top: 5px;
+    background-color: var(--light-purple);
+    margin-top: 0px;
+    margin-bottom: 10px;
+}
+
 .populated-field {
     font-style: italic;
 }
@@ -639,9 +651,8 @@ img {
 }
 
 .refresh-icon {
-    width: 40px;
-    border-radius: 10px;
-    margin-top: 4px;
+    width: 30px;
+    border-radius: 5px;
 }
 
 .section-header {
@@ -650,10 +661,6 @@ img {
     border-top-right-radius: 5px;
     color: white;
     padding: 10px;
-}
-
-.no-padding {
-    padding: 0px;
 }
 
 .back-submit-row Button {
@@ -794,8 +801,18 @@ img {
 .display-item-row {
     background-color: var(--near-white);
     border-radius: 5px;
-    margin: 10px;
-    padding: 5px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    margin-left: 0px;
+    margin-right: 0px;
+    padding: 0px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+}
+
+.prepare-section {
+    border-top-right-radius: 3px;
+    border-bottom-right-radius: 3px;
 }
 
 .weapon-equipped {
@@ -987,7 +1004,15 @@ img {
 }
 
 .no-margin {
-    margin: 0px;
+    margin: 0px !important;
+}
+
+.small-margin {
+    margin: 3px;
+}
+
+.large-top-margin {
+    margin-top: 40px;
 }
 
 .overview-top {
@@ -1046,6 +1071,15 @@ img {
 
 .no-padding {
     padding: 0px;
+}
+
+.small-padding {
+    padding: 5px !important;
+}
+
+.spell-display-custom-padding {
+    padding-left: 10px !important;
+    padding-right: 10px !important;
 }
 
 .summonable {
@@ -1326,6 +1360,11 @@ img {
     }
 }
 
+.btn-custom-green {
+    background-color: var(--success-light) !important;
+    color: black !important;
+}
+
 .alert-text-warning {
     color: crimson;
     font-weight: bold;
@@ -1374,12 +1413,12 @@ img {
 
 /* Overrides */
 .inline {
-    display: inline;
+    display: inline !important;
 }
 
 .center {
     margin: auto;
-    text-align: center;
+    text-align: center !important;
 }
 
 .float-right {
@@ -1401,6 +1440,16 @@ img {
 
 .gray-bg {
     background-color: darkgray;
+    color: black;
+}
+
+.light-gray-bg {
+    background-color: var(--very-light-gray) !important;
+    color: black;
+}
+
+.light-purple-bg {
+    background-color: var(--light-purple) !important;
     color: black;
 }
 
@@ -1428,6 +1477,11 @@ img {
     font-size: large;
 }
 
+.prepare-text {
+    padding-left: 0px;
+    padding-right: 0px;
+}
+
 .gray-text {
     font-style: italic;
     color: var(--dark-gray);
@@ -1452,4 +1506,10 @@ img {
     -o-transform: scale(1, -1);
     -ms-transform: scale(1, -1);
     transform: scale(1, -1);
+}
+
+.up-arrow, .down-arrow, .symbol {
+    font-family: "Lexend Zetta", serif;
+    font-optical-sizing: auto;
+    font-style: normal;
 }

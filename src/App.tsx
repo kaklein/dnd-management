@@ -20,6 +20,7 @@ import { getUserRole } from '@services/firestore/getUserRole';
 import { getAuth } from '@firebase/auth';
 import VerifyEmail from '@pages/authenticated/VerifyEmail';
 import About from '@pages/authenticated/About';
+import PrepareSpells from '@pages/authenticated/PrepareSpells';
 
 const queryClient = new QueryClient();
 
@@ -132,6 +133,7 @@ function MainApp() {
                 <Route path="/stats" element={<Stats pcData={pcQuery.data.selectedPcData} pcList={pcQuery.data.pcList} selectedPc={{pcId: selectedPcId, setSelectedPcId: setSelectedPcId}} queryClient={queryClient} userRole={roleQuery.data}/>}/>
                 <Route path="/tracker" element={<Tracker pcData={pcQuery.data.selectedPcData} queryClient={queryClient} pcList={pcQuery.data.pcList} selectedPc={{pcId: selectedPcId, setSelectedPcId: setSelectedPcId}} userRole={roleQuery.data}/>}/>
                 <Route path="/details" element={<Details pcData={pcQuery.data.selectedPcData} pcList={pcQuery.data.pcList} selectedPc={{pcId: selectedPcId, setSelectedPcId: setSelectedPcId}} queryClient={queryClient} userRole={roleQuery.data}/>}/>
+                <Route path="/prepare-spells" element={<PrepareSpells pcData={pcQuery.data.selectedPcData} pcList={pcQuery.data.pcList} selectedPc={{pcId: selectedPcId, setSelectedPcId: setSelectedPcId}} queryClient={queryClient} userRole={roleQuery.data}/>}/>
                 <Route path="/add" element={<AddItems pcData={pcQuery.data.selectedPcData} queryClient={queryClient} pcList={pcQuery.data.pcList} selectedPc={{pcId: selectedPcId, setSelectedPcId: setSelectedPcId}} userRole={roleQuery.data}/>}/>
                 <Route path="/create" element={<CreateCharacter queryClient={queryClient} setSelectedPcId={setSelectedPcId} userRole={roleQuery.data}/>}/>
                 <Route path ="/about" element={<About selectedPc={{pcId: selectedPcId, setSelectedPcId: setSelectedPcId}} userRole={roleQuery.data}/>}/>

@@ -60,6 +60,14 @@ function About ({selectedPc, userRole}: Props) {
                 <div className="col-2 small-text"><b>Release Date</b></div>
                 <div className="col-8 small-text"><b>Release Notes</b></div>
               </div>
+              <ReleaseNote version="1.6.0" releaseDate="2025-02-02"
+                releaseNotes={
+                  <>
+                    <p>Added ability to prepare/unprepare spells via link from the Tracker page. (New spells are automatically considered "prepared" when added.)</p>
+                    <p>UI improvements on the Add Items, Details, and Tracker pages.</p>
+                  </>
+                }
+              />
               <ReleaseNote version="1.5.0" releaseDate="2025-01-12"
                 releaseNotes={
                   <>

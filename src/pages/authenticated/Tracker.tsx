@@ -16,7 +16,7 @@ import ItemUseToggle from "@components/ItemUseToggle";
 import { BaseDetails, PlayerCharacter } from "@models/playerCharacter/PlayerCharacter";
 import { QueryClient } from "@tanstack/react-query";
 import { CollectionName } from "@services/firestore/enum/CollectionName";
-import { determineAttackBonus, emptyRichTextContent, formatBonus, formatWeaponDisplayTitle, getDefaultFormData, getHPRange, getLimitedUseFeatures, getSummonableIconName, getSummonedItem, triggerSuccessAlert } from "../utils";
+import { determineAttackBonus, emptyRichTextContent, formatBonus, formatWeaponDisplayTitle, getDefaultFormData, getHPRange, getLimitedUseFeatures, getSummonableIconName, getSummonedItem, SAVE_CHANGES_ERROR, triggerSuccessAlert } from "../utils";
 import PageHeaderBarPC from "@components/headerBars/PageHeaderBarPC";
 import QuickNav from "@components/QuickNav";
 import SuccessAlert from "@components/alerts/SuccessAlert";
@@ -44,9 +44,7 @@ interface Props {
     userRole: UserRole | undefined;
 }
 
-function Tracker({pcData, queryClient, pcList, selectedPc, userRole}: Props) {
-    const SAVE_CHANGES_ERROR = 'We encountered an error saving your changes. Please refresh the page and try again.';
-    
+function Tracker({pcData, queryClient, pcList, selectedPc, userRole}: Props) {   
     const conModifier = pcData.abilityScores.data.constitution.modifier;
    
     const [showSuccessAlert, setShowSuccessAlert] = useState(false);
@@ -445,22 +443,32 @@ function Tracker({pcData, queryClient, pcList, selectedPc, userRole}: Props) {
                             <h3 className="section-header">Abilities</h3>
                             {
                                 limitedUseFeatures.map(feature => (
-                                    <Card key={feature.id}>
-                                        <button
-                                            type="button"
-                                            className="text-link invisible-btn spell-display-name"
-                                            data-bs-toggle="modal"
-                                            data-bs-target="#descriptionModal"
-                                            disabled={!feature.data.description || feature.data.description == emptyRichTextContent}
-                                            onClick={() => {
-                                                    setDescriptionModalData({
-                                                    title: feature.data.name,
-                                                    content: feature.data.description
-                                                });
-                                            }}
-                                        >
-                                            <h4>{feature.data.name}</h4>
-                                        </button>
+                                    <Card key={feature.id} customClass="small-padding">
+                                        <div className="container-fluid light-gray-bg small-padding no-margin">
+                                            <div className="row">
+                                                <div className="col left-justify">
+                                                    <button
+                                                        type="button"
+                                                        className="text-link invisible-btn spell-display-name"
+                                                        data-bs-toggle="modal"
+                                                        data-bs-target="#descriptionModal"
+                                                        disabled={!feature.data.description || feature.data.description == emptyRichTextContent}
+                                                        onClick={() => {
+                                                                setDescriptionModalData({
+                                                                title: feature.data.name,
+                                                                content: feature.data.description
+                                                            });
+                                                        }}
+                                                    >
+                                                        <h4>{feature.data.name}</h4>
+                                                    </button>
+                                                </div>
+                                                <div className="col-auto">
+                                                    <Refresh refreshRestType={feature.data.refresh!}/>
+                                                </div>
+                                            </div>                                            
+                                        </div>
+                                        
                                         <ItemUseToggle
                                             itemLabel={removeWhiteSpaceAndConvertToLowerCase(feature.data.name)}
                                             formDataName={buildFeatureCurrentUsesKey(feature)}
@@ -469,7 +477,6 @@ function Tracker({pcData, queryClient, pcList, selectedPc, userRole}: Props) {
                                             formData={formData}
                                             handleSubmit={handleSubmit}
                                         />                                        
-                                        <Refresh refreshRestType={feature.data.refresh!}/>
                                     </Card>
                                 ))
                             }

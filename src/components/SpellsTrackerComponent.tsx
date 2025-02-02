@@ -12,6 +12,7 @@ import { emptyRichTextContent, emptySpellFormData } from "@pages/utils";
 import { buildDefaultSpellSlotFormData, getMatchingSpellSlots } from "@data/emptyFormData";
 import SpellSlotEditModal from "./modals/SpellSlotEditModal";
 import GenericModal from "./modals/GenericModal";
+import { useNavigate } from "react-router-dom";
 
 interface Props {
   pcData: PlayerCharacter;
@@ -58,6 +59,8 @@ const mergeSpellsAndSlots = (spellSlots: SpellSlot[], spells: Spell[]): SpellDis
 }
 
 function SpellsTrackerComponent ({pcData, spellSlotLevel, handleSubmit}: Props) {
+  const navigate = useNavigate();
+  
   const [spellToCast, setSpellToCast] = useState(emptySpellFormData);
   
   const spellSlots = pcData.spellSlots ?? [];
@@ -105,7 +108,23 @@ function SpellsTrackerComponent ({pcData, spellSlotLevel, handleSubmit}: Props) 
       modalBody={<div dangerouslySetInnerHTML={{__html: spellDescriptionModalContent.content}}/>}
     />
     <Card>
-    <h3 className="section-header">Spells</h3>
+    <h3 className="section-header no-margin">Spells</h3>
+    <div className="container-fluid prepare-spells-button-display">
+      <div className="row">
+        <div className="col">
+          <p><i>Prepared: {spells.filter(s => s.level !== SpellLevel.CANTRIP && (s.prepared || s.prepared === undefined)).length}</i></p>
+        </div>
+      <div className="col-auto">
+        <button type="button" className="btn btn-secondary small-margin" onClick={() => {
+          navigate('/prepare-spells');
+          window.scrollTo(0, 0);
+        }}>
+          &#8663; Prepare Spells
+        </button>        
+      </div>
+      </div>
+    </div>
+    
       {
         spellDisplays.sort((a,b) => {
           if (a.level < b.level) return -1;
@@ -143,17 +162,32 @@ function SpellsTrackerComponent ({pcData, spellSlotLevel, handleSubmit}: Props) 
             </div>              
             {
               (!d.spellSlot && !(d.level === SpellLevel.CANTRIP))&&
-              <div><p className="center"><i>No {d.level} spell slots! Use the <a style={{fontWeight: 'bold'}} className="text-link" href="/add">Add Items</a> page to add them.</i></p></div>
+              <div>
+                <p className="center"><i>
+                No {d.level} spell slots! Use the&nbsp;
+                  <a 
+                    style={{fontWeight: 'bold'}}
+                    className="text-link"
+                    onClick={() => {
+                      navigate('/add');
+                      window.scrollTo(0, 0);
+                    }}
+                  >
+                    Add Items
+                  </a>
+                  &nbsp;page to add them.
+                </i></p>
+              </div>
             }
 
             {
               (d.spells && d.spells.length > 0) &&
                 
-                  d.spells.sort((a, b) => {
+                  d.spells.filter(s => s.prepared || s.prepared === undefined).sort((a, b) => {
                     if (a.name < b.name) return -1;
                     return 1;
                   }).map((s, i) => (
-                    <div className="container-fluid left-justify" key={i}>
+                    <div className="container-fluid left-justify spell-display-custom-padding" key={i}>
                       <div className="row display-item-row">
                         <div className="col-4">
                           <button
@@ -222,7 +256,41 @@ function SpellsTrackerComponent ({pcData, spellSlotLevel, handleSubmit}: Props) 
               
             {
               (!d.spells || d.spells.length < 1) &&
-              <div><p className="center"><i>No {d.level} spells! Use the <a style={{fontWeight: 'bold'}} className="text-link" href="/add">Add Items</a> page to add them.</i></p></div>
+              <div>
+                <p className="center"><i>
+                No {d.level} spells! Use the&nbsp;
+                  <a 
+                    style={{fontWeight: 'bold'}}
+                    className="text-link"
+                    onClick={() => {
+                      navigate('/add');
+                      window.scrollTo(0, 0);
+                    }}
+                  >
+                    Add Items
+                  </a>
+                  &nbsp;page to add them.
+                </i></p>
+              </div>
+            }
+            {
+              (d.spells && d.spells.length > 0 && d.spells.filter(s => s.prepared || s.prepared === undefined).length < 1) &&
+              <div>
+                <p className="center"><i>
+                  No {d.level} spells prepared! Go to&nbsp;
+                  <a 
+                    style={{fontWeight: 'bold'}}
+                    className="text-link"
+                    onClick={() => {
+                      navigate('/prepare-spells');
+                      window.scrollTo(0, 0);
+                    }}
+                  >
+                    Prepare Spells
+                  </a>
+                  &nbsp;to adjust which spells are available to cast.
+                </i></p>
+              </div>
             }
           </div>
           </Card>

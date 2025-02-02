@@ -150,7 +150,7 @@ function Details({pcData, pcList, selectedPc, queryClient, userRole}: Props) {
                         }
         
                         {spell.spellCastingAbility &&
-                            <p><b>Spellcasting ability: </b>{spell.spellCastingAbility}</p>
+                            <p><b>Spellcasting ability: </b>{capitalize(spell.spellCastingAbility)}</p>
                         }
         
                         {spell.sourceUrl &&

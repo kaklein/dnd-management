@@ -12,6 +12,7 @@ export interface Spell {
     hasSaveDC?: boolean;
     hasAttack?: boolean;
     sourceUrl?: string;
+    prepared?: boolean;
 }
 
 export enum SpellLevel {

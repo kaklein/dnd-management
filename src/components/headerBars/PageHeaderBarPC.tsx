@@ -47,7 +47,7 @@ function PageHeaderBarPC ({pageName, pcList, pcName, selectedPc}: Props) {
                     <div key={pc.pcId} className="pc-list-item"><Button onClick={() => handlePcClick(pc.pcId)} buttonType={ButtonType.DARK} text={`${pc.name.firstName} ${pc.name.lastName}`}/></div>
                 ))}
                 <div className="divider"></div>
-                <div className="pc-list-item-add pc-list-item-center"><Button onClick={() => navigate('/create')} buttonType={ButtonType.INFO} text="+ Create New Character"/></div>
+                <div className="pc-list-item-add pc-list-item-center"><Button onClick={() => navigate('/create')} buttonType={ButtonType.CUSTOM_GREEN} text="+ Create New Character"/></div>
               </div>
             }
           </div>

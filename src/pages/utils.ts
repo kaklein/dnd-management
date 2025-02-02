@@ -11,6 +11,8 @@ import { updateArrayObjectItem, updateById, updateDataByPcId, updateStringArrayI
 import { CollectionName } from "@services/firestore/enum/CollectionName";
 import { getBool, getProficiencyBonusByLevel } from "@services/firestore/utils";
 
+export const SAVE_CHANGES_ERROR = 'We encountered an error saving your changes. Please refresh the page and try again.';
+
 export const determineAttackBonus = (weapon: Weapon, pcData: PlayerCharacter) => {
   // weapon modifier + proficiency bonus
   let weaponModifier;
@@ -155,8 +157,9 @@ export const handleSubmitEdit = async (
                 damage: formData.damage,
                 damageType: formData.damageType,
                 saveDC: formData.saveDC,
-                sourceUrl: formData.sourceUrl
-            }
+                sourceUrl: formData.sourceUrl,
+                prepared: existingArray.find(s => s.id == formData.spellId)?.prepared ?? true
+            };
             break;
         }
         case 'weapon': {

@@ -31,7 +31,8 @@ export const getDefaultSpellFormData = (pcData: PlayerCharacter) => {
     hasSaveDC: false,
     damageType: '',
     damage: '',
-    sourceUrl: ''
+    sourceUrl: '',
+    prepared: "true"
   }
 };
 

@@ -380,4 +380,4 @@ export const getAvailableSpellSlots = (spell: Spell, spellSlots: SpellSlot[]) =>
         slot.data.current > 0
     );
     return availableSlots;
-}
+};
