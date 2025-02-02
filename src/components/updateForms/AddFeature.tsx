@@ -26,6 +26,7 @@ function AddFeature ({handleChange, handleSubmit, formData, setFormData, initial
         formTitle="Feature"
         onClick={() => showSection.setFunction({...emptyShowSectionData, features: !showForm})}
         showForm={showForm}
+        expandType="add"
       />
     
     {

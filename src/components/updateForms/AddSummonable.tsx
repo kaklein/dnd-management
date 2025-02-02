@@ -28,6 +28,7 @@ function AddSummonable ({handleChange, handleSubmit, formData, setFormData, show
         formTitle="Summonable"
         onClick={() => showSection.setFunction({...emptyShowSectionData, summonables: !showForm})}
         showForm={showForm}
+        expandType="add"
       />
     
     {

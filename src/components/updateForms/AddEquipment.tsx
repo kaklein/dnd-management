@@ -26,6 +26,7 @@ function AddEquipment ({handleChange, handleSubmit, formData, setFormData, initi
         formTitle="Equipment"
         onClick={() => showSection.setFunction({...emptyShowSectionData, equipment: !showForm})}
         showForm={showForm}
+        expandType="add"
       />
     
     {

@@ -1326,6 +1326,11 @@ img {
     }
 }
 
+.btn-custom-green {
+    background-color: var(--success-light) !important;
+    color: black !important;
+}
+
 .alert-text-warning {
     color: crimson;
     font-weight: bold;
@@ -1452,4 +1457,10 @@ img {
     -o-transform: scale(1, -1);
     -ms-transform: scale(1, -1);
     transform: scale(1, -1);
+}
+
+.up-arrow, .down-arrow, .symbol {
+    font-family: "Lexend Zetta", serif;
+    font-optical-sizing: auto;
+    font-style: normal;
 }
