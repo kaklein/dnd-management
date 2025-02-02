@@ -115,7 +115,7 @@ function SpellsTrackerComponent ({pcData, spellSlotLevel, handleSubmit}: Props) 
           <p><i>Prepared: {spells.filter(s => s.level !== SpellLevel.CANTRIP && (s.prepared || s.prepared === undefined)).length}</i></p>
         </div>
       <div className="col-auto">
-        <button type="button" className="btn btn-secondary no-margin" onClick={() => {
+        <button type="button" className="btn btn-secondary small-margin" onClick={() => {
           navigate('/prepare-spells');
           window.scrollTo(0, 0);
         }}>
