@@ -16,7 +16,7 @@ import ItemUseToggle from "@components/ItemUseToggle";
 import { BaseDetails, PlayerCharacter } from "@models/playerCharacter/PlayerCharacter";
 import { QueryClient } from "@tanstack/react-query";
 import { CollectionName } from "@services/firestore/enum/CollectionName";
-import { determineAttackBonus, emptyRichTextContent, formatBonus, formatWeaponDisplayTitle, getDefaultFormData, getHPRange, getLimitedUseFeatures, getSummonableIconName, getSummonedItem, triggerSuccessAlert } from "../utils";
+import { determineAttackBonus, emptyRichTextContent, formatBonus, formatWeaponDisplayTitle, getDefaultFormData, getHPRange, getLimitedUseFeatures, getSummonableIconName, getSummonedItem, SAVE_CHANGES_ERROR, triggerSuccessAlert } from "../utils";
 import PageHeaderBarPC from "@components/headerBars/PageHeaderBarPC";
 import QuickNav from "@components/QuickNav";
 import SuccessAlert from "@components/alerts/SuccessAlert";
@@ -44,9 +44,7 @@ interface Props {
     userRole: UserRole | undefined;
 }
 
-function Tracker({pcData, queryClient, pcList, selectedPc, userRole}: Props) {
-    const SAVE_CHANGES_ERROR = 'We encountered an error saving your changes. Please refresh the page and try again.';
-    
+function Tracker({pcData, queryClient, pcList, selectedPc, userRole}: Props) {   
     const conModifier = pcData.abilityScores.data.constitution.modifier;
    
     const [showSuccessAlert, setShowSuccessAlert] = useState(false);
