@@ -1462,6 +1462,11 @@ img {
     font-size: large;
 }
 
+.prepare-text {
+    padding-left: 0px;
+    padding-right: 0px;
+}
+
 .gray-text {
     font-style: italic;
     color: var(--dark-gray);

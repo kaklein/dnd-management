@@ -138,7 +138,7 @@ function PrepareSpellsList ({pcData, queryClient, setShowSuccessAlert}: Props) {
                   }).map((s, i) => (
                     <div className="container-fluid left-justify" key={i}>
                       <div className="row display-item-row">
-                        <div className="col-4">
+                        <div className="col">
                           <button
                             type="button"
                             className="text-link invisible-btn spell-display-name"
@@ -192,7 +192,7 @@ function PrepareSpellsList ({pcData, queryClient, setShowSuccessAlert}: Props) {
                                     }));                                    
                                 }}
                             />
-                            <p className="inline large-text">PREPARE</p>
+                            <p className="inline prepare-text">PREPARE</p>
                         </div>
                       </div>
                     </div>
