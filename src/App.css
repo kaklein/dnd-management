@@ -1067,6 +1067,11 @@ img {
     padding: 5px !important;
 }
 
+.padding-10 {
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
 .summonable {
     z-index: 100;
     margin-top: 10px;
