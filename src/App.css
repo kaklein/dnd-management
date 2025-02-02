@@ -1067,9 +1067,9 @@ img {
     padding: 5px !important;
 }
 
-.padding-10 {
-    padding-left: 10px;
-    padding-right: 10px;
+.spell-display-custom-padding {
+    padding-left: 10px !important;
+    padding-right: 10px !important;
 }
 
 .summonable {

@@ -187,7 +187,7 @@ function SpellsTrackerComponent ({pcData, spellSlotLevel, handleSubmit}: Props) 
                     if (a.name < b.name) return -1;
                     return 1;
                   }).map((s, i) => (
-                    <div className="container-fluid left-justify" key={i}>
+                    <div className="container-fluid left-justify spell-display-custom-padding" key={i}>
                       <div className="row display-item-row">
                         <div className="col-4">
                           <button
