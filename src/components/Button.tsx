@@ -12,6 +12,7 @@ export enum ButtonType {
     'PRIMARY'= 'primary',
     'SECONDARY' = 'secondary',
     'SUCCESS' = 'success',
+    'CUSTOM_GREEN' = 'success btn-custom-green',
     'DANGER' = 'danger',
     'WARNING' = 'warning',
     'INFO' = 'info',

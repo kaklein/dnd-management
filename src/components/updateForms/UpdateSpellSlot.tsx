@@ -26,6 +26,7 @@ function UpdateSpellSlot ({handleChange, handleSubmit, formData, setFormData, sh
         formTitle="Spell Slot"
         onClick={() => showSection.setFunction({...emptyShowSectionData, spellSlots: !showForm})}
         showForm={showForm}
+        expandType="add"
       />
     
     {

@@ -28,6 +28,7 @@ function AddSpell ({handleChange, handleSubmit, formData, setFormData, initialEd
         formTitle="Spell"
         onClick={() => showSection.setFunction({...emptyShowSectionData, spells: !showForm})}
         showForm={showForm}
+        expandType="add"
       />
     
     {

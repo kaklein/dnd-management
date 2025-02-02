@@ -26,6 +26,7 @@ function AddWeapon ({handleChange, handleSubmit, formData, setFormData, initialE
         formTitle="Weapon"
         onClick={() => showSection.setFunction({...emptyShowSectionData, weapons: !showForm})}
         showForm={showForm}
+        expandType="add"
       />
     
     {
