@@ -443,22 +443,32 @@ function Tracker({pcData, queryClient, pcList, selectedPc, userRole}: Props) {
                             <h3 className="section-header">Abilities</h3>
                             {
                                 limitedUseFeatures.map(feature => (
-                                    <Card key={feature.id}>
-                                        <button
-                                            type="button"
-                                            className="text-link invisible-btn spell-display-name"
-                                            data-bs-toggle="modal"
-                                            data-bs-target="#descriptionModal"
-                                            disabled={!feature.data.description || feature.data.description == emptyRichTextContent}
-                                            onClick={() => {
-                                                    setDescriptionModalData({
-                                                    title: feature.data.name,
-                                                    content: feature.data.description
-                                                });
-                                            }}
-                                        >
-                                            <h4>{feature.data.name}</h4>
-                                        </button>
+                                    <Card key={feature.id} customClass="small-padding">
+                                        <div className="container-fluid light-gray-bg small-padding no-margin">
+                                            <div className="row">
+                                                <div className="col left-justify">
+                                                    <button
+                                                        type="button"
+                                                        className="text-link invisible-btn spell-display-name"
+                                                        data-bs-toggle="modal"
+                                                        data-bs-target="#descriptionModal"
+                                                        disabled={!feature.data.description || feature.data.description == emptyRichTextContent}
+                                                        onClick={() => {
+                                                                setDescriptionModalData({
+                                                                title: feature.data.name,
+                                                                content: feature.data.description
+                                                            });
+                                                        }}
+                                                    >
+                                                        <h4>{feature.data.name}</h4>
+                                                    </button>
+                                                </div>
+                                                <div className="col-auto">
+                                                    <Refresh refreshRestType={feature.data.refresh!}/>
+                                                </div>
+                                            </div>                                            
+                                        </div>
+                                        
                                         <ItemUseToggle
                                             itemLabel={removeWhiteSpaceAndConvertToLowerCase(feature.data.name)}
                                             formDataName={buildFeatureCurrentUsesKey(feature)}
@@ -467,7 +477,6 @@ function Tracker({pcData, queryClient, pcList, selectedPc, userRole}: Props) {
                                             formData={formData}
                                             handleSubmit={handleSubmit}
                                         />                                        
-                                        <Refresh refreshRestType={feature.data.refresh!}/>
                                     </Card>
                                 ))
                             }

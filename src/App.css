@@ -651,9 +651,8 @@ img {
 }
 
 .refresh-icon {
-    width: 40px;
-    border-radius: 10px;
-    margin-top: 4px;
+    width: 30px;
+    border-radius: 5px;
 }
 
 .section-header {
@@ -662,10 +661,6 @@ img {
     border-top-right-radius: 5px;
     color: white;
     padding: 10px;
-}
-
-.no-padding {
-    padding: 0px;
 }
 
 .back-submit-row Button {
@@ -999,7 +994,7 @@ img {
 }
 
 .no-margin {
-    margin: 0px;
+    margin: 0px !important;
 }
 
 .small-margin {
@@ -1066,6 +1061,10 @@ img {
 
 .no-padding {
     padding: 0px;
+}
+
+.small-padding {
+    padding: 5px !important;
 }
 
 .summonable {
