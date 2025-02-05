@@ -6,20 +6,28 @@ interface Props {
   buttons?: ReactNode;
   customColor?: "dark-purple";
   centered?: boolean;
+  matchSectionHeaderFormat?: boolean;
 }
-export function TitleButtonRow ({text, formatAsHeader=true, buttons, centered=false, customColor=undefined}: Props) {
-  const titleClass = centered ? "center" : ""
+export function TitleButtonRow ({text, formatAsHeader=true, buttons, centered=false, customColor=undefined, matchSectionHeaderFormat=false}: Props) {
+  const titleClass = centered ? "center" : "";
+  
+  let className = `container-fluid title-button-row`;
+  if (customColor == "dark-purple") className = className.concat(" bg-purple");
+  if (formatAsHeader) className = className.concat(" title-button-row-bg-dark");
+  if (matchSectionHeaderFormat) className = className.concat(" title-button-row-match-section-header")
+  
   const titleDisplay = formatAsHeader ? <h3 className={titleClass}>{text}</h3> : <p className={titleClass}>{text}</p>;
+
   return (
-    <div className={`container-fluid title-button-row ${customColor ? "bg-purple" : formatAsHeader ? "title-button-row-bg-dark": ""}`}>
+    <div className={className}>
       <div className="row">
-        <div className="col-sm">
+        <div className="col">
           {!centered && titleDisplay}
         </div>
-        <div className="col-sm">
+        <div className="col">
           {centered && titleDisplay}
         </div>
-        <div className="col-sm horiz-btn right-justify">
+        <div className="col horiz-btn right-justify">
           {buttons}
         </div>
       </div>

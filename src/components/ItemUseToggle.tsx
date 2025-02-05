@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { removeWhiteSpaceAndConvertToLowerCase } from "./utils";
 
 interface ItemUseToggleProps {
@@ -14,6 +14,9 @@ function ItemUseToggle({ formDataName, itemLabel, maxUses, currentUses, formData
   const formattedLabel = removeWhiteSpaceAndConvertToLowerCase(itemLabel);
 
   const [localCurrentUses, setCurrentUses] = useState(currentUses);
+  useEffect(() => {
+    setCurrentUses(currentUses);
+  }, [currentUses]);
 
   // checked = 'used', e.g. if there are 3 max uses and 2 current uses, there is one 'used' and therefore one checked
   const amountChecked = maxUses - localCurrentUses;
