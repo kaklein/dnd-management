@@ -37,6 +37,7 @@ import { Weapon } from "@models/playerCharacter/Weapon";
 import { SpellLevel } from "@models/playerCharacter/Spell";
 import GenericModal from "@components/modals/GenericModal";
 import SpellSaveDCPopoverContent from "@components/popovers/SpellSaveDCPopoverContent";
+import TitleButtonRow from "@components/TitleButtonRow";
 
 interface Props {
     pcData: PlayerCharacter;
@@ -205,6 +206,34 @@ function Tracker({pcData, queryClient, pcList, selectedPc, userRole}: Props) {
                 title={descriptionModalData.title}
                 onClose={() => setDescriptionModalData({title: '', content: emptyRichTextContent})}
                 modalBody={<div dangerouslySetInnerHTML={{__html: descriptionModalData.content}}/>}
+            />
+            <GenericModal
+                modalName="resetDeathSaves"
+                title="Reset Death Saves?"
+                modalFooter={
+                    <>
+                    <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button
+                        type="button"
+                        className="btn btn-success"
+                        onClick={() => {
+                            const max = pcData.baseDetails.usableResources.deathSaves.max;
+                            updateDataByPcId(CollectionName.PC_BASE_DETAILS, pcData.baseDetails.pcId, {
+                                'usableResources.deathSaves.failuresRemaining': max,
+                                'usableResources.deathSaves.successesRemaining': max
+                            });
+                            queryClient.refetchQueries({ queryKey: ['pcData', pcData.baseDetails.pcId]});
+                            setFormData(getDefaultFormData(pcData));
+                            triggerSuccessAlert(setShowSuccessAlert);
+                        }}
+                        data-bs-dismiss="modal"
+                    >
+                        Reset
+                    </button>
+                    </>
+                }
+                modalBody={<p>This will clear all successes and failures.</p>}
+                modalFooterAsButton={false}
             />
 
             <form onSubmit={handleSubmit}>
@@ -590,7 +619,29 @@ function Tracker({pcData, queryClient, pcList, selectedPc, userRole}: Props) {
                     </Card>
 
                     <Card>
-                        <h3 className="section-header">Death Saves</h3>
+                        <TitleButtonRow
+                            text="Death Saves"
+                            formatAsHeader={true}
+                            matchSectionHeaderFormat={true}
+                            buttons={
+                                <button
+                                    type="button"
+                                    className="btn btn-success"
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#resetDeathSavesModal"
+                                    disabled={
+                                        pcData.baseDetails.usableResources.deathSaves.failuresRemaining == 
+                                            pcData.baseDetails.usableResources.deathSaves.max &&
+                                        pcData.baseDetails.usableResources.deathSaves.successesRemaining ==
+                                            pcData.baseDetails.usableResources.deathSaves.max
+                                    }
+                                >
+                                    Reset
+                                </button>                                
+                            }
+                            customColor="dark-purple"
+                            centered={true}
+                        />
                         <h4 className="text-green">Successes</h4>
                         <ItemUseToggle
                             itemLabel="Death Save Successes"
@@ -607,7 +658,7 @@ function Tracker({pcData, queryClient, pcList, selectedPc, userRole}: Props) {
                             maxUses={pcData.baseDetails.usableResources.deathSaves.max}
                             currentUses={formData.deathSavesFailures}
                             formData={formData}
-                            handleSubmit={handleSubmit}                           
+                            handleSubmit={handleSubmit}
                         />
                     </Card>
 
