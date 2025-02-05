@@ -8,6 +8,7 @@ import {
     formatFeaturesUpdates, 
     formatSpellSlotsUpdates,
     formatSummonablesUpdates,
+    getDefaultSpellSaveDC,
     removeWhiteSpaceAndConvertToLowerCase, 
 } from "@components/utils";
 import { useEffect, useState} from "react";
@@ -35,6 +36,7 @@ import SummonableDrawer from "@components/modals/SummonableDrawer";
 import { Weapon } from "@models/playerCharacter/Weapon";
 import { SpellLevel } from "@models/playerCharacter/Spell";
 import GenericModal from "@components/modals/GenericModal";
+import SpellSaveDCPopoverContent from "@components/popovers/SpellSaveDCPopoverContent";
 
 interface Props {
     pcData: PlayerCharacter;
@@ -316,16 +318,39 @@ function Tracker({pcData, queryClient, pcList, selectedPc, userRole}: Props) {
                     </div>
                     </Card> 
                     <Card>
-                        <h5>Initiative</h5>
-                            <Popover
-                                popoverBody={
-                                    <div>
-                                        <b>{pcData.abilityScores.data.dexterity.modifier > 0 && '+'}{pcData.abilityScores.data.dexterity.modifier}</b> from DEX modifier
-                                    </div>
-                                }
-                            >
-                                <h4>{pcData.abilityScores.data.dexterity.modifier > 0 && '+'}{pcData.abilityScores.data.dexterity.modifier}</h4>
-                            </Popover>        
+                        <div className="container-fluid">
+                            <div className="row center">
+                            <div className="col">
+                                <h5>Initiative</h5>
+                                <Popover
+                                    popoverBody={
+                                        <div>
+                                            <b>{pcData.abilityScores.data.dexterity.modifier > 0 && '+'}{pcData.abilityScores.data.dexterity.modifier}</b> from DEX modifier
+                                        </div>
+                                    }
+                                >
+                                    <h4>{pcData.abilityScores.data.dexterity.modifier > 0 && '+'}{pcData.abilityScores.data.dexterity.modifier}</h4>
+                                </Popover>    
+                            </div>
+                            {
+                                pcData.baseDetails.defaultSpellCastingAbility &&
+                                <div className="col">
+                                    <h5>Spell Save DC</h5>
+                                    <Popover
+                                        popoverBody={
+                                            <SpellSaveDCPopoverContent
+                                                proficiencyBonus={pcData.baseDetails.proficiencyBonus}
+                                                defaultSpellCastingAbility={pcData.baseDetails.defaultSpellCastingAbility}
+                                                abilityScores={pcData.abilityScores}
+                                            />
+                                        }
+                                    >
+                                        <h4>{getDefaultSpellSaveDC(pcData.baseDetails.proficiencyBonus, pcData.baseDetails.defaultSpellCastingAbility, pcData.abilityScores)}</h4>
+                                    </Popover>
+                                </div>
+                            }                            
+                            </div>
+                        </div>                            
                     </Card>                   
 
                     {
