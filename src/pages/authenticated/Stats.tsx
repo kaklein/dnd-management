@@ -3,7 +3,7 @@ import AbilityCard from "@components/cards/AbilityCard";
 import Card from "@components/cards/Card";
 import { AbilityScores } from "@models/playerCharacter/AbilityScores";
 import { BaseDetails, PlayerCharacter } from "@models/playerCharacter/PlayerCharacter";
-import { getPassiveWisdom, orderAbilityCardElements } from "@components/utils";
+import { getDefaultSpellSaveDC, getPassiveWisdom, orderAbilityCardElements } from "@components/utils";
 import { Ability } from "@models/enum/Ability";
 import PageHeaderBarPC from "@components/headerBars/PageHeaderBarPC";
 import Button, { ButtonType } from "@components/Button";
@@ -18,6 +18,7 @@ import { UserRole } from "@services/firestore/enum/UserRole";
 import Popover from "@components/modals/Popover";
 import PassivePerceptionPopoverContent from "@components/popovers/PassivePerceptionPopoverContent";
 import AboutFooter from "@components/AboutFooter";
+import SpellSaveDCPopoverContent from "@components/popovers/SpellSaveDCPopoverContent";
 
 interface Props {
     pcData: PlayerCharacter;
@@ -28,6 +29,8 @@ interface Props {
 }
 
 function Stats({pcData, pcList, selectedPc, queryClient, userRole}: Props) { 
+    const defaultSpellCastingAbility = pcData.baseDetails.defaultSpellCastingAbility;
+    
     const [editable, setEditable] = useState(false);
     const [showSuccessAlert, setShowSuccessAlert] = useState(false);
     
@@ -184,6 +187,31 @@ function Stats({pcData, pcList, selectedPc, queryClient, userRole}: Props) {
                     </div>
                 </div>                    
             </Card>
+            {
+                defaultSpellCastingAbility &&
+                <Card>
+                    <div className="row">
+                        <div className="col-6 right-justify">
+                            <h5>Spell Save DC:</h5>
+                        </div>
+                        <div className="col-6 left-justify">
+                        <Popover
+                            popoverBody={
+                                <SpellSaveDCPopoverContent
+                                    proficiencyBonus={pcData.baseDetails.proficiencyBonus}
+                                    defaultSpellCastingAbility={defaultSpellCastingAbility}
+                                    abilityScores={pcData.abilityScores}
+                                />
+                            }
+                            fitContent={true}
+                        >
+                            <h4>{getDefaultSpellSaveDC(pcData.baseDetails.proficiencyBonus, defaultSpellCastingAbility, pcData.abilityScores)}</h4>
+                        </Popover>
+                        </div>
+                    </div>                    
+                </Card>
+            }
+            
             <Card>
                     <div className="row">
                     <div className="col-6 right-justify">

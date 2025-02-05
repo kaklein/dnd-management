@@ -359,6 +359,10 @@ export const getSpellSaveDC = (pcData: PlayerCharacter, spell: Spell): number =>
     return 8 + mod + pcData.baseDetails.proficiencyBonus;
 }
 
+export const getDefaultSpellSaveDC = (proficiencyBonus: number, defaultSpellCastingAbility: Ability, abilityScores: AbilityScores) => {
+    return 8 + proficiencyBonus + abilityScores.data[defaultSpellCastingAbility].modifier;
+}
+
 export const canCastSpell = (spell: Spell, spellSlots: SpellSlot[], selectedLevel?: SpellLevel) => {
     // Can always cast a cantrip
     if (spell.level == SpellLevel.CANTRIP) return true;
