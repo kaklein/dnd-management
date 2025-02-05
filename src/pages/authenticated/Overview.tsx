@@ -51,7 +51,7 @@ function Overview({pcData, pcList, selectedPc, userRole, queryClient, imageUrl}:
     const [editable, setEditable] = useState(false);
     const [showPCDelete, setShowPCDelete] = useState('');
     const handleDeleteCharacter = async () => {
-        await deletePC(pcData.baseDetails.pcId);
+        await deletePC(pcData.baseDetails.pcId, pcData.baseDetails.imagePath);
         localStorage.removeItem('selectedPcId');
         navigate(`/home?deleted=${pcData.baseDetails.name.firstName}_${pcData.baseDetails.name.lastName}`);
         location.reload();

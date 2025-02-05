@@ -5,6 +5,8 @@ import { updateDataByPcId } from "./update";
 import { db } from "../../../firebase";
 import { ArrayField } from "@models/util/ArrayField";
 import { buildWhereClauses } from "./read";
+import { deleteImage } from "@services/firebaseStorage/delete";
+import { FileNameUtil } from "@services/firebaseStorage/util";
 
 const DELETE_ERROR_MESSAGE = 'Error occurred deleting item. Please refresh the page and try again.';
 
@@ -41,7 +43,7 @@ export const deleteItemFromStringArray = async (collectionName: CollectionName, 
 }
 
 /** Function to delete all data associated with a single PC. Use with caution! */
-export const deletePC = async (pcId: string) => {
+export const deletePC = async (pcId: string, imageFileName?: string) => {
   try {
     const batch = writeBatch(db);
   
@@ -60,6 +62,11 @@ export const deletePC = async (pcId: string) => {
         batch.delete(doc.ref);
       });
     };
+
+    if (imageFileName) {
+      const fileNameUtil = new FileNameUtil(pcId);      
+      await deleteImage(imageFileName, fileNameUtil);
+    }
 
     await batch.commit();
   } catch (e) {
