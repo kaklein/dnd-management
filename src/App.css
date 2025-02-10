@@ -251,7 +251,7 @@ img {
     width: 1em;
 }
 
-.ability-proficiencies {
+.ability-proficiencies table tbody {
     width: 100%;
 }
 
