@@ -251,8 +251,8 @@ img {
     width: 1em;
 }
 
-.ability-proficiencies table {
-    width: 100%;
+.ability-proficiencies-table {
+    width: 100% !important;
 }
 
 .row-checkbox {
