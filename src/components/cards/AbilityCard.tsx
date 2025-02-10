@@ -71,7 +71,7 @@ function AbilityCard({ abilityName, proficiencyBonus, skills, editable, handleCh
                         <div className="col small-padding">
                             <div className="ability-proficiencies">
                             <table className="table">
-                                <tbody>
+                                <tbody className="full-width">
                                     {
                                         skills.map((skill, i) => (
                                             <tr className={
