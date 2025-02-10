@@ -231,7 +231,7 @@ function SummonableForm ({handleChange, handleSubmit, formData, setFormData, ini
         { showStatsFields &&
         <>
             <Card>
-              <div className="container-fluid test">
+              <div className="container-fluid">
                 <div className="row display-item-row left-justify">
                   <div className="col update-form-field">
                     <label className="update-form-label" htmlFor="strengthScore">Strength</label>
