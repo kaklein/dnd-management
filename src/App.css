@@ -176,7 +176,7 @@ img {
     margin-bottom: 5px;
     margin-top: 5px;
     width: 100%;
-    max-width: 450px;
+    max-width: 400px;
 }
 
 .ability-card-card {
@@ -249,6 +249,10 @@ img {
 .ability-card-checkbox-unchecked {
     display: none;
     width: 1em;
+}
+
+.ability-proficiencies {
+    width: 100%;
 }
 
 .row-checkbox {
