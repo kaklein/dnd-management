@@ -4,7 +4,7 @@ import TextEditor, { buildEditor } from '@components/TextEditor';
 import { DamageType } from '@models/enum/DamageType';
 import { Summonable } from '@models/playerCharacter/Summonable';
 import { SummonableAttack } from '@models/playerCharacter/SummonableAttack';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 interface Props {
   formData: any;
@@ -35,6 +35,9 @@ function SummonableAttackForm({ formData, attackId, initialEditorContent, remove
   }
   
   const [showDamageFields, setShowDamageFields] = useState(formDataExistingAttack?.damage ? true : false);
+  useEffect(() => {
+    setShowDamageFields(formDataExistingAttack?.damage ? true : false);
+  }, [formDataExistingAttack?.damage]);
     
   const handleDamageCheckboxChange = () => {
     const newVal = !showDamageFields;

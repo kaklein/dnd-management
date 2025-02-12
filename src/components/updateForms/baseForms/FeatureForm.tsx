@@ -2,7 +2,7 @@ import FormSelect from "@components/FormSelect";
 import { defaultFeatureFormData } from "@data/emptyFormData";
 import { DamageType } from "@models/enum/DamageType";
 import { RestType } from "@models/enum/RestType";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Button, { ButtonType } from "@components/Button";
 import { validateRequiredFields } from "../utils";
 import TextEditor, { buildEditor } from "@components/TextEditor";
@@ -23,6 +23,9 @@ interface Props {
 
 function FeatureForm ({handleChange, handleSubmit, formData, setFormData, initialEditorContent, modalDismiss=false}: Props) {
   const [showLimitedUseFields, setShowLimitedUseFields] = useState(formData.maxUses ? true : false);
+  useEffect(() => {
+    setShowLimitedUseFields(formData.maxUses ? true : false);
+  }, [formData.maxUses]);
   const handleLimitedUseCheckboxChange = () => {
     const newVal = !showLimitedUseFields;
     setShowLimitedUseFields(newVal);
@@ -33,6 +36,9 @@ function FeatureForm ({handleChange, handleSubmit, formData, setFormData, initia
   };
 
   const [showDamageFields, setShowDamageFields] = useState(formData.damage ? true : false);
+  useEffect(() => {
+    setShowDamageFields(formData.damage ? true : false);
+  }, [formData.damage]);
   const handleDamageCheckboxChange = () => {
     const newVal = !showDamageFields;
     setShowDamageFields(newVal);
@@ -43,6 +49,9 @@ function FeatureForm ({handleChange, handleSubmit, formData, setFormData, initia
   }
 
   const [showSaveDCField, setShowSaveDCField] = useState(formData.saveDC ? true : false);
+  useEffect(() => {
+    setShowSaveDCField(formData.saveDC ? true : false);
+  }, [formData.saveDC]);
   const handleSaveDcCheckboxChange = () => {
     const newVal = !showSaveDCField;
     setShowSaveDCField(newVal);
