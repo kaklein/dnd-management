@@ -14,6 +14,7 @@ export const defaultWeaponFormData = {
   type: '',
   damage: '',
   damageType: '',
+  bonus: '',
   modifierProperty: '',
   magic: "false",
   description: '',

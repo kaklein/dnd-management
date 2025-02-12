@@ -464,7 +464,7 @@ function Tracker({pcData, queryClient, pcList, selectedPc, userRole}: Props) {
                                                             popoverBody={<WeaponContentPopover weapon={weapon} pcData={pcData} attribute="attack bonus"/>}
                                                             fitContent={true}
                                                         >
-                                                            <span><b>{formatBonus(determineAttackBonus(weapon, pcData) + pcData.baseDetails.proficiencyBonus)}</b></span>
+                                                            <span><b>{formatBonus(determineAttackBonus(weapon, pcData) + pcData.baseDetails.proficiencyBonus + (weapon.bonus ?? 0))}</b></span>
                                                         </Popover>
                                                     </div>
                                                     </div>
@@ -477,7 +477,7 @@ function Tracker({pcData, queryClient, pcList, selectedPc, userRole}: Props) {
                                                                 popoverBody={<WeaponContentPopover weapon={weapon} pcData={pcData} attribute="damage"/>}
                                                                 fitContent={true}
                                                             >
-                                                                <span><b>{weapon.damage} {formatBonus(determineAttackBonus(weapon, pcData), false)}</b> {weapon.damageType.toLowerCase()}</span>
+                                                                <span><b>{weapon.damage} {formatBonus(determineAttackBonus(weapon, pcData) + (weapon.bonus ?? 0), false)}</b> {weapon.damageType.toLowerCase()}</span>
                                                             </Popover>
                                                         </div>
                                                     </div>
