@@ -289,6 +289,7 @@ function Details({pcData, pcList, selectedPc, queryClient, userRole}: Props) {
                                                 description: weapon.description ?? '',
                                                 damage: weapon.damage,
                                                 damageType: weapon.damageType,
+                                                bonus: weapon.bonus ?? '',
                                                 type: weapon.type,
                                                 modifierProperty: weapon.modifierProperty,
                                                 magic: weapon.magic ? "true" : "false",

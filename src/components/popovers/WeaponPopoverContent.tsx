@@ -44,6 +44,12 @@ function WeaponContentPopover({pcData, weapon, attribute}: Props) {
         <b>+{pcData.baseDetails.proficiencyBonus}</b> from proficiency bonus
       </div>
       }
+      {
+        (weapon.bonus !== undefined && weapon.bonus > 0) &&
+        <div>
+          <b>+{weapon.bonus}</b> weapon bonus
+        </div>
+      }
     </div>
   )
 }
