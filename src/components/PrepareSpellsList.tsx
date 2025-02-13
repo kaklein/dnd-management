@@ -63,7 +63,7 @@ function PrepareSpellsList ({pcData, queryClient, setShowSuccessAlert}: Props) {
     // RETURN EARLY IF NO SPELL SLOTS
     const spellSlots = pcData.spellSlots ?? [];
     const spells = pcData.baseDetails.spells ?? [];
-    if (spellSlots.length < 1 && spells.length < 1) return;
+    if (spells.length < 1 || spells.filter(s => s.level !== SpellLevel.CANTRIP).length < 1) return;
 
     const [spellDescriptionModalContent, setSpellDescriptionModalContent] = useState({
         title: '',
@@ -118,88 +118,83 @@ function PrepareSpellsList ({pcData, queryClient, setShowSuccessAlert}: Props) {
           if (a.level < b.level) return -1;
           return 1;
         }).map((d, index) => (
+          (d.spells && d.spells.length > 0) &&  
           <Card key={index}>
-          <div className="spell-display center-table">
-            <div className="row spell-display-header">
-              <div className="col spell-display-header-col">
-                <h3 className="left-justify">{d.level}</h3>
+            <div className="spell-display center-table">
+              <div className="row spell-display-header">
+                <div className="col spell-display-header-col">
+                  <h3 className="left-justify">{d.level}</h3>
+                </div>
               </div>
-            </div>              
-            {
-              (!d.spellSlot && !(d.level === SpellLevel.CANTRIP))&&
-              <div><p className="center"><i>No {d.level} spell slots! Use the <a style={{fontWeight: 'bold'}} className="text-link" href="/add">Add Items</a> page to add them.</i></p></div>
-            }
-
-            {
-              (d.spells && d.spells.length > 0) &&                
-                  d.spells.sort((a, b) => {
-                    if (a.name < b.name) return -1;
-                    return 1;
-                  }).map((s, i) => (
-                    <div className="container-fluid left-justify spell-display-custom-padding" key={i}>
-                      <div className="row display-item-row">
-                        <div className="col">
-                          <button
-                            type="button"
-                            className="text-link invisible-btn spell-display-name"
-                            data-bs-toggle="modal"
-                            data-bs-target="#spellDescriptionModal"
-                            disabled={!s.description || s.description == emptyRichTextContent}
-                            onClick={() => {
-                              setSpellDescriptionModalContent({
-                                title: `${s.name} - ${s.level}${s.level !== SpellLevel.CANTRIP ? " Spell" : ""}`,
-                                content: s.description
-                              });
-                            }}
-                          >
-                            <b>{s.name}</b>
-                          </button>
-                        </div>                          
-                        <div className="col">
-                            {
-                              s.hasAttack &&
-                              <Popover
-                                  popoverBody={<PopoverContentSpell pcData={pcData} spell={s} displayType="attack bonus"/>}
-                                  customClass="spell-display-item"
-                                >
-                                  <span>ATK: <b>+{pcData.abilityScores.data[s.spellCastingAbility].modifier + pcData.baseDetails.proficiencyBonus}</b></span>
-                              </Popover>
-                            }
-                            {
-                              s.damage &&
-                                <div className="popover-main-content spell-display-item"><span>{s.damageType == DamageType.HEALING ? 'EFFECT:' : 'DMG:'} {s.damage} {s.damageType}</span></div>
-                            }   
-                            {
-                              s.hasSaveDC &&
-                              <Popover
-                                popoverBody={<PopoverContentSpell pcData={pcData} spell={s} displayType="save DC"/>}
+              {
+                d.spells.sort((a, b) => {
+                  if (a.name < b.name) return -1;
+                  return 1;
+                }).map((s, i) => (
+                  <div className="container-fluid left-justify spell-display-custom-padding" key={i}>
+                    <div className="row display-item-row">
+                      <div className="col">
+                        <button
+                          type="button"
+                          className="text-link invisible-btn spell-display-name"
+                          data-bs-toggle="modal"
+                          data-bs-target="#spellDescriptionModal"
+                          disabled={!s.description || s.description == emptyRichTextContent}
+                          onClick={() => {
+                            setSpellDescriptionModalContent({
+                              title: `${s.name} - ${s.level}${s.level !== SpellLevel.CANTRIP ? " Spell" : ""}`,
+                              content: s.description
+                            });
+                          }}
+                        >
+                          <b>{s.name}</b>
+                        </button>
+                      </div>                          
+                      <div className="col">
+                          {
+                            s.hasAttack &&
+                            <Popover
+                                popoverBody={<PopoverContentSpell pcData={pcData} spell={s} displayType="attack bonus"/>}
                                 customClass="spell-display-item"
                               >
-                              <span>Save DC: <b>{getSpellSaveDC(pcData, s)}</b></span>
-                              </Popover>
-                            }
-                        </div>   
-                        <div className="col-auto light-purple-bg prepare-section">
-                            <input
-                                className="inline"
-                                type="checkbox"
-                                checked={newPreparedSpells.find(spell => spell.id === s.id)?.prepared || newPreparedSpells.find(spell => spell.id === s.id)?.prepared === undefined}
-                                onChange={() => {
-                                    const newValue = !newPreparedSpells.find(spell => spell.id === s.id)?.prepared;
-                                    setNewPreparedSpells(newPreparedSpells.map(spell => {
-                                        if (spell.id === s.id) return {...spell, prepared: newValue}
-                                        else return spell;
-                                    }));                                    
-                                }}
-                            />
-                            <p className="inline prepare-text">PREPARE</p>
-                        </div>
+                                <span>ATK: <b>+{pcData.abilityScores.data[s.spellCastingAbility].modifier + pcData.baseDetails.proficiencyBonus}</b></span>
+                            </Popover>
+                          }
+                          {
+                            s.damage &&
+                              <div className="popover-main-content spell-display-item"><span>{s.damageType == DamageType.HEALING ? 'EFFECT:' : 'DMG:'} {s.damage} {s.damageType}</span></div>
+                          }   
+                          {
+                            s.hasSaveDC &&
+                            <Popover
+                              popoverBody={<PopoverContentSpell pcData={pcData} spell={s} displayType="save DC"/>}
+                              customClass="spell-display-item"
+                            >
+                            <span>Save DC: <b>{getSpellSaveDC(pcData, s)}</b></span>
+                            </Popover>
+                          }
+                      </div>   
+                      <div className="col-auto light-purple-bg prepare-section">
+                        <input
+                          className="inline prepare-checkbox"
+                          type="checkbox"
+                          checked={newPreparedSpells.find(spell => spell.id === s.id)?.prepared || newPreparedSpells.find(spell => spell.id === s.id)?.prepared === undefined}
+                          onChange={() => {
+                              const newValue = !newPreparedSpells.find(spell => spell.id === s.id)?.prepared;
+                              setNewPreparedSpells(newPreparedSpells.map(spell => {
+                                  if (spell.id === s.id) return {...spell, prepared: newValue}
+                                  else return spell;
+                              }));                                    
+                          }}
+                        />
+                        <p className="inline prepare-text">PREPARE</p>
                       </div>
                     </div>
-                  ))
-                }
-          </div>
-          </Card>
+                  </div>
+                ))
+              }
+            </div>
+          </Card>                
         ))
       }
       <Card customClass="light-purple-bg">

@@ -889,6 +889,14 @@ td {
 .prepare-section {
     border-top-right-radius: 3px;
     border-bottom-right-radius: 3px;
+    padding-left: 5px !important;
+    padding-right: 3px !important;
+}
+
+.prepare-text {
+    padding-left: 0px;
+    padding-right: 0px;
+    margin: 3px !important;
 }
 
 .weapon-equipped {
@@ -1572,7 +1580,7 @@ td {
 }
 
 .small-text {
-    font-size: small;
+    font-size: small !important;
 }
 
 .medium-text {
@@ -1581,11 +1589,6 @@ td {
 
 .large-text {
     font-size: large;
-}
-
-.prepare-text {
-    padding-left: 0px;
-    padding-right: 0px;
 }
 
 .gray-text {
