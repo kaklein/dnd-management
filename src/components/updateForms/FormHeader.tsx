@@ -23,7 +23,7 @@ function FormHeader ({formTitle, onClick, showForm, anchorTag=undefined, expandT
           {anchorTag && 
             <a href={'#' + anchorTag}>
               <button
-                className={`btn btn-${buttonType} expand-collapse-btn`}
+                className={`btn btn-${buttonType} expand-collapse-btn ${collapseSymbol == "Cancel" ? "small-text" : ""}`}
                 type="button"
                 onClick={onClick}
               >
