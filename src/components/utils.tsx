@@ -141,6 +141,7 @@ export const orderAndFormatWeaponElements = (weapon: Weapon, pcData: PlayerChara
         type: weapon.type,
         damage: `${weapon.damage} ${formatBonus(determineAttackBonus(weapon, pcData), false)}`,
         ['damage type']: weapon.damageType,
+        ...(weapon.bonus && { bonus: `+${weapon.bonus}` }),
         ['modifier property']: weapon.modifierProperty.toLowerCase(),
         magic: weapon.magic,
         ...((weapon.description && weapon.description != emptyRichTextContent) && {description: <div className="long-text-display no-overflow left-justify" dangerouslySetInnerHTML={{__html: weapon.description}}/>
@@ -357,6 +358,10 @@ export const buildProficiencyForms = (formData: any, abilityName: string, skills
 export const getSpellSaveDC = (pcData: PlayerCharacter, spell: Spell): number => {
     const mod = pcData.abilityScores.data[spell.spellCastingAbility].modifier;
     return 8 + mod + pcData.baseDetails.proficiencyBonus;
+}
+
+export const getDefaultSpellSaveDC = (proficiencyBonus: number, defaultSpellCastingAbility: Ability, abilityScores: AbilityScores) => {
+    return 8 + proficiencyBonus + abilityScores.data[defaultSpellCastingAbility].modifier;
 }
 
 export const canCastSpell = (spell: Spell, spellSlots: SpellSlot[], selectedLevel?: SpellLevel) => {

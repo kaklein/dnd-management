@@ -109,21 +109,25 @@ function SpellsTrackerComponent ({pcData, spellSlotLevel, handleSubmit}: Props) 
     />
     <Card>
     <h3 className="section-header no-margin">Spells</h3>
-    <div className="container-fluid prepare-spells-button-display">
-      <div className="row">
-        <div className="col">
-          <p><i>Prepared: {spells.filter(s => s.level !== SpellLevel.CANTRIP && (s.prepared || s.prepared === undefined)).length}</i></p>
+    {
+      spells.filter(s => s.level !== SpellLevel.CANTRIP).length > 0 &&
+      <div className="container-fluid prepare-spells-button-display">
+        <div className="row">
+          <div className="col">
+            <p><i>Prepared: {spells.filter(s => s.level !== SpellLevel.CANTRIP && (s.prepared || s.prepared === undefined)).length}</i></p>
+          </div>
+        <div className="col-auto">
+          <button type="button" className="btn btn-secondary small-margin" onClick={() => {
+            navigate('/prepare-spells');
+            window.scrollTo(0, 0);
+          }}>
+            &#8663; Prepare Spells
+          </button>        
         </div>
-      <div className="col-auto">
-        <button type="button" className="btn btn-secondary small-margin" onClick={() => {
-          navigate('/prepare-spells');
-          window.scrollTo(0, 0);
-        }}>
-          &#8663; Prepare Spells
-        </button>        
+        </div>
       </div>
-      </div>
-    </div>
+    }
+    
     
       {
         spellDisplays.sort((a,b) => {

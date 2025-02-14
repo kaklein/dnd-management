@@ -62,6 +62,7 @@ export const transformFormDataForUpdate = (pcData: PlayerCharacter, data: {updat
         modifierProperty: String(updates.modifierProperty) as WeaponModifierProperty,
         equipped: getBool(String(updates.equipped) ?? "false"),
         ...(updates.description && {description: String(updates.description)}),
+        ...(updates.bonus && {bonus: Number(updates.bonus)}),
       };
       return {
         collectionName: CollectionName.PC_BASE_DETAILS,

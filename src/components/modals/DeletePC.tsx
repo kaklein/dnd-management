@@ -4,10 +4,9 @@ interface Props {
   pcName: string;
   handleCancel: () => void;
   handleDelete: () => void;
-  setEditable: (editable: boolean) => void;
 }
 
-function DeletePC ({pcName, handleCancel, handleDelete, setEditable}: Props) {
+function DeletePC ({pcName, handleCancel, handleDelete}: Props) {
   const [firstYes, setFirstYes] = useState(false);
   
   return (
@@ -23,54 +22,71 @@ function DeletePC ({pcName, handleCancel, handleDelete, setEditable}: Props) {
               aria-label="Close"
               onClick={() => {
                 setFirstYes(false);
-                setEditable(false);
                 handleCancel;
               }}
             />
           </div>
           <div className="modal-body">
             <p><b>This will delete all data associated with this character and cannot be undone.</b></p>
-            <button 
-              type="button"
-              className="btn btn-secondary"
-              disabled={firstYes}
-              onClick={() => {
-                setFirstYes(false);
-                setEditable(false);
-                handleCancel;
-              }} 
-              data-bs-dismiss="modal"
-            >
-              Cancel
-            </button>
-            <button type="button" className="btn btn-danger" disabled={firstYes} onClick={() => {setFirstYes(true)}}>
-              Yes, that's why I clicked the delete button.
-            </button>
+            <div className="container-fluid">
+              <div className="row">
+                <div className="col no-padding">
+                  <button type="button" className="btn btn-danger no-side-margin full-width" disabled={firstYes} onClick={() => {setFirstYes(true)}}>
+                    Yes, that's why I clicked "delete".
+                  </button>
+                </div>
+              </div>
+              <div className="row">
+                <div className="col no-padding">
+                  <button 
+                    type="button"
+                    className="btn btn-secondary no-side-margin full-width"
+                    disabled={firstYes}
+                    onClick={() => {
+                      setFirstYes(false);
+                      handleCancel;
+                    }} 
+                    data-bs-dismiss="modal"
+                  >
+                    Cancel
+                  </button>
+                </div>
+              </div>
+            </div>
           </div>
           {
             firstYes &&
             <div className="modal-footer">
               <p><b>Are you <i>really</i> sure? There's no going back after this. {pcName} will be GONE!</b></p>
-              <button
-                type="button"
-                className="btn btn-secondary"
-                onClick={() => { 
-                  setFirstYes(false);
-                  setEditable(false);
-                  handleCancel; 
-                }}
-                data-bs-dismiss="modal"
-              >
-                Cancel
-              </button>
-              <button
-                type="button"
-                className="btn btn-danger"
-                onClick={handleDelete}
-                data-bs-dismiss="modal"
-              >
-                Yes. DELETE {pcName.toUpperCase()}!
-              </button>
+              <div className="container-fluid">
+                <div className="row">
+                  <div className="col no-padding">
+                    <button
+                      type="button"
+                      className="btn btn-danger no-side-margin full-width"
+                      onClick={handleDelete}
+                      data-bs-dismiss="modal"
+                    >
+                      Yes. DELETE {pcName.toUpperCase()}!
+                    </button>
+                  </div>
+                </div>
+                <div className="row">
+                  <div className="col no-padding">
+                    <button
+                      type="button"
+                      className="btn btn-secondary no-side-margin full-width"
+                      onClick={() => { 
+                        setFirstYes(false);
+                        handleCancel; 
+                      }}
+                      data-bs-dismiss="modal"
+                    >
+                      Cancel
+                    </button>
+                  </div>
+                </div>
+              </div>
             </div>
           }
         </div>

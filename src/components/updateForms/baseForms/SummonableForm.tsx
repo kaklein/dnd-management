@@ -5,7 +5,7 @@ import { defaultSummonableFormData } from "@data/emptyFormData";
 import { PlayerCharacter } from "@models/playerCharacter/PlayerCharacter";
 import { validateRequiredFields } from "../utils";
 import SummonableAttackForm from "./SummonableAttackForm";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 import { SummonableAttack } from "@models/playerCharacter/SummonableAttack";
 import { emptyRichTextContent } from "@pages/utils";
@@ -36,6 +36,9 @@ function SummonableForm ({handleChange, handleSubmit, formData, setFormData, ini
   const [attacks, setAttacks] = useState((formData.attacks && formData.attacks.length > 0) ? formData.attacks.map((a: SummonableAttack) => a.id) as string[] : emptyAttacks);
   
   const [showStatsFields, setShowStatsFields] = useState(getBool(formData.useAbilityScores));
+  useEffect(() => {
+    setShowStatsFields(getBool(formData.useAbilityScores));
+  }, [formData.useAbilityScores]);
   const handleStatsFieldCheckboxChange = () => {
     const newVal = !showStatsFields;
     setShowStatsFields(newVal);
@@ -231,7 +234,7 @@ function SummonableForm ({handleChange, handleSubmit, formData, setFormData, ini
         { showStatsFields &&
         <>
             <Card>
-              <div className="container-fluid test">
+              <div className="container-fluid">
                 <div className="row display-item-row left-justify">
                   <div className="col update-form-field">
                     <label className="update-form-label" htmlFor="strengthScore">Strength</label>

@@ -3,7 +3,7 @@ import AbilityCard from "@components/cards/AbilityCard";
 import Card from "@components/cards/Card";
 import { AbilityScores } from "@models/playerCharacter/AbilityScores";
 import { BaseDetails, PlayerCharacter } from "@models/playerCharacter/PlayerCharacter";
-import { getPassiveWisdom, orderAbilityCardElements } from "@components/utils";
+import { getDefaultSpellSaveDC, getPassiveWisdom, orderAbilityCardElements } from "@components/utils";
 import { Ability } from "@models/enum/Ability";
 import PageHeaderBarPC from "@components/headerBars/PageHeaderBarPC";
 import Button, { ButtonType } from "@components/Button";
@@ -18,6 +18,7 @@ import { UserRole } from "@services/firestore/enum/UserRole";
 import Popover from "@components/modals/Popover";
 import PassivePerceptionPopoverContent from "@components/popovers/PassivePerceptionPopoverContent";
 import AboutFooter from "@components/AboutFooter";
+import SpellSaveDCPopoverContent from "@components/popovers/SpellSaveDCPopoverContent";
 
 interface Props {
     pcData: PlayerCharacter;
@@ -28,6 +29,8 @@ interface Props {
 }
 
 function Stats({pcData, pcList, selectedPc, queryClient, userRole}: Props) { 
+    const defaultSpellCastingAbility = pcData.baseDetails.defaultSpellCastingAbility;
+    
     const [editable, setEditable] = useState(false);
     const [showSuccessAlert, setShowSuccessAlert] = useState(false);
     
@@ -118,9 +121,54 @@ function Stats({pcData, pcList, selectedPc, queryClient, userRole}: Props) {
                 setFormData={setFormData}
                 formData={formData}
             />
-            { editable &&
-                <Button type="submit" buttonType={ButtonType.INFO} text="Save Changes" onClick={() => {}}/>
-            }
+            <div className="container-fluid bottom-button-container">
+                {
+                    editable &&
+                    <>
+                    <div className="row">
+                        <div className="col small-padding">
+                        <Button customClass="full-width bottom-button-container-button" buttonType={ButtonType.SECONDARY} text={"Cancel"} onClick={() => {
+                            setEditable(!editable);
+                            setFormData(buildDefaultAbilityScoreFormData(pcData.abilityScores));
+                        }}/>
+                        </div>
+                        <div className="col small-padding">
+                                <Button customClass="full-width bottom-button-container-button" type="submit" buttonType={ButtonType.INFO} text="Save Changes" onClick={() => {}}/>
+                        </div>
+                    </div>
+                    <div className="row">
+                        <div className="col"/>
+                        <div className="col-auto small-padding border-row">
+                            <Popover
+                                popoverBody={
+                                    <>
+                                    <p>To change an <b>ability score</b>, edit the score at the top left - all modifiers will be automatically recalculated.</p>
+                                    <p>To add or remove <b>skill proficiencies</b>, check or uncheck the box to the left of the relevant skill.</p>
+                                    <p>Be sure to click <b>Save Changes</b> when you're done, or <b>Cancel</b> if you've changed your mind.</p>
+                                    </>
+                                }
+                            >
+                                <p className="update-form-description dark-purple center">&#9432; Tips for editing</p>
+                            </Popover>
+                        </div>
+                        <div className="col"/>
+                    </div>
+                    </>
+                }
+                {
+                    !editable &&
+                    <>
+                    <div className="row">
+                        <div className="col small-padding">
+                            <Button customClass="full-width bottom-button-container-button" buttonType={ButtonType.SECONDARY} text={"Edit Ability Scores"} onClick={() => {
+                                setEditable(!editable);
+                                setFormData(buildDefaultAbilityScoreFormData(pcData.abilityScores));
+                            }}/>
+                        </div>
+                    </div>                        
+                    </>
+                }
+            </div>           
             </form>             
             </>
         );
@@ -144,33 +192,27 @@ function Stats({pcData, pcList, selectedPc, queryClient, userRole}: Props) {
             { 
                 mapAbilityScoreCards(pcData.abilityScores) 
             }
-            <div className="div-button">
-                <Button customClass="float-right" buttonType={ButtonType.DANGER} text={editable ? "Cancel" : "Edit Ability Scores"} onClick={() => {
-                    setEditable(!editable);
-                    setFormData(buildDefaultAbilityScoreFormData(pcData.abilityScores));
-                }}/>
-            </div>
-
+            
             <br/>
 
             <Card>
                 <div className="container-fluid">
                     <div className="row">
-                        <div className="col-6 right-justify">
-                            <h5>AC:</h5>
+                        <div className="col-6 right-justify stat-item">
+                            AC:
                         </div>
-                        <div className="col-6 left-justify">
-                            <h4>{pcData.baseDetails.armorClass}</h4>
+                        <div className="col-6 left-justify stat-item-bold">
+                            {pcData.baseDetails.armorClass}
                         </div>
                     </div>
                 </div>
             </Card>
             <Card>
                 <div className="row">
-                    <div className="col-6 right-justify">
-                        <h5>Initiative:</h5>
+                    <div className="col-6 right-justify stat-item">
+                        Initiative:
                     </div>
-                    <div className="col-6 left-justify">
+                    <div className="col-6 left-justify stat-item-bold">
                     <Popover
                         popoverBody={
                             <div>
@@ -179,17 +221,17 @@ function Stats({pcData, pcList, selectedPc, queryClient, userRole}: Props) {
                         }
                         fitContent={true}
                     >
-                        <h4>{pcData.abilityScores.data.dexterity.modifier > 0 && '+'}{pcData.abilityScores.data.dexterity.modifier}</h4>
+                        <>{pcData.abilityScores.data.dexterity.modifier > 0 && '+'}{pcData.abilityScores.data.dexterity.modifier}</>
                     </Popover>
                     </div>
                 </div>                    
             </Card>
             <Card>
                     <div className="row">
-                    <div className="col-6 right-justify">
-                        <h5>Passive Perception:</h5>
+                    <div className="col-6 right-justify stat-item">
+                        Passive Perception:
                     </div>
-                    <div className="col-6 left-justify">
+                    <div className="col-6 left-justify stat-item-bold">
                     <Popover
                         popoverBody={
                             <PassivePerceptionPopoverContent
@@ -200,23 +242,23 @@ function Stats({pcData, pcList, selectedPc, queryClient, userRole}: Props) {
                         }
                         fitContent={true}
                     >
-                        <h4>
+                        <>
                             {getPassiveWisdom(
                                 pcData.abilityScores.data.wisdom.modifier, 
                                 pcData.abilityScores.data.wisdom.perception.proficient, 
                                 pcData.baseDetails.proficiencyBonus
                             )}
-                        </h4>                            
+                        </>                            
                     </Popover>
                     </div>
                 </div>                    
             </Card>
             <Card>
                 <div className="row">
-                    <div className="col-6 right-justify">
-                        <h5>Proficiency Bonus:</h5>
+                    <div className="col-6 right-justify stat-item">
+                        Proficiency Bonus:
                     </div>
-                    <div className="col-6 left-justify">
+                    <div className="col-6 left-justify stat-item-bold">
                     <Popover
                         popoverBody={
                             <div>
@@ -225,23 +267,47 @@ function Stats({pcData, pcList, selectedPc, queryClient, userRole}: Props) {
                         }
                         fitContent={true}
                     >
-                        <h4>+{pcData.baseDetails.proficiencyBonus}</h4>
+                        <>+{pcData.baseDetails.proficiencyBonus}</>
                     </Popover>
                     </div>
                 </div>
-            </Card>
+            </Card>            
             <Card>
                 <div className="container-fluid">
                     <div className="row">
-                        <div className="col-6 right-justify">
-                            <h5>Speed:</h5>
+                        <div className="col-6 right-justify stat-item">
+                            Speed:
                         </div>
-                        <div className="col-6 left-justify">
-                            <h4>{pcData.baseDetails.speed}</h4>
+                        <div className="col-6 left-justify stat-item-bold">
+                            {pcData.baseDetails.speed}
                         </div>
                     </div>
                 </div>
             </Card>
+            {
+                defaultSpellCastingAbility &&
+                <Card>
+                    <div className="row">
+                        <div className="col-6 right-justify stat-item">
+                            Spell Save DC:
+                        </div>
+                        <div className="col-6 left-justify stat-item-bold">
+                        <Popover
+                            popoverBody={
+                                <SpellSaveDCPopoverContent
+                                    proficiencyBonus={pcData.baseDetails.proficiencyBonus}
+                                    defaultSpellCastingAbility={defaultSpellCastingAbility}
+                                    abilityScores={pcData.abilityScores}
+                                />
+                            }
+                            fitContent={true}
+                        >
+                            <>{getDefaultSpellSaveDC(pcData.baseDetails.proficiencyBonus, defaultSpellCastingAbility, pcData.abilityScores)}</>
+                        </Popover>
+                        </div>
+                    </div>                    
+                </Card>
+            }
 
             <AboutFooter/>
         </div>

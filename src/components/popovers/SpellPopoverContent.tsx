@@ -1,6 +1,7 @@
 import { AbilityAbbreviation } from "@models/enum/Ability";
 import { PlayerCharacter } from "@models/playerCharacter/PlayerCharacter";
 import { Spell } from "@models/playerCharacter/Spell";
+import SpellSaveDCPopoverContent from "./SpellSaveDCPopoverContent";
 
 interface Props {
   pcData: PlayerCharacter;
@@ -29,17 +30,11 @@ function PopoverContentSpell ({pcData, spell, displayType}: Props) {
     return (<div></div>)
   } else if (displayType === 'save DC') {
     return (
-      <div>
-        <div>
-          <b>8</b> base
-        </div>
-        <div>
-          <b>{formattedMod}</b> from spellcasting ability modifier ({AbilityAbbreviation[spell.spellCastingAbility]})
-        </div>
-        <div>
-          <b>+{pcData.baseDetails.proficiencyBonus}</b> from proficiency bonus
-        </div>
-      </div>
+      <SpellSaveDCPopoverContent
+          proficiencyBonus={pcData.baseDetails.proficiencyBonus}
+          defaultSpellCastingAbility={spell.spellCastingAbility}
+          abilityScores={pcData.abilityScores}
+      />
     )
   }
 }

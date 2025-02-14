@@ -11,4 +11,5 @@ export interface Weapon {
     magic: boolean;
     description?: string;
     equipped?: boolean;
+    bonus?: number;
 }

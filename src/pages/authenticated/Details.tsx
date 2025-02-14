@@ -47,7 +47,6 @@ function Details({pcData, pcList, selectedPc, queryClient, userRole}: Props) {
 
     const [showSuccessAlert, setShowSuccessAlert] = useState(false);
 
-    const [editable, setEditable] = useState(false);
     const handleDeleteFeature = async (featureId: string) => {
         await deleteItemById(CollectionName.FEATURES, featureId);
         queryClient.refetchQueries({ queryKey: ['pcData', pcData.baseDetails.pcId]});
@@ -83,7 +82,7 @@ function Details({pcData, pcList, selectedPc, queryClient, userRole}: Props) {
 
     const mapSpells = (
         spells: Spell[], 
-        editable: boolean, 
+        editable?: boolean, 
     ) => {    
         return (
             spells.sort((a, b) => {
@@ -96,23 +95,11 @@ function Details({pcData, pcList, selectedPc, queryClient, userRole}: Props) {
                     <a id={spell.id}></a>
                     <TitleButtonRow
                         text={spell.name}
+                        page="details"
                         buttons={
-                            <>
-                            <DeleteItemButton
-                                editable={editable}
-                                handleDelete={() => setShowConfirmDelete({
-                                    show: true,
-                                    data: {
-                                        ...emptyShowConfirmDeleteData,
-                                        displayName: spell.name,
-                                        objectArrayFieldName: 'spells',
-                                        objectArrayFullItem: spell,
-                                        objectArrayExistingItems: spells                        
-                                    }
-                                })}
-                            />
+                            <>                            
                             <EditItemButton
-                                editable={editable}
+                                editable={editable ?? true}
                                 handleEdit={() => {
                                     setEditModalFormData({
                                         ...emptyEditModalData,
@@ -131,6 +118,19 @@ function Details({pcData, pcList, selectedPc, queryClient, userRole}: Props) {
                                     });
                                     setInitialEditorContent(spell.description);
                                 }}
+                            />
+                            <DeleteItemButton
+                                editable={editable ?? true}
+                                handleDelete={() => setShowConfirmDelete({
+                                    show: true,
+                                    data: {
+                                        ...emptyShowConfirmDeleteData,
+                                        displayName: spell.name,
+                                        objectArrayFieldName: 'spells',
+                                        objectArrayFullItem: spell,
+                                        objectArrayExistingItems: spells                        
+                                    }
+                                })}
                             />
                             </>
                         }
@@ -233,7 +233,7 @@ function Details({pcData, pcList, selectedPc, queryClient, userRole}: Props) {
                     />
                     {
                         showSection.spells &&
-                        mapSpells(pcData.baseDetails.spells, editable)
+                        mapSpells(pcData.baseDetails.spells)
                     }
                 </Card>
             }
@@ -262,23 +262,10 @@ function Details({pcData, pcList, selectedPc, queryClient, userRole}: Props) {
                             <a id={weapon.id}></a>
                             <TitleButtonRow
                                 text={formatWeaponDisplayTitle(weapon.type, weapon.name)}
+                                page="details"
                                 buttons={
-                                    <>
-                                    <DeleteItemButton
-                                        editable={editable}
-                                        handleDelete={() => setShowConfirmDelete({
-                                            show: true,
-                                            data: {
-                                                ...emptyShowConfirmDeleteData,
-                                                displayName: formatWeaponDisplayTitle(weapon.type, weapon.name),
-                                                objectArrayFieldName: 'weapons',
-                                                objectArrayFullItem: weapon,
-                                                objectArrayExistingItems: pcData.baseDetails.weapons                            
-                                            }
-                                        })}
-                                    />
+                                    <>                                    
                                     <EditItemButton
-                                        editable={editable}
                                         handleEdit={() => {
                                             setEditModalFormData({
                                                 ...emptyEditModalData,
@@ -289,13 +276,26 @@ function Details({pcData, pcList, selectedPc, queryClient, userRole}: Props) {
                                                 description: weapon.description ?? '',
                                                 damage: weapon.damage,
                                                 damageType: weapon.damageType,
+                                                bonus: weapon.bonus ?? '',
                                                 type: weapon.type,
                                                 modifierProperty: weapon.modifierProperty,
                                                 magic: weapon.magic ? "true" : "false",
                                             });
                                             setInitialEditorContent(weapon.description ?? emptyRichTextContent);
                                         }}
-                                    />    
+                                    />
+                                    <DeleteItemButton                                        
+                                        handleDelete={() => setShowConfirmDelete({
+                                            show: true,
+                                            data: {
+                                                ...emptyShowConfirmDeleteData,
+                                                displayName: formatWeaponDisplayTitle(weapon.type, weapon.name),
+                                                objectArrayFieldName: 'weapons',
+                                                objectArrayFullItem: weapon,
+                                                objectArrayExistingItems: pcData.baseDetails.weapons                            
+                                            }
+                                        })}
+                                    /> 
                                     </>                               
                                 }
                             />
@@ -328,21 +328,10 @@ function Details({pcData, pcList, selectedPc, queryClient, userRole}: Props) {
                                 <a id={removeWhiteSpaceAndConvertToLowerCase(feature.data.name)}></a>
                                 <TitleButtonRow
                                     text={feature.data.name}
+                                    page="details"
                                     buttons={
-                                        <>
-                                        <DeleteItemButton
-                                            editable={editable}
-                                            handleDelete={() => setShowConfirmDelete({
-                                                show: true,
-                                                data: {
-                                                    ...emptyShowConfirmDeleteData,
-                                                    featureId: feature.id,
-                                                    displayName: feature.data.name
-                                                }
-                                            })}
-                                        />
+                                        <>                                        
                                         <EditItemButton
-                                            editable={editable}
                                             handleEdit={() => {
                                                 setEditModalFormData({
                                                     ...emptyEditModalData,
@@ -361,6 +350,16 @@ function Details({pcData, pcList, selectedPc, queryClient, userRole}: Props) {
                                                 });
                                                 setInitialEditorContent(feature.data.description);
                                             }}
+                                        />
+                                        <DeleteItemButton
+                                            handleDelete={() => setShowConfirmDelete({
+                                                show: true,
+                                                data: {
+                                                    ...emptyShowConfirmDeleteData,
+                                                    featureId: feature.id,
+                                                    displayName: feature.data.name
+                                                }
+                                            })}
                                         />
                                         </>
                                     }
@@ -402,21 +401,10 @@ function Details({pcData, pcList, selectedPc, queryClient, userRole}: Props) {
                                 <a id={s.id}></a>
                                 <TitleButtonRow
                                     text={s.data.name ? `${s.data.name} (${s.data.type})` : s.data.type}
+                                    page="details"
                                     buttons={
-                                        <>
-                                        <DeleteItemButton
-                                            editable={editable}
-                                            handleDelete={() => setShowConfirmDelete({
-                                                show: true,
-                                                data: {
-                                                    ...emptyShowConfirmDeleteData,
-                                                    summonableId: s.id,
-                                                    displayName: s.data.name ? `${s.data.name} (${s.data.type})` : s.data.type
-                                                }
-                                            })}
-                                        />
+                                        <>                                        
                                         <EditItemButton
-                                            editable={editable}
                                             handleEdit={() => {
                                                 setEditModalFormData({
                                                     ...emptyEditModalData,
@@ -444,6 +432,16 @@ function Details({pcData, pcList, selectedPc, queryClient, userRole}: Props) {
                                                 });
                                                 setInitialEditorContent(s.data.description);
                                             }}
+                                        />
+                                        <DeleteItemButton
+                                            handleDelete={() => setShowConfirmDelete({
+                                                show: true,
+                                                data: {
+                                                    ...emptyShowConfirmDeleteData,
+                                                    summonableId: s.id,
+                                                    displayName: s.data.name ? `${s.data.name} (${s.data.type})` : s.data.type
+                                                }
+                                            })}
                                         />
                                         </>
                                     }
@@ -536,23 +534,10 @@ function Details({pcData, pcList, selectedPc, queryClient, userRole}: Props) {
                         <Card key={i}>
                             <TitleButtonRow
                                 text={item.type}
+                                page="details"
                                 buttons={
-                                    <>
-                                    <DeleteItemButton
-                                        editable={editable}
-                                        handleDelete={() => setShowConfirmDelete({
-                                            show: true,
-                                            data: {
-                                                ...emptyShowConfirmDeleteData,
-                                                displayName: item.type,
-                                                objectArrayFieldName: 'equipment',
-                                                objectArrayExistingItems: pcData.baseDetails.equipment,
-                                                objectArrayFullItem: item                            
-                                            }
-                                        })}
-                                    />
+                                    <>                                    
                                     <EditItemButton
-                                        editable={editable}
                                         handleEdit={() => {
                                             setEditModalFormData({
                                                 ...emptyEditModalData,
@@ -564,6 +549,18 @@ function Details({pcData, pcList, selectedPc, queryClient, userRole}: Props) {
                                             });
                                             setInitialEditorContent(item.description ?? emptyRichTextContent);
                                         }}
+                                    />
+                                    <DeleteItemButton
+                                        handleDelete={() => setShowConfirmDelete({
+                                            show: true,
+                                            data: {
+                                                ...emptyShowConfirmDeleteData,
+                                                displayName: item.type,
+                                                objectArrayFieldName: 'equipment',
+                                                objectArrayExistingItems: pcData.baseDetails.equipment,
+                                                objectArrayFullItem: item                            
+                                            }
+                                        })}
                                     />
                                     </>
                                 }
@@ -598,11 +595,23 @@ function Details({pcData, pcList, selectedPc, queryClient, userRole}: Props) {
                         <Card key={i}>
                         <TitleButtonRow
                             text={language}
+                            page="details"
                             formatAsHeader={false}
                             buttons={
-                                <>
+                                <>                                
+                                <EditItemButton
+                                    handleEdit={() => {
+                                        setEditModalFormData({
+                                            ...emptyEditModalData,
+                                            formType: 'language',
+                                            displayName: language,
+                                            stringArrayFieldName: 'languages',
+                                            language: language,
+                                            originalItem: language
+                                        })
+                                    }}
+                                />
                                 <DeleteItemButton
-                                    editable={editable}
                                     handleDelete={() => setShowConfirmDelete({
                                         show: true,
                                         data: {
@@ -613,19 +622,6 @@ function Details({pcData, pcList, selectedPc, queryClient, userRole}: Props) {
                                         }
                                     })}
                                 />
-                                <EditItemButton
-                                        editable={editable}
-                                        handleEdit={() => {
-                                            setEditModalFormData({
-                                                ...emptyEditModalData,
-                                                formType: 'language',
-                                                displayName: language,
-                                                stringArrayFieldName: 'languages',
-                                                language: language,
-                                                originalItem: language
-                                            })
-                                        }}
-                                    />
                                 </>
                             }
                         />
@@ -653,23 +649,11 @@ function Details({pcData, pcList, selectedPc, queryClient, userRole}: Props) {
                         <Card key={i}>
                             <TitleButtonRow
                                 text={proficiency}
+                                page="details"
                                 formatAsHeader={false}
                                 buttons={
-                                    <>
-                                    <DeleteItemButton
-                                        editable={editable}
-                                        handleDelete={() => setShowConfirmDelete({
-                                            show: true,
-                                            data: {
-                                                ...emptyShowConfirmDeleteData,
-                                                stringArrayFieldName: 'proficiencies',
-                                                stringArrayItemName: proficiency,
-                                                displayName: proficiency                          
-                                            }
-                                        })}
-                                    />
+                                    <>                                    
                                     <EditItemButton
-                                        editable={editable}
                                         handleEdit={() => {
                                             setEditModalFormData({
                                                 ...emptyEditModalData,
@@ -680,6 +664,17 @@ function Details({pcData, pcList, selectedPc, queryClient, userRole}: Props) {
                                                 originalItem: proficiency
                                             })
                                         }}
+                                    />
+                                    <DeleteItemButton
+                                        handleDelete={() => setShowConfirmDelete({
+                                            show: true,
+                                            data: {
+                                                ...emptyShowConfirmDeleteData,
+                                                stringArrayFieldName: 'proficiencies',
+                                                stringArrayItemName: proficiency,
+                                                displayName: proficiency                          
+                                            }
+                                        })}
                                     />
                                     </>
                                 }
@@ -708,22 +703,10 @@ function Details({pcData, pcList, selectedPc, queryClient, userRole}: Props) {
                         <Card key={i}>
                             <TitleButtonRow
                                 text={String(i + 1)}
+                                page="details"
                                 buttons={
-                                    <>
-                                    <DeleteItemButton
-                                        editable={editable}
-                                        handleDelete={() => setShowConfirmDelete({
-                                            show: true,
-                                            data: {
-                                                ...emptyShowConfirmDeleteData,
-                                                stringArrayFieldName: 'notes',
-                                                stringArrayItemName: note,
-                                                displayName: `Note ${i + 1}`,                           
-                                            }
-                                        })}
-                                    />
+                                    <>                                    
                                     <EditItemButton
-                                        editable={editable}
                                         handleEdit={() => {
                                             setEditModalFormData({
                                                 ...emptyEditModalData,
@@ -737,6 +720,17 @@ function Details({pcData, pcList, selectedPc, queryClient, userRole}: Props) {
                                             setInitialEditorContent(note);
                                         }}
                                     />
+                                    <DeleteItemButton
+                                        handleDelete={() => setShowConfirmDelete({
+                                            show: true,
+                                            data: {
+                                                ...emptyShowConfirmDeleteData,
+                                                stringArrayFieldName: 'notes',
+                                                stringArrayItemName: note,
+                                                displayName: `Note ${i + 1}`,                           
+                                            }
+                                        })}
+                                    />
                                     </>
                                 }
                             />
@@ -748,13 +742,7 @@ function Details({pcData, pcList, selectedPc, queryClient, userRole}: Props) {
                 }
                 </Card>
             }
-            
-            {
-                hasItems &&
-                <div className="div-button">
-                    <Button customClass="float-right" buttonType={ButtonType.DANGER} text={editable ? "Lock" : "Unlock"} onClick={() => {setEditable(!editable)}}/>
-                </div>
-            }
+
             {
                 !hasItems &&
                 <Card>

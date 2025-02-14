@@ -171,10 +171,11 @@ export const handleSubmitEdit = async (
                 type: formData.type,
                 damage: formData.damage,
                 damageType: formData.damageType,
+                bonus: Number(formData.bonus) ?? 0,
                 modifierProperty: formData.modifierProperty,
                 magic: getBool(formData.magic),
                 description: formData.description,
-                equipped: existingArray.find(w => w.id == formData.weaponId)?.equipped ?? false
+                equipped: existingArray.find(w => w.id == formData.weaponId)?.equipped ?? false,                
             };
             break;
         }

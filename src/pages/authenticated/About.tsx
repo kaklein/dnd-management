@@ -60,6 +60,15 @@ function About ({selectedPc, userRole}: Props) {
                 <div className="col-2 small-text"><b>Release Date</b></div>
                 <div className="col-8 small-text"><b>Release Notes</b></div>
               </div>
+              <ReleaseNote version="1.7.0" releaseDate="2025-02-13"
+                releaseNotes={
+                  <>
+                    <p>Added support for weapons with bonuses (e.g. "+1" weapons).</p>
+                    <p>Improved UI and editing experience on Overview, Ability Scores, and Details pages.</p>
+                    <p>Additional UI enhancements.</p>
+                  </>
+                }
+              />
               <ReleaseNote version="1.6.0" releaseDate="2025-02-02"
                 releaseNotes={
                   <>

@@ -5,6 +5,8 @@ import { WeaponModifierProperty } from "@models/enum/WeaponModifierProperty"
 import { Link } from "react-router-dom"
 import Button, { ButtonType } from "@components/Button";
 import TextEditor, { buildEditor } from "@components/TextEditor";
+import { useEffect, useState } from "react";
+import Popover from "@components/modals/Popover";
 
 interface Props {
   handleChange: (event: any, setFunction: (prevFormData: any) => void) => void;
@@ -24,6 +26,18 @@ function WeaponForm ({handleChange, handleSubmit, formData, setFormData, initial
   const editor = buildEditor(initialEditorContent, (value: string) => {
     handleChange({ target: { name: 'description', value: value }}, setFormData);
   });
+
+  const [showBonusField, setShowBonusField] = useState(formData.bonus ? true : false);  
+  useEffect(() => {
+    setShowBonusField(formData.bonus ? true : false);
+  }, [formData.bonus]);
+  const handleBonusCheckboxChange = () => {
+    const newVal = !showBonusField;
+    setShowBonusField(newVal);
+    if (!newVal) {
+      handleChange({target: {name: 'bonus', value: ''}}, setFormData);
+    }
+  }
 
   return (
     editor &&
@@ -67,7 +81,7 @@ function WeaponForm ({handleChange, handleSubmit, formData, setFormData, initial
           value={formData.damage}
           required
         />
-      </div>
+      </div>      
       <div className="update-form-field">
         <label className="update-form-label" htmlFor="damageType">Damage Type</label>
         <FormSelect
@@ -84,6 +98,41 @@ function WeaponForm ({handleChange, handleSubmit, formData, setFormData, initial
           }
           required
         />
+      </div>
+      <div className="update-form-field">
+        <div className="update-form-conditional">
+          <input
+            id="bonusCheckBox"
+            type="checkbox"
+            checked={showBonusField}
+            onChange={handleBonusCheckboxChange}
+          />
+          <label htmlFor="bonusCheckBox" className="inline-label">
+            &nbsp; Weapon has a bonus (e.g. is a "+1" weapon)
+            <Popover
+              popoverBody={<>Bonus amount will be added to attack and damage rolls</>}
+              fitContent={true}
+              customClass="inline"
+            ><>&#9432;</></Popover>
+          </label>
+        </div>
+        {
+          showBonusField &&
+          <div className="form-sub-section">
+            <label className="update-form-label" htmlFor="bonus">Bonus amount</label>
+            <input
+              className="update-form-input"
+              type="number"
+              min="0"
+              max="9"
+              id="bonus"
+              name="bonus"
+              onChange={(event) => {handleChange(event, setFormData)}}
+              value={formData.bonus}
+              required
+            />  
+          </div>
+        }        
       </div>
       <div className="update-form-field">
         <label className="update-form-label" htmlFor="modifierProperty">Weapon Range</label>

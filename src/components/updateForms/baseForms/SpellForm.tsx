@@ -3,7 +3,7 @@ import { getDefaultSpellFormData } from "@data/emptyFormData";
 import { Ability } from "@models/enum/Ability";
 import { DamageType } from "@models/enum/DamageType";
 import { SpellLevel } from "@models/playerCharacter/Spell";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Button, { ButtonType } from "@components/Button";
 import TextEditor, { buildEditor } from "@components/TextEditor";
 import { validateRequiredFields } from "../utils";
@@ -27,6 +27,9 @@ interface Props {
 
 function SpellForm ({handleChange, handleSubmit, formData, setFormData, initialEditorContent, pcData, modalDismiss=false}: Props) {
   const [showDamageFields, setShowDamageFields] = useState(formData.damage ? true : false);
+  useEffect(() => {
+    setShowDamageFields(formData.damage ? true : false);
+  }, [formData.damage]);
   const handleDamageCheckboxChange = () => {
     const newVal = !showDamageFields;
     setShowDamageFields(newVal);
