@@ -447,6 +447,10 @@ td {
     padding-left: 15px;
 }
 
+.form-sub-section input, .form-sub-section select {
+    width: 285px;
+}
+
 .expand-collapse-btn {
     width: 80%;
 }
