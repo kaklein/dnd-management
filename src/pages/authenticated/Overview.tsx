@@ -3,11 +3,9 @@ import { BaseDetails, PlayerCharacter } from "@models/playerCharacter/PlayerChar
 import PageHeaderBarPC from "@components/headerBars/PageHeaderBarPC";
 import QuickNav from "@components/QuickNav";
 import { UserRole } from "@services/firestore/enum/UserRole";
-import Button, { ButtonType } from "@components/Button";
 import { useState } from "react";
 import Card from "@components/cards/Card";
 import { capitalize, formatDataAsTable } from "@components/utils";
-import TitleButtonRow from "@components/TitleButtonRow";
 import DeleteItemButton from "@components/DeleteItemButton";
 import DeletePC from "@components/modals/DeletePC";
 import { deletePC } from "@services/firestore/crud/delete";
@@ -48,7 +46,6 @@ function Overview({pcData, pcList, selectedPc, userRole, queryClient, imageUrl}:
         alignment: pcData.baseDetails.alignment,
         ...(pcData.baseDetails.defaultSpellCastingAbility && {['Spellcasting Ability']: capitalize(pcData.baseDetails.defaultSpellCastingAbility)})
     };
-    const [editable, setEditable] = useState(false);
     const [showPCDelete, setShowPCDelete] = useState('');
     const handleDeleteCharacter = async () => {
         await deletePC(pcData.baseDetails.pcId, pcData.baseDetails.imagePath);
@@ -75,7 +72,6 @@ function Overview({pcData, pcList, selectedPc, userRole, queryClient, imageUrl}:
                 setShowPCDelete('');
             }}
             handleDelete={handleDeleteCharacter}
-            setEditable={setEditable}
         />
         <EditModal
             formType={editModalFormData.formType}
@@ -86,7 +82,6 @@ function Overview({pcData, pcList, selectedPc, userRole, queryClient, imageUrl}:
                     await handleSubmitEdit(event, editModalFormData, pcData);
                     queryClient.refetchQueries({ queryKey: ['pcData', pcData.baseDetails.pcId]});
                     setEditModalFormData(emptyEditModalData);
-                    setEditable(false);
                     triggerSuccessAlert(setShowSuccessAlert);
                 } catch (e) {
                     console.error(`Error submitting changes: ${e}`);
@@ -111,46 +106,7 @@ function Overview({pcData, pcList, selectedPc, userRole, queryClient, imageUrl}:
             />
             <Card>
                 <div className="card-body">
-                    <TitleButtonRow
-                        text={pcFullName}
-                        customColor="dark-purple"
-                        buttons={
-                            editable &&
-                            <>
-                            <DeleteItemButton
-                                editable={editable}
-                                handleDelete={() => setShowPCDelete(`${pcData.baseDetails.name.firstName} ${pcData.baseDetails.name.lastName}`)}
-                                customDeleteText="Delete Character"
-                            />
-                            <EditItemButton
-                                editable={editable}
-                                handleEdit={() => {
-                                    setEditModalFormData({
-                                        ...emptyEditModalData,
-                                        formType: 'character',
-                                        firstName: pcData.baseDetails.name.firstName,
-                                        lastName: pcData.baseDetails.name.lastName,
-                                        description: pcData.baseDetails.description ?? '',
-                                        imagePath: pcData.baseDetails.imagePath ?? '',
-                                        class: pcData.baseDetails.class,
-                                        subclass: pcData.baseDetails.subclass ?? '',
-                                        race: pcData.baseDetails.race,
-                                        background: pcData.baseDetails.background,
-                                        alignment: getValidAlignment(pcData.baseDetails.alignment),
-                                        defaultSpellCastingAbility: pcData.baseDetails.defaultSpellCastingAbility ?? '',
-                                        level: String(pcData.baseDetails.level),
-                                        maxHP: String(pcData.baseDetails.usableResources.hitPoints.max),
-                                        armorClass: String(pcData.baseDetails.armorClass),
-                                        speed: String(pcData.baseDetails.speed),
-                                        xp: String(pcData.baseDetails.xp ?? ''),
-                                        hitDiceType: pcData.baseDetails.usableResources.hitDice.type,
-                                    });
-                                    setInitialEditorContent(pcData.baseDetails.description ?? emptyRichTextContent);
-                                }}
-                            />
-                            </>
-                        }
-                    />
+                    <h4 className="section-header-rounded">{pcFullName}</h4>
                     {
                     imageUrl && 
                     <div className="pc-image-container">
@@ -173,10 +129,48 @@ function Overview({pcData, pcList, selectedPc, userRole, queryClient, imageUrl}:
 
                     {formatDataAsTable(listCardObject)}
               </div>
+              <div className="container-fluid">
+                <div className="row">
+                    <div className="col"></div>
+                    <div className="col-auto no-padding">
+                        <DeleteItemButton
+                            customClass="small-margin"
+                            handleDelete={() => setShowPCDelete(`${pcData.baseDetails.name.firstName} ${pcData.baseDetails.name.lastName}`)}                                
+                            iconAndText={true}
+                        />
+                    </div>
+                    <div className="col-auto no-padding">
+                        <EditItemButton
+                            customClass="small-margin"
+                            iconAndText={true}
+                            handleEdit={() => {
+                                setEditModalFormData({
+                                    ...emptyEditModalData,
+                                    formType: 'character',
+                                    firstName: pcData.baseDetails.name.firstName,
+                                    lastName: pcData.baseDetails.name.lastName,
+                                    description: pcData.baseDetails.description ?? '',
+                                    imagePath: pcData.baseDetails.imagePath ?? '',
+                                    class: pcData.baseDetails.class,
+                                    subclass: pcData.baseDetails.subclass ?? '',
+                                    race: pcData.baseDetails.race,
+                                    background: pcData.baseDetails.background,
+                                    alignment: getValidAlignment(pcData.baseDetails.alignment),
+                                    defaultSpellCastingAbility: pcData.baseDetails.defaultSpellCastingAbility ?? '',
+                                    level: String(pcData.baseDetails.level),
+                                    maxHP: String(pcData.baseDetails.usableResources.hitPoints.max),
+                                    armorClass: String(pcData.baseDetails.armorClass),
+                                    speed: String(pcData.baseDetails.speed),
+                                    xp: String(pcData.baseDetails.xp ?? ''),
+                                    hitDiceType: pcData.baseDetails.usableResources.hitDice.type,
+                                });
+                                setInitialEditorContent(pcData.baseDetails.description ?? emptyRichTextContent);
+                            }}
+                        />
+                    </div>
+                </div>
+              </div>
             </Card>
-            <div className="div-button">
-                <Button customClass="float-right" buttonType={ButtonType.DANGER} text={editable ? "Lock" : "Unlock"} onClick={() => {setEditable(!editable)}}/>
-            </div>
             <AboutFooter/>
         </div>
         

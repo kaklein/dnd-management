@@ -7,8 +7,9 @@ interface Props {
   customColor?: "dark-purple";
   centered?: boolean;
   matchSectionHeaderFormat?: boolean;
+  page?: "details";
 }
-export function TitleButtonRow ({text, formatAsHeader=true, buttons, centered=false, customColor=undefined, matchSectionHeaderFormat=false}: Props) {
+export function TitleButtonRow ({text, formatAsHeader=true, buttons, centered=false, customColor=undefined, matchSectionHeaderFormat=false, page=undefined}: Props) {
   const titleClass = centered ? "center" : "";
   
   let className = `container-fluid title-button-row`;
@@ -24,10 +25,10 @@ export function TitleButtonRow ({text, formatAsHeader=true, buttons, centered=fa
         <div className="col">
           {!centered && titleDisplay}
         </div>
-        <div className="col">
+        <div className={page == "details" ? "col-auto" : "col"}>
           {centered && titleDisplay}
         </div>
-        <div className="col horiz-btn right-justify">
+        <div className={page == "details" ? "col-auto horiz-btn right-justify" : "col horiz-btn right-justify"}>
           {buttons}
         </div>
       </div>

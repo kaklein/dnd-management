@@ -739,6 +739,13 @@ td {
     padding: 10px;
 }
 
+.section-header-rounded {
+    background-color: var(--dark-purple);
+    border-radius: 5px;
+    color: white;
+    padding: 10px;
+}
+
 .back-submit-row Button {
     width: 100%;
     margin: 0px;
@@ -1093,6 +1100,12 @@ td {
 
 .small-margin {
     margin: 3px;
+}
+
+.no-side-margin {
+    margin: 3px;
+    margin-left: 0px;
+    margin-right: 0px;
 }
 
 .large-top-margin {
@@ -1524,6 +1537,10 @@ td {
 /* Overrides */
 .inline {
     display: inline !important;
+}
+
+.inline-block {
+    display: inline-block !important;
 }
 
 .center {
