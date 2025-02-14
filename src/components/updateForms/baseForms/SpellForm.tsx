@@ -120,38 +120,59 @@ function SpellForm ({handleChange, handleSubmit, formData, setFormData, initialE
           <p className="update-form-label no-bottom-margin">Check all that apply:</p>
           <div>
             <div>
-              <div className="update-form-conditional">
-                <input
-                  id="attackCheckBox"
-                  type="checkbox"
-                  checked={formData.hasAttack}
-                  onChange={() => setFormData({...formData, hasAttack: !formData.hasAttack})}
-                />
-                <label htmlFor="attackCheckBox" className="inline-label">&nbsp; Spell includes making an <b>attack</b></label>
+              <div className="update-form-conditional container-fluid">
+                <div className="row">
+                  <div className="col-auto">
+                    <input
+                      id="attackCheckBox"
+                      type="checkbox"
+                      checked={formData.hasAttack}
+                      onChange={() => setFormData({...formData, hasAttack: !formData.hasAttack})}
+                      className="no-margin"
+                    />
+                  </div>
+                  <div className="col no-padding">
+                    <label htmlFor="attackCheckBox" className="inline-label inline">Spell includes making an <b>attack</b></label>
+                  </div>
+                </div>
               </div>
             </div>
 
             <div>
-              <div className="update-form-conditional">
-                <input
-                  id="saveDCCheckbox"
-                  type="checkbox"
-                  checked={formData.hasSaveDC}
-                  onChange={() => setFormData({...formData, hasSaveDC: !formData.hasSaveDC})}
-                />
-                <label htmlFor="saveDCCheckbox" className="inline-label">&nbsp; Spell requires a <b>saving throw</b> by target(s)</label>
+              <div className="update-form-conditional container-fluid">
+                <div className="row">
+                  <div className="col-auto">
+                    <input
+                      id="saveDCCheckbox"
+                      type="checkbox"
+                      checked={formData.hasSaveDC}
+                      onChange={() => setFormData({...formData, hasSaveDC: !formData.hasSaveDC})}
+                      className="no-margin"
+                    />
+                  </div>
+                  <div className="col no-padding">
+                    <label htmlFor="saveDCCheckbox" className="inline-label inline">Spell requires a <b>saving throw</b> by target(s)</label>
+                  </div>
+                </div>
               </div>
             </div>
 
             <div>
-              <div className="update-form-conditional">
-                <input
-                  id="damageCheckBox"
-                  type="checkbox"
-                  checked={showDamageFields}
-                  onChange={handleDamageCheckboxChange}
-                />
-                <label htmlFor="damageCheckBox" className="inline-label">&nbsp; Spell does <b>damage</b> or provides <b>healing</b></label>
+              <div className="update-form-conditional container-fluid">
+                <div className="row">
+                  <div className="col-auto">
+                    <input
+                      id="damageCheckBox"
+                      type="checkbox"
+                      checked={showDamageFields}
+                      onChange={handleDamageCheckboxChange}
+                      className="no-margin"
+                    />
+                  </div>
+                  <div className="col no-padding">
+                    <label htmlFor="damageCheckBox" className="inline-label inline">Spell does <b>damage</b> or provides <b>healing</b></label>
+                  </div>
+                </div>
               </div>
             
               { showDamageFields &&

@@ -100,21 +100,28 @@ function WeaponForm ({handleChange, handleSubmit, formData, setFormData, initial
         />
       </div>
       <div className="update-form-field">
-        <div className="update-form-conditional">
-          <input
-            id="bonusCheckBox"
-            type="checkbox"
-            checked={showBonusField}
-            onChange={handleBonusCheckboxChange}
-          />
-          <label htmlFor="bonusCheckBox" className="inline-label">
-            &nbsp; Weapon has a bonus (e.g. is a "+1" weapon)
-            <Popover
-              popoverBody={<>Bonus amount will be added to attack and damage rolls</>}
-              fitContent={true}
-              customClass="inline"
-            ><>&#9432;</></Popover>
-          </label>
+        <div className="update-form-conditional container-fluid">
+          <div className="row">
+            <div className="col-auto">
+              <input
+                id="bonusCheckBox"
+                type="checkbox"
+                checked={showBonusField}
+                onChange={handleBonusCheckboxChange}
+                className="no-margin"
+              />
+            </div>
+            <div className="col no-padding">
+              <label htmlFor="bonusCheckBox" className="inline-label inline">
+                Weapon has a bonus (e.g. is a "+1" weapon)
+              </label>
+              <Popover
+                  popoverBody={<>Bonus amount will be added to attack and damage rolls</>}
+                  fitContent={true}
+                  customClass="inline"
+                ><>&#9432;</></Popover>
+            </div>
+          </div>
         </div>
         {
           showBonusField &&
