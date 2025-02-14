@@ -47,7 +47,6 @@ function Details({pcData, pcList, selectedPc, queryClient, userRole}: Props) {
 
     const [showSuccessAlert, setShowSuccessAlert] = useState(false);
 
-    const [editable, setEditable] = useState(false);
     const handleDeleteFeature = async (featureId: string) => {
         await deleteItemById(CollectionName.FEATURES, featureId);
         queryClient.refetchQueries({ queryKey: ['pcData', pcData.baseDetails.pcId]});
