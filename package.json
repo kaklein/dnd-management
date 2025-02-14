@@ -17,6 +17,7 @@
     "@tiptap/react": "^2.8.0",
     "@tiptap/starter-kit": "^2.8.0",
     "bootstrap": "^5.3.3",
+    "bootstrap-icons": "^1.11.3",
     "events": "^3.3.0",
     "firebase": "^10.12.3",
     "n": "^9.2.3",
