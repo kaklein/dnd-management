@@ -279,6 +279,10 @@ export const getHPRange = (currentHP: number, maxHP: number): 'full' | 'high' | 
   return 'dying';
 }
 
+export const getHPAsPercentage = (currentHP: number, maxHP: number): number => {
+  return (currentHP / maxHP) * 100;
+}
+
 export const getSpendGoldButtonText = (inputAmountToSpend: string) => {
   const amount = Number(inputAmountToSpend);
   if (!amount) {
