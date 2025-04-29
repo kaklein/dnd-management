@@ -1,6 +1,15 @@
 import { DamageType } from "@models/enum/DamageType";
 import { Ability } from "@models/enum/Ability";
 
+export enum SpellTag {
+    'RITUAL' = 'Ritual',
+    'CONCENTRATION' = 'Concentration',
+    'REACTION' = 'Reaction',
+    'AOE' = 'AOE',
+    'RANGED' = 'Ranged',
+    'MELEE' = 'Melee'
+}
+
 export interface Spell {
     id: string;
     name: string;
@@ -13,6 +22,7 @@ export interface Spell {
     hasAttack?: boolean;
     sourceUrl?: string;
     prepared?: boolean;
+    tags?: SpellTag[];
 }
 
 export enum SpellLevel {

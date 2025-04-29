@@ -1,6 +1,10 @@
 import { RestType } from "@models/enum/RestType";
 import { DamageType } from "@models/enum/DamageType";
 
+export enum FeatureTag {
+    'REACTION' = 'Reaction'
+}
+
 export interface Feature {
     id: string,
     data: {
@@ -15,6 +19,7 @@ export interface Feature {
         damageType?: DamageType;
         saveDC?: number;
         sourceUrl?: string;
+        tags?: FeatureTag[];
     }
    
 }
