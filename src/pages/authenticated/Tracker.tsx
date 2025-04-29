@@ -17,7 +17,7 @@ import ItemUseToggle from "@components/ItemUseToggle";
 import { BaseDetails, PlayerCharacter } from "@models/playerCharacter/PlayerCharacter";
 import { QueryClient } from "@tanstack/react-query";
 import { CollectionName } from "@services/firestore/enum/CollectionName";
-import { determineAttackBonus, emptyRichTextContent, formatBonus, formatWeaponDisplayTitle, getDefaultFormData, getHPRange, getLimitedUseFeatures, getSummonableIconName, getSummonedItem, SAVE_CHANGES_ERROR, triggerSuccessAlert } from "../utils";
+import { determineAttackBonus, emptyRichTextContent, formatBonus, formatWeaponDisplayTitle, getDefaultFormData, getHPAsPercentage, getHPRange, getLimitedUseFeatures, getSummonableIconName, getSummonedItem, SAVE_CHANGES_ERROR, triggerSuccessAlert } from "../utils";
 import PageHeaderBarPC from "@components/headerBars/PageHeaderBarPC";
 import QuickNav from "@components/QuickNav";
 import SuccessAlert from "@components/alerts/SuccessAlert";
@@ -246,7 +246,10 @@ function Tracker({pcData, queryClient, pcList, selectedPc, userRole}: Props) {
                                 <div className="col-6 hp-col">
                                     <div className={`hp-display hp-display-${getHPRange(pcData.baseDetails.usableResources.hitPoints.current, pcData.baseDetails.usableResources.hitPoints.max)}`}>
                                         {pcData.baseDetails.usableResources.hitPoints.current} / {pcData.baseDetails.usableResources.hitPoints.max}
-                                    </div>                                   
+                                    </div>
+                                    <div className={`progress hp-progress ${pcData.baseDetails.usableResources.hitPoints.current <= 0 ? "progress-zero" : ""}`} role="progressbar" aria-label="HP Progress Bar" aria-valuenow={getHPAsPercentage(pcData.baseDetails.usableResources.hitPoints.current, pcData.baseDetails.usableResources.hitPoints.max)} aria-valuemin={0} aria-valuemax={100}>
+                                        <div className={`progress-bar hp-progress-display-${getHPRange(pcData.baseDetails.usableResources.hitPoints.current, pcData.baseDetails.usableResources.hitPoints.max)}`} style={{ width: `${getHPAsPercentage(pcData.baseDetails.usableResources.hitPoints.current, pcData.baseDetails.usableResources.hitPoints.max)}%`}}></div>
+                                    </div>
                                 </div>
                                 <div className="col-6 hp-col">
                                     <button

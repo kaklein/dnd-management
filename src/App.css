@@ -773,7 +773,7 @@ td {
 .hp-display {
     font-weight: bold;
     font-size: 1.6em;
-    margin-top: 36px;
+    margin-top: 28px;
     padding-top: 15px;
     padding-bottom: 15px;
     padding-left: 0px;
@@ -783,50 +783,87 @@ td {
     color: var(--near-black);
 }
 
+.progress {
+    margin-top: 5px;
+    border: 1px solid darkgray;
+    background-color: lightgray !important;
+}
+
+.progress-zero {
+    border: 1px solid black !important;
+    background-image: url('images/backgrounds/blood-spatter.png');
+    background-size: cover;
+}
+
+.progress-bar {
+    box-shadow: 0px 0px 5px black;
+}
+
+.hp-display-full, .hp-progress-display-full {
+    background-color: #67e03f !important;
+}
+
 .hp-display-full {
-    background-color: #67e03f;
     color: #202b1c;
     border-color: #6bff3b;
     box-shadow: 0px 0px 3px 3px #6bff3b;
 }
 
+.hp-display-high, .hp-progress-display-high {
+    background-color: #b5e03f !important;
+}
+
 .hp-display-high {
-    background-color: #b5e03f;
     border-color: #82a327;
     box-shadow: 0px 0px 2px 2px #82a327;
     color: darkgreen;
 }
 
+.hp-display-med-high, .hp-progress-display-med-high {
+    background-color: #fcd14e !important;
+}
+
 .hp-display-med-high {
-    background-color: #fcd14e;
     color: #38281d;
     border-color: #d6a309;
     box-shadow: 0px 0px 2px 2px #d6a309;
 }
 
+.hp-display-med-low, .hp-progress-display-med-low {
+    background-color: #e3ab42 !important;
+}
+
 .hp-display-med-low {
-    background-color: #e3ab42;
     color: #38281d;
     border-color: #b37d19;
     box-shadow: 0px 0px 2px 2px #b37d19;
 }
 
+.hp-display-low, .hp-progress-display-low {
+    background-color: #e05c34 !important;
+}
+
 .hp-display-low {
-    background-color: #e05c34;
     color: #38281d;
     border-color: #70240c;
     box-shadow: 0px 0px 4px 4px #70240c;
 }
 
+.hp-display-min, .hp-progress-display-min {
+    background-color: #e00232 !important;
+}
+
 .hp-display-min {
-    background-color: #e00232;
     color: white;
     border-color: #ff0037;
     box-shadow: 0px 0px 10px 10px #ff0037;
 }
 
+.hp-display-dying, .hp-progress-display-dying {
+    background-color: #e00232 !important;
+}
+
 .hp-display-dying {
-    background-color: #e00232;
     color: black;
     border-color: black;
     box-shadow: 0px 0px 14px 14px var(--near-black);
