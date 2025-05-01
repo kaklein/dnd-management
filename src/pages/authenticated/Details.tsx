@@ -72,8 +72,8 @@ function Details({pcData, pcList, selectedPc, queryClient, userRole}: Props) {
         event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>, 
         setFunction: (prevFormData: any) => void
     ) => {
-    const { name, value } = event.target;
-    setFunction((prevFormData: any) => ({...prevFormData, [name]: value}));
+        const { name, value } = event.target;
+        setFunction((prevFormData: any) => ({...prevFormData, [name]: value}));
     };
 
     const [showConfirmDelete, setShowConfirmDelete] = useState({show: false, data: emptyShowConfirmDeleteData});
@@ -346,7 +346,8 @@ function Details({pcData, pcList, selectedPc, queryClient, userRole}: Props) {
                                                     source: feature.data.source,
                                                     maxUses: feature.data.maxUses ? String(feature.data.maxUses) : '',
                                                     refresh: feature.data.refresh ?? '',
-                                                    saveDC: feature.data.saveDC ? String(feature.data.saveDC) : ''
+                                                    saveDC: feature.data.saveDC ? String(feature.data.saveDC) : '',
+                                                    displayAsPool: feature.data.displayAsPool ?? false,
                                                 });
                                                 setInitialEditorContent(feature.data.description);
                                             }}
