@@ -80,6 +80,7 @@ export const handleSubmitEdit = async (
             damageType: formData.damageType,
             saveDC: formData.saveDC,
             sourceUrl: formData.sourceUrl,
+            displayAsPool: formData.displayAsPool
         }
     }
     await updateById(CollectionName.FEATURES, formData.featureId, updatedFeature.data);
@@ -279,8 +280,8 @@ export const getHPRange = (currentHP: number, maxHP: number): 'full' | 'high' | 
   return 'dying';
 }
 
-export const getHPAsPercentage = (currentHP: number, maxHP: number): number => {
-  return (currentHP / maxHP) * 100;
+export const getAsPercentage = (numerator: number, denominator: number) : number => {
+  return (numerator / denominator) * 100;
 }
 
 export const getSpendGoldButtonText = (inputAmountToSpend: string) => {

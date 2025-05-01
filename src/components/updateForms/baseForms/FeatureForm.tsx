@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import Button, { ButtonType } from "@components/Button";
 import { validateRequiredFields } from "../utils";
 import TextEditor, { buildEditor } from "@components/TextEditor";
+import Popover from "@components/modals/Popover";
 
 interface Props {
   handleChange: (event: any, setFunction: (prevFormData: any) => void) => void;
@@ -32,7 +33,15 @@ function FeatureForm ({handleChange, handleSubmit, formData, setFormData, initia
     if (!newVal) {
       handleChange({target: {name: 'maxUses', value: ''}}, setFormData);
       handleChange({target: {name: 'refresh', value: ''}}, setFormData);
+      handleChange({target: {name: 'displayAsPool', value: ''}}, setFormData);
     }
+  };
+
+  const [displayAsPool, setDisplayAsPool] = useState(formData.displayAsPool ? true : false);
+  const handleDisplayAsPoolChange = () => {
+    const newVal = !displayAsPool;
+    setDisplayAsPool(newVal);
+    handleChange({target: {name: 'displayAsPool', value: newVal}}, setFormData);
   };
 
   const [showDamageFields, setShowDamageFields] = useState(formData.damage ? true : false);
@@ -46,7 +55,7 @@ function FeatureForm ({handleChange, handleSubmit, formData, setFormData, initia
       handleChange({target: {name: 'damage', value: ''}}, setFormData);
       handleChange({target: {name: 'damageType', value: ''}}, setFormData);
     }
-  }
+  };
 
   const [showSaveDCField, setShowSaveDCField] = useState(formData.saveDC ? true : false);
   useEffect(() => {
@@ -58,7 +67,7 @@ function FeatureForm ({handleChange, handleSubmit, formData, setFormData, initia
     if (!newVal) {
       handleChange({target: {name: 'saveDC', value: ''}}, setFormData);
     }
-  }
+  };
 
   const editor = buildEditor(initialEditorContent, (value: string) => {
     handleChange({ target: { name: 'description', value: value }}, setFormData);
@@ -113,7 +122,7 @@ function FeatureForm ({handleChange, handleSubmit, formData, setFormData, initia
 
       <div>
         <div className="update-form-conditional">
-          <p>Are there a limited number of uses for this feature?</p>
+          <p>Are there a limited number of uses or resources for this feature?</p>
           <label htmlFor="limitedUseCheckbox">Yes</label>
           <input
             id="limitedUseCheckbox"
@@ -126,7 +135,7 @@ function FeatureForm ({handleChange, handleSubmit, formData, setFormData, initia
         { showLimitedUseFields &&
         <>
           <div className="update-form-field">
-            <label className="update-form-label" htmlFor="maxUses">Number of uses</label>
+            <label className="update-form-label" htmlFor="maxUses">Number of uses/resources</label>
             <input
               className="update-form-input"
               type="number"
@@ -155,6 +164,35 @@ function FeatureForm ({handleChange, handleSubmit, formData, setFormData, initia
               }
               required={showLimitedUseFields}
             />
+          </div>
+          <div className="update-form-conditional">
+              <p>Treat this as a pool of resources?
+              {
+                <Popover
+                  customClass="inline"
+                  popoverBody={
+                    <div>
+                      <p>This determines how the feature uses will be tracked on the Tracker page.</p>
+                      <ul>
+                        <li><b>Check 'Yes'</b> for resources you may use <b>multiple of at once</b>, like Lay on Hands healing or Sorcery Points.</li>
+                        <li><b>Leave this unchecked</b> for features you'll just use <b>one at a time</b>, like Second Wind.</li>
+                      </ul>
+                      <p>You can always change this later.</p>
+                    </div>
+                  }
+                  fitContent={false}
+                >
+                  <p className="inline">&#9432;</p>
+                </Popover>
+              }
+              </p>
+              <label htmlFor="displayAsPoolCheckbox">Yes</label> 
+              <input
+                id="displayAsPoolCheckbox"
+                type="checkbox"
+                checked={displayAsPool}
+                onChange={handleDisplayAsPoolChange}
+              />
           </div>
         </>
         }         
