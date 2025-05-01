@@ -10,6 +10,7 @@ export interface Feature {
         source: string; // 'race', 'class', etc.
         maxUses?: number;
         currentUses?: number;
+        displayAsPool?: boolean; // whether uses should be displayed as numbered pool
         refresh?: RestType;
         damage?: string;
         damageType?: DamageType;
