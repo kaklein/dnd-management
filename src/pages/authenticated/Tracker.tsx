@@ -226,9 +226,7 @@ function Tracker({pcData, queryClient, pcList, selectedPc, userRole}: Props) {
                 modalBody={<div dangerouslySetInnerHTML={{__html: descriptionModalData.content}}/>}
             />
             <ResourceUseModal
-                handleChange={handleChange}
                 handleSubmit={handleSubmit}
-                setFormData={setFormData}
                 formData={formData}
                 modalData={resourceUseModalData}
             />
