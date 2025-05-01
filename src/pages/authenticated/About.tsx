@@ -60,6 +60,18 @@ function About ({selectedPc, userRole}: Props) {
                 <div className="col-2 small-text"><b>Release Date</b></div>
                 <div className="col-8 small-text"><b>Release Notes</b></div>
               </div>
+              <ReleaseNote version="1.8.0" releaseDate="2025-05-01"
+                releaseNotes={
+                  <>
+                    <p>Added progress bar visual to Hit Points display.</p>
+                    <p>
+                      Enabled optional display type for limited-use features, as an alternative to individual
+                      checkboxes: displays the number of resources available and allows you to input the specific
+                      amount you want to use.
+                    </p>
+                  </>
+                }
+              />
               <ReleaseNote version="1.7.0" releaseDate="2025-02-13"
                 releaseNotes={
                   <>
