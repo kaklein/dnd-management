@@ -7,7 +7,7 @@ import { WeaponModifierProperty } from "@models/enum/WeaponModifierProperty";
 import { Spell, SpellLevel } from "@models/playerCharacter/Spell";
 import { Ability } from "@models/enum/Ability";
 import { SpellSlot } from "@models/playerCharacter/usableResources/SpellSlot";
-import { Feature } from "@models/playerCharacter/Feature";
+import { Feature, FeatureTag } from "@models/playerCharacter/Feature";
 import { RestType } from "@models/enum/RestType";
 import { BaseDetails, PlayerCharacter } from "@models/playerCharacter/PlayerCharacter";
 import { AbilityScores } from "@models/playerCharacter/AbilityScores";
@@ -82,6 +82,7 @@ export const transformFormDataForUpdate = (pcData: PlayerCharacter, data: {updat
         hasAttack: getBool(String(updates.hasAttack)),
         hasSaveDC: getBool(String(updates.hasSaveDC)),
         prepared: getBool(String(updates.prepared) ?? "true"),
+        tags: updates.tags as FeatureTag[],
         ...(updates.damageType && {damageType: String(updates.damageType) as DamageType}),
         ...(updates.damage && {damage: String(updates.damage)}),
         ...(updates.sourceUrl && {sourceUrl: String(updates.sourceUrl)})

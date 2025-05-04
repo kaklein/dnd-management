@@ -155,6 +155,7 @@ export const handleSubmitEdit = async (
                 spellCastingAbility: formData.spellCastingAbility,
                 hasAttack: formData.hasAttack,
                 hasSaveDC: formData.hasSaveDC,
+                tags: formData.tags,
                 damage: formData.damage,
                 damageType: formData.damageType,
                 saveDC: formData.saveDC,

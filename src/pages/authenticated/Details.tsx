@@ -23,13 +23,14 @@ import { emptyRichTextContent, formatWeaponDisplayTitle, handleSubmitEdit, pcHas
 import SuccessAlert from "@components/alerts/SuccessAlert";
 import EditItemButton from "@components/EditItemButton";
 import EditModal from "@components/modals/EditModal";
-import { buildEmptyShowSectionData, emptyEditModalData, emptyShowConfirmDeleteData, emptyShowSectionData } from "@data/emptyFormData";
+import { buildDefaultSpellTags, buildEmptyShowSectionData, emptyEditModalData, emptyShowConfirmDeleteData, emptyShowSectionData } from "@data/emptyFormData";
 import { UserRole } from "@services/firestore/enum/UserRole";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import FormHeader from "@components/updateForms/FormHeader";
 import AboutFooter from "@components/AboutFooter";
 import { DamageType } from "@models/enum/DamageType";
 import { getModifierFormatted } from "@services/firestore/utils";
+import TagDisplay from "@components/TagDisplay";
 
 interface Props {
     pcData: PlayerCharacter;
@@ -112,6 +113,7 @@ function Details({pcData, pcList, selectedPc, queryClient, userRole}: Props) {
                                         hasSaveDC: spell.hasSaveDC ?? false,
                                         damage: spell.damage ?? '',
                                         damageType: spell.damageType ?? '',
+                                        tags: spell.tags ?? buildDefaultSpellTags(),
                                         sourceUrl: spell.sourceUrl ?? '',
                                         level: spell.level,
                                         spellCastingAbility: spell.spellCastingAbility
@@ -156,6 +158,11 @@ function Details({pcData, pcList, selectedPc, queryClient, userRole}: Props) {
                         {spell.sourceUrl &&
                             <p><b>Source URL: </b><a href={spell.sourceUrl} target="_blank">{spell.sourceUrl}</a></p>
                         }
+
+                        {
+                            (spell.tags && spell.tags.filter(t => t.value === true).length > 0) &&
+                            <TagDisplay tags={spell.tags.filter(t => t.value === true)}/>
+                        }                        
                     </div>
                 </Card>
             ))

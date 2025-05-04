@@ -3,8 +3,9 @@ import { CreateCharacterFormData } from "@models/CreateCharacterFormData";
 import { EditModalFormData } from "@models/EditModalFormData";
 import { UpdateType } from "@models/enum/service/UpdateType";
 import { AbilityScores } from "@models/playerCharacter/AbilityScores";
+import { FeatureTag } from "@models/playerCharacter/Feature";
 import { PlayerCharacter } from "@models/playerCharacter/PlayerCharacter";
-import { Spell } from "@models/playerCharacter/Spell";
+import { AllowedSpellTags, Spell } from "@models/playerCharacter/Spell";
 import { SpellSlot } from "@models/playerCharacter/usableResources/SpellSlot";
 import { ShowConfirmDeleteData } from "@models/ShowConfirmDeleteData";
 
@@ -33,9 +34,19 @@ export const getDefaultSpellFormData = (pcData: PlayerCharacter) => {
     damageType: '',
     damage: '',
     sourceUrl: '',
-    prepared: "true"
+    prepared: "true",
+    tags: buildDefaultSpellTags()
   }
 };
+
+// TODO: sort spell tags definitively?
+export const buildDefaultSpellTags = (): FeatureTag[] => {
+  return AllowedSpellTags.map(tag => ({
+    fieldName: tag.fieldName,
+    displayName: tag.displayName,
+    value: false
+  }));
+}
 
 export const defaultSpellSlotFormData = {
   updateType: UpdateType.SPELL_SLOTS,
@@ -204,6 +215,7 @@ export const emptyEditModalData: EditModalFormData = {
   maxUses: '', // features, summonables
   refresh: '', // features, summonables
   armorClass: '', // character, summonables
+  tags: [], // spells, features
 
   // equipment
   equipmentId: '',

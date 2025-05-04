@@ -12,6 +12,16 @@
     --very-light-gray: #f0eeed;
     --inspiration-pink: #d68ff2;
     --light-purple: #cec7d6;
+    --tag-action: rgb(236, 140, 140);
+    --tag-action-border: rgb(216, 114, 114);
+    --tag-bonus-action: rgb(166, 166, 231);
+    --tag-bonus-action-border: rgb(136, 136, 216);
+    --tag-reaction: rgb(147, 247, 147);
+    --tag-reaction-border: rgb(120, 227, 120);
+    --tag-concentration: rgb(251, 238, 116);
+    --tag-concentration-border: rgb(228, 215, 97);
+    --tag-ritual: rgb(196, 117, 196);
+    --tag-ritual-border: rgb(181, 103, 181);
 }
 
 .card {
@@ -705,6 +715,48 @@ td {
     margin-top: 0px;
     margin-bottom: 10px;
 }
+
+/* SPELL/FEATURE TAGS */
+.tag-display {
+    float: left;
+}
+
+.tag-action, .tag-bonusAction, .tag-concentration, .tag-ritual, .tag-reaction {
+    border-radius: 5px;
+    padding-left: 7px;
+    padding-right: 7px;
+    padding-top: 2px;
+    padding-bottom: 2px;
+    margin-left: 2px;
+    margin-right: 2px;
+    border: 1px solid gray;
+}
+
+.tag-action {
+    background-color: var(--tag-action);
+    border-color: var(--tag-action-border);
+}
+
+.tag-bonusAction {
+    background-color: var(--tag-bonus-action);
+    border-color: var(--tag-bonus-action-border);
+}
+
+.tag-concentration {
+    background-color: var(--tag-concentration);
+    border-color: var(--tag-concentration-border);
+}
+
+.tag-ritual {
+    background-color: var(--tag-ritual);
+    border-color: var(--tag-ritual-border);
+}
+
+.tag-reaction {
+    background-color: var(--tag-reaction);
+    border-color: var(--tag-reaction-border);
+}
+/* END SPELL/FEATURE TAGS */
 
 .populated-field {
     font-style: italic;
