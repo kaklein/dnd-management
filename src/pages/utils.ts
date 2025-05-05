@@ -96,7 +96,7 @@ export const handleSubmitEdit = async (
     const attacks: SummonableAttack[] = formData.attacks as SummonableAttack[];
 
     // update abilityScores
-    let abilityScores;
+    let abilityScores = null;
     if (getBool(formData.useAbilityScores)) {
       abilityScores = {
         strength: Number(formData.strengthScore),
@@ -126,7 +126,7 @@ export const handleSubmitEdit = async (
             },
             armorClass: Number(formData.armorClass),
             summoned: existingSummonable.data.summoned,
-            attacks: attacks && attacks.length > 0 ? attacks.map(a => ({
+            attacks: (attacks && attacks.length > 0) ? attacks.map(a => ({
               id: a.id,
               name: a.name,
               description: a.description,
