@@ -14,6 +14,7 @@ import { updateDataByPcId } from "@services/firestore/crud/update";
 import { CollectionName } from "@services/firestore/enum/CollectionName";
 import { QueryClient } from "@tanstack/react-query";
 import { sleep } from "@services/firestore/utils";
+import { logError } from "@services/sentry/logger";
 
 interface Props {
     pcData: PlayerCharacter;
@@ -81,7 +82,7 @@ function PrepareSpellsList ({pcData, queryClient, setShowSuccessAlert}: Props) {
         try {
             await updateDataByPcId(CollectionName.PC_BASE_DETAILS, pcData.baseDetails.pcId, { spells: newPreparedSpells });
         } catch (e: any) {
-            console.error(e);
+            logError(e);
             alert(SAVE_CHANGES_ERROR);
             return;
         }

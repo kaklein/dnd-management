@@ -30,6 +30,7 @@ import FormHeader from "@components/updateForms/FormHeader";
 import AboutFooter from "@components/AboutFooter";
 import { DamageType } from "@models/enum/DamageType";
 import SummonableDisplay from "@components/SummonableDisplay";
+import { logError } from "@services/sentry/logger";
 
 interface Props {
     pcData: PlayerCharacter;
@@ -205,7 +206,7 @@ function Details({pcData, pcList, selectedPc, queryClient, userRole}: Props) {
                         setEditModalFormData(emptyEditModalData);
                         triggerSuccessAlert(setShowSuccessAlert);
                     } catch (e) {
-                        console.error(`Error submitting changes: ${e}`);
+                        logError(`Error submitting changes: ${e}`);
                         alert('Failed to save changes. Please refresh the page and try again');
                     }
                 }}

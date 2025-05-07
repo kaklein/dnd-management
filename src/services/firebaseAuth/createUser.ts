@@ -1,5 +1,6 @@
 import { createUserWithEmailAndPassword, User } from "firebase/auth";
 import { auth } from '../../firebase';
+import { logError } from "@services/sentry/logger";
 
 
 export const createUser = async (email: string, password: string): Promise<{
@@ -18,7 +19,7 @@ export const createUser = async (email: string, password: string): Promise<{
   } catch (e: any) {
     const errorCode = e.code;
     const errorMessage = e.message;
-    console.error(`Error creating user with Firebase auth: ${JSON.stringify({
+    logError(`Error creating user with Firebase auth: ${JSON.stringify({
         errorCode,
         errorMessage
     })}`);

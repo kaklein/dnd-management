@@ -31,6 +31,7 @@ import SuccessAlert from "@components/alerts/SuccessAlert";
 import { UserRole } from "@services/firestore/enum/UserRole";
 import AboutFooter from "@components/AboutFooter";
 import AddSummonable from "@components/updateForms/AddSummonable";
+import { logError } from "@services/sentry/logger";
 
 interface Props {
   pcData: PlayerCharacter;
@@ -76,7 +77,7 @@ function AddItems ({pcData, queryClient, pcList, selectedPc, userRole}: Props) {
     try{
       await transformAndUpdate(pcData, data);
     } catch (e) {
-      console.error(e);
+      logError(e);
       alert (`Update failed. Please refresh the page and try again.`);
       return;
     }

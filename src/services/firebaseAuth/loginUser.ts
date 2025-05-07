@@ -1,5 +1,6 @@
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from '../../firebase';
+import { logError } from "@services/sentry/logger";
 
 const INVALID_LOGIN_ERROR = 'auth/invalid-credential';
 
@@ -12,7 +13,7 @@ export const loginUser = async (email: string, password: string): Promise<boolea
     if (errorCode == INVALID_LOGIN_ERROR) {
       alert('Invalid username/password combo :( Please try again!');
     } else {
-      console.error(`Error signing in user with Firebase auth: ${JSON.stringify({
+      logError(`Error signing in user with Firebase auth: ${JSON.stringify({
         errorCode,
         errorMessage
       })}`);

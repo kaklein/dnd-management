@@ -1,3 +1,4 @@
+import * as Sentry from "@sentry/react";
 import './App.css'
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Overview from "./pages/authenticated/Overview";
@@ -31,7 +32,9 @@ const getMillis = (minutes: number) => {
 function App() {
     return (
         <QueryClientProvider client={queryClient}>
-            <MainApp/>
+            <Sentry.ErrorBoundary fallback={<p>An error has occurred</p>}>
+                <MainApp/>
+            </Sentry.ErrorBoundary>
         </QueryClientProvider>
 
     )

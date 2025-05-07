@@ -41,6 +41,7 @@ import TitleButtonRow from "@components/TitleButtonRow";
 import PoolDisplay from "@components/PoolDisplay";
 import HPDisplay from "@components/HPDisplay";
 import ResourceUseModal from "@components/modals/ResourceUseModal";
+import { logError } from "@services/sentry/logger";
 
 interface Props {
     pcData: PlayerCharacter;
@@ -106,7 +107,7 @@ function Tracker({pcData, queryClient, pcList, selectedPc, userRole}: Props) {
         try {
             await updateDataByPcId(CollectionName.PC_BASE_DETAILS, pcData.baseDetails.pcId, { weapons: weaponFormData });
         } catch (e: any) {
-            console.error(e);
+            logError(e);
             alert(SAVE_CHANGES_ERROR);
             return;
         }
@@ -121,7 +122,7 @@ function Tracker({pcData, queryClient, pcList, selectedPc, userRole}: Props) {
         try {
             await updateById(CollectionName.SPELL_SLOTS, spellSlotsUpdate.docId, spellSlotsUpdate.updates);
         } catch (e: any) {
-            console.error(e);
+            logError(e);
             alert(SAVE_CHANGES_ERROR);
             return;
         }
@@ -145,7 +146,7 @@ function Tracker({pcData, queryClient, pcList, selectedPc, userRole}: Props) {
                 ...summonablesUpdates.map(s => updateById(CollectionName.SUMMONABLES, s.docId, s.updates))
             ]).then();
         } catch (e: any) {
-            console.error(e);
+            logError(e);
             alert(SAVE_CHANGES_ERROR);
             return;
         }

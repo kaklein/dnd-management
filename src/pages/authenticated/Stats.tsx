@@ -19,6 +19,7 @@ import Popover from "@components/modals/Popover";
 import PassivePerceptionPopoverContent from "@components/popovers/PassivePerceptionPopoverContent";
 import AboutFooter from "@components/AboutFooter";
 import SpellSaveDCPopoverContent from "@components/popovers/SpellSaveDCPopoverContent";
+import { logError } from "@services/sentry/logger";
 
 interface Props {
     pcData: PlayerCharacter;
@@ -47,7 +48,7 @@ function Stats({pcData, pcList, selectedPc, queryClient, userRole}: Props) {
         try {
             await transformAndUpdate(pcData, formData);
         } catch (e) {
-            console.error(e);
+            logError(e);
             alert(`Update failed. PLease refresh the page and try again.`);
             return;
         }

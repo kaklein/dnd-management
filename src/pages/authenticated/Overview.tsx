@@ -18,6 +18,7 @@ import { QueryClient } from "@tanstack/react-query";
 import SuccessAlert from "@components/alerts/SuccessAlert";
 import AboutFooter from "@components/AboutFooter";
 import { Alignment } from "@models/enum/Alignment";
+import { logError } from "@services/sentry/logger";
 
 interface Props {
     pcData: PlayerCharacter;
@@ -84,7 +85,7 @@ function Overview({pcData, pcList, selectedPc, userRole, queryClient, imageUrl}:
                     setEditModalFormData(emptyEditModalData);
                     triggerSuccessAlert(setShowSuccessAlert);
                 } catch (e) {
-                    console.error(`Error submitting changes: ${e}`);
+                    logError(`Error submitting changes: ${e}`);
                     alert('Failed to save changes. Please refresh the page and try again');
                 }
             }}

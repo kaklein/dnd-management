@@ -12,6 +12,7 @@ import { FileNameUtil } from "@services/firebaseStorage/util";
 import { v4 as uuidv4 } from "uuid";
 import { Ability } from "@models/enum/Ability";
 import Popover from "@components/modals/Popover";
+import { logError } from "@services/sentry/logger";
 
 interface Props {
   handleChange: (event: any, setFunction: (prevFormData: any) => void) => void;
@@ -47,7 +48,7 @@ function CreateCharacterForm ({handleChange, handleSubmit, formData, initialEdit
             await handleSubmit(event, formData, generatedPcId);
             editor.commands.clearContent();
           } catch (e: any) {
-            console.error(e);
+            logError(e);
           }
         } else {
           await handleSubmit(event, formData, generatedPcId);

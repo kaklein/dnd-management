@@ -24,7 +24,7 @@ export interface Summonable {
       wisdom: number;
       charisma: number;
       proficiencyBonus?: number | '';
-    } | null;
+    };
     attacks?: SummonableAttack[];
     summoned: boolean;
   };

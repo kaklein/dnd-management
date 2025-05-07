@@ -96,7 +96,7 @@ export const handleSubmitEdit = async (
     const attacks: SummonableAttack[] = formData.attacks as SummonableAttack[];
 
     // update abilityScores
-    let abilityScores = null;
+    let abilityScores;
     if (getBool(formData.useAbilityScores)) {
       abilityScores = {
         strength: Number(formData.strengthScore),

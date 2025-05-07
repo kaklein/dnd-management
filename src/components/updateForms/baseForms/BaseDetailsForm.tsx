@@ -8,6 +8,7 @@ import { HitDiceType } from "@models/enum/HitDiceType";
 import { deleteImage } from "@services/firebaseStorage/delete";
 import { FileNameUtil } from "@services/firebaseStorage/util";
 import { uploadImage } from "@services/firebaseStorage/write";
+import { logError } from "@services/sentry/logger";
 import { useState } from "react";
 
 interface Props {
@@ -51,7 +52,7 @@ function BaseDetailsForm ({handleChange, handleSubmit, formData, setFormData, in
           }
           editor.commands.clearContent();
         } catch (e: any) {
-          console.error(e);
+          logError(e);
           alert ('Sorry, an error occurred saving your changes. Please refresh the page and try again.');
         }
       } else if (existingPCImage.path && !formData.imagePath) {
@@ -61,7 +62,7 @@ function BaseDetailsForm ({handleChange, handleSubmit, formData, setFormData, in
           await handleSubmit(event, formData, setFormData, formData);
           editor.commands.clearContent();
         } catch (e: any) {
-          console.error(e);
+          logError(e);
           alert ('Sorry, an error occurred saving your changes. Please refresh the page and try again.');
         }
       } else {

@@ -9,6 +9,7 @@ import { getAuth } from "@firebase/auth";
 import { emptyRichTextContent } from "@pages/utils";
 import { createCharacter } from "@services/firestore/createCharacter";
 import { UserRole } from "@services/firestore/enum/UserRole";
+import { logError } from "@services/sentry/logger";
 import { QueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -52,7 +53,7 @@ function CreateCharacter ({queryClient, setSelectedPcId, userRole}: Props) {
       setSelectedPcId(generatedPcId);
       navigate('/add?created=true');
     } catch (e: any) {
-      console.error(e);
+      logError({error: e, formData});
       alert('Error creating character. Please make sure you filled out all fields correctly before submitting, or refresh the page and try again.');
     }
   }
