@@ -1,0 +1,16 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    uses: ./.github/workflows/firebase-hosting-merge.yml
+
+  create_release:
+    uses: ./.github/workflows/create-release.yml
+    needs: deploy
+    
+
