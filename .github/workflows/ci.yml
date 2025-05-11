@@ -5,6 +5,9 @@ on:
     branches:
       - main
 
+permissions:
+  contents: read
+
 jobs:
   deploy:
     uses: ./.github/workflows/firebase-hosting-merge.yml
@@ -13,4 +16,3 @@ jobs:
     uses: ./.github/workflows/create-release.yml
     needs: deploy
     
-
