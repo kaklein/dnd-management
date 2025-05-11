@@ -106,7 +106,8 @@ function Tracker({pcData, queryClient, pcList, selectedPc, userRole, logger}: Pr
         event.preventDefault();
 
         try {
-            await updateDataByPcId(CollectionName.PC_BASE_DETAILS, pcData.baseDetails.pcId, { weapons: weaponFormData });
+            throw Error('Whoa Nellie!');
+            //await updateDataByPcId(CollectionName.PC_BASE_DETAILS, pcData.baseDetails.pcId, { weapons: weaponFormData });
         } catch (e: any) {
             logger.logError(e);
             alert(SAVE_CHANGES_ERROR);
