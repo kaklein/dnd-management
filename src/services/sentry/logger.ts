@@ -1,13 +1,31 @@
 import * as Sentry from "@sentry/react";
 
-export const logError = (error: any) => {
-    Sentry.captureException(error);
-}
+export class SentryLogger {
+    userId: string;
+    pcId: string;
+    name: string;
 
-export const logEvent = (event: any) => {
-    Sentry.captureEvent(event);
-}
+    constructor(userId?: string, pcId?: string, pcName?: string) {
+        this.userId = userId ?? '';
+        this.pcId = pcId ?? '';
+        this.name = pcName ?? '';
 
-export const logMessage = (message: string, severity?: Sentry.SeverityLevel) => {
-    Sentry.captureMessage(message, severity);
+        Sentry.setUser({ id: this.userId });
+        Sentry.setContext('pcData', {
+            pcId,
+            pcName
+        });
+    }
+
+    logError(error: any) {
+        Sentry.captureException(error);
+    }
+
+    logMessage(message: string) {
+        Sentry.captureMessage(message);
+    }
+
+    logEvent(event: any) {
+        Sentry.captureEvent(event);
+    }
 }

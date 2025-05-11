@@ -12,7 +12,7 @@ import { FileNameUtil } from "@services/firebaseStorage/util";
 import { v4 as uuidv4 } from "uuid";
 import { Ability } from "@models/enum/Ability";
 import Popover from "@components/modals/Popover";
-import { logError } from "@services/sentry/logger";
+import { SentryLogger } from "@services/sentry/logger";
 
 interface Props {
   handleChange: (event: any, setFunction: (prevFormData: any) => void) => void;
@@ -24,9 +24,10 @@ interface Props {
   formData: any;
   initialEditorContent: string;
   setFormData: (data: any) => void;
+  logger: SentryLogger;
 }
 
-function CreateCharacterForm ({handleChange, handleSubmit, formData, initialEditorContent, setFormData}: Props) {
+function CreateCharacterForm ({handleChange, handleSubmit, formData, initialEditorContent, setFormData, logger}: Props) {
   const [showBaseDetails, setShowBaseDetails] = useState(true);
   const [showAbilityScores, setShowAbilityScores] = useState(false);
   const editor = buildEditor(initialEditorContent, (value: string) => {
@@ -48,7 +49,7 @@ function CreateCharacterForm ({handleChange, handleSubmit, formData, initialEdit
             await handleSubmit(event, formData, generatedPcId);
             editor.commands.clearContent();
           } catch (e: any) {
-            logError(e);
+            logger.logError(e);
           }
         } else {
           await handleSubmit(event, formData, generatedPcId);

@@ -22,6 +22,8 @@ import { getAuth } from '@firebase/auth';
 import VerifyEmail from '@pages/authenticated/VerifyEmail';
 import About from '@pages/authenticated/About';
 import PrepareSpells from '@pages/authenticated/PrepareSpells';
+import { SentryLogger } from "@services/sentry/logger";
+import { useEffect, useState } from "react";
 
 const queryClient = new QueryClient();
 
@@ -92,14 +94,20 @@ function MainApp() {
         enabled: !!loggedIn,
     });
 
+    /* Initialize logger */
+    const [sentryLogger, setSentryLogger] = useState(new SentryLogger(getAuth().currentUser?.uid, pcQuery.data?.selectedPcData?.baseDetails.pcId, JSON.stringify(pcQuery.data?.selectedPcData?.baseDetails.name)));
+    useEffect(() => {
+        setSentryLogger(new SentryLogger(getAuth().currentUser?.uid ?? '', selectedPcId ?? '', JSON.stringify(pcQuery.data?.selectedPcData?.baseDetails.name)));
+    }, [selectedPcId]);
+
     if (!loggedIn) {
         return (
             <BrowserRouter>
                 <Routes>
-                    <Route index element={<Login/>}/>
-                    <Route path="/login" element={<Login/>}/>
-                    <Route path="/signup" element={<SignUp/>}/>
-                    <Route path="/password-reset" element={<PasswordReset/>}/>
+                    <Route index element={<Login logger={sentryLogger}/>}/>
+                    <Route path="/login" element={<Login logger={sentryLogger}/>}/>
+                    <Route path="/signup" element={<SignUp logger={sentryLogger}/>}/>
+                    <Route path="/password-reset" element={<PasswordReset logger={sentryLogger}/>}/>
                 </Routes>
             </BrowserRouter>
         )
@@ -121,7 +129,7 @@ function MainApp() {
             <Routes>
                 <Route index element={<Home pcList={pcQuery.data.pcList} setSelectedPcId={setSelectedPcId} userRole={roleQuery.data}/>}/>
                 <Route path="/home" element={<Home pcList={pcQuery.data.pcList} setSelectedPcId={setSelectedPcId} userRole={roleQuery.data}/>}/>
-                <Route path="/create" element={<CreateCharacter queryClient={queryClient} setSelectedPcId={setSelectedPcId} userRole={roleQuery.data}/>}/>
+                <Route path="/create" element={<CreateCharacter queryClient={queryClient} setSelectedPcId={setSelectedPcId} userRole={roleQuery.data} logger={sentryLogger}/>}/>
                 <Route path ="/about" element={<About userRole={roleQuery.data}/>}/>
             </Routes>
         </BrowserRouter>
@@ -130,15 +138,15 @@ function MainApp() {
     return (
         <BrowserRouter>
             <Routes>
-                <Route index element={<Overview pcData={pcQuery.data.selectedPcData} pcList={pcQuery.data.pcList} imageUrl={imageQuery.data ?? ''} selectedPc={{pcId: selectedPcId, setSelectedPcId: setSelectedPcId}} userRole={roleQuery.data} queryClient={queryClient}/>}/>
+                <Route index element={<Overview pcData={pcQuery.data.selectedPcData} pcList={pcQuery.data.pcList} imageUrl={imageQuery.data ?? ''} selectedPc={{pcId: selectedPcId, setSelectedPcId: setSelectedPcId}} userRole={roleQuery.data} queryClient={queryClient} logger={sentryLogger}/>}/>
                 <Route path="/home" element={<Home pcList={pcQuery.data.pcList} setSelectedPcId={setSelectedPcId} userRole={roleQuery.data}/>}/>
-                <Route path="/overview" element={<Overview pcData={pcQuery.data.selectedPcData} pcList={pcQuery.data.pcList} imageUrl={imageQuery.data ?? ''} selectedPc={{pcId: selectedPcId, setSelectedPcId: setSelectedPcId}} userRole={roleQuery.data} queryClient={queryClient}/>}/>
-                <Route path="/stats" element={<Stats pcData={pcQuery.data.selectedPcData} pcList={pcQuery.data.pcList} selectedPc={{pcId: selectedPcId, setSelectedPcId: setSelectedPcId}} queryClient={queryClient} userRole={roleQuery.data}/>}/>
-                <Route path="/tracker" element={<Tracker pcData={pcQuery.data.selectedPcData} queryClient={queryClient} pcList={pcQuery.data.pcList} selectedPc={{pcId: selectedPcId, setSelectedPcId: setSelectedPcId}} userRole={roleQuery.data}/>}/>
-                <Route path="/details" element={<Details pcData={pcQuery.data.selectedPcData} pcList={pcQuery.data.pcList} selectedPc={{pcId: selectedPcId, setSelectedPcId: setSelectedPcId}} queryClient={queryClient} userRole={roleQuery.data}/>}/>
-                <Route path="/prepare-spells" element={<PrepareSpells pcData={pcQuery.data.selectedPcData} pcList={pcQuery.data.pcList} selectedPc={{pcId: selectedPcId, setSelectedPcId: setSelectedPcId}} queryClient={queryClient} userRole={roleQuery.data}/>}/>
-                <Route path="/add" element={<AddItems pcData={pcQuery.data.selectedPcData} queryClient={queryClient} pcList={pcQuery.data.pcList} selectedPc={{pcId: selectedPcId, setSelectedPcId: setSelectedPcId}} userRole={roleQuery.data}/>}/>
-                <Route path="/create" element={<CreateCharacter queryClient={queryClient} setSelectedPcId={setSelectedPcId} userRole={roleQuery.data}/>}/>
+                <Route path="/overview" element={<Overview pcData={pcQuery.data.selectedPcData} pcList={pcQuery.data.pcList} imageUrl={imageQuery.data ?? ''} selectedPc={{pcId: selectedPcId, setSelectedPcId: setSelectedPcId}} userRole={roleQuery.data} queryClient={queryClient} logger={sentryLogger}/>}/>
+                <Route path="/stats" element={<Stats pcData={pcQuery.data.selectedPcData} pcList={pcQuery.data.pcList} selectedPc={{pcId: selectedPcId, setSelectedPcId: setSelectedPcId}} queryClient={queryClient} userRole={roleQuery.data} logger={sentryLogger}/>}/>
+                <Route path="/tracker" element={<Tracker pcData={pcQuery.data.selectedPcData} queryClient={queryClient} pcList={pcQuery.data.pcList} selectedPc={{pcId: selectedPcId, setSelectedPcId: setSelectedPcId}} userRole={roleQuery.data} logger={sentryLogger}/>}/>
+                <Route path="/details" element={<Details pcData={pcQuery.data.selectedPcData} pcList={pcQuery.data.pcList} selectedPc={{pcId: selectedPcId, setSelectedPcId: setSelectedPcId}} queryClient={queryClient} userRole={roleQuery.data} logger={sentryLogger}/>}/>
+                <Route path="/prepare-spells" element={<PrepareSpells pcData={pcQuery.data.selectedPcData} pcList={pcQuery.data.pcList} selectedPc={{pcId: selectedPcId, setSelectedPcId: setSelectedPcId}} queryClient={queryClient} userRole={roleQuery.data} logger={sentryLogger}/>}/>
+                <Route path="/add" element={<AddItems pcData={pcQuery.data.selectedPcData} queryClient={queryClient} pcList={pcQuery.data.pcList} selectedPc={{pcId: selectedPcId, setSelectedPcId: setSelectedPcId}} userRole={roleQuery.data} logger={sentryLogger}/>}/>
+                <Route path="/create" element={<CreateCharacter queryClient={queryClient} setSelectedPcId={setSelectedPcId} userRole={roleQuery.data} logger={sentryLogger}/>}/>
                 <Route path ="/about" element={<About selectedPc={{pcId: selectedPcId, setSelectedPcId: setSelectedPcId}} userRole={roleQuery.data}/>}/>
             </Routes>
         </BrowserRouter>

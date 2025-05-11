@@ -10,6 +10,7 @@ import { Weapon } from "@models/playerCharacter/Weapon";
 import { updateArrayObjectItem, updateById, updateDataByPcId, updateStringArrayItem } from "@services/firestore/crud/update";
 import { CollectionName } from "@services/firestore/enum/CollectionName";
 import { getBool, getProficiencyBonusByLevel } from "@services/firestore/utils";
+import { SentryLogger } from "@services/sentry/logger";
 
 export const SAVE_CHANGES_ERROR = 'We encountered an error saving your changes. Please refresh the page and try again.';
 
@@ -50,7 +51,8 @@ export const triggerSuccessAlert = (setFunction: (value: boolean) => void) => {
 export const handleSubmitEdit = async (
   event: React.ChangeEvent<HTMLInputElement>,
   formData: any,
-  pcData: PlayerCharacter
+  pcData: PlayerCharacter,
+  logger: SentryLogger
 ) => {
   event.preventDefault();
   if (formData.formType === 'feature') {
@@ -200,7 +202,8 @@ export const handleSubmitEdit = async (
         pcData.baseDetails.pcId,
         fieldName,
         existingArray,
-        updatedItem
+        updatedItem,
+        logger
     );
   } else if (['language', 'note', 'proficiency'].includes(formData.formType)) {     
     let fieldName;

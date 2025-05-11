@@ -4,7 +4,7 @@ import { updateById } from "@services/firestore/crud/update";
 import { CollectionName } from "@services/firestore/enum/CollectionName";
 import { QueryClient } from "@tanstack/react-query";
 import { triggerSuccessAlert } from "@pages/utils";
-import { logError } from "@services/sentry/logger";
+import { SentryLogger } from "@services/sentry/logger";
 
 interface Props {
   action: string;  
@@ -14,9 +14,10 @@ interface Props {
   searchParams: URLSearchParams;
   setDisableBackdrop: (newValue: boolean) => void;
   pcId: string;
+  logger: SentryLogger;
 }
 
-function SummonableActionModal ({ action, summonable, setShowSuccessAlert, queryClient, searchParams, setDisableBackdrop, pcId }: Props) { 
+function SummonableActionModal ({ action, summonable, setShowSuccessAlert, queryClient, searchParams, setDisableBackdrop, pcId, logger }: Props) { 
   const itemDisplayName = summonable.data.name ?? summonable.data.type;
   const title = action == 'takeDamage' ? itemDisplayName + " Damage Amount:" :
     action == 'gainHP' ? itemDisplayName + " Gained HP Amount:" : 
@@ -51,7 +52,7 @@ function SummonableActionModal ({ action, summonable, setShowSuccessAlert, query
               'hitPoints.current': action === 'refillHP' ? summonable.data.hitPoints.max : submitData.newHPAmount
             } );
           } catch (e: any) {
-            logError(e);
+            logger.logError(e);
             alert('We encountered an error saving your changes. Please refresh the page and try again.');
             return;
           }
@@ -63,7 +64,7 @@ function SummonableActionModal ({ action, summonable, setShowSuccessAlert, query
             searchParams.set("showSummonable", "true");
             setDisableBackdrop(true);
           } catch (e: any) {
-            logError(e);
+            logger.logError(e);
             alert('We encountered an error saving your changes. Please refresh the page and try again.');
             return;
           }

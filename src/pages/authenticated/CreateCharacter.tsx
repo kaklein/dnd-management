@@ -9,7 +9,7 @@ import { getAuth } from "@firebase/auth";
 import { emptyRichTextContent } from "@pages/utils";
 import { createCharacter } from "@services/firestore/createCharacter";
 import { UserRole } from "@services/firestore/enum/UserRole";
-import { logError } from "@services/sentry/logger";
+import { SentryLogger } from "@services/sentry/logger";
 import { QueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -18,9 +18,10 @@ interface Props {
   queryClient: QueryClient;
   setSelectedPcId: (pcId: string) => void;
   userRole: UserRole | undefined;
+  logger: SentryLogger;
 }
 
-function CreateCharacter ({queryClient, setSelectedPcId, userRole}: Props) {
+function CreateCharacter ({queryClient, setSelectedPcId, userRole, logger}: Props) {
   const navigate = useNavigate();
 
   const [formData, setFormData] = useState(defaultCreateCharacterFormData);
@@ -53,7 +54,7 @@ function CreateCharacter ({queryClient, setSelectedPcId, userRole}: Props) {
       setSelectedPcId(generatedPcId);
       navigate('/add?created=true');
     } catch (e: any) {
-      logError({error: e, formData});
+      logger.logError({error: e, formData});
       alert('Error creating character. Please make sure you filled out all fields correctly before submitting, or refresh the page and try again.');
     }
   }
@@ -81,6 +82,7 @@ function CreateCharacter ({queryClient, setSelectedPcId, userRole}: Props) {
           formData={formData}
           setFormData={setFormData}
           initialEditorContent={initialEditorContent}
+          logger={logger}
         />
       </Card>
     </div>

@@ -4,11 +4,15 @@ import Card from "@components/cards/Card";
 import PageHeaderBar from "@components/headerBars/PageHeaderBar";
 import { triggerSuccessAlert } from "@pages/utils";
 import { resetPassword } from "@services/firebaseAuth/resetPassword";
-import { logError } from "@services/sentry/logger";
+import { SentryLogger } from "@services/sentry/logger";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-function PasswordReset () {
+interface Props {
+  logger: SentryLogger;
+}
+
+function PasswordReset ({logger}: Props) {
   const navigate = useNavigate();
   const [email, setEmail] = useState('');
   const [showConfirmation, setShowConfirmation] = useState(false);
@@ -19,7 +23,7 @@ function PasswordReset () {
     try {
       await resetPassword(email);
     } catch (e) {
-      logError(`Error resetting password: ${e}`);
+      logger.logError(`Error resetting password: ${e}`);
       alert('Error occurred sending password reset email. Please refresh the page and try again.');
       return;
     }
