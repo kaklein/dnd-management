@@ -15,4 +15,6 @@ jobs:
   create_release:
     uses: ./.github/workflows/create-release.yml
     needs: deploy
+    permissions:
+      contents: write
     
