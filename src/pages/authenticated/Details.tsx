@@ -30,6 +30,7 @@ import FormHeader from "@components/updateForms/FormHeader";
 import AboutFooter from "@components/AboutFooter";
 import { DamageType } from "@models/enum/DamageType";
 import SummonableDisplay from "@components/SummonableDisplay";
+import { SentryLogger } from "@services/sentry/logger";
 
 interface Props {
     pcData: PlayerCharacter;
@@ -37,9 +38,10 @@ interface Props {
     selectedPc: {pcId: string | null, setSelectedPcId: (pcId: string) => void};
     queryClient: QueryClient;
     userRole: UserRole | undefined;
+    logger: SentryLogger;
 }
 
-function Details({pcData, pcList, selectedPc, queryClient, userRole}: Props) {
+function Details({pcData, pcList, selectedPc, queryClient, userRole, logger}: Props) {
     const hasItems = pcHasDetailsPageItems(pcData);
     const navigate = useNavigate();
     const [searchParams, setSearchParams] = useSearchParams();
@@ -200,12 +202,12 @@ function Details({pcData, pcList, selectedPc, queryClient, userRole}: Props) {
                 handleChange={handleChange}
                 handleSubmit={async (event: any) => {
                     try {
-                        await handleSubmitEdit(event, editModalFormData, pcData);
+                        await handleSubmitEdit(event, editModalFormData, pcData, logger);
                         queryClient.refetchQueries({ queryKey: ['pcData', pcData.baseDetails.pcId]});
                         setEditModalFormData(emptyEditModalData);
                         triggerSuccessAlert(setShowSuccessAlert);
                     } catch (e) {
-                        console.error(`Error submitting changes: ${e}`);
+                        logger.logError(`Error submitting changes: ${e}`);
                         alert('Failed to save changes. Please refresh the page and try again');
                     }
                 }}
@@ -215,6 +217,7 @@ function Details({pcData, pcList, selectedPc, queryClient, userRole}: Props) {
                     setEditModalFormData(emptyEditModalData);
                 }}
                 pcData={pcData}
+                logger={logger}
             />
 
             {showSuccessAlert && <SuccessAlert/>}
