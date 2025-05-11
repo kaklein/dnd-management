@@ -1708,3 +1708,24 @@ td {
 .stat-item-bold {
     font-weight: bold;
 }
+
+.sentry-test-error {
+    width: 100%;
+    margin: auto;
+    text-align: center;
+    margin-top: 20px;
+    background-color: red;
+}
+
+.sentry-test-error button {
+    background-color: pink;
+    color: black;
+    border-color: black;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+}
+
+.sentry-test-error button:hover {
+    background-color: yellow;
+}

@@ -2,6 +2,7 @@ import { updateDoc, doc } from "firebase/firestore";
 import { readSingleItem } from "@services/firestore/crud/read";
 import { db } from "../../../firebase";
 import { CollectionName } from "../enum/CollectionName";
+import { SentryLogger } from "@services/sentry/logger";
 
 const UPDATE_ERROR_MESSAGE = 'Error occurred updating item. Please refresh the page and try again.';
 
@@ -25,7 +26,7 @@ export const updateById = async (collectionName: CollectionName, docId: string, 
   }
 }
 
-export const updateArrayObjectItem = async (collectionName: CollectionName, pcId: string, fieldName: string, existingArray: any[], updatedItem: any) => {
+export const updateArrayObjectItem = async (collectionName: CollectionName, pcId: string, fieldName: string, existingArray: any[], updatedItem: any, logger: SentryLogger) => {
   const updatedArray = existingArray.filter(item => item.id !== updatedItem.id);
   updatedArray.push(updatedItem);
   const update = {
@@ -34,7 +35,7 @@ export const updateArrayObjectItem = async (collectionName: CollectionName, pcId
   try {
     await updateDataByPcId(collectionName, pcId, update);
   } catch (e: any) {
-    console.error(`Error updating array: ${JSON.stringify(e)}`);
+    logger.logError(`Error updating array: ${JSON.stringify(e)}`);
     alert(UPDATE_ERROR_MESSAGE);
   }
 }
