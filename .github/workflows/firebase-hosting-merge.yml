@@ -5,6 +5,9 @@ name: Deploy to Firebase Hosting on merge
 on:
   workflow_call
 
+permissions:
+  contents: read
+  
 jobs:
   build_and_deploy:
     name: Build and Deploy
