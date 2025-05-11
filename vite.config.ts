@@ -1,10 +1,14 @@
+import { sentryVitePlugin } from "@sentry/vite-plugin";
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import packageJson from './package.json'
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [react()],
+  plugins: [react(), sentryVitePlugin({
+    org: "katie-klein",
+    project: "dnd-management"
+  })],
   resolve: {
     alias: {
       "@components": "/src/components",
@@ -24,7 +28,9 @@ export default defineConfig({
                 }
             }
         }
-    }
+    },
+
+    sourcemap: true
   },
   define: {
     'import.meta.env.PACKAGE_VERSION': JSON.stringify(packageJson.version),
