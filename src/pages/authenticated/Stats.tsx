@@ -19,6 +19,7 @@ import Popover from "@components/modals/Popover";
 import PassivePerceptionPopoverContent from "@components/popovers/PassivePerceptionPopoverContent";
 import AboutFooter from "@components/AboutFooter";
 import SpellSaveDCPopoverContent from "@components/popovers/SpellSaveDCPopoverContent";
+import { SentryLogger } from "@services/sentry/logger";
 
 interface Props {
     pcData: PlayerCharacter;
@@ -26,9 +27,10 @@ interface Props {
     selectedPc: {pcId: string | null, setSelectedPcId: (pcId: string) => void};
     queryClient: QueryClient;
     userRole: UserRole | undefined;
+    logger: SentryLogger;
 }
 
-function Stats({pcData, pcList, selectedPc, queryClient, userRole}: Props) { 
+function Stats({pcData, pcList, selectedPc, queryClient, userRole, logger}: Props) { 
     const defaultSpellCastingAbility = pcData.baseDetails.defaultSpellCastingAbility;
     
     const [editable, setEditable] = useState(false);
@@ -47,7 +49,7 @@ function Stats({pcData, pcList, selectedPc, queryClient, userRole}: Props) {
         try {
             await transformAndUpdate(pcData, formData);
         } catch (e) {
-            console.error(e);
+            logger.logError(e);
             alert(`Update failed. PLease refresh the page and try again.`);
             return;
         }

@@ -27,9 +27,9 @@ export const transformFormDataForUpdate = (pcData: PlayerCharacter, data: {updat
     updateObject: {[key: string]: string | number | object }
   };
   create?: {
-    dataObject: {[key: string]: string | number | object | boolean }
+    dataObject: {[key: string]: string | number | object | boolean | null }
   }
-} => { 
+} => {
   const { updateType, ...updates } = data;
   
   switch (updateType) {

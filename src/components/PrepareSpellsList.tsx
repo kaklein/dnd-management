@@ -14,11 +14,13 @@ import { updateDataByPcId } from "@services/firestore/crud/update";
 import { CollectionName } from "@services/firestore/enum/CollectionName";
 import { QueryClient } from "@tanstack/react-query";
 import { sleep } from "@services/firestore/utils";
+import { SentryLogger } from "@services/sentry/logger";
 
 interface Props {
     pcData: PlayerCharacter;
     queryClient: QueryClient;
     setShowSuccessAlert: (show: boolean) => void;
+    logger: SentryLogger;
 }
 
 interface SpellDisplay {
@@ -56,7 +58,7 @@ const mergeSpellsAndSlots = (spellSlots: SpellSlot[], spells: Spell[]): SpellDis
   return spellDisplays;
 }
 
-function PrepareSpellsList ({pcData, queryClient, setShowSuccessAlert}: Props) { 
+function PrepareSpellsList ({pcData, queryClient, setShowSuccessAlert, logger}: Props) { 
     const navigate = useNavigate();
     const [disabledButtons, setDisabledButtons] = useState(false);
   
@@ -81,7 +83,7 @@ function PrepareSpellsList ({pcData, queryClient, setShowSuccessAlert}: Props) {
         try {
             await updateDataByPcId(CollectionName.PC_BASE_DETAILS, pcData.baseDetails.pcId, { spells: newPreparedSpells });
         } catch (e: any) {
-            console.error(e);
+            logger.logError(e);
             alert(SAVE_CHANGES_ERROR);
             return;
         }
