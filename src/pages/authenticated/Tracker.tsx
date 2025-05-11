@@ -38,6 +38,10 @@ import { SpellLevel } from "@models/playerCharacter/Spell";
 import GenericModal from "@components/modals/GenericModal";
 import SpellSaveDCPopoverContent from "@components/popovers/SpellSaveDCPopoverContent";
 import TitleButtonRow from "@components/TitleButtonRow";
+import PoolDisplay from "@components/PoolDisplay";
+import HPDisplay from "@components/HPDisplay";
+import ResourceUseModal from "@components/modals/ResourceUseModal";
+import { SentryLogger } from "@services/sentry/logger";
 
 interface Props {
     pcData: PlayerCharacter;
@@ -45,9 +49,10 @@ interface Props {
     pcList: BaseDetails[];
     selectedPc: {pcId: string | null, setSelectedPcId: (pcId: string) => void}
     userRole: UserRole | undefined;
+    logger: SentryLogger;
 }
 
-function Tracker({pcData, queryClient, pcList, selectedPc, userRole}: Props) {   
+function Tracker({pcData, queryClient, pcList, selectedPc, userRole, logger}: Props) {   
     const conModifier = pcData.abilityScores.data.constitution.modifier;
    
     const [showSuccessAlert, setShowSuccessAlert] = useState(false);
@@ -63,6 +68,21 @@ function Tracker({pcData, queryClient, pcList, selectedPc, userRole}: Props) {
     const [limitedUseFeatures, setLimitedUseFeatures] = useState(getLimitedUseFeatures(pcData));
     const [hpModalAction, setHPModalAction] = useState('');
     const [goldModalAction, setGoldModalAction] = useState('');
+    const [resourceUseModalData, setResourceUseModalData] = useState({
+        title: '',
+        action: '' as any,
+        feature: {
+            id: '',
+            data: {
+                currentUses: 0,
+                maxUses: 0,
+                pcId: pcData.baseDetails.pcId,
+                description: '',
+                source: '',
+                name: ''
+            }
+        }
+    });
     const [summonedItem, setSummonedItem] = useState(getSummonedItem(pcData));
     const [selectedSpellSlotLevel, setSelectedSpellSlotLevel] = useState(SpellLevel.L1);
 
@@ -88,7 +108,7 @@ function Tracker({pcData, queryClient, pcList, selectedPc, userRole}: Props) {
         try {
             await updateDataByPcId(CollectionName.PC_BASE_DETAILS, pcData.baseDetails.pcId, { weapons: weaponFormData });
         } catch (e: any) {
-            console.error(e);
+            logger.logError(e);
             alert(SAVE_CHANGES_ERROR);
             return;
         }
@@ -103,7 +123,7 @@ function Tracker({pcData, queryClient, pcList, selectedPc, userRole}: Props) {
         try {
             await updateById(CollectionName.SPELL_SLOTS, spellSlotsUpdate.docId, spellSlotsUpdate.updates);
         } catch (e: any) {
-            console.error(e);
+            logger.logError(e);
             alert(SAVE_CHANGES_ERROR);
             return;
         }
@@ -127,7 +147,7 @@ function Tracker({pcData, queryClient, pcList, selectedPc, userRole}: Props) {
                 ...summonablesUpdates.map(s => updateById(CollectionName.SUMMONABLES, s.docId, s.updates))
             ]).then();
         } catch (e: any) {
-            console.error(e);
+            logger.logError(e);
             alert(SAVE_CHANGES_ERROR);
             return;
         }
@@ -200,12 +220,18 @@ function Tracker({pcData, queryClient, pcList, selectedPc, userRole}: Props) {
                 searchParams={searchParams}
                 setDisableBackdrop={setDisableBackdrop}
                 pcId={pcData.baseDetails.pcId}
+                logger={logger}
             />
             <GenericModal
                 modalName="description"
                 title={descriptionModalData.title}
                 onClose={() => setDescriptionModalData({title: '', content: emptyRichTextContent})}
                 modalBody={<div dangerouslySetInnerHTML={{__html: descriptionModalData.content}}/>}
+            />
+            <ResourceUseModal
+                handleSubmit={handleSubmit}
+                formData={formData}
+                modalData={resourceUseModalData}
             />
             <GenericModal
                 modalName="resetDeathSaves"
@@ -240,58 +266,12 @@ function Tracker({pcData, queryClient, pcList, selectedPc, userRole}: Props) {
                 <div>
                     {showSuccessAlert && <SuccessAlert/>}
                     <Card>
-                        <h3 className="section-header">Hit Points</h3>
-                        <div className="hp container-fluid">
-                            <div className="row">
-                                <div className="col-6 hp-col">
-                                    <div className={`hp-display hp-display-${getHPRange(pcData.baseDetails.usableResources.hitPoints.current, pcData.baseDetails.usableResources.hitPoints.max)}`}>
-                                        {pcData.baseDetails.usableResources.hitPoints.current} / {pcData.baseDetails.usableResources.hitPoints.max}
-                                    </div>
-                                    <div className={`progress hp-progress ${pcData.baseDetails.usableResources.hitPoints.current <= 0 ? "progress-zero" : ""}`} role="progressbar" aria-label="HP Progress Bar" aria-valuenow={getHPAsPercentage(pcData.baseDetails.usableResources.hitPoints.current, pcData.baseDetails.usableResources.hitPoints.max)} aria-valuemin={0} aria-valuemax={100}>
-                                        <div className={`progress-bar hp-progress-display-${getHPRange(pcData.baseDetails.usableResources.hitPoints.current, pcData.baseDetails.usableResources.hitPoints.max)}`} style={{ width: `${getHPAsPercentage(pcData.baseDetails.usableResources.hitPoints.current, pcData.baseDetails.usableResources.hitPoints.max)}%`}}></div>
-                                    </div>
-                                </div>
-                                <div className="col-6 hp-col">
-                                    <button
-                                        type="button"
-                                        className="btn btn-danger"
-                                        data-bs-toggle="modal"
-                                        data-bs-target="#hpModal"
-                                        onClick={() => { setHPModalAction('takeDamage') }}
-                                        disabled={pcData.baseDetails.usableResources.hitPoints.current == 0}
-                                    >
-                                        Take Damage
-                                    </button>
-                                    <button
-                                        type="button"
-                                        className="btn btn-success"
-                                        data-bs-toggle="modal"
-                                        data-bs-target="#hpModal"
-                                        onClick={() => { setHPModalAction('gainHP') }}
-                                        disabled={pcData.baseDetails.usableResources.hitPoints.current == pcData.baseDetails.usableResources.hitPoints.max}
-                                    >
-                                        Gain HP
-                                    </button>
-                                    <button
-                                        type="button"
-                                        className="btn btn-info"
-                                        data-bs-toggle="modal"
-                                        data-bs-target="#hpModal"
-                                        onClick={() => { 
-                                            setHPModalAction('refillHP');
-                                            setFormData({
-                                                ...getDefaultFormData(pcData),
-                                                hitPointsCurrent: pcData.baseDetails.usableResources.hitPoints.max,
-                                            });
-                                        }}
-                                        disabled={pcData.baseDetails.usableResources.hitPoints.current == pcData.baseDetails.usableResources.hitPoints.max}
-                                    >
-                                        Refill
-                                    </button>
-                                </div>
-                            </div>                  
-                        </div>
-                    </Card>            
+                        <HPDisplay
+                            pcData={pcData}
+                            setHPModalAction={setHPModalAction}
+                            setFormData={setFormData}
+                        />
+                    </Card>
                     <Card>
                     <div className="container-fluid">
                         <div className="row">
@@ -525,15 +505,26 @@ function Tracker({pcData, queryClient, pcList, selectedPc, userRole}: Props) {
                                                 </div>
                                             </div>                                            
                                         </div>
-                                        
-                                        <ItemUseToggle
-                                            itemLabel={removeWhiteSpaceAndConvertToLowerCase(feature.data.name)}
-                                            formDataName={buildFeatureCurrentUsesKey(feature)}
-                                            maxUses={feature.data.maxUses!}
-                                            currentUses={formData[buildFeatureCurrentUsesKey(feature)]}
-                                            formData={formData}
-                                            handleSubmit={handleSubmit}
-                                        />                                        
+
+                                        {
+                                            feature.data.displayAsPool &&
+                                            <PoolDisplay
+                                                feature={feature}
+                                                setResourceUseModalData={setResourceUseModalData}
+                                            />
+                                        }
+                                        {
+                                            !feature.data.displayAsPool &&
+                                            <ItemUseToggle
+                                                itemLabel={removeWhiteSpaceAndConvertToLowerCase(feature.data.name)}
+                                                formDataName={buildFeatureCurrentUsesKey(feature)}
+                                                maxUses={feature.data.maxUses!}
+                                                currentUses={formData[buildFeatureCurrentUsesKey(feature)]}
+                                                formData={formData}
+                                                handleSubmit={handleSubmit}
+                                            />   
+                                        }
+                                                                          
                                     </Card>
                                 ))
                             }

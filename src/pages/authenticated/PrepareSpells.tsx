@@ -11,6 +11,7 @@ import PrepareSpellsList from "@components/PrepareSpellsList";
 import Card from "@components/cards/Card";
 import { useNavigate } from "react-router-dom";
 import { SpellLevel } from "@models/playerCharacter/Spell";
+import { SentryLogger } from "@services/sentry/logger";
 
 interface Props {
     pcData: PlayerCharacter;
@@ -18,9 +19,10 @@ interface Props {
     selectedPc: {pcId: string | null, setSelectedPcId: (pcId: string) => void};
     queryClient: QueryClient;
     userRole: UserRole | undefined;
+    logger: SentryLogger;
 }
 
-function PrepareSpells({pcData, pcList, selectedPc, queryClient, userRole}: Props) {   
+function PrepareSpells({pcData, pcList, selectedPc, queryClient, userRole, logger}: Props) {   
     const navigate = useNavigate();
     const [showSuccessAlert, setShowSuccessAlert] = useState(false);
     
@@ -43,6 +45,7 @@ function PrepareSpells({pcData, pcList, selectedPc, queryClient, userRole}: Prop
                 pcData={pcData}
                 queryClient={queryClient}
                 setShowSuccessAlert={setShowSuccessAlert}
+                logger={logger}
             />
 
             <Card customClass="large-top-margin light-gray-bg">

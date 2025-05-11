@@ -8,6 +8,7 @@ import WeaponForm from "@components/updateForms/baseForms/WeaponForm";
 import { capitalize } from "@components/utils";
 import { emptyEditModalData } from "@data/emptyFormData";
 import { PlayerCharacter } from "@models/playerCharacter/PlayerCharacter";
+import { SentryLogger } from "@services/sentry/logger";
 import { ReactNode } from "react";
 
 interface Props {
@@ -25,6 +26,7 @@ interface Props {
   handleCancel: () => void;
   pcData: PlayerCharacter;
   imageUrl?: string;
+  logger: SentryLogger;
 }
 
 const checkRequiredContent = (formType: string, content?: string, imageUrl?: string) => {
@@ -40,7 +42,7 @@ const checkRequiredContent = (formType: string, content?: string, imageUrl?: str
   return undefined;  
 }
 
-function EditModal ({ formType, formData, handleChange, handleSubmit, handleCancel, setFormData, initialEditorContent, pcData, imageUrl}: Props) {
+function EditModal ({ formType, formData, handleChange, handleSubmit, handleCancel, setFormData, initialEditorContent, pcData, imageUrl, logger}: Props) {
   const editorContent = checkRequiredContent(formType, initialEditorContent);
   
   let form: ReactNode;
@@ -143,6 +145,7 @@ function EditModal ({ formType, formData, handleChange, handleSubmit, handleCanc
           url: imageUrl!
         }}
         pcId={pcData.baseDetails.pcId}
+        logger={logger}
       />
       break;
     }

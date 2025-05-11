@@ -27,9 +27,9 @@ export const transformFormDataForUpdate = (pcData: PlayerCharacter, data: {updat
     updateObject: {[key: string]: string | number | object }
   };
   create?: {
-    dataObject: {[key: string]: string | number | object | boolean }
+    dataObject: {[key: string]: string | number | object | boolean | null }
   }
-} => { 
+} => {
   const { updateType, ...updates } = data;
   
   switch (updateType) {
@@ -174,6 +174,7 @@ export const transformFormDataForUpdate = (pcData: PlayerCharacter, data: {updat
           name: String(updates.name),
           description: String(updates.description),
           source: String(updates.source),
+          displayAsPool: getBool(String(updates.displayAsPool)),
           ...(updates.maxUses && {maxUses: Number(updates.maxUses)}),
           ...(updates.maxUses && {currentUses: Number(updates.maxUses)}),
           ...(updates.refresh && {refresh: String(updates.refresh) as RestType}),

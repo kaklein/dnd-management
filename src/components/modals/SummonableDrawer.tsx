@@ -2,7 +2,7 @@ import Card from "@components/cards/Card";
 import { buildSummonableSummonedKey } from "@components/utils";
 import { PlayerCharacter } from "@models/playerCharacter/PlayerCharacter";
 import { Summonable } from "@models/playerCharacter/Summonable";
-import { getDefaultFormData, getHPRange } from "@pages/utils";
+import { getAsPercentage, getDefaultFormData, getHPRange } from "@pages/utils";
 import Popover from "./Popover";
 import { getModifierFormatted } from "@services/firestore/utils";
 import { DamageType } from "@models/enum/DamageType";
@@ -62,7 +62,10 @@ function SummonableDrawer ({summonable, pcData, setFormData, searchParams, setSu
                         <div className="col-6 hp-col">
                             <div className={`hp-display hp-display-${getHPRange(summonable.data.hitPoints.current, summonable.data.hitPoints.max)}`}>
                                 {summonable.data.hitPoints.current} / {summonable.data.hitPoints.max}
-                            </div>                                   
+                            </div>
+                            <div className={`progress hp-progress ${summonable.data.hitPoints.current <= 0 ? "progress-zero" : ""}`} role="progressbar" aria-label="Summonable HP Progress Bar" aria-valuenow={getAsPercentage(summonable.data.hitPoints.current, summonable.data.hitPoints.max)} aria-valuemin={0} aria-valuemax={100}>
+                                <div className={`progress-bar hp-progress-display-${getHPRange(summonable.data.hitPoints.current, summonable.data.hitPoints.max)}`} style={{ width: `${getAsPercentage(summonable.data.hitPoints.current, summonable.data.hitPoints.max)}%`}}></div>
+                            </div>                                
                         </div>
                         <div className="col-6 hp-col">
                             <button

@@ -1,0 +1,21 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+jobs:
+  deploy:
+    uses: ./.github/workflows/firebase-hosting-merge.yml
+    secrets: inherit
+
+  create_release:
+    uses: ./.github/workflows/create-release.yml
+    needs: deploy
+    permissions:
+      contents: write
+    

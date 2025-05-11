@@ -2,10 +2,15 @@ import Button, { ButtonType } from "@components/Button";
 import Card from "@components/cards/Card";
 import PageHeaderBar from "@components/headerBars/PageHeaderBar";
 import { loginUser } from "@services/firebaseAuth/loginUser";
+import { SentryLogger } from "@services/sentry/logger";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-function Login () {
+interface Props {
+  logger: SentryLogger;
+}
+
+function Login ({logger}: Props) {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
     email: '',
@@ -21,7 +26,7 @@ function Login () {
       console.error(`No form data :(`);
       return;
     }
-    await loginUser(formData.email, formData.password);
+    await loginUser(formData.email, formData.password, logger);
     navigate('/');
   }
 

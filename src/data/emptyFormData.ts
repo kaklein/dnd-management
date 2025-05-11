@@ -49,6 +49,7 @@ export const defaultFeatureFormData = {
   description: '',
   source: '',
   maxUses: '',
+  displayAsPool: false,
   refresh: '',
   damage: '',
   damageType: '',
