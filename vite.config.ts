@@ -29,7 +29,6 @@ export default defineConfig({
             }
         }
     },
-
     sourcemap: true
   },
   define: {
