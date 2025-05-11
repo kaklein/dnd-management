@@ -1725,3 +1725,7 @@ td {
     margin-bottom: 10px;
     border-radius: 5px;
 }
+
+.sentry-test-error button:hover {
+    background-color: yellow;
+}
