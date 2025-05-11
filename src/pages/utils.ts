@@ -12,6 +12,19 @@ import { CollectionName } from "@services/firestore/enum/CollectionName";
 import { getBool, getProficiencyBonusByLevel } from "@services/firestore/utils";
 import { SentryLogger } from "@services/sentry/logger";
 
+export enum EnvName {
+  'production' = 'production',
+  'staging' = 'staging',
+  'dev' = 'dev'
+}
+
+const PRODUCTION_HOSTS = [
+  'dnd-management-347a9.web.app',
+  'dnd-management-347a9.firebaseapp.com'
+];
+
+const STAGING_HOST_PREFIX = 'dnd-management-347a9--pr';
+
 export const SAVE_CHANGES_ERROR = 'We encountered an error saving your changes. Please refresh the page and try again.';
 
 export const determineAttackBonus = (weapon: Weapon, pcData: PlayerCharacter) => {
@@ -391,3 +404,10 @@ export const getSummonedItem = (pcData: PlayerCharacter) => {
 }
 
 export const emptyRichTextContent = '<p></p>';
+
+export const getEnvName = (): EnvName => {
+  const hostName = window.location.hostname;
+  if (PRODUCTION_HOSTS.includes(hostName)) return EnvName.production;
+  if (hostName.startsWith(STAGING_HOST_PREFIX)) return EnvName.staging;
+  return EnvName.dev;
+}

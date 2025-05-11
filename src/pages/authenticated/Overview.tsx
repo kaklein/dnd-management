@@ -19,6 +19,7 @@ import SuccessAlert from "@components/alerts/SuccessAlert";
 import AboutFooter from "@components/AboutFooter";
 import { Alignment } from "@models/enum/Alignment";
 import { SentryLogger } from "@services/sentry/logger";
+import TestErrorButton from "@components/TestErrorButton";
 
 interface Props {
     pcData: PlayerCharacter;
@@ -174,6 +175,7 @@ function Overview({pcData, pcList, selectedPc, userRole, queryClient, imageUrl, 
                 </div>
               </div>
             </Card>
+            <TestErrorButton displayInStaging={true}/>
             <AboutFooter/>
         </div>
         
