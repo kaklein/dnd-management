@@ -11,6 +11,7 @@ permissions:
 jobs:
   deploy:
     uses: ./.github/workflows/firebase-hosting-merge.yml
+    secrets: inherit
 
   create_release:
     uses: ./.github/workflows/create-release.yml
