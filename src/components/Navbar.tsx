@@ -23,14 +23,15 @@ function Navbar ({isSelectedPc, userRole=undefined}: Props) {
                 const retrievedRole = await getUserRole(currentUser.uid);
                 setKnownUserRole(retrievedRole);
                 return retrievedRole;
-            } else {
-                throw Error('No current user found');
             }
         } else {
             return userRole;
         }
     }
     checkUserRole();
+
+    let logoUrl = "/home";
+    if (!userRole) logoUrl = "/login";
 
     return (
         <>
@@ -41,10 +42,10 @@ function Navbar ({isSelectedPc, userRole=undefined}: Props) {
                     <span className="navbar-toggler-icon"></span>
                 </button>
                 <div className={`${isNavCollapsed ? "collapse": ""} navbar-collapse`}>
-                    <a href="/home"><img src="/images/logo-1.png" width="100px"/></a>
+                    <a href={logoUrl}><img src="/images/logo-1.png" width="100px"/></a>
                     <ul className="navbar-nav mr-auto">
                         {
-                            isSelectedPc &&
+                            (isSelectedPc && userRole) && 
                             <>
                             <li className="nav-item">
                                 <h3><NavLink className="nav-link" to="/overview">Overview</NavLink></h3>
@@ -69,12 +70,16 @@ function Navbar ({isSelectedPc, userRole=undefined}: Props) {
                  <div className={`${isNavCollapsed ? "collapse": ""} navbar-collapse ml-auto w-100 justify-content-end`}>   
                     <ul className="navbar-nav mr-auto">
                         <li className="nav-item navbar-text">
-                            <p>
-                                Logged in
-                                {currentUser?.displayName && ` as ${currentUser?.displayName}` }
-                                {(currentUser && userRole === 'ADMIN') && " | ADMIN ROLE"}
-                                {(currentUser && userRole === 'READ_ALL') && " | READ_ALL ROLE"}
-                            </p>
+                            {
+                                userRole &&
+                                <p>
+                                    Logged in
+                                    {currentUser?.displayName && ` as ${currentUser?.displayName}` }
+                                    {(currentUser && userRole === 'ADMIN') && " | ADMIN ROLE"}
+                                    {(currentUser && userRole === 'READ_ALL') && " | READ_ALL ROLE"}
+                                </p>
+                            }
+                            
                             {currentUser &&
                                 <a className="btn btn-secondary" href="/" onClick={() => logoutUser()}>Log Out</a>
                             }

@@ -1,3 +1,4 @@
+import AboutFooter from "@components/AboutFooter";
 import Button, { ButtonType } from "@components/Button";
 import Card from "@components/cards/Card";
 import PageHeaderBar from "@components/headerBars/PageHeaderBar";
@@ -103,6 +104,7 @@ function SignUp ({logger}: Props) {
             />
         </div>        
       </Card>
+      <AboutFooter loggedIn={false}/>
     </>
   )
 }
