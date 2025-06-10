@@ -18,6 +18,8 @@ import { QueryClient } from "@tanstack/react-query";
 import SuccessAlert from "@components/alerts/SuccessAlert";
 import AboutFooter from "@components/AboutFooter";
 import { Alignment } from "@models/enum/Alignment";
+import { SentryLogger } from "@services/sentry/logger";
+import TestErrorButton from "@components/TestErrorButton";
 
 interface Props {
     pcData: PlayerCharacter;
@@ -26,6 +28,7 @@ interface Props {
     userRole: UserRole | undefined;
     queryClient: QueryClient;
     imageUrl: string;
+    logger: SentryLogger;
 }
 
 const getValidAlignment = (alignment: string): string => {
@@ -33,7 +36,7 @@ const getValidAlignment = (alignment: string): string => {
     return Alignment.N_A;
 }
 
-function Overview({pcData, pcList, selectedPc, userRole, queryClient, imageUrl}: Props) {
+function Overview({pcData, pcList, selectedPc, userRole, queryClient, imageUrl, logger}: Props) {
     const navigate = useNavigate();
     const pcFullName = `${pcData.baseDetails.name.firstName} ${pcData.baseDetails.name.lastName}`
     const listCardObject = {
@@ -79,12 +82,12 @@ function Overview({pcData, pcList, selectedPc, userRole, queryClient, imageUrl}:
             handleChange={handleChange}
             handleSubmit={async (event: any) => {
                 try {
-                    await handleSubmitEdit(event, editModalFormData, pcData);
+                    await handleSubmitEdit(event, editModalFormData, pcData, logger);
                     queryClient.refetchQueries({ queryKey: ['pcData', pcData.baseDetails.pcId]});
                     setEditModalFormData(emptyEditModalData);
                     triggerSuccessAlert(setShowSuccessAlert);
                 } catch (e) {
-                    console.error(`Error submitting changes: ${e}`);
+                    logger.logError(`Error submitting changes: ${e}`);
                     alert('Failed to save changes. Please refresh the page and try again');
                 }
             }}
@@ -93,6 +96,7 @@ function Overview({pcData, pcList, selectedPc, userRole, queryClient, imageUrl}:
             handleCancel={() => setEditModalFormData(emptyEditModalData)}
             pcData={pcData}
             imageUrl={imageUrl}
+            logger={logger}
         />
         {showSuccessAlert && <SuccessAlert/>}
 
@@ -171,6 +175,7 @@ function Overview({pcData, pcList, selectedPc, userRole, queryClient, imageUrl}:
                 </div>
               </div>
             </Card>
+            <TestErrorButton displayInStaging={true}/>
             <AboutFooter/>
         </div>
         

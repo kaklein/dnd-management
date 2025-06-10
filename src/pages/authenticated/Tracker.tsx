@@ -41,6 +41,8 @@ import TitleButtonRow from "@components/TitleButtonRow";
 import PoolDisplay from "@components/PoolDisplay";
 import HPDisplay from "@components/HPDisplay";
 import ResourceUseModal from "@components/modals/ResourceUseModal";
+import { SentryLogger } from "@services/sentry/logger";
+import TagDisplay from "@components/TagDisplay";
 
 interface Props {
     pcData: PlayerCharacter;
@@ -48,9 +50,10 @@ interface Props {
     pcList: BaseDetails[];
     selectedPc: {pcId: string | null, setSelectedPcId: (pcId: string) => void}
     userRole: UserRole | undefined;
+    logger: SentryLogger;
 }
 
-function Tracker({pcData, queryClient, pcList, selectedPc, userRole}: Props) {   
+function Tracker({pcData, queryClient, pcList, selectedPc, userRole, logger}: Props) {   
     const conModifier = pcData.abilityScores.data.constitution.modifier;
    
     const [showSuccessAlert, setShowSuccessAlert] = useState(false);
@@ -106,7 +109,7 @@ function Tracker({pcData, queryClient, pcList, selectedPc, userRole}: Props) {
         try {
             await updateDataByPcId(CollectionName.PC_BASE_DETAILS, pcData.baseDetails.pcId, { weapons: weaponFormData });
         } catch (e: any) {
-            console.error(e);
+            logger.logError(e);
             alert(SAVE_CHANGES_ERROR);
             return;
         }
@@ -121,7 +124,7 @@ function Tracker({pcData, queryClient, pcList, selectedPc, userRole}: Props) {
         try {
             await updateById(CollectionName.SPELL_SLOTS, spellSlotsUpdate.docId, spellSlotsUpdate.updates);
         } catch (e: any) {
-            console.error(e);
+            logger.logError(e);
             alert(SAVE_CHANGES_ERROR);
             return;
         }
@@ -145,7 +148,7 @@ function Tracker({pcData, queryClient, pcList, selectedPc, userRole}: Props) {
                 ...summonablesUpdates.map(s => updateById(CollectionName.SUMMONABLES, s.docId, s.updates))
             ]).then();
         } catch (e: any) {
-            console.error(e);
+            logger.logError(e);
             alert(SAVE_CHANGES_ERROR);
             return;
         }
@@ -218,6 +221,7 @@ function Tracker({pcData, queryClient, pcList, selectedPc, userRole}: Props) {
                 searchParams={searchParams}
                 setDisableBackdrop={setDisableBackdrop}
                 pcId={pcData.baseDetails.pcId}
+                logger={logger}
             />
             <GenericModal
                 modalName="description"
@@ -502,7 +506,7 @@ function Tracker({pcData, queryClient, pcList, selectedPc, userRole}: Props) {
                                                 </div>
                                             </div>                                            
                                         </div>
-
+                                        <div className="feature-display">
                                         {
                                             feature.data.displayAsPool &&
                                             <PoolDisplay
@@ -521,7 +525,13 @@ function Tracker({pcData, queryClient, pcList, selectedPc, userRole}: Props) {
                                                 handleSubmit={handleSubmit}
                                             />   
                                         }
-                                                                          
+                                        {
+                                            (feature.data.tags && feature.data.tags.filter(t => t.value === true).length > 0) &&
+                                            <div className="row tracker-tag-row">
+                                                <TagDisplay tags={feature.data.tags.filter(t => t.value === true)}/>
+                                            </div>
+                                        }
+                                        </div>                                                                          
                                     </Card>
                                 ))
                             }

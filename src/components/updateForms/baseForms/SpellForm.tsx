@@ -9,6 +9,7 @@ import TextEditor, { buildEditor } from "@components/TextEditor";
 import { validateRequiredFields } from "../utils";
 import { PlayerCharacter } from "@models/playerCharacter/PlayerCharacter";
 import { capitalize } from "@components/utils";
+import CheckboxMultiSelect from "@components/CheckboxMultiSelect";
 
 interface Props {
   handleChange: (event: any, setFunction: (prevFormData: any) => void) => void;
@@ -212,7 +213,16 @@ function SpellForm ({handleChange, handleSubmit, formData, setFormData, initialE
               }
             </div>
           </div>
-        </div>       
+        </div>
+
+        <div>
+          <label className="update-form-label">Add Tags (Optional)</label>
+          <CheckboxMultiSelect
+            formData={formData}
+            setFormData={setFormData}
+            formDataFieldName="tags"
+          />
+        </div>    
 
         <div className="update-form-field">
           <label className="update-form-label" htmlFor="sourceUrl">Source URL (Optional)</label>
@@ -237,7 +247,7 @@ function SpellForm ({handleChange, handleSubmit, formData, setFormData, initialE
           onClick={() => {}}
           modalDismiss={modalDismiss}
         />
-      </form>      
+      </form>
   )
 }
 

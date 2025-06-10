@@ -1,5 +1,6 @@
 import { DamageType } from "@models/enum/DamageType";
 import { Ability } from "@models/enum/Ability";
+import { AllowedFeatureTags, FeatureTag } from "./Feature";
 
 export interface Spell {
     id: string;
@@ -13,6 +14,7 @@ export interface Spell {
     hasAttack?: boolean;
     sourceUrl?: string;
     prepared?: boolean;
+    tags?: FeatureTag[];
 }
 
 export enum SpellLevel {
@@ -40,3 +42,11 @@ export enum SpellLevelAbbreviation {
     'Level 8' = 'L8',
     'Level 9' = 'L9'
 }
+
+export const AllowedSpellTags: {fieldName: string, displayName: string}[] = 
+    AllowedFeatureTags.concat([
+    {
+        fieldName: 'ritual',
+        displayName: 'Ritual',
+    }
+]);

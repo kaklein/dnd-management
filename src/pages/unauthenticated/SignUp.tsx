@@ -7,13 +7,18 @@ import { sendVerification } from "@services/firebaseAuth/sendVerification";
 import { setDisplayName } from "@services/firebaseAuth/setDisplayName";
 import { UserRole } from "@services/firestore/enum/UserRole";
 import { insertUser } from "@services/firestore/insertUser";
+import { SentryLogger } from "@services/sentry/logger";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 const USER_EXISTS_SIGNUP_ERROR = 'auth/email-already-in-use';
 const WEAK_PASSWORD_SIGNUP_ERROR = 'auth/weak-password';
 
-function SignUp () {
+interface Props {
+  logger: SentryLogger;
+}
+
+function SignUp ({logger}: Props) {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
     email: '',
@@ -36,11 +41,11 @@ function SignUp () {
       return;
     }
 
-    const createResult: {success: boolean, error: any, user: User | undefined} = await createUser(formData.email, formData.passwordCreate);
+    const createResult: {success: boolean, error: any, user: User | undefined} = await createUser(formData.email, formData.passwordCreate, logger);
     if (createResult.success && createResult.user) {
       const userRole = UserRole.USER;
       await Promise.all([
-        insertUser(createResult.user.uid, userRole),
+        insertUser(createResult.user.uid, userRole, logger),
         setDisplayName(createResult.user),
         sendVerification(createResult.user)
       ]);

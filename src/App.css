@@ -1,5 +1,6 @@
 /** Variables **/
 :root {
+    /* GENERAL USE COLORS */
     --dark-purple: #200859;
     --darker-purple: #16053e;
     --light-text: white;
@@ -12,6 +13,17 @@
     --very-light-gray: #f0eeed;
     --inspiration-pink: #d68ff2;
     --light-purple: #cec7d6;
+    /* TAG COLORS */
+    --tag-action: #FF785A;
+    --tag-action-border: #fa5e3b;
+    --tag-bonus-action: #FFBF48;
+    --tag-bonus-action-border: #efaa29;
+    --tag-reaction: #A6FFA7;
+    --tag-reaction-border: #70f573;
+    --tag-concentration: #97EBF0;
+    --tag-concentration-border: #67dde3;
+    --tag-ritual: #A693FA;
+    --tag-ritual-border: #8970f7;
 }
 
 .card {
@@ -258,6 +270,21 @@ img {
 .row-checkbox {
     padding-right: 0px !important;
     width: 25px;
+}
+
+.checkbox-multiselect {
+    margin-left: 5px;
+    margin-right: 5px;
+    width: 100%;
+    padding: 5px;
+    display: block;
+    text-align: left;
+}
+
+.checkbox-multiselect label {
+    display: inline-block;
+    margin-right: 5px;
+    margin-left: 5px;
 }
 
 .table-highlighted, .table-highlighted td {
@@ -706,6 +733,64 @@ td {
     margin-bottom: 10px;
 }
 
+/* SPELL/FEATURE TAGS */
+.tag-display {
+    padding-top: 5px;
+    padding-left: 0px !important;
+}
+
+.tag-display-item {
+    width: fit-content;
+    margin-bottom: 5px;
+    float: left;
+}
+
+.tracker-tag-row {
+    margin-top: 5px !important;
+    margin-bottom: -5px !important;
+    border-bottom-left-radius: 3px;
+    border-bottom-right-radius: 3px;
+    background-color: var(--very-light-gray);
+    margin-left: -5px !important;
+    margin-right: -5px !important;
+}
+
+.tag-action, .tag-bonusAction, .tag-concentration, .tag-ritual, .tag-reaction {
+    border-radius: 5px;
+    padding-left: 4px;
+    padding-right: 4px;
+    margin-left: 2px;
+    margin-right: 2px;
+    /* leaving border commented out in case I want to add it back later */
+    /* border: 1px solid gray; */
+}
+
+.tag-action {
+    background-color: var(--tag-action);
+    border-color: var(--tag-action-border);
+}
+
+.tag-bonusAction {
+    background-color: var(--tag-bonus-action);
+    border-color: var(--tag-bonus-action-border);
+}
+
+.tag-concentration {
+    background-color: var(--tag-concentration);
+    border-color: var(--tag-concentration-border);
+}
+
+.tag-ritual {
+    background-color: var(--tag-ritual);
+    border-color: var(--tag-ritual-border);
+}
+
+.tag-reaction {
+    background-color: var(--tag-reaction);
+    border-color: var(--tag-reaction-border);
+}
+/* END SPELL/FEATURE TAGS */
+
 .populated-field {
     font-style: italic;
 }
@@ -996,11 +1081,27 @@ td {
     color: var(--dark-purple);
 }
 
+.feature-display {
+    margin-left: 5px;
+    margin-right: 5px;
+    margin-bottom: 5px;
+}
+
+.feature-display .tag-display {
+    border-bottom-left-radius: 3px;
+    border-bottom-right-radius: 3px;
+}
+
 .spell-display {
     margin-top: 10px;
     margin-bottom: 10px;
     margin-left: auto;
     margin-right: auto;
+}
+
+.spell-display-row {
+    padding-left: 8px;
+    padding-right: 5px;
 }
 
 .spell-display-header {
@@ -1043,7 +1144,7 @@ td {
 }
 
 .cast-button {
-    margin-right: 5px;
+    margin-right: 15px;
     margin-top: 5px;
     margin-bottom: 5px;
 }
@@ -1246,8 +1347,8 @@ td {
 }
 
 .spell-display-custom-padding {
-    padding-left: 10px !important;
-    padding-right: 10px !important;
+    padding-left: 0px !important;
+    padding-right: 0px !important;
 }
 
 .summonable {
@@ -1707,4 +1808,25 @@ td {
 
 .stat-item-bold {
     font-weight: bold;
+}
+
+.sentry-test-error {
+    width: 100%;
+    margin: auto;
+    text-align: center;
+    margin-top: 20px;
+    background-color: red;
+}
+
+.sentry-test-error button {
+    background-color: pink;
+    color: black;
+    border-color: black;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+}
+
+.sentry-test-error button:hover {
+    background-color: yellow;
 }

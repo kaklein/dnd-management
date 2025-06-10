@@ -10,7 +10,6 @@ import AddItemToArrayField from "@components/updateForms/AddItemToArrayField";
 import AddEquipment from "@components/updateForms/AddEquipment";
 import { 
   defaultEquipmentFormData,
-  defaultFeatureFormData,
   defaultLanguageFormData,
   defaultNoteFormData,
   defaultProficiencyFormData,
@@ -18,7 +17,8 @@ import {
   defaultSpellSlotFormData,
   defaultSummonableFormData,
   defaultWeaponFormData,
-  emptyShowSectionData
+  emptyShowSectionData,
+  getDefaultFeatureFormData
 } from "@data/emptyFormData";
 import { UpdateType } from "@models/enum/service/UpdateType";
 import { transformAndUpdate } from "@services/firestore/updateData";
@@ -31,6 +31,7 @@ import SuccessAlert from "@components/alerts/SuccessAlert";
 import { UserRole } from "@services/firestore/enum/UserRole";
 import AboutFooter from "@components/AboutFooter";
 import AddSummonable from "@components/updateForms/AddSummonable";
+import { SentryLogger } from "@services/sentry/logger";
 
 interface Props {
   pcData: PlayerCharacter;
@@ -38,9 +39,10 @@ interface Props {
   pcList: BaseDetails[];
   selectedPc: {pcId: string | null, setSelectedPcId: (pcId: string) => void};
   userRole: UserRole | undefined;
+  logger: SentryLogger;
 }
 
-function AddItems ({pcData, queryClient, pcList, selectedPc, userRole}: Props) {
+function AddItems ({pcData, queryClient, pcList, selectedPc, userRole, logger}: Props) {
   const [searchParams] = useSearchParams();
   const [showSuccessAlert, setShowSuccessAlert] = useState(false);
   const [showSection, setShowSection] = useState(emptyShowSectionData);
@@ -49,7 +51,7 @@ function AddItems ({pcData, queryClient, pcList, selectedPc, userRole}: Props) {
   const [weaponFormData, setWeaponFormData] = useState(defaultWeaponFormData);
   const [spellFormData, setSpellFormData] = useState(getDefaultSpellFormData(pcData));
   const [spellSlotFormData, setSpellSlotFormData] = useState(defaultSpellSlotFormData);
-  const [featureFormData, setFeatureFormData] = useState(defaultFeatureFormData);
+  const [featureFormData, setFeatureFormData] = useState(getDefaultFeatureFormData());
   const [equipmentFormData, setEquipmentFormData] = useState(defaultEquipmentFormData);
   const [proficiencyFormData, setProficiencyFormData] = useState(defaultProficiencyFormData);
   const [languageFormData, setLanguageFormData] = useState(defaultLanguageFormData);
@@ -76,7 +78,7 @@ function AddItems ({pcData, queryClient, pcList, selectedPc, userRole}: Props) {
     try{
       await transformAndUpdate(pcData, data);
     } catch (e) {
-      console.error(e);
+      logger.logError(e);
       alert (`Update failed. Please refresh the page and try again.`);
       return;
     }
