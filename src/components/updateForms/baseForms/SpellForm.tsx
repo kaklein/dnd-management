@@ -247,7 +247,7 @@ function SpellForm ({handleChange, handleSubmit, formData, setFormData, initialE
           onClick={() => {}}
           modalDismiss={modalDismiss}
         />
-      </form>      
+      </form>
   )
 }
 

@@ -10,7 +10,6 @@ import AddItemToArrayField from "@components/updateForms/AddItemToArrayField";
 import AddEquipment from "@components/updateForms/AddEquipment";
 import { 
   defaultEquipmentFormData,
-  defaultFeatureFormData,
   defaultLanguageFormData,
   defaultNoteFormData,
   defaultProficiencyFormData,
@@ -18,7 +17,8 @@ import {
   defaultSpellSlotFormData,
   defaultSummonableFormData,
   defaultWeaponFormData,
-  emptyShowSectionData
+  emptyShowSectionData,
+  getDefaultFeatureFormData
 } from "@data/emptyFormData";
 import { UpdateType } from "@models/enum/service/UpdateType";
 import { transformAndUpdate } from "@services/firestore/updateData";
@@ -51,7 +51,7 @@ function AddItems ({pcData, queryClient, pcList, selectedPc, userRole, logger}: 
   const [weaponFormData, setWeaponFormData] = useState(defaultWeaponFormData);
   const [spellFormData, setSpellFormData] = useState(getDefaultSpellFormData(pcData));
   const [spellSlotFormData, setSpellSlotFormData] = useState(defaultSpellSlotFormData);
-  const [featureFormData, setFeatureFormData] = useState(defaultFeatureFormData);
+  const [featureFormData, setFeatureFormData] = useState(getDefaultFeatureFormData());
   const [equipmentFormData, setEquipmentFormData] = useState(defaultEquipmentFormData);
   const [proficiencyFormData, setProficiencyFormData] = useState(defaultProficiencyFormData);
   const [languageFormData, setLanguageFormData] = useState(defaultLanguageFormData);

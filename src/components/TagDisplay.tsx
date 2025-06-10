@@ -8,7 +8,7 @@ function TagDisplay ({ tags }: Props) {
     return <div className="tag-display">
         {
             tags.map((tag, i) => (
-                <span key={i} className={`tag-${tag.fieldName}`}>
+                <span key={i} className={`tag-${tag.fieldName} tag-display-item`}>
                     {tag.displayName}
                 </span>
             ))

@@ -12,16 +12,17 @@ interface Props {
 
 function CheckboxMultiSelect ({ formData, setFormData, formDataFieldName }: Props) {    
     const getOptionIndex = (fieldName: string): number => {
-        return formData[formDataFieldName].map((i: any) => i.fieldName).indexOf(fieldName);
+        return formData[formDataFieldName].map((i: any) => i.fieldName).indexOf(fieldName) ?? -1;
     };
 
     const isChecked = (fieldName: string): boolean => {
+        if (getOptionIndex(fieldName) < 0) return false;
         return formData[formDataFieldName][getOptionIndex(fieldName)].value;
     }
 
-    const options: Option[] = formData[formDataFieldName];
+    const options: Option[] = formData[formDataFieldName] ?? [];
 
-    return <div>
+    if (options.length > 1) return <div className="checkbox-multiselect">
         {
             options.map((opt, i) => (
                 <div key={i}>

@@ -42,6 +42,7 @@ import PoolDisplay from "@components/PoolDisplay";
 import HPDisplay from "@components/HPDisplay";
 import ResourceUseModal from "@components/modals/ResourceUseModal";
 import { SentryLogger } from "@services/sentry/logger";
+import TagDisplay from "@components/TagDisplay";
 
 interface Props {
     pcData: PlayerCharacter;
@@ -505,7 +506,7 @@ function Tracker({pcData, queryClient, pcList, selectedPc, userRole, logger}: Pr
                                                 </div>
                                             </div>                                            
                                         </div>
-
+                                        <div className="feature-display">
                                         {
                                             feature.data.displayAsPool &&
                                             <PoolDisplay
@@ -524,7 +525,13 @@ function Tracker({pcData, queryClient, pcList, selectedPc, userRole, logger}: Pr
                                                 handleSubmit={handleSubmit}
                                             />   
                                         }
-                                                                          
+                                        {
+                                            (feature.data.tags && feature.data.tags.filter(t => t.value === true).length > 0) &&
+                                            <div className="row tracker-tag-row">
+                                                <TagDisplay tags={feature.data.tags.filter(t => t.value === true)}/>
+                                            </div>
+                                        }
+                                        </div>                                                                          
                                     </Card>
                                 ))
                             }
