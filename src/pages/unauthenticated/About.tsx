@@ -14,6 +14,10 @@ interface Props {
 
 function About ({selectedPc, userRole}: Props) {
   const navigate = useNavigate();
+  let startButtonUrl = "/home";
+  if (!userRole) {
+    startButtonUrl = "/login";
+  }
   
   return (
     <>
@@ -41,9 +45,9 @@ function About ({selectedPc, userRole}: Props) {
           </div>
           <Button
             buttonType={ButtonType.INFO}
-            text="Let's get started!"
+            text={`${userRole ? "Let's get started!" : "Log In to Get Started"}`}
             onClick={
-              () => navigate('/home')
+              () => navigate(startButtonUrl)
             }
           />
           </div>
@@ -208,7 +212,7 @@ function About ({selectedPc, userRole}: Props) {
         </Card>
       </div>
     </div>
-    <AboutFooter/>
+    <AboutFooter loggedIn={!!userRole}/>
     </>
   )
 }

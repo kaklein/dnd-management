@@ -1,3 +1,4 @@
+import AboutFooter from "@components/AboutFooter";
 import SuccessAlert from "@components/alerts/SuccessAlert";
 import Button, { ButtonType } from "@components/Button";
 import Card from "@components/cards/Card";
@@ -91,6 +92,7 @@ function PasswordReset ({logger}: Props) {
           />
         </div>
       </Card>
+      <AboutFooter loggedIn={false}/>
     </>
   )
 }
