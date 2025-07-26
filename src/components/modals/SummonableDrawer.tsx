@@ -1,14 +1,14 @@
 import Card from "@components/cards/Card";
-import { buildSummonableSummonedKey } from "@components/utils";
+import { buildSummonableSelectedKey, buildSummonableSummonedKey } from "@components/utils";
 import { PlayerCharacter } from "@models/playerCharacter/PlayerCharacter";
 import { Summonable } from "@models/playerCharacter/Summonable";
-import { getAsPercentage, getDefaultFormData, getHPRange } from "@pages/utils";
+import { getAsPercentage, getDefaultFormData, getHPRange, getSelectedSummonedItem } from "@pages/utils";
 import Popover from "./Popover";
 import { getModifierFormatted } from "@services/firestore/utils";
 import { DamageType } from "@models/enum/DamageType";
 
 interface Props {
-  summonable: Summonable;
+  summonables: Summonable[];
   pcData: PlayerCharacter;
   setFormData: (data: any) => void;
   searchParams: URLSearchParams;
@@ -17,8 +17,10 @@ interface Props {
   disableBackdrop: boolean;
 }
 
-function SummonableDrawer ({summonable, pcData, setFormData, searchParams, setSummonableAction, setDisableBackdrop, disableBackdrop}: Props) {
-  if (!summonable.id) return;
+function SummonableDrawer ({summonables, pcData, setFormData, searchParams, setSummonableAction, setDisableBackdrop, disableBackdrop}: Props) {
+  const selectedSummonable = getSelectedSummonedItem(summonables);
+  if (!selectedSummonable) return;
+
   let className = "col-auto collapse collapse-horizontal drawer-body popup";
   className = searchParams.get("showSummonable") == "true" ? className.concat(" show") : className;
 
@@ -45,12 +47,18 @@ function SummonableDrawer ({summonable, pcData, setFormData, searchParams, setSu
             <div className="summonable-title-row">
               <div className="summonable-title row">
                 <div className="col no-padding">
-                  <h4 className={`summonable-title-header ${summonable.data.name ? "summonable-title-header-flat-bottom" : ""}`}>{summonable.data.name ? summonable.data.name : summonable.data.type}</h4>
+                  <h4 className={`summonable-title-header center ${selectedSummonable.data.name ? "summonable-title-header-flat-bottom" : ""}`}>
+                    <button onClick={() => {
+                      // TODO: change selectedSummonable
+                    }}>&lsaquo;</button>
+                    {selectedSummonable.data.name ? selectedSummonable.data.name : selectedSummonable.data.type}
+                    <button>&rsaquo;</button>
+                  </h4>
                 </div>                                
               </div>
               {
-                summonable.data.name &&
-                <h5 className="summonable-subtitle"><i>{summonable.data.type}</i></h5>
+                selectedSummonable.data.name &&
+                <h5 className="summonable-subtitle center"><i>{selectedSummonable.data.type}</i></h5>
               }
             </div>
 
@@ -60,11 +68,11 @@ function SummonableDrawer ({summonable, pcData, setFormData, searchParams, setSu
                 <div className="hp container-fluid">
                     <div className="row">
                         <div className="col-6 hp-col">
-                            <div className={`hp-display hp-display-${getHPRange(summonable.data.hitPoints.current, summonable.data.hitPoints.max)}`}>
-                                {summonable.data.hitPoints.current} / {summonable.data.hitPoints.max}
+                            <div className={`hp-display hp-display-${getHPRange(selectedSummonable.data.hitPoints.current, selectedSummonable.data.hitPoints.max)}`}>
+                                {selectedSummonable.data.hitPoints.current} / {selectedSummonable.data.hitPoints.max}
                             </div>
-                            <div className={`progress hp-progress ${summonable.data.hitPoints.current <= 0 ? "progress-zero" : ""}`} role="progressbar" aria-label="Summonable HP Progress Bar" aria-valuenow={getAsPercentage(summonable.data.hitPoints.current, summonable.data.hitPoints.max)} aria-valuemin={0} aria-valuemax={100}>
-                                <div className={`progress-bar hp-progress-display-${getHPRange(summonable.data.hitPoints.current, summonable.data.hitPoints.max)}`} style={{ width: `${getAsPercentage(summonable.data.hitPoints.current, summonable.data.hitPoints.max)}%`}}></div>
+                            <div className={`progress hp-progress ${selectedSummonable.data.hitPoints.current <= 0 ? "progress-zero" : ""}`} role="progressbar" aria-label="Summonable HP Progress Bar" aria-valuenow={getAsPercentage(selectedSummonable.data.hitPoints.current, selectedSummonable.data.hitPoints.max)} aria-valuemin={0} aria-valuemax={100}>
+                                <div className={`progress-bar hp-progress-display-${getHPRange(selectedSummonable.data.hitPoints.current, selectedSummonable.data.hitPoints.max)}`} style={{ width: `${getAsPercentage(selectedSummonable.data.hitPoints.current, selectedSummonable.data.hitPoints.max)}%`}}></div>
                             </div>                                
                         </div>
                         <div className="col-6 hp-col">
@@ -74,7 +82,7 @@ function SummonableDrawer ({summonable, pcData, setFormData, searchParams, setSu
                                 data-bs-toggle="modal"
                                 data-bs-target="#summonableActionModal"
                                 onClick={() => { setSummonableAction('takeDamage') }}
-                                disabled={summonable.data.hitPoints.current == 0}
+                                disabled={selectedSummonable.data.hitPoints.current == 0}
                             >
                                 Take Damage
                             </button>
@@ -84,7 +92,7 @@ function SummonableDrawer ({summonable, pcData, setFormData, searchParams, setSu
                                 data-bs-toggle="modal"
                                 data-bs-target="#summonableActionModal"
                                 onClick={() => { setSummonableAction('gainHP') }}
-                                disabled={summonable.data.hitPoints.current == summonable.data.hitPoints.max}
+                                disabled={selectedSummonable.data.hitPoints.current == selectedSummonable.data.hitPoints.max}
                             >
                                 Gain HP
                             </button>
@@ -96,7 +104,7 @@ function SummonableDrawer ({summonable, pcData, setFormData, searchParams, setSu
                                 onClick={() => { 
                                   setSummonableAction('refillHP');
                                 }}
-                                disabled={summonable.data.hitPoints.current == summonable.data.hitPoints.max}
+                                disabled={selectedSummonable.data.hitPoints.current == selectedSummonable.data.hitPoints.max}
                             >
                                 Refill
                             </button>
@@ -107,12 +115,12 @@ function SummonableDrawer ({summonable, pcData, setFormData, searchParams, setSu
 
             {/* Attacks display (if any) */}
             {
-              (summonable.data.attacks && summonable.data.attacks.length > 0) &&
+              (selectedSummonable.data.attacks && selectedSummonable.data.attacks.length > 0) &&
               <Card>
                 <h4 className="section-header">Attacks & Actions</h4>
                 
                 {
-                  summonable.data.attacks.map(s => (
+                  selectedSummonable.data.attacks.map(s => (
                     <Popover
                       key={s.id}
                       popoverBody={
@@ -142,13 +150,13 @@ function SummonableDrawer ({summonable, pcData, setFormData, searchParams, setSu
                 <div className="row">
                   <div className="col summonable-stat">
                     <p className="center">AC:</p>
-                    <h5>{summonable.data.armorClass}</h5>
+                    <h5>{selectedSummonable.data.armorClass}</h5>
                   </div>
                   {
-                    Number(summonable.data.abilityScores?.proficiencyBonus) > 0 &&
+                    Number(selectedSummonable.data.abilityScores?.proficiencyBonus) > 0 &&
                     <div className="col summonable-stat">
                       <p className="center">Proficiency Bonus:</p>
-                      <h5>+{summonable.data.abilityScores?.proficiencyBonus}</h5>
+                      <h5>+{selectedSummonable.data.abilityScores?.proficiencyBonus}</h5>
                     </div>
                   }                  
                 </div>
@@ -156,31 +164,31 @@ function SummonableDrawer ({summonable, pcData, setFormData, searchParams, setSu
 
               {/* Stat Block display */}
               {
-                (summonable.data.abilityScores && summonable.data.abilityScores.strength >= 0) &&
+                (selectedSummonable.data.abilityScores && selectedSummonable.data.abilityScores.strength >= 0) &&
                 <div className="mini-stat-block center">
                   <div className="stat-block-item">
                     <div className="stat-block-item-title"><b>STR</b></div>
-                    <p>{summonable.data.abilityScores.strength} ({getModifierFormatted(summonable.data.abilityScores.strength)})</p>
+                    <p>{selectedSummonable.data.abilityScores.strength} ({getModifierFormatted(selectedSummonable.data.abilityScores.strength)})</p>
                   </div>
                   <div className="stat-block-item">
                     <div className="stat-block-item-title"><b>DEX</b></div>
-                    <p>{summonable.data.abilityScores.dexterity} ({getModifierFormatted(summonable.data.abilityScores.dexterity)})</p>
+                    <p>{selectedSummonable.data.abilityScores.dexterity} ({getModifierFormatted(selectedSummonable.data.abilityScores.dexterity)})</p>
                   </div>
                   <div className="stat-block-item">
                     <div className="stat-block-item-title"><b>CON</b></div>
-                    <p>{summonable.data.abilityScores.constitution} ({getModifierFormatted(summonable.data.abilityScores.constitution)})</p>
+                    <p>{selectedSummonable.data.abilityScores.constitution} ({getModifierFormatted(selectedSummonable.data.abilityScores.constitution)})</p>
                   </div>
                   <div className="stat-block-item">
                     <div className="stat-block-item-title"><b>INT</b></div>
-                    <p>{summonable.data.abilityScores.intelligence} ({getModifierFormatted(summonable.data.abilityScores.intelligence)})</p>
+                    <p>{selectedSummonable.data.abilityScores.intelligence} ({getModifierFormatted(selectedSummonable.data.abilityScores.intelligence)})</p>
                   </div>
                   <div className="stat-block-item">
                     <div className="stat-block-item-title"><b>WIS</b></div>
-                    <p>{summonable.data.abilityScores.wisdom} ({getModifierFormatted(summonable.data.abilityScores.wisdom)})</p>
+                    <p>{selectedSummonable.data.abilityScores.wisdom} ({getModifierFormatted(selectedSummonable.data.abilityScores.wisdom)})</p>
                   </div>
                   <div className="stat-block-item">
                     <div className="stat-block-item-title"><b>CHA</b></div>
-                    <p>{summonable.data.abilityScores.charisma} ({getModifierFormatted(summonable.data.abilityScores.charisma)})</p>
+                    <p>{selectedSummonable.data.abilityScores.charisma} ({getModifierFormatted(selectedSummonable.data.abilityScores.charisma)})</p>
                   </div>
                 </div>
               }
@@ -197,9 +205,11 @@ function SummonableDrawer ({summonable, pcData, setFormData, searchParams, setSu
                     data-bs-toggle="modal"
                     data-bs-target="#confirmDismissSummonModal"
                     onClick={() => {
+                      const otherSummonables = summonables.filter(s => s.id !== selectedSummonable.id && s.data.summoned === true && !s.data.selected);
                       setFormData({
                           ...getDefaultFormData(pcData),
-                          [buildSummonableSummonedKey(summonable)]: false,
+                          [buildSummonableSummonedKey(selectedSummonable)]: false,
+                          [buildSummonableSelectedKey(otherSummonables[0])]: true,
                       });
                     }}
                   >

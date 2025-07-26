@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Summonable } from "@models/playerCharacter/Summonable";
-import { updateById } from "@services/firestore/crud/update";
+import { batchUpdate, updateById } from "@services/firestore/crud/update";
 import { CollectionName } from "@services/firestore/enum/CollectionName";
 import { QueryClient } from "@tanstack/react-query";
 import { triggerSuccessAlert } from "@pages/utils";
@@ -8,7 +8,8 @@ import { SentryLogger } from "@services/sentry/logger";
 
 interface Props {
   action: string;  
-  summonable: Summonable;
+  summonable: Summonable; // currently selected summonable
+  summonables: Summonable[] | undefined; // all summonables associated with the pc
   setShowSuccessAlert: (show: boolean) => void;
   queryClient: QueryClient;
   searchParams: URLSearchParams;
@@ -17,7 +18,7 @@ interface Props {
   logger: SentryLogger;
 }
 
-function SummonableActionModal ({ action, summonable, setShowSuccessAlert, queryClient, searchParams, setDisableBackdrop, pcId, logger }: Props) { 
+function SummonableActionModal ({ action, summonable, summonables, setShowSuccessAlert, queryClient, searchParams, setDisableBackdrop, pcId, logger }: Props) { 
   const itemDisplayName = summonable.data.name ?? summonable.data.type;
   const title = action == 'takeDamage' ? itemDisplayName + " Damage Amount:" :
     action == 'gainHP' ? itemDisplayName + " Gained HP Amount:" : 
@@ -58,9 +59,33 @@ function SummonableActionModal ({ action, summonable, setShowSuccessAlert, query
           }
         } else if (['summon'].includes(action)) {
           try {
-            await updateById(CollectionName.SUMMONABLES, summonable.id, {
-              summoned: true
-            });
+            let updates: {
+              collectionName: CollectionName, 
+              docId: string, 
+              update: {[key: string]: string | number | object | boolean | null}
+            }[] = [{
+              collectionName: CollectionName.SUMMONABLES,
+              docId: summonable.id,
+              update: {
+                summoned: true,
+                selected: true
+              }
+            }];
+            
+            // Deselect any other summonables, if applicable
+            const otherSelectedSummonables = summonables?.filter(s => s.id !== summonable.id && s.data.selected);
+            if (otherSelectedSummonables && otherSelectedSummonables.length > 0) {
+              updates = updates.concat(otherSelectedSummonables.map(s => ({
+                collectionName: CollectionName.SUMMONABLES,
+                docId: s.id,
+                update: {
+                  selected: false
+                }
+              })));
+            }
+
+            await batchUpdate(updates);
+            
             searchParams.set("showSummonable", "true");
             setDisableBackdrop(true);
           } catch (e: any) {

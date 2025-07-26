@@ -1,4 +1,4 @@
-import { getFeatureFormData, getSpellSlotFormData, getSummonablesSummoned } from "@components/utils";
+import { getFeatureFormData, getSpellSlotFormData, getSummonablesSelected, getSummonablesSummoned } from "@components/utils";
 import { Ability } from "@models/enum/Ability";
 import { WeaponModifierProperty } from "@models/enum/WeaponModifierProperty";
 import { Feature } from "@models/playerCharacter/Feature";
@@ -364,7 +364,8 @@ export const getDefaultFormData = (pcData: PlayerCharacter) => {
       armorClass: pcData.baseDetails.armorClass,
       ...getSpellSlotFormData(pcData.spellSlots ?? []),
       ...getFeatureFormData(getLimitedUseFeatures(pcData)),
-      ...getSummonablesSummoned(pcData.summonables ?? [])
+      ...getSummonablesSummoned(pcData.summonables ?? []),
+      ...getSummonablesSelected(pcData.summonables ?? [])
   }
 };
 
@@ -376,33 +377,47 @@ export const emptySpellFormData: Spell = {
   spellCastingAbility: Ability.CHA
 }
 
-export const getSummonedItem = (pcData: PlayerCharacter) => {
+const emptySummonable: Summonable = {
+  id: '',
+  data: {
+    pcId: '',
+    type: '',
+    description: '',
+    source: {
+      type: '',
+      name: ''
+    },
+    hitPoints: {
+      max: 0,
+      current: 0
+    },
+    armorClass: 0,
+    summoned: false
+  }
+};
+
+export const getSummonedItems = (pcData: PlayerCharacter): Summonable[] => {
   const summonables = pcData.summonables;
   
-  const summoned = summonables?.filter(s => s.data.summoned == true)[0];  
+  const summoned = summonables?.filter(s => s.data.summoned == true);  
   
   if (!summoned) {
-    return {
-      id: '',
-      data: {
-        pcId: '',
-        type: '',
-        description: '',
-        source: {
-          type: '',
-          name: ''
-        },
-        hitPoints: {
-          max: 0,
-          current: 0
-        },
-        armorClass: 0,
-        summoned: false
-      }
-    }
+    return [emptySummonable];
   } else {
     return summoned;
   }
+}
+
+export const getSelectedSummonedItem = (summonables: Summonable[]): Summonable => {
+  const summoned = summonables.filter(s => s.data.summoned && s.data.summoned === true);
+  let selectedSummonable: Summonable = emptySummonable;
+  if (summoned && summoned.length == 1) {
+    selectedSummonable = summoned[0]; // If only 1 is summoned, consider that the active summonable by default
+  }
+  if (summoned && summoned.length > 1) {
+    selectedSummonable = summoned.find(s => s.data.selected && s.data.selected === true) ?? emptySummonable; // if more than one are summoned, return the currently selected item
+  }
+  return selectedSummonable;
 }
 
 export const emptyRichTextContent = '<p></p>';
