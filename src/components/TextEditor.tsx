@@ -1,3 +1,4 @@
+import { SentryLogger } from '@services/sentry/logger';
 import { useEditor, EditorContent, BubbleMenu, Editor } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
 
@@ -5,7 +6,7 @@ interface Props {
   editor: Editor;
 }
 
-export const buildEditor = (content: string, handleChange: (value: string) => void, dependOnInitialContent=true) => {
+export const buildEditor = (content: string, handleChange: (value: string) => void, logger: SentryLogger, dependOnInitialContent=true) => {
   const editor = useEditor({
     extensions: [
       StarterKit
@@ -13,7 +14,11 @@ export const buildEditor = (content: string, handleChange: (value: string) => vo
     content,
     onUpdate({editor}) {
       const updatedContent = editor.getHTML();
-      handleChange(updatedContent);
+      try {
+        handleChange(updatedContent);
+      } catch (error) {
+        logger.logError('Error updating text editor content: ' + JSON.stringify(error) + ' with content: ' + updatedContent);
+      }
     },
     editorProps: {
       attributes: {
@@ -25,7 +30,7 @@ export const buildEditor = (content: string, handleChange: (value: string) => vo
   return editor;
 }
 
-function TextEditor ({ editor, }: Props) {
+function TextEditor ({ editor }: Props) {
   return (
     <div>
       <div>

@@ -34,7 +34,7 @@ interface Props {
 function BaseDetailsForm ({handleChange, handleSubmit, formData, setFormData, initialEditorContent, modalDismiss, existingPCImage, pcId, logger}: Props) {
   const editor = buildEditor(initialEditorContent, (value: string) => {
     handleChange({ target: { name: 'description', value: value }}, setFormData);
-  });
+  }, logger);
   const [imageUploadElement, setImageUploadElement] = useState(document.getElementById("uploadFile") as HTMLInputElement);
   const fileNameUtil = new FileNameUtil(pcId);
 

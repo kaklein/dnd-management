@@ -2,6 +2,7 @@ import { capitalize } from "@components/utils";
 import Button, { ButtonType } from "@components/Button";
 import { validateRequiredFields } from "../utils";
 import TextEditor, { buildEditor } from "@components/TextEditor";
+import { SentryLogger } from "@services/sentry/logger";
 
 interface Props {
   fieldName: string;
@@ -18,12 +19,13 @@ interface Props {
   initialEditorContent?: string;
   useTextArea?: boolean;
   modalDismiss?: boolean;
+  logger: SentryLogger;
 }
 
-function ArrayItemForm ({fieldName, handleChange, handleSubmit, formData, setFormData, defaultFormData, initialEditorContent, useTextArea=false, modalDismiss=false}: Props) {
+function ArrayItemForm ({fieldName, handleChange, handleSubmit, formData, setFormData, defaultFormData, initialEditorContent, logger, useTextArea=false, modalDismiss=false}: Props) {
   const editor = buildEditor(initialEditorContent ?? '', (value: string) => {
     handleChange({ target: { name: 'note', value: value }}, setFormData);
-  });
+  }, logger);
 
   return (
     editor &&

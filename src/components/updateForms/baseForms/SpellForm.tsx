@@ -10,6 +10,7 @@ import { validateRequiredFields } from "../utils";
 import { PlayerCharacter } from "@models/playerCharacter/PlayerCharacter";
 import { capitalize } from "@components/utils";
 import CheckboxMultiSelect from "@components/CheckboxMultiSelect";
+import { SentryLogger } from "@services/sentry/logger";
 
 interface Props {
   handleChange: (event: any, setFunction: (prevFormData: any) => void) => void;
@@ -24,9 +25,10 @@ interface Props {
   initialEditorContent: string;
   pcData: PlayerCharacter;
   modalDismiss?: boolean;
+  logger: SentryLogger
 }
 
-function SpellForm ({handleChange, handleSubmit, formData, setFormData, initialEditorContent, pcData, modalDismiss=false}: Props) {
+function SpellForm ({handleChange, handleSubmit, formData, setFormData, initialEditorContent, pcData, logger, modalDismiss=false}: Props) {
   const [showDamageFields, setShowDamageFields] = useState(formData.damage ? true : false);
   useEffect(() => {
     setShowDamageFields(formData.damage ? true : false);
@@ -42,7 +44,7 @@ function SpellForm ({handleChange, handleSubmit, formData, setFormData, initialE
 
   const editor = buildEditor(initialEditorContent, (value: string) => {
     handleChange({ target: { name: 'description', value: value }}, setFormData);
-  });
+  }, logger);
 
   return (
       editor &&

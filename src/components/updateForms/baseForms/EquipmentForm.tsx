@@ -1,6 +1,7 @@
 import { defaultEquipmentFormData } from "@data/emptyFormData";
 import Button, { ButtonType } from "@components/Button";
 import TextEditor, { buildEditor } from "@components/TextEditor";
+import { SentryLogger } from "@services/sentry/logger";
 
 interface Props {
   handleChange: (event: any, setFunction: (prevFormData: any) => void) => void;
@@ -14,12 +15,13 @@ interface Props {
   setFormData: (data: any) => void;
   initialEditorContent: string;
   modalDismiss?: boolean;
+  logger: SentryLogger
 }
 
-function EquipmentForm ({handleChange, handleSubmit, formData, setFormData, initialEditorContent, modalDismiss=false}: Props) { 
+function EquipmentForm ({handleChange, handleSubmit, formData, setFormData, initialEditorContent, logger, modalDismiss=false}: Props) { 
   const editor = buildEditor(initialEditorContent, (value: string) => {
     handleChange({ target: { name: 'description', value: value }}, setFormData);
-  });
+  }, logger);
   
   return (
     editor &&

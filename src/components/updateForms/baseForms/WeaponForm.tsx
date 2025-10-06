@@ -7,6 +7,7 @@ import Button, { ButtonType } from "@components/Button";
 import TextEditor, { buildEditor } from "@components/TextEditor";
 import { useEffect, useState } from "react";
 import Popover from "@components/modals/Popover";
+import { SentryLogger } from "@services/sentry/logger";
 
 interface Props {
   handleChange: (event: any, setFunction: (prevFormData: any) => void) => void;
@@ -20,12 +21,13 @@ interface Props {
   setFormData: (data: any) => void;
   initialEditorContent: string;
   modalDismiss?: boolean;
+  logger: SentryLogger;
 }
 
-function WeaponForm ({handleChange, handleSubmit, formData, setFormData, initialEditorContent, modalDismiss=false}: Props) { 
+function WeaponForm ({handleChange, handleSubmit, formData, setFormData, initialEditorContent, logger, modalDismiss=false}: Props) { 
   const editor = buildEditor(initialEditorContent, (value: string) => {
     handleChange({ target: { name: 'description', value: value }}, setFormData);
-  });
+  }, logger);
 
   const [showBonusField, setShowBonusField] = useState(formData.bonus ? true : false);  
   useEffect(() => {

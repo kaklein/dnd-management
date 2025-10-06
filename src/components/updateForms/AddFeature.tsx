@@ -1,3 +1,4 @@
+import { SentryLogger } from "@services/sentry/logger";
 import FormHeader from "./FormHeader";
 import FeatureForm from "./baseForms/FeatureForm";
 import { emptyShowSectionData } from "@data/emptyFormData";
@@ -14,9 +15,10 @@ interface Props {
   setFormData: (data: any) => void;
   initialEditorContent: string;
   showSection: {data: any, setFunction: (newValues: any) => void};
+  logger: SentryLogger;
 }
 
-function AddFeature ({handleChange, handleSubmit, formData, setFormData, initialEditorContent, showSection}: Props) {
+function AddFeature ({handleChange, handleSubmit, formData, setFormData, initialEditorContent, showSection, logger}: Props) {
   const showForm = showSection.data.features;
 
   return (
@@ -42,6 +44,7 @@ function AddFeature ({handleChange, handleSubmit, formData, setFormData, initial
         formData={formData}
         setFormData={setFormData}
         initialEditorContent={initialEditorContent}
+        logger={logger}
       />
       </>
     }

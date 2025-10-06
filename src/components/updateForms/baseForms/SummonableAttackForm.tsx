@@ -4,6 +4,7 @@ import TextEditor, { buildEditor } from '@components/TextEditor';
 import { DamageType } from '@models/enum/DamageType';
 import { Summonable } from '@models/playerCharacter/Summonable';
 import { SummonableAttack } from '@models/playerCharacter/SummonableAttack';
+import { SentryLogger } from '@services/sentry/logger';
 import { useEffect, useState } from 'react';
 
 interface Props {
@@ -13,9 +14,10 @@ interface Props {
   initialEditorContent: string;
   summonable: Summonable | undefined;
   attackId: string;
+  logger: SentryLogger;
 }
 
-function SummonableAttackForm({ formData, attackId, initialEditorContent, removeAttack, setFormData }: Props) {
+function SummonableAttackForm({ formData, attackId, initialEditorContent, removeAttack, setFormData, logger }: Props) {
   const formDataExistingAttack = formData.attacks.filter((a: SummonableAttack) => a.id == attackId)[0];
 
   const handleAttackFieldChange = (updatedAttack: SummonableAttack) => {
@@ -59,6 +61,7 @@ function SummonableAttackForm({ formData, attackId, initialEditorContent, remove
         description: value
       });
     },
+    logger,
     false
   );
   

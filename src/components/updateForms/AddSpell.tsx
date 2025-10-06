@@ -2,6 +2,7 @@ import { emptyShowSectionData } from "@data/emptyFormData";
 import FormHeader from "./FormHeader";
 import SpellForm from "./baseForms/SpellForm";
 import { PlayerCharacter } from "@models/playerCharacter/PlayerCharacter";
+import { SentryLogger } from "@services/sentry/logger";
 
 interface Props {
   handleChange: (event: any, setFunction: (prevFormData: any) => void) => void;
@@ -16,9 +17,10 @@ interface Props {
   setFormData: (data: any) => void;
   showSection: {data: any, setFunction: (newValues: any) => void};
   pcData: PlayerCharacter;
+  logger: SentryLogger;
 }
 
-function AddSpell ({handleChange, handleSubmit, formData, setFormData, initialEditorContent, showSection, pcData}: Props) { 
+function AddSpell ({handleChange, handleSubmit, formData, setFormData, initialEditorContent, showSection, pcData, logger}: Props) { 
   const showForm = showSection.data.spells;
 
   return (
@@ -40,6 +42,7 @@ function AddSpell ({handleChange, handleSubmit, formData, setFormData, initialEd
         setFormData={setFormData}
         initialEditorContent={initialEditorContent}
         pcData={pcData}
+        logger={logger}
       />
     }
     </div>
