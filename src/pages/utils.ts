@@ -404,20 +404,34 @@ export const getSummonedItems = (pcData: PlayerCharacter): Summonable[] => {
   if (!summoned) {
     return [emptySummonable];
   } else {
-    return summoned;
+    return summoned.sort((a, b) => {
+      const aComparable = a.data.name ?? a.data.type;
+      const bComparable = b.data.name ?? b.data.type;
+      if (aComparable < bComparable) return -1;
+      return 1;
+    });
   }
 }
 
-export const getSelectedSummonedItem = (summonables: Summonable[]): Summonable => {
+export const getSelectedSummonedItem = (summonables: Summonable[], selectedSummonable?: Summonable): Summonable => {
+  if (selectedSummonable && selectedSummonable.data?.summoned) return selectedSummonable;
   const summoned = summonables.filter(s => s.data.summoned && s.data.summoned === true);
-  let selectedSummonable: Summonable = emptySummonable;
-  if (summoned && summoned.length == 1) {
-    selectedSummonable = summoned[0]; // If only 1 is summoned, consider that the active summonable by default
-  }
-  if (summoned && summoned.length > 1) {
-    selectedSummonable = summoned.find(s => s.data.selected && s.data.selected === true) ?? emptySummonable; // if more than one are summoned, return the currently selected item
-  }
-  return selectedSummonable;
+  return summoned[0] ?? emptySummonable; // If multiple are summoned, just return the first one
+}
+
+export const getNextSummonable = (selectedSummonable: Summonable, summonables: Summonable[], backward?: boolean): Summonable => {
+  if (summonables.length < 2) return selectedSummonable;
+
+  let selectedIndex = summonables.findIndex(s => s.id === selectedSummonable.id);
+  if (selectedIndex < 0) return selectedSummonable;
+
+  if (backward) { 
+    selectedIndex = (selectedIndex - 1) < 0 ? (summonables.length - 1) : (selectedIndex - 1)
+  } else { 
+    selectedIndex = (selectedIndex + 1) >= summonables.length ? 0 : (selectedIndex + 1)
+  } 
+
+  return summonables[selectedIndex];
 }
 
 export const emptyRichTextContent = '<p></p>';

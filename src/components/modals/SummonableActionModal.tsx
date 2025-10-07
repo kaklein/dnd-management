@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Summonable } from "@models/playerCharacter/Summonable";
-import { batchUpdate, updateById } from "@services/firestore/crud/update";
+import { updateById } from "@services/firestore/crud/update";
 import { CollectionName } from "@services/firestore/enum/CollectionName";
 import { QueryClient } from "@tanstack/react-query";
 import { toggleSummonableDrawer } from "@pages/utils";
@@ -9,14 +9,14 @@ import { SentryLogger } from "@services/sentry/logger";
 interface Props {
   action: string;  
   summonable: Summonable; // currently selected summonable
-  summonables: Summonable[] | undefined; // all summonables associated with the pc
   queryClient: QueryClient;
   setDisableBackdrop: (newValue: boolean) => void;
   pcId: string;
   logger: SentryLogger;
+  setSelectedSummonable: (summonable: Summonable) => void;
 }
 
-function SummonableActionModal ({ action, summonable, summonables, queryClient, setDisableBackdrop, pcId, logger }: Props) { 
+function SummonableActionModal ({ action, summonable, queryClient, setDisableBackdrop, pcId, logger, setSelectedSummonable }: Props) { 
   const itemDisplayName = summonable.data.name ?? summonable.data.type;
   const title = action == 'takeDamage' ? itemDisplayName + " Damage Amount:" :
     action == 'gainHP' ? itemDisplayName + " Gained HP Amount:" : 
@@ -56,32 +56,8 @@ function SummonableActionModal ({ action, summonable, summonables, queryClient, 
             return;
           }
         } else if (['summon'].includes(action)) {
-          try {
-            let updates: {
-              collectionName: CollectionName, 
-              docId: string, 
-              update: {[key: string]: string | number | object | boolean | null}
-            }[] = [{
-              collectionName: CollectionName.SUMMONABLES,
-              docId: summonable.id,
-              update: {
-                summoned: true,
-                selected: true
-              }
-            }];
-            
-            // Deselect any other summonables, if applicable
-            const otherSelectedSummonables = summonables?.filter(s => s.id !== summonable.id && s.data.selected);
-            if (otherSelectedSummonables && otherSelectedSummonables.length > 0) {
-              updates = updates.concat(otherSelectedSummonables.map(s => ({
-                collectionName: CollectionName.SUMMONABLES,
-                docId: s.id,
-                update: {
-                  selected: false
-                }
-              })));
-            }
-            await batchUpdate(updates);
+          try {                     
+            await updateById(CollectionName.SUMMONABLES, summonable.id, { summoned: true });
           } catch (e: any) {
             logger.logError(e);
             alert('We encountered an error saving your changes. Please refresh the page and try again.');
@@ -91,7 +67,8 @@ function SummonableActionModal ({ action, summonable, summonables, queryClient, 
           throw Error ('Unknown action in summon modal: ' + action);
         }
         setModalFormData(emptyModalData);
-        queryClient.refetchQueries({ queryKey: ['pcData', pcId]});
+        await queryClient.refetchQueries({ queryKey: ['pcData', pcId]});
+        setSelectedSummonable(summonable);
         toggleSummonableDrawer(true);
         setDisableBackdrop(true);    
       }}>

@@ -12,7 +12,7 @@ import {
     removeWhiteSpaceAndConvertToLowerCase, 
 } from "@components/utils";
 import { useEffect, useState} from "react";
-import { batchUpdate, updateById, updateDataByPcId } from "@services/firestore/crud/update";
+import { updateById, updateDataByPcId } from "@services/firestore/crud/update";
 import ItemUseToggle from "@components/ItemUseToggle";
 import { BaseDetails, PlayerCharacter } from "@models/playerCharacter/PlayerCharacter";
 import { QueryClient } from "@tanstack/react-query";
@@ -94,7 +94,6 @@ function Tracker({pcData, queryClient, pcList, selectedPc, userRole, logger}: Pr
         setLimitedUseFeatures(getLimitedUseFeatures(pcData));
         setFormData(getDefaultFormData(pcData));
         setSummonedItems(getSummonedItems(pcData));
-        setSelectedSummonable(getSelectedSummonedItem(getSummonedItems(pcData)));
     }, [pcData]);
 
 
@@ -174,6 +173,8 @@ function Tracker({pcData, queryClient, pcList, selectedPc, userRole, logger}: Pr
                     setSummonableAction={setSummonableAction}
                     setDisableBackdrop={setDisableBackdrop}
                     disableBackdrop={disableBackdrop}
+                    selectedSummonable={selectedSummonable}
+                    setSelectedSummonable={setSelectedSummonable}
                 />
             }
             
@@ -205,37 +206,21 @@ function Tracker({pcData, queryClient, pcList, selectedPc, userRole, logger}: Pr
             <ConfirmDismissSummonModal
                 summonable={selectedSummonable}
                 handleDismiss={() => {
-                    // on dismiss: 1. set current summonable to summoned: false, selected: false
-                    let updates: {
-                        collectionName: CollectionName, 
-                        docId: string, 
-                        update: {[key: string]: string | number | object | boolean | null}
-                    }[] = [{
-                        collectionName: CollectionName.SUMMONABLES,
-                        docId: selectedSummonable.id,
-                        update: {
-                            summoned: false,
-                            selected: false
-                        }
-                    }];
-                    // 2. if any others are summoned, set the first one to selected: true
+                    // set current summonable to summoned: false
+                    updateById(CollectionName.SUMMONABLES, selectedSummonable.id, { summoned: false });
+                    
+                    // if any others are summoned, set the first one as the selected one
                     let newSelectedSummonable;
                     if (summonedItems.length > 1) {
                         newSelectedSummonable = summonedItems.find(i => i.id !== selectedSummonable.id);
                         if (newSelectedSummonable) {
-                            updates = updates.concat([{
-                                collectionName: CollectionName.SUMMONABLES,
-                                docId: newSelectedSummonable.id,
-                                update: {
-                                    selected: true
-                                }
-                            }]);
+                            setSelectedSummonable(newSelectedSummonable);
                         }
                     };
+                    // close drawer if there are no more summoned items
                     if (!newSelectedSummonable) {
                         setDisableBackdrop(false);
                     }
-                    batchUpdate(updates);
                     queryClient.refetchQueries({ queryKey: ['pcData', pcData.baseDetails.pcId]});
                     setFormData(getDefaultFormData(pcData));
                     setSummonedItems(getSummonedItems(pcData));
@@ -245,11 +230,11 @@ function Tracker({pcData, queryClient, pcList, selectedPc, userRole, logger}: Pr
             <SummonableActionModal
                 action={summonableAction}
                 summonable={selectedSummonable}
-                summonables={pcData.summonables}
                 queryClient={queryClient}
                 setDisableBackdrop={setDisableBackdrop}
                 pcId={pcData.baseDetails.pcId}
                 logger={logger}
+                setSelectedSummonable={setSelectedSummonable}
             />
                          
             <GenericModal
@@ -602,17 +587,12 @@ function Tracker({pcData, queryClient, pcList, selectedPc, userRole, logger}: Pr
                                             (s.data.source.type == 'feature' && pcData.features.filter(f => f.data.name === s.data.source.name)[0].data.maxUses) &&
                                             <p className="center">Must use the {s.data.source.name} feature under the Abilities section in order to summon.</p>
                                         }
-                                        <button
-                                        // TODO: figure out why summoning is messed up. Doesn't work at all if there isn't 
-                                        // already a summoned item, and if there IS a summoned item then this one doesn't get properly summoned
-                                        // even though it looks like it briefly does.....
-                                        // TODO: update logic for allowing/not allowing button click for multiple summonables
+                                        <button                                        
                                             className={`btn btn-${(summonedItems.map(i => i.id).includes(s.id) && summonedItems.find(i => i.id == s.id)?.data.summoned) ? 'success' : 'info'}`}
                                             type="button"
                                             data-bs-toggle="modal"
                                             data-bs-target="#summonableActionModal"
                                             onClick={() => {
-                                                // setSummonedItems(summonedItems.concat(s));
                                                 setSelectedSummonable(s);
                                                 setSummonableAction('summon');
                                             }}

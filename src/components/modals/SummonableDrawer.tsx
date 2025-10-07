@@ -2,7 +2,7 @@ import Card from "@components/cards/Card";
 import { buildSummonableSelectedKey, buildSummonableSummonedKey } from "@components/utils";
 import { PlayerCharacter } from "@models/playerCharacter/PlayerCharacter";
 import { Summonable } from "@models/playerCharacter/Summonable";
-import { getAsPercentage, getDefaultFormData, getHPRange, getSelectedSummonedItem, toggleSummonableDrawer } from "@pages/utils";
+import { getAsPercentage, getDefaultFormData, getHPRange, getNextSummonable, toggleSummonableDrawer } from "@pages/utils";
 import Popover from "./Popover";
 import { getModifierFormatted } from "@services/firestore/utils";
 import { DamageType } from "@models/enum/DamageType";
@@ -14,10 +14,11 @@ interface Props {
   setSummonableAction: (action: 'gainHP' | 'takeDamage' | 'refillHP' | '') => void;
   setDisableBackdrop: (newValue: boolean) => void;
   disableBackdrop: boolean;
+  setSelectedSummonable: (summonable: Summonable) => void;
+  selectedSummonable?: Summonable;
 }
 
-function SummonableDrawer ({summonables, pcData, setFormData, setSummonableAction, setDisableBackdrop, disableBackdrop}: Props) {
-  const selectedSummonable = getSelectedSummonedItem(summonables);
+function SummonableDrawer ({summonables, pcData, setFormData, setSummonableAction, setDisableBackdrop, disableBackdrop, setSelectedSummonable, selectedSummonable=undefined}: Props) {
   if (!selectedSummonable) return;
 
   let className = "col-auto collapse collapse-horizontal drawer-body popup";
@@ -48,11 +49,9 @@ function SummonableDrawer ({summonables, pcData, setFormData, setSummonableActio
               <div className="summonable-title row">
                 <div className="col no-padding">
                   <h4 className={`summonable-title-header center ${selectedSummonable.data.name ? "summonable-title-header-flat-bottom" : ""}`}>
-                    <button onClick={() => {
-                      // TODO: change selectedSummonable
-                    }}>&lsaquo;</button>
+                    <button onClick={() => { setSelectedSummonable(getNextSummonable(selectedSummonable, summonables, true)) }}>&lsaquo;</button>
                     {selectedSummonable.data.name ? selectedSummonable.data.name : selectedSummonable.data.type}
-                    <button>&rsaquo;</button>
+                    <button onClick={() => { setSelectedSummonable(getNextSummonable(selectedSummonable, summonables)) }}>&rsaquo;</button>                
                   </h4>
                 </div>                                
               </div>
@@ -209,7 +208,7 @@ function SummonableDrawer ({summonables, pcData, setFormData, setSummonableActio
                       setFormData({
                           ...getDefaultFormData(pcData),
                           [buildSummonableSummonedKey(selectedSummonable)]: false,
-                          [buildSummonableSelectedKey(otherSummonables[0])]: true, // todo
+                          ...(otherSummonables[0] && {[buildSummonableSelectedKey(otherSummonables[0])]: true}),
                       });
                     }}
                   >
