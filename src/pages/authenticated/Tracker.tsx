@@ -205,9 +205,9 @@ function Tracker({pcData, queryClient, pcList, selectedPc, userRole, logger}: Pr
             
             <ConfirmDismissSummonModal
                 summonable={selectedSummonable}
-                handleDismiss={() => {
+                handleDismiss={ async () => {
                     // set current summonable to summoned: false
-                    updateById(CollectionName.SUMMONABLES, selectedSummonable.id, { summoned: false });
+                    await updateById(CollectionName.SUMMONABLES, selectedSummonable.id, { summoned: false });
                     
                     // if any others are summoned, set the first one as the selected one
                     let newSelectedSummonable;
