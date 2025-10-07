@@ -428,3 +428,13 @@ export const getEnvName = (): EnvName => {
   if (hostName.startsWith(STAGING_HOST_PREFIX)) return EnvName.staging;
   return EnvName.dev;
 }
+
+export const toggleSummonableDrawer = (show: boolean) => {
+  const summonableDrawer = document.getElementById('summonable-drawer');
+  if (!summonableDrawer) return;
+  if (show) {
+    summonableDrawer.classList.add('show');
+  } else {
+    summonableDrawer.classList.remove('show');
+  }
+}

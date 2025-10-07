@@ -17,7 +17,7 @@ import ItemUseToggle from "@components/ItemUseToggle";
 import { BaseDetails, PlayerCharacter } from "@models/playerCharacter/PlayerCharacter";
 import { QueryClient } from "@tanstack/react-query";
 import { CollectionName } from "@services/firestore/enum/CollectionName";
-import { determineAttackBonus, emptyRichTextContent, formatBonus, formatWeaponDisplayTitle, getDefaultFormData, getLimitedUseFeatures, getSelectedSummonedItem, getSummonableIconName, getSummonedItems, SAVE_CHANGES_ERROR, triggerSuccessAlert } from "../utils";
+import { determineAttackBonus, emptyRichTextContent, formatBonus, formatWeaponDisplayTitle, getDefaultFormData, getLimitedUseFeatures, getSelectedSummonedItem, getSummonableIconName, getSummonedItems, SAVE_CHANGES_ERROR, toggleSummonableDrawer, triggerSuccessAlert } from "../utils";
 import PageHeaderBarPC from "@components/headerBars/PageHeaderBarPC";
 import QuickNav from "@components/QuickNav";
 import SuccessAlert from "@components/alerts/SuccessAlert";
@@ -30,7 +30,6 @@ import AboutFooter from "@components/AboutFooter";
 import SpellsTrackerComponent from "@components/SpellsTrackerComponent";
 import { RestType } from "@models/enum/RestType";
 import ConfirmDismissSummonModal from "@components/modals/ConfirmDismissSummonModal";
-import { useSearchParams } from "react-router-dom";
 import SummonableActionModal from "@components/modals/SummonableActionModal";
 import SummonableDrawer from "@components/modals/SummonableDrawer";
 import { Weapon } from "@models/playerCharacter/Weapon";
@@ -57,8 +56,6 @@ function Tracker({pcData, queryClient, pcList, selectedPc, userRole, logger}: Pr
     const conModifier = pcData.abilityScores.data.constitution.modifier;
    
     const [showSuccessAlert, setShowSuccessAlert] = useState(false);
-
-    const [searchParams] = useSearchParams();
 
     const [disableBackdrop, setDisableBackdrop] = useState(false);
 
@@ -174,7 +171,6 @@ function Tracker({pcData, queryClient, pcList, selectedPc, userRole, logger}: Pr
                     pcData={pcData}
                     setFormData={setFormData}
                     summonables={summonedItems}
-                    searchParams={searchParams}
                     setSummonableAction={setSummonableAction}
                     setDisableBackdrop={setDisableBackdrop}
                     disableBackdrop={disableBackdrop}
@@ -250,9 +246,7 @@ function Tracker({pcData, queryClient, pcList, selectedPc, userRole, logger}: Pr
                 action={summonableAction}
                 summonable={selectedSummonable}
                 summonables={pcData.summonables}
-                setShowSuccessAlert={setShowSuccessAlert}
                 queryClient={queryClient}
-                searchParams={searchParams}
                 setDisableBackdrop={setDisableBackdrop}
                 pcId={pcData.baseDetails.pcId}
                 logger={logger}
@@ -847,9 +841,10 @@ function Tracker({pcData, queryClient, pcList, selectedPc, userRole, logger}: Pr
             {
                 (selectedSummonable && selectedSummonable.data.summoned && !disableBackdrop) &&
                 <div className="col-auto drawer-handle">
-                    <button className="btn drawer-handle-btn" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample"
+                <button className="btn drawer-handle-btn" type="button"
                     onClick={() => {
                         setDisableBackdrop(!disableBackdrop);
+                        toggleSummonableDrawer(true);
                     }}>
                         <a href="#top">
                             { !disableBackdrop && 

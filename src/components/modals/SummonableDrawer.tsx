@@ -2,7 +2,7 @@ import Card from "@components/cards/Card";
 import { buildSummonableSelectedKey, buildSummonableSummonedKey } from "@components/utils";
 import { PlayerCharacter } from "@models/playerCharacter/PlayerCharacter";
 import { Summonable } from "@models/playerCharacter/Summonable";
-import { getAsPercentage, getDefaultFormData, getHPRange, getSelectedSummonedItem } from "@pages/utils";
+import { getAsPercentage, getDefaultFormData, getHPRange, getSelectedSummonedItem, toggleSummonableDrawer } from "@pages/utils";
 import Popover from "./Popover";
 import { getModifierFormatted } from "@services/firestore/utils";
 import { DamageType } from "@models/enum/DamageType";
@@ -11,31 +11,31 @@ interface Props {
   summonables: Summonable[];
   pcData: PlayerCharacter;
   setFormData: (data: any) => void;
-  searchParams: URLSearchParams;
   setSummonableAction: (action: 'gainHP' | 'takeDamage' | 'refillHP' | '') => void;
   setDisableBackdrop: (newValue: boolean) => void;
   disableBackdrop: boolean;
 }
 
-function SummonableDrawer ({summonables, pcData, setFormData, searchParams, setSummonableAction, setDisableBackdrop, disableBackdrop}: Props) {
+function SummonableDrawer ({summonables, pcData, setFormData, setSummonableAction, setDisableBackdrop, disableBackdrop}: Props) {
   const selectedSummonable = getSelectedSummonedItem(summonables);
   if (!selectedSummonable) return;
 
   let className = "col-auto collapse collapse-horizontal drawer-body popup";
-  className = searchParams.get("showSummonable") == "true" ? className.concat(" show") : className;
+  className = disableBackdrop ? className.concat(" show") : className;
 
   return (
     <div className="container-fluid summonable" id="top">
       <div className="row">
-        <div className={className} id="collapseExample">          
+        <div className={className} id="summonable-drawer">          
           <div className="summonable-content" style={{width: "93vw"}}>
             {/* Collapse button */}
             {
               disableBackdrop &&
               <div className="collapse-btn collapse-btn-top">
-                <button className="btn" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample"
+                <button className="btn" type="button"
                   onClick={() => {
                     setDisableBackdrop(false);
+                    toggleSummonableDrawer(false);
                   }}
                 >
                   <p className="inline"><span className="collapse-icon">&lsaquo;</span> COLLAPSE</p>
@@ -209,7 +209,7 @@ function SummonableDrawer ({summonables, pcData, setFormData, searchParams, setS
                       setFormData({
                           ...getDefaultFormData(pcData),
                           [buildSummonableSummonedKey(selectedSummonable)]: false,
-                          [buildSummonableSelectedKey(otherSummonables[0])]: true,
+                          [buildSummonableSelectedKey(otherSummonables[0])]: true, // todo
                       });
                     }}
                   >
@@ -221,9 +221,10 @@ function SummonableDrawer ({summonables, pcData, setFormData, searchParams, setS
               {
                 disableBackdrop &&
                 <div className="collapse-btn collapse-btn-bottom">
-                  <button className="btn" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample"
+                  <button className="btn" type="button"
                     onClick={() => {
                       setDisableBackdrop(false);
+                      toggleSummonableDrawer(false);
                     }}
                   >
                     <p className="inline"><span className="collapse-icon">&lsaquo;</span> COLLAPSE</p>
