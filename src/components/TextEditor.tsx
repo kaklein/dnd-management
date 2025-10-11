@@ -14,6 +14,7 @@ export const buildEditor = (content: string, handleChange: (value: string) => vo
     content,
     onUpdate({editor}) {
       const updatedContent = editor.getHTML();
+      logger.logMessage('Editing content: ' + updatedContent);
       try {
         handleChange(updatedContent);
       } catch (error) {
