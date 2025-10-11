@@ -825,12 +825,14 @@ function Tracker({pcData, queryClient, pcList, selectedPc, userRole, logger}: Pr
             {/* SUMMONABLE DRAWER HANDLE */}
             {
                 showDrawerHandle &&
-                <div className="col-auto drawer-handle show" id="summonable-drawer-handle">
-                <button className="btn drawer-handle-btn" type="button"
-                    onClick={() => {
-                        setDisableBackdrop(!disableBackdrop);
-                        toggleSummonableDrawer();
-                    }}>
+                <>
+                <div className="col-auto summonable-drawer-handle show">
+                    <button className="btn drawer-handle-btn" type="button"
+                        onClick={() => {
+                            setDisableBackdrop(!disableBackdrop);
+                            toggleSummonableDrawer();
+                        }}
+                    >
                         <a href="#top">
                             { !disableBackdrop && 
                             <img
@@ -840,7 +842,12 @@ function Tracker({pcData, queryClient, pcList, selectedPc, userRole, logger}: Pr
                             }
                         </a>
                     </button>
-                </div>                
+                </div>
+                {
+                    (summonedItems.length > 1 && !disableBackdrop) &&
+                    <div className="summonable-drawer-handle show" id="drawer-handle-layer"></div>
+                }
+                </>
             }
 
             <AboutFooter/>

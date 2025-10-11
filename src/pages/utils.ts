@@ -454,9 +454,10 @@ export const toggleSummonableDrawer = () => {
   summonableContainer.classList.toggle('expand');
   summonableContainer.classList.toggle('contract');
   
-  const drawerHandle = document.getElementById('summonable-drawer-handle');
-  console.log('drawer handle class: ', drawerHandle?.className);
-  if (!drawerHandle) return;
-  drawerHandle.classList.toggle('show');
-  drawerHandle.classList.toggle('hide');
+  const drawerHandleEls = document.getElementsByClassName('summonable-drawer-handle');
+  if (!drawerHandleEls || drawerHandleEls.length === 0) return;
+  for (const el of drawerHandleEls) {
+    el.classList.toggle('show');
+    el.classList.toggle('hide');
+  }
 }

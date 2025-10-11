@@ -1385,15 +1385,24 @@ td {
     box-shadow: 2px 2px 2px 2px lightgray;
 }
 
-.drawer-handle {
+.summonable-drawer-handle {
     position: fixed;
     bottom: 101px;
     z-index: 99;
     background-color: white;
     height: 60px;
-    box-shadow: 2px 2px 2px 2px lightgray;
+    box-shadow: 1px 1px 2px 1px lightgray;
     border-top-right-radius: 5px;
     border-bottom-right-radius: 5px;
+}
+
+#drawer-handle-layer {
+    bottom: 105px;
+    left: 5px;
+    border-radius: 5px;
+    z-index: 98;
+    width: 42px;
+    height: 60px;
 }
 
 .summonable-title-row {
