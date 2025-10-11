@@ -1356,10 +1356,27 @@ td {
     padding-right: 0px !important;
 }
 
-.summonable {
+#summonable-drawer-container {
+    overflow: hidden;
+    width: fit-content;
+    margin-left: -100%;
+    transition: all .5s;
     z-index: 100;
     margin-top: 10px;
     position: fixed;
+}
+
+#summonable-drawer-container.expand {
+    margin-left: 0;
+}
+
+#summonable-drawer {
+    margin-left: -100%;
+    transition: all .5s;
+}
+
+#summonable-drawer.expand {
+    margin-left: 0;
 }
 
 .drawer-body {
@@ -1371,7 +1388,7 @@ td {
 .drawer-handle {
     position: fixed;
     bottom: 101px;
-    z-index: 100;
+    z-index: 99;
     background-color: white;
     height: 60px;
     box-shadow: 2px 2px 2px 2px lightgray;

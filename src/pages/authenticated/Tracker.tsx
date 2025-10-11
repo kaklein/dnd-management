@@ -84,7 +84,7 @@ function Tracker({pcData, queryClient, pcList, selectedPc, userRole, logger}: Pr
     const [summonedItems, setSummonedItems] = useState(getSummonedItems(pcData));
     const [selectedSummonable, setSelectedSummonable] = useState(getSelectedSummonedItem(summonedItems));
     const [selectedSpellSlotLevel, setSelectedSpellSlotLevel] = useState(SpellLevel.L1);
-
+    const [showDrawerHandle, setShowDrawerHandle] = useState(summonedItems[0]?.data?.summoned && !disableBackdrop);
     const [descriptionModalData, setDescriptionModalData] = useState({
         title: '',
         content: emptyRichTextContent
@@ -94,6 +94,7 @@ function Tracker({pcData, queryClient, pcList, selectedPc, userRole, logger}: Pr
         setLimitedUseFeatures(getLimitedUseFeatures(pcData));
         setFormData(getDefaultFormData(pcData));
         setSummonedItems(getSummonedItems(pcData));
+        setShowDrawerHandle(getSummonedItems(pcData).length > 0 && getSummonedItems(pcData)[0].data.summoned);
     }, [pcData]);
 
 
@@ -220,6 +221,8 @@ function Tracker({pcData, queryClient, pcList, selectedPc, userRole, logger}: Pr
                     // close drawer if there are no more summoned items
                     if (!newSelectedSummonable) {
                         setDisableBackdrop(false);
+                        toggleSummonableDrawer();
+                        setShowDrawerHandle(false);
                     }
                     queryClient.refetchQueries({ queryKey: ['pcData', pcData.baseDetails.pcId]});
                     setFormData(getDefaultFormData(pcData));
@@ -818,13 +821,14 @@ function Tracker({pcData, queryClient, pcList, selectedPc, userRole, logger}: Pr
                 </div>                          
             </form>
 
+            {/* SUMMONABLE DRAWER HANDLE */}
             {
-                (selectedSummonable && selectedSummonable.data.summoned && !disableBackdrop) &&
-                <div className="col-auto drawer-handle">
+                showDrawerHandle &&
+                <div className="col-auto drawer-handle show" id="summonable-drawer-handle">
                 <button className="btn drawer-handle-btn" type="button"
                     onClick={() => {
                         setDisableBackdrop(!disableBackdrop);
-                        toggleSummonableDrawer(true);
+                        toggleSummonableDrawer();
                     }}>
                         <a href="#top">
                             { !disableBackdrop && 

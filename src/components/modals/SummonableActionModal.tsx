@@ -69,8 +69,8 @@ function SummonableActionModal ({ action, summonable, queryClient, setDisableBac
         setModalFormData(emptyModalData);
         await queryClient.refetchQueries({ queryKey: ['pcData', pcId]});
         setSelectedSummonable(summonable);
-        toggleSummonableDrawer(true);
-        setDisableBackdrop(true);    
+        setDisableBackdrop(true);
+        toggleSummonableDrawer();
       }}>
       <div className="modal-dialog">
         <div className="modal-content">

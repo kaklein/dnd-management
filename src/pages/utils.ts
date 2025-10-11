@@ -443,12 +443,20 @@ export const getEnvName = (): EnvName => {
   return EnvName.dev;
 }
 
-export const toggleSummonableDrawer = (show: boolean) => {
+export const toggleSummonableDrawer = () => {
   const summonableDrawer = document.getElementById('summonable-drawer');
   if (!summonableDrawer) return;
-  if (show) {
-    summonableDrawer.classList.add('show');
-  } else {
-    summonableDrawer.classList.remove('show');
-  }
+  summonableDrawer.classList.toggle('expand');
+  summonableDrawer.classList.toggle('contract');
+
+  const summonableContainer = document.getElementById('summonable-drawer-container');
+  if (!summonableContainer) return;
+  summonableContainer.classList.toggle('expand');
+  summonableContainer.classList.toggle('contract');
+  
+  const drawerHandle = document.getElementById('summonable-drawer-handle');
+  console.log('drawer handle class: ', drawerHandle?.className);
+  if (!drawerHandle) return;
+  drawerHandle.classList.toggle('show');
+  drawerHandle.classList.toggle('hide');
 }

@@ -21,11 +21,22 @@ interface Props {
 function SummonableDrawer ({summonables, pcData, setFormData, setSummonableAction, setDisableBackdrop, disableBackdrop, setSelectedSummonable, selectedSummonable=undefined}: Props) {
   if (!selectedSummonable) return;
 
-  let className = "col-auto collapse collapse-horizontal drawer-body popup";
-  className = disableBackdrop ? className.concat(" show") : className;
+  let className = "col-auto drawer-body";
+  if (disableBackdrop) {
+    className += " expand";
+  } else {
+    className += " drawer-body-collapsed";
+  }
+
+  let containerClassName = "container-fluid summonable";
+  if (disableBackdrop) {
+    containerClassName += " expand";
+  } else {
+    containerClassName += " contract";
+  }
 
   return (
-    <div className="container-fluid summonable" id="top">
+    <div className={containerClassName} id="summonable-drawer-container">
       <div className="row">
         <div className={className} id="summonable-drawer">          
           <div className="summonable-content" style={{width: "93vw"}}>
@@ -36,7 +47,7 @@ function SummonableDrawer ({summonables, pcData, setFormData, setSummonableActio
                 <button className="btn" type="button"
                   onClick={() => {
                     setDisableBackdrop(false);
-                    toggleSummonableDrawer(false);
+                    toggleSummonableDrawer();
                   }}
                 >
                   <p className="inline"><span className="collapse-icon">&lsaquo;</span> COLLAPSE</p>
@@ -223,7 +234,7 @@ function SummonableDrawer ({summonables, pcData, setFormData, setSummonableActio
                   <button className="btn" type="button"
                     onClick={() => {
                       setDisableBackdrop(false);
-                      toggleSummonableDrawer(false);
+                      toggleSummonableDrawer();
                     }}
                   >
                     <p className="inline"><span className="collapse-icon">&lsaquo;</span> COLLAPSE</p>
