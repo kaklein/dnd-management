@@ -17,7 +17,7 @@ import ItemUseToggle from "@components/ItemUseToggle";
 import { BaseDetails, PlayerCharacter } from "@models/playerCharacter/PlayerCharacter";
 import { QueryClient } from "@tanstack/react-query";
 import { CollectionName } from "@services/firestore/enum/CollectionName";
-import { determineAttackBonus, emptyRichTextContent, formatBonus, formatWeaponDisplayTitle, getDefaultFormData, getLimitedUseFeatures, getSelectedSummonedItem, getSummonableIconName, getSummonedItems, SAVE_CHANGES_ERROR, toggleSummonableDrawer, triggerSuccessAlert } from "../utils";
+import { determineAttackBonus, emptyRichTextContent, emptySummonable, formatBonus, formatWeaponDisplayTitle, getDefaultFormData, getLimitedUseFeatures, getSelectedSummonedItem, getSummonableIconName, getSummonedItems, SAVE_CHANGES_ERROR, toggleSummonableDrawer, triggerSuccessAlert } from "../utils";
 import PageHeaderBarPC from "@components/headerBars/PageHeaderBarPC";
 import QuickNav from "@components/QuickNav";
 import SuccessAlert from "@components/alerts/SuccessAlert";
@@ -83,6 +83,7 @@ function Tracker({pcData, queryClient, pcList, selectedPc, userRole, logger}: Pr
     });
     const [summonedItems, setSummonedItems] = useState(getSummonedItems(pcData));
     const [selectedSummonable, setSelectedSummonable] = useState(getSelectedSummonedItem(summonedItems));
+    const [clickedSummonable, setClickedSummonable] = useState(emptySummonable);
     const [selectedSpellSlotLevel, setSelectedSpellSlotLevel] = useState(SpellLevel.L1);
     const [showDrawerHandle, setShowDrawerHandle] = useState(summonedItems[0]?.data?.summoned && !disableBackdrop);
     const [descriptionModalData, setDescriptionModalData] = useState({
@@ -232,7 +233,7 @@ function Tracker({pcData, queryClient, pcList, selectedPc, userRole, logger}: Pr
             />
             <SummonableActionModal
                 action={summonableAction}
-                summonable={selectedSummonable}
+                summonable={clickedSummonable}
                 queryClient={queryClient}
                 setDisableBackdrop={setDisableBackdrop}
                 pcId={pcData.baseDetails.pcId}
@@ -596,7 +597,7 @@ function Tracker({pcData, queryClient, pcList, selectedPc, userRole, logger}: Pr
                                             data-bs-toggle="modal"
                                             data-bs-target="#summonableActionModal"
                                             onClick={() => {
-                                                setSelectedSummonable(s);
+                                                setClickedSummonable(s);
                                                 setSummonableAction('summon');
                                             }}
                                             disabled={s.data.summoned === true}

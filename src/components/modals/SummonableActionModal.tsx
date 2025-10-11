@@ -42,7 +42,7 @@ function SummonableActionModal ({ action, summonable, queryClient, setDisableBac
  
   return (
     <div className={className} id="summonableActionModal" autoFocus={false} tabIndex={-1} aria-labelledby="summonableActionModalLabel" aria-hidden="true">
-      <form onSubmit={async (event) => {   
+      <form onSubmit={async (event) => {
         event.preventDefault();
 
         if (['takeDamage', 'gainHP', 'refillHP'].includes(action)) {

@@ -377,7 +377,7 @@ export const emptySpellFormData: Spell = {
   spellCastingAbility: Ability.CHA
 }
 
-const emptySummonable: Summonable = {
+export const emptySummonable: Summonable = {
   id: '',
   data: {
     pcId: '',
