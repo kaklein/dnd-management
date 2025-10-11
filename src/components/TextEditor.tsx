@@ -14,12 +14,14 @@ export const buildEditor = (content: string, handleChange: (value: string) => vo
     content,
     onUpdate({editor}) {
       const updatedContent = editor.getHTML();
-      logger.logMessage('Editing content: ' + updatedContent);
       try {
         handleChange(updatedContent);
       } catch (error) {
         logger.logError('Error updating text editor content: ' + JSON.stringify(error) + ' with content: ' + updatedContent);
       }
+    },
+    onContentError({error}) {
+      logger.logError('Text editor content error: ' + JSON.stringify(error));
     },
     editorProps: {
       attributes: {
