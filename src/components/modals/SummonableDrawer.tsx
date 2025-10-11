@@ -59,11 +59,25 @@ function SummonableDrawer ({summonables, pcData, setFormData, setSummonableActio
             <div className="summonable-title-row">
               <div className="summonable-title row">
                 <div className="col no-padding">
-                  <h4 className={`summonable-title-header center ${selectedSummonable.data.name ? "summonable-title-header-flat-bottom" : ""}`}>
-                    <button onClick={() => { setSelectedSummonable(getNextSummonable(selectedSummonable, summonables, true)) }}>&lsaquo;</button>
-                    {selectedSummonable.data.name ? selectedSummonable.data.name : selectedSummonable.data.type}
-                    <button onClick={() => { setSelectedSummonable(getNextSummonable(selectedSummonable, summonables)) }}>&rsaquo;</button>                
-                  </h4>
+                  <div className={`summonable-title-header center ${selectedSummonable.data.name ? "summonable-title-header-flat-bottom" : ""}`}>
+                    <div className="row align-items-center">
+                      <div className="col-auto">
+                        {/* Next Button */}
+                        { summonables.length > 1 &&
+                          <button className="btn btn-secondary btn-page-nav" disabled={summonables.length < 2} onClick={() => { setSelectedSummonable(getNextSummonable(selectedSummonable, summonables, true)) }}>&laquo;</button>
+                        }
+                      </div>
+                      <div className="col">
+                        <h4 className="summonable-name">{selectedSummonable.data.name ? selectedSummonable.data.name : selectedSummonable.data.type}</h4>
+                      </div>
+                      <div className="col-auto">
+                        {/* Back Button */}
+                        { summonables.length > 1 &&
+                          <button className="btn btn-secondary btn-page-nav" disabled={summonables.length < 2} onClick={() => { setSelectedSummonable(getNextSummonable(selectedSummonable, summonables)) }}>&raquo;</button>                
+                        }
+                      </div>
+                    </div>
+                  </div>
                 </div>                                
               </div>
               {

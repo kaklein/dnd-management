@@ -1400,6 +1400,14 @@ td {
     margin-bottom: 10px;
 }
 
+.summonable-name {
+    margin-bottom: 0px;
+}
+
+.btn-page-nav {
+    margin: 0;
+}
+
 .summonable-bottom-btn-container {
     width: 100%;
     background-color: lightgray;
