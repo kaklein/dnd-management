@@ -833,7 +833,7 @@ function Tracker({pcData, queryClient, pcList, selectedPc, userRole, logger}: Pr
                             toggleSummonableDrawer();
                         }}
                     >
-                        <a href="#top">
+                        <a href="#summonable-drawer-container">
                             { !disableBackdrop && 
                             <img
                                 alt="open summoned item"

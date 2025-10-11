@@ -27,6 +27,5 @@ export interface Summonable {
     } | null;
     attacks?: SummonableAttack[];
     summoned: boolean; // whether or not the item is currently summoned
-    selected?: boolean; // whether this is the actively selected summoned item - determines which summonable is currently displayed in the summonable drawer. No impact if summoned is false.
   };
 }
