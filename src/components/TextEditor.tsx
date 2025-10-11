@@ -18,7 +18,7 @@ export const buildEditor = (content: string, handleChange: (value: string) => vo
         const updatedContent = editor.getHTML();
         handleChange(updatedContent);
       } catch (error) {
-        logger.logError('Error updating text editor content: ' + JSON.stringify(error) + ' with content: ' + updatedContent);
+        logger.logError('Error updating text editor content: ' + JSON.stringify(error));
         alert('text editor error during update!!');
       }
     },
