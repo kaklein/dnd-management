@@ -1,4 +1,4 @@
-import { getFeatureFormData, getSpellSlotFormData, getSummonablesSelected, getSummonablesSummoned } from "@components/utils";
+import { getFeatureFormData, getSpellSlotFormData, getSummonablesSummoned } from "@components/utils";
 import { Ability } from "@models/enum/Ability";
 import { WeaponModifierProperty } from "@models/enum/WeaponModifierProperty";
 import { Feature } from "@models/playerCharacter/Feature";
@@ -365,7 +365,6 @@ export const getDefaultFormData = (pcData: PlayerCharacter) => {
       ...getSpellSlotFormData(pcData.spellSlots ?? []),
       ...getFeatureFormData(getLimitedUseFeatures(pcData)),
       ...getSummonablesSummoned(pcData.summonables ?? []),
-      ...getSummonablesSelected(pcData.summonables ?? [])
   }
 };
 

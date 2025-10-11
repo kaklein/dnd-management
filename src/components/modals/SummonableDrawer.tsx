@@ -1,5 +1,5 @@
 import Card from "@components/cards/Card";
-import { buildSummonableSelectedKey, buildSummonableSummonedKey } from "@components/utils";
+import { buildSummonableSummonedKey } from "@components/utils";
 import { PlayerCharacter } from "@models/playerCharacter/PlayerCharacter";
 import { Summonable } from "@models/playerCharacter/Summonable";
 import { getAsPercentage, getDefaultFormData, getHPRange, getNextSummonable, toggleSummonableDrawer } from "@pages/utils";
@@ -229,11 +229,9 @@ function SummonableDrawer ({summonables, pcData, setFormData, setSummonableActio
                     data-bs-toggle="modal"
                     data-bs-target="#confirmDismissSummonModal"
                     onClick={() => {
-                      const otherSummonables = summonables.filter(s => s.id !== selectedSummonable.id && s.data.summoned === true && !s.data.selected);
                       setFormData({
                           ...getDefaultFormData(pcData),
                           [buildSummonableSummonedKey(selectedSummonable)]: false,
-                          ...(otherSummonables[0] && {[buildSummonableSelectedKey(otherSummonables[0])]: true}),
                       });
                     }}
                   >

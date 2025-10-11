@@ -98,6 +98,12 @@ function Tracker({pcData, queryClient, pcList, selectedPc, userRole, logger}: Pr
         setShowDrawerHandle(getSummonedItems(pcData).length > 0 && getSummonedItems(pcData)[0].data.summoned);
     }, [pcData]);
 
+    useEffect(() => {
+        // If new PC is selected, refresh selected summonable to ensure state variable doesn't carry over to different PC
+        const newSummonedItems = getSummonedItems(pcData);
+        setSelectedSummonable(getSelectedSummonedItem(newSummonedItems));
+    }, [selectedPc.pcId]);
+
 
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = event.target;

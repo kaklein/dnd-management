@@ -69,23 +69,12 @@ export const buildSummonableSummonedKey = (summonable: Summonable) => {
     return `summonable_${summonable.id}_summoned`;
 };
 
-export const buildSummonableSelectedKey = (summonable: Summonable) => {
-    return `summonable_${summonable.id}_selected`;
-}
-
 export const getSummonablesSummoned = (summonables: Summonable[]) => {
     const array = summonables.map(s => (
         [buildSummonableSummonedKey(s), s.data.summoned]
     ));
     return Object.fromEntries(array);
 };
-
-export const getSummonablesSelected = (summonables: Summonable[]) => {
-    const array = summonables.map(s => (
-        [buildSummonableSelectedKey(s), s.data.selected ?? false]
-    ));
-    return Object.fromEntries(array);
-}
 
 export const buildSpellSlotsCurrentKey = (spellSlot: SpellSlot) => {
     return `spellSlot_${spellSlot.id}_current`;
