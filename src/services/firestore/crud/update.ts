@@ -1,4 +1,4 @@
-import { updateDoc, doc } from "firebase/firestore";
+import { updateDoc, doc, writeBatch } from "firebase/firestore";
 import { readSingleItem } from "@services/firestore/crud/read";
 import { db } from "../../../firebase";
 import { CollectionName } from "../enum/CollectionName";
@@ -24,6 +24,27 @@ export const updateById = async (collectionName: CollectionName, docId: string, 
   } catch (e) {
     throw Error(`Error updating doc id ${docId} in ${collectionName} collection: ${JSON.stringify(e)}`);
   }
+}
+
+export const batchUpdate = async (
+  updates: {
+    collectionName: CollectionName, 
+    docId: string, 
+    update: {[key: string]: string | number | object | boolean | null}
+  }[]
+) => {
+  // start batch
+  const batch = writeBatch(db);
+
+  // build updates
+  let ref;
+  updates.map(u => {
+    ref = doc(db, u.collectionName, u.docId);
+    batch.update(ref, u.update);
+  });  
+  
+  // commit batch
+  batch.commit();
 }
 
 export const updateArrayObjectItem = async (collectionName: CollectionName, pcId: string, fieldName: string, existingArray: any[], updatedItem: any, logger: SentryLogger) => {

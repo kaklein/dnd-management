@@ -26,6 +26,6 @@ export interface Summonable {
       proficiencyBonus?: number | '';
     } | null;
     attacks?: SummonableAttack[];
-    summoned: boolean;
+    summoned: boolean; // whether or not the item is currently summoned
   };
 }

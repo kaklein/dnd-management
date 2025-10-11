@@ -2,38 +2,52 @@ import Card from "@components/cards/Card";
 import { buildSummonableSummonedKey } from "@components/utils";
 import { PlayerCharacter } from "@models/playerCharacter/PlayerCharacter";
 import { Summonable } from "@models/playerCharacter/Summonable";
-import { getAsPercentage, getDefaultFormData, getHPRange } from "@pages/utils";
+import { getAsPercentage, getDefaultFormData, getHPRange, getNextSummonable, toggleSummonableDrawer } from "@pages/utils";
 import Popover from "./Popover";
 import { getModifierFormatted } from "@services/firestore/utils";
 import { DamageType } from "@models/enum/DamageType";
 
 interface Props {
-  summonable: Summonable;
+  summonables: Summonable[];
   pcData: PlayerCharacter;
   setFormData: (data: any) => void;
-  searchParams: URLSearchParams;
   setSummonableAction: (action: 'gainHP' | 'takeDamage' | 'refillHP' | '') => void;
   setDisableBackdrop: (newValue: boolean) => void;
   disableBackdrop: boolean;
+  setSelectedSummonable: (summonable: Summonable) => void;
+  selectedSummonable?: Summonable;
 }
 
-function SummonableDrawer ({summonable, pcData, setFormData, searchParams, setSummonableAction, setDisableBackdrop, disableBackdrop}: Props) {
-  if (!summonable.id) return;
-  let className = "col-auto collapse collapse-horizontal drawer-body popup";
-  className = searchParams.get("showSummonable") == "true" ? className.concat(" show") : className;
+function SummonableDrawer ({summonables, pcData, setFormData, setSummonableAction, setDisableBackdrop, disableBackdrop, setSelectedSummonable, selectedSummonable=undefined}: Props) {
+  if (!selectedSummonable) return;
+
+  let className = "col-auto drawer-body";
+  if (disableBackdrop) {
+    className += " expand";
+  } else {
+    className += " drawer-body-collapsed";
+  }
+
+  let containerClassName = "container-fluid summonable";
+  if (disableBackdrop) {
+    containerClassName += " expand";
+  } else {
+    containerClassName += " contract";
+  }
 
   return (
-    <div className="container-fluid summonable" id="top">
+    <div className={containerClassName} id="summonable-drawer-container">
       <div className="row">
-        <div className={className} id="collapseExample">          
+        <div className={className} id="summonable-drawer">          
           <div className="summonable-content" style={{width: "93vw"}}>
             {/* Collapse button */}
             {
               disableBackdrop &&
               <div className="collapse-btn collapse-btn-top">
-                <button className="btn" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample"
+                <button className="btn" type="button"
                   onClick={() => {
                     setDisableBackdrop(false);
+                    toggleSummonableDrawer();
                   }}
                 >
                   <p className="inline"><span className="collapse-icon">&lsaquo;</span> COLLAPSE</p>
@@ -45,12 +59,30 @@ function SummonableDrawer ({summonable, pcData, setFormData, searchParams, setSu
             <div className="summonable-title-row">
               <div className="summonable-title row">
                 <div className="col no-padding">
-                  <h4 className={`summonable-title-header ${summonable.data.name ? "summonable-title-header-flat-bottom" : ""}`}>{summonable.data.name ? summonable.data.name : summonable.data.type}</h4>
+                  <div className={`summonable-title-header center ${selectedSummonable.data.name ? "summonable-title-header-flat-bottom" : ""}`}>
+                    <div className="row align-items-center">
+                      <div className="col-auto">
+                        {/* Next Button */}
+                        { summonables.length > 1 &&
+                          <button className="btn btn-secondary btn-page-nav" disabled={summonables.length < 2} onClick={() => { setSelectedSummonable(getNextSummonable(selectedSummonable, summonables, true)) }}>&laquo;</button>
+                        }
+                      </div>
+                      <div className="col">
+                        <h4 className="summonable-name">{selectedSummonable.data.name ? selectedSummonable.data.name : selectedSummonable.data.type}</h4>
+                      </div>
+                      <div className="col-auto">
+                        {/* Back Button */}
+                        { summonables.length > 1 &&
+                          <button className="btn btn-secondary btn-page-nav" disabled={summonables.length < 2} onClick={() => { setSelectedSummonable(getNextSummonable(selectedSummonable, summonables)) }}>&raquo;</button>                
+                        }
+                      </div>
+                    </div>
+                  </div>
                 </div>                                
               </div>
               {
-                summonable.data.name &&
-                <h5 className="summonable-subtitle"><i>{summonable.data.type}</i></h5>
+                selectedSummonable.data.name &&
+                <h5 className="summonable-subtitle center"><i>{selectedSummonable.data.type}</i></h5>
               }
             </div>
 
@@ -60,11 +92,11 @@ function SummonableDrawer ({summonable, pcData, setFormData, searchParams, setSu
                 <div className="hp container-fluid">
                     <div className="row">
                         <div className="col-6 hp-col">
-                            <div className={`hp-display hp-display-${getHPRange(summonable.data.hitPoints.current, summonable.data.hitPoints.max)}`}>
-                                {summonable.data.hitPoints.current} / {summonable.data.hitPoints.max}
+                            <div className={`hp-display hp-display-${getHPRange(selectedSummonable.data.hitPoints.current, selectedSummonable.data.hitPoints.max)}`}>
+                                {selectedSummonable.data.hitPoints.current} / {selectedSummonable.data.hitPoints.max}
                             </div>
-                            <div className={`progress hp-progress ${summonable.data.hitPoints.current <= 0 ? "progress-zero" : ""}`} role="progressbar" aria-label="Summonable HP Progress Bar" aria-valuenow={getAsPercentage(summonable.data.hitPoints.current, summonable.data.hitPoints.max)} aria-valuemin={0} aria-valuemax={100}>
-                                <div className={`progress-bar hp-progress-display-${getHPRange(summonable.data.hitPoints.current, summonable.data.hitPoints.max)}`} style={{ width: `${getAsPercentage(summonable.data.hitPoints.current, summonable.data.hitPoints.max)}%`}}></div>
+                            <div className={`progress hp-progress ${selectedSummonable.data.hitPoints.current <= 0 ? "progress-zero" : ""}`} role="progressbar" aria-label="Summonable HP Progress Bar" aria-valuenow={getAsPercentage(selectedSummonable.data.hitPoints.current, selectedSummonable.data.hitPoints.max)} aria-valuemin={0} aria-valuemax={100}>
+                                <div className={`progress-bar hp-progress-display-${getHPRange(selectedSummonable.data.hitPoints.current, selectedSummonable.data.hitPoints.max)}`} style={{ width: `${getAsPercentage(selectedSummonable.data.hitPoints.current, selectedSummonable.data.hitPoints.max)}%`}}></div>
                             </div>                                
                         </div>
                         <div className="col-6 hp-col">
@@ -74,7 +106,7 @@ function SummonableDrawer ({summonable, pcData, setFormData, searchParams, setSu
                                 data-bs-toggle="modal"
                                 data-bs-target="#summonableActionModal"
                                 onClick={() => { setSummonableAction('takeDamage') }}
-                                disabled={summonable.data.hitPoints.current == 0}
+                                disabled={selectedSummonable.data.hitPoints.current == 0}
                             >
                                 Take Damage
                             </button>
@@ -84,7 +116,7 @@ function SummonableDrawer ({summonable, pcData, setFormData, searchParams, setSu
                                 data-bs-toggle="modal"
                                 data-bs-target="#summonableActionModal"
                                 onClick={() => { setSummonableAction('gainHP') }}
-                                disabled={summonable.data.hitPoints.current == summonable.data.hitPoints.max}
+                                disabled={selectedSummonable.data.hitPoints.current == selectedSummonable.data.hitPoints.max}
                             >
                                 Gain HP
                             </button>
@@ -96,7 +128,7 @@ function SummonableDrawer ({summonable, pcData, setFormData, searchParams, setSu
                                 onClick={() => { 
                                   setSummonableAction('refillHP');
                                 }}
-                                disabled={summonable.data.hitPoints.current == summonable.data.hitPoints.max}
+                                disabled={selectedSummonable.data.hitPoints.current == selectedSummonable.data.hitPoints.max}
                             >
                                 Refill
                             </button>
@@ -107,12 +139,12 @@ function SummonableDrawer ({summonable, pcData, setFormData, searchParams, setSu
 
             {/* Attacks display (if any) */}
             {
-              (summonable.data.attacks && summonable.data.attacks.length > 0) &&
+              (selectedSummonable.data.attacks && selectedSummonable.data.attacks.length > 0) &&
               <Card>
                 <h4 className="section-header">Attacks & Actions</h4>
                 
                 {
-                  summonable.data.attacks.map(s => (
+                  selectedSummonable.data.attacks.map(s => (
                     <Popover
                       key={s.id}
                       popoverBody={
@@ -142,13 +174,13 @@ function SummonableDrawer ({summonable, pcData, setFormData, searchParams, setSu
                 <div className="row">
                   <div className="col summonable-stat">
                     <p className="center">AC:</p>
-                    <h5>{summonable.data.armorClass}</h5>
+                    <h5>{selectedSummonable.data.armorClass}</h5>
                   </div>
                   {
-                    Number(summonable.data.abilityScores?.proficiencyBonus) > 0 &&
+                    Number(selectedSummonable.data.abilityScores?.proficiencyBonus) > 0 &&
                     <div className="col summonable-stat">
                       <p className="center">Proficiency Bonus:</p>
-                      <h5>+{summonable.data.abilityScores?.proficiencyBonus}</h5>
+                      <h5>+{selectedSummonable.data.abilityScores?.proficiencyBonus}</h5>
                     </div>
                   }                  
                 </div>
@@ -156,31 +188,31 @@ function SummonableDrawer ({summonable, pcData, setFormData, searchParams, setSu
 
               {/* Stat Block display */}
               {
-                (summonable.data.abilityScores && summonable.data.abilityScores.strength >= 0) &&
+                (selectedSummonable.data.abilityScores && selectedSummonable.data.abilityScores.strength >= 0) &&
                 <div className="mini-stat-block center">
                   <div className="stat-block-item">
                     <div className="stat-block-item-title"><b>STR</b></div>
-                    <p>{summonable.data.abilityScores.strength} ({getModifierFormatted(summonable.data.abilityScores.strength)})</p>
+                    <p>{selectedSummonable.data.abilityScores.strength} ({getModifierFormatted(selectedSummonable.data.abilityScores.strength)})</p>
                   </div>
                   <div className="stat-block-item">
                     <div className="stat-block-item-title"><b>DEX</b></div>
-                    <p>{summonable.data.abilityScores.dexterity} ({getModifierFormatted(summonable.data.abilityScores.dexterity)})</p>
+                    <p>{selectedSummonable.data.abilityScores.dexterity} ({getModifierFormatted(selectedSummonable.data.abilityScores.dexterity)})</p>
                   </div>
                   <div className="stat-block-item">
                     <div className="stat-block-item-title"><b>CON</b></div>
-                    <p>{summonable.data.abilityScores.constitution} ({getModifierFormatted(summonable.data.abilityScores.constitution)})</p>
+                    <p>{selectedSummonable.data.abilityScores.constitution} ({getModifierFormatted(selectedSummonable.data.abilityScores.constitution)})</p>
                   </div>
                   <div className="stat-block-item">
                     <div className="stat-block-item-title"><b>INT</b></div>
-                    <p>{summonable.data.abilityScores.intelligence} ({getModifierFormatted(summonable.data.abilityScores.intelligence)})</p>
+                    <p>{selectedSummonable.data.abilityScores.intelligence} ({getModifierFormatted(selectedSummonable.data.abilityScores.intelligence)})</p>
                   </div>
                   <div className="stat-block-item">
                     <div className="stat-block-item-title"><b>WIS</b></div>
-                    <p>{summonable.data.abilityScores.wisdom} ({getModifierFormatted(summonable.data.abilityScores.wisdom)})</p>
+                    <p>{selectedSummonable.data.abilityScores.wisdom} ({getModifierFormatted(selectedSummonable.data.abilityScores.wisdom)})</p>
                   </div>
                   <div className="stat-block-item">
                     <div className="stat-block-item-title"><b>CHA</b></div>
-                    <p>{summonable.data.abilityScores.charisma} ({getModifierFormatted(summonable.data.abilityScores.charisma)})</p>
+                    <p>{selectedSummonable.data.abilityScores.charisma} ({getModifierFormatted(selectedSummonable.data.abilityScores.charisma)})</p>
                   </div>
                 </div>
               }
@@ -199,7 +231,7 @@ function SummonableDrawer ({summonable, pcData, setFormData, searchParams, setSu
                     onClick={() => {
                       setFormData({
                           ...getDefaultFormData(pcData),
-                          [buildSummonableSummonedKey(summonable)]: false,
+                          [buildSummonableSummonedKey(selectedSummonable)]: false,
                       });
                     }}
                   >
@@ -211,9 +243,10 @@ function SummonableDrawer ({summonable, pcData, setFormData, searchParams, setSu
               {
                 disableBackdrop &&
                 <div className="collapse-btn collapse-btn-bottom">
-                  <button className="btn" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample"
+                  <button className="btn" type="button"
                     onClick={() => {
                       setDisableBackdrop(false);
+                      toggleSummonableDrawer();
                     }}
                   >
                     <p className="inline"><span className="collapse-icon">&lsaquo;</span> COLLAPSE</p>

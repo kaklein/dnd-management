@@ -364,7 +364,7 @@ export const getDefaultFormData = (pcData: PlayerCharacter) => {
       armorClass: pcData.baseDetails.armorClass,
       ...getSpellSlotFormData(pcData.spellSlots ?? []),
       ...getFeatureFormData(getLimitedUseFeatures(pcData)),
-      ...getSummonablesSummoned(pcData.summonables ?? [])
+      ...getSummonablesSummoned(pcData.summonables ?? []),
   }
 };
 
@@ -376,33 +376,61 @@ export const emptySpellFormData: Spell = {
   spellCastingAbility: Ability.CHA
 }
 
-export const getSummonedItem = (pcData: PlayerCharacter) => {
+export const emptySummonable: Summonable = {
+  id: '',
+  data: {
+    pcId: '',
+    type: '',
+    description: '',
+    source: {
+      type: '',
+      name: ''
+    },
+    hitPoints: {
+      max: 0,
+      current: 0
+    },
+    armorClass: 0,
+    summoned: false
+  }
+};
+
+export const getSummonedItems = (pcData: PlayerCharacter): Summonable[] => {
   const summonables = pcData.summonables;
   
-  const summoned = summonables?.filter(s => s.data.summoned == true)[0];  
+  const summoned = summonables?.filter(s => s.data.summoned == true);  
   
   if (!summoned) {
-    return {
-      id: '',
-      data: {
-        pcId: '',
-        type: '',
-        description: '',
-        source: {
-          type: '',
-          name: ''
-        },
-        hitPoints: {
-          max: 0,
-          current: 0
-        },
-        armorClass: 0,
-        summoned: false
-      }
-    }
+    return [emptySummonable];
   } else {
-    return summoned;
+    return summoned.sort((a, b) => {
+      const aComparable = a.data.name ?? a.data.type;
+      const bComparable = b.data.name ?? b.data.type;
+      if (aComparable < bComparable) return -1;
+      return 1;
+    });
   }
+}
+
+export const getSelectedSummonedItem = (summonables: Summonable[], selectedSummonable?: Summonable): Summonable => {
+  if (selectedSummonable && selectedSummonable.data?.summoned) return selectedSummonable;
+  const summoned = summonables.filter(s => s.data.summoned && s.data.summoned === true);
+  return summoned[0] ?? emptySummonable; // If multiple are summoned, just return the first one
+}
+
+export const getNextSummonable = (selectedSummonable: Summonable, summonables: Summonable[], backward?: boolean): Summonable => {
+  if (summonables.length < 2) return selectedSummonable;
+
+  let selectedIndex = summonables.findIndex(s => s.id === selectedSummonable.id);
+  if (selectedIndex < 0) return selectedSummonable;
+
+  if (backward) { 
+    selectedIndex = (selectedIndex - 1) < 0 ? (summonables.length - 1) : (selectedIndex - 1)
+  } else { 
+    selectedIndex = (selectedIndex + 1) >= summonables.length ? 0 : (selectedIndex + 1)
+  } 
+
+  return summonables[selectedIndex];
 }
 
 export const emptyRichTextContent = '<p></p>';
@@ -412,4 +440,23 @@ export const getEnvName = (): EnvName => {
   if (PRODUCTION_HOSTS.includes(hostName)) return EnvName.production;
   if (hostName.startsWith(STAGING_HOST_PREFIX)) return EnvName.staging;
   return EnvName.dev;
+}
+
+export const toggleSummonableDrawer = () => {
+  const summonableDrawer = document.getElementById('summonable-drawer');
+  if (!summonableDrawer) return;
+  summonableDrawer.classList.toggle('expand');
+  summonableDrawer.classList.toggle('contract');
+
+  const summonableContainer = document.getElementById('summonable-drawer-container');
+  if (!summonableContainer) return;
+  summonableContainer.classList.toggle('expand');
+  summonableContainer.classList.toggle('contract');
+  
+  const drawerHandleEls = document.getElementsByClassName('summonable-drawer-handle');
+  if (!drawerHandleEls || drawerHandleEls.length === 0) return;
+  for (const el of drawerHandleEls) {
+    el.classList.toggle('show');
+    el.classList.toggle('hide');
+  }
 }

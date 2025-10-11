@@ -1356,10 +1356,27 @@ td {
     padding-right: 0px !important;
 }
 
-.summonable {
+#summonable-drawer-container {
+    overflow: hidden;
+    width: fit-content;
+    margin-left: -100%;
+    transition: all .5s;
     z-index: 100;
     margin-top: 10px;
     position: fixed;
+}
+
+#summonable-drawer-container.expand {
+    margin-left: 0;
+}
+
+#summonable-drawer {
+    margin-left: -100%;
+    transition: all .5s;
+}
+
+#summonable-drawer.expand {
+    margin-left: 0;
 }
 
 .drawer-body {
@@ -1368,19 +1385,38 @@ td {
     box-shadow: 2px 2px 2px 2px lightgray;
 }
 
-.drawer-handle {
+.summonable-drawer-handle {
     position: fixed;
     bottom: 101px;
-    z-index: 100;
+    z-index: 99;
     background-color: white;
     height: 60px;
-    box-shadow: 2px 2px 2px 2px lightgray;
+    box-shadow: 1px 1px 2px 1px lightgray;
     border-top-right-radius: 5px;
     border-bottom-right-radius: 5px;
 }
 
+#drawer-handle-layer {
+    bottom: 105px;
+    left: 5px;
+    border-radius: 5px;
+    z-index: 98;
+    width: 42px;
+    height: 60px;
+}
+
 .summonable-title-row {
     margin-bottom: 10px;
+}
+
+.summonable-name {
+    margin-bottom: 0px;
+}
+
+.btn-page-nav {
+    margin: 0;
+    padding-top: 0px !important;
+    padding-bottom: 0px !important;
 }
 
 .summonable-bottom-btn-container {
