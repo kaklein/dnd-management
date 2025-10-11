@@ -76,6 +76,7 @@ function Details({pcData, pcList, selectedPc, queryClient, userRole, logger}: Pr
         setFunction: (prevFormData: any) => void
     ) => {
         const { name, value } = event.target;
+        console.log('handling change for ' + name + ' with value ' + value); // todo - delete
         setFunction((prevFormData: any) => ({...prevFormData, [name]: value}));
     };
 

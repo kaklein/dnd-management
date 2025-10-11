@@ -11,6 +11,7 @@ import { SummonableAttack } from "@models/playerCharacter/SummonableAttack";
 import { emptyRichTextContent } from "@pages/utils";
 import Card from "@components/cards/Card";
 import { getBool, getModifierFormatted } from "@services/firestore/utils";
+import { SentryLogger } from "@services/sentry/logger";
 
 interface Props {
   handleChange: (event: any, setFunction: (prevFormData: any) => void) => void;
@@ -25,12 +26,13 @@ interface Props {
   initialEditorContent: string;
   pcData: PlayerCharacter;
   modalDismiss?: boolean;
+  logger: SentryLogger;
 }
 
-function SummonableForm ({handleChange, handleSubmit, formData, setFormData, initialEditorContent, pcData, modalDismiss=false}: Props) {
+function SummonableForm ({handleChange, handleSubmit, formData, setFormData, initialEditorContent, pcData, logger, modalDismiss=false}: Props) {
   const summonableDescriptionEditor = buildEditor(initialEditorContent, (value: string) => {
     handleChange({ target: { name: 'description', value: value }}, setFormData);
-  });
+  }, logger);
 
   const emptyAttacks: string[] = [];
   const [attacks, setAttacks] = useState((formData.attacks && formData.attacks.length > 0) ? formData.attacks.map((a: SummonableAttack) => a.id) as string[] : emptyAttacks);
@@ -407,6 +409,7 @@ function SummonableForm ({handleChange, handleSubmit, formData, setFormData, ini
                 });
               }}
               summonable={pcData.summonables?.find(s => s.id == summonableId)}
+              logger={logger}
             />
             ))
           }

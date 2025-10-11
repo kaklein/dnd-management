@@ -1,3 +1,4 @@
+import { SentryLogger } from "@services/sentry/logger";
 import FormHeader from "./FormHeader";
 import EquipmentForm from "./baseForms/EquipmentForm";
 import { emptyShowSectionData } from "@data/emptyFormData";
@@ -14,9 +15,10 @@ interface Props {
   setFormData: (data: any) => void;
   initialEditorContent: string;
   showSection: {data: any, setFunction: (newValues: any) => void};
+  logger: SentryLogger;
 }
 
-function AddEquipment ({handleChange, handleSubmit, formData, setFormData, initialEditorContent, showSection}: Props) {
+function AddEquipment ({handleChange, handleSubmit, formData, setFormData, initialEditorContent, showSection, logger}: Props) {
   const showForm = showSection.data.equipment;
   
   return (
@@ -37,6 +39,7 @@ function AddEquipment ({handleChange, handleSubmit, formData, setFormData, initi
         formData={formData}
         setFormData={setFormData}
         initialEditorContent={initialEditorContent}
+        logger={logger}
       />
     }
     </div>

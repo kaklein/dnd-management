@@ -132,6 +132,7 @@ function AddItems ({pcData, queryClient, pcList, selectedPc, userRole, logger}: 
           initialEditorContent={initialEditorContent}
           showSection={{data: showSection, setFunction: setShowSection}}
           pcData={pcData}
+          logger={logger}
         />
       </Card>
 
@@ -143,6 +144,7 @@ function AddItems ({pcData, queryClient, pcList, selectedPc, userRole, logger}: 
           setFormData={setWeaponFormData}
           initialEditorContent={initialEditorContent}
           showSection={{data: showSection, setFunction: setShowSection}}
+          logger={logger}
         />
       </Card>
 
@@ -154,6 +156,7 @@ function AddItems ({pcData, queryClient, pcList, selectedPc, userRole, logger}: 
           setFormData={setFeatureFormData}
           initialEditorContent={initialEditorContent}
           showSection={{data: showSection, setFunction: setShowSection}}
+          logger={logger}
         />
       </Card>
 
@@ -165,6 +168,7 @@ function AddItems ({pcData, queryClient, pcList, selectedPc, userRole, logger}: 
           setFormData={setEquipmentFormData}
           initialEditorContent={initialEditorContent}
           showSection={{data: showSection, setFunction: setShowSection}}
+          logger={logger}
         />
       </Card>
 
@@ -177,6 +181,7 @@ function AddItems ({pcData, queryClient, pcList, selectedPc, userRole, logger}: 
           initialEditorContent={initialEditorContent}
           showSection={{data: showSection, setFunction: setShowSection}}
           pcData={pcData}
+          logger={logger}
         />
       </Card>
 
@@ -189,6 +194,7 @@ function AddItems ({pcData, queryClient, pcList, selectedPc, userRole, logger}: 
           setFormData={setLanguageFormData}
           defaultFormData={defaultLanguageFormData}
           showSection={{data: showSection, setFunction: setShowSection}}
+          logger={logger}
         />
       </Card>
 
@@ -201,6 +207,7 @@ function AddItems ({pcData, queryClient, pcList, selectedPc, userRole, logger}: 
           setFormData={setProficiencyFormData}
           defaultFormData={defaultProficiencyFormData}
           showSection={{data: showSection, setFunction: setShowSection}}
+          logger={logger}
         />
       </Card>
 
@@ -216,6 +223,7 @@ function AddItems ({pcData, queryClient, pcList, selectedPc, userRole, logger}: 
           useTextArea={true}
           initialEditorContent={initialEditorContent}
           showSection={{data: showSection, setFunction: setShowSection}}
+          logger={logger}
         />
       </Card>
       <AboutFooter/>   

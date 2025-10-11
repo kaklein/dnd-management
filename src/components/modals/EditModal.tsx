@@ -56,6 +56,7 @@ function EditModal ({ formType, formData, handleChange, handleSubmit, handleCanc
         modalDismiss={true}
         initialEditorContent={editorContent!.content}
         pcData={pcData}
+        logger={logger}
       />
       break;
     }
@@ -67,6 +68,7 @@ function EditModal ({ formType, formData, handleChange, handleSubmit, handleCanc
         setFormData={setFormData}
         modalDismiss={true}
         initialEditorContent={editorContent!.content}
+        logger={logger}
       />
       break;
     }
@@ -79,6 +81,7 @@ function EditModal ({ formType, formData, handleChange, handleSubmit, handleCanc
         pcData={pcData}
         modalDismiss={true}
         initialEditorContent={editorContent!.content}
+        logger={logger}
       />
       break;
     }
@@ -90,6 +93,7 @@ function EditModal ({ formType, formData, handleChange, handleSubmit, handleCanc
         setFormData={setFormData}
         modalDismiss={true}
         initialEditorContent={editorContent!.content}
+        logger={logger}
       />
       break;
     }
@@ -101,6 +105,7 @@ function EditModal ({ formType, formData, handleChange, handleSubmit, handleCanc
         setFormData={setFormData}
         modalDismiss={true}
         initialEditorContent={editorContent!.content}
+        logger={logger}
       />
       break;
     }
@@ -115,6 +120,7 @@ function EditModal ({ formType, formData, handleChange, handleSubmit, handleCanc
         useTextArea={formData.useTextArea}
         defaultFormData={emptyEditModalData}
         modalDismiss={true}
+        logger={logger}
       />
       break;
     }
@@ -129,6 +135,7 @@ function EditModal ({ formType, formData, handleChange, handleSubmit, handleCanc
         initialEditorContent={editorContent!.content}
         defaultFormData={emptyEditModalData}
         modalDismiss={true}
+        logger={logger}
       />
       break;
     }

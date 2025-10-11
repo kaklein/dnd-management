@@ -2,6 +2,7 @@ import FormHeader from "./FormHeader";
 import { emptyShowSectionData } from "@data/emptyFormData";
 import SummonableForm from "./baseForms/SummonableForm";
 import { PlayerCharacter } from "@models/playerCharacter/PlayerCharacter";
+import { SentryLogger } from "@services/sentry/logger";
 
 interface Props {
   handleChange: (event: any, setFunction: (prevFormData: any) => void) => void;
@@ -16,9 +17,10 @@ interface Props {
   initialEditorContent: string;
   showSection: {data: any, setFunction: (newValues: any) => void};
   pcData: PlayerCharacter;
+  logger: SentryLogger;
 }
 
-function AddSummonable ({handleChange, handleSubmit, formData, setFormData, showSection, initialEditorContent, pcData}: Props) {
+function AddSummonable ({handleChange, handleSubmit, formData, setFormData, showSection, initialEditorContent, pcData, logger}: Props) {
   const showForm = showSection.data.summonables;
 
   return (
@@ -46,6 +48,7 @@ function AddSummonable ({handleChange, handleSubmit, formData, setFormData, show
         setFormData={setFormData}
         pcData={pcData}
         initialEditorContent={initialEditorContent}
+        logger={logger}
       />
       </>
     }

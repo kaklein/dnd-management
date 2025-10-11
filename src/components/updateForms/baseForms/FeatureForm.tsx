@@ -8,6 +8,7 @@ import { validateRequiredFields } from "../utils";
 import TextEditor, { buildEditor } from "@components/TextEditor";
 import Popover from "@components/modals/Popover";
 import CheckboxMultiSelect from "@components/CheckboxMultiSelect";
+import { SentryLogger } from "@services/sentry/logger";
 
 interface Props {
   handleChange: (event: any, setFunction: (prevFormData: any) => void) => void;
@@ -21,9 +22,10 @@ interface Props {
   setFormData: (data: any) => void;
   initialEditorContent: string;
   modalDismiss?: boolean;
+  logger: SentryLogger;
 }
 
-function FeatureForm ({handleChange, handleSubmit, formData, setFormData, initialEditorContent, modalDismiss=false}: Props) {
+function FeatureForm ({handleChange, handleSubmit, formData, setFormData, initialEditorContent, logger, modalDismiss=false}: Props) {
   const [showLimitedUseFields, setShowLimitedUseFields] = useState(formData.maxUses ? true : false);
   useEffect(() => {
     setShowLimitedUseFields(formData.maxUses ? true : false);
@@ -72,7 +74,7 @@ function FeatureForm ({handleChange, handleSubmit, formData, setFormData, initia
 
   const editor = buildEditor(initialEditorContent, (value: string) => {
     handleChange({ target: { name: 'description', value: value }}, setFormData);
-  });
+  }, logger);
   
   return (
     editor &&

@@ -2,6 +2,7 @@ import { capitalize } from "@components/utils";
 import FormHeader from "./FormHeader";
 import ArrayItemForm from "./baseForms/ArrayItemForm";
 import { emptyShowSectionData } from "@data/emptyFormData";
+import { SentryLogger } from "@services/sentry/logger";
 
 interface Props {
   fieldName: string;
@@ -19,9 +20,10 @@ interface Props {
   useTextArea?: boolean;
   initialEditorContent?: string;
   showSection: {data: any, setFunction: (newValues: any) => void};
+  logger: SentryLogger;
 }
 
-function AddItemToArrayField ({fieldName, handleChange, handleSubmit, formData, setFormData, defaultFormData, initialEditorContent, description="", useTextArea=false, showSection}: Props) {
+function AddItemToArrayField ({fieldName, handleChange, handleSubmit, formData, setFormData, defaultFormData, initialEditorContent, logger, description="", useTextArea=false, showSection}: Props) {
   const arrayFieldName = 
     fieldName == 'language' ? 'languages' : 
     fieldName == 'proficiency' ? 'proficiencies' : 
@@ -56,6 +58,7 @@ function AddItemToArrayField ({fieldName, handleChange, handleSubmit, formData, 
         defaultFormData={defaultFormData}
         initialEditorContent={initialEditorContent}
         useTextArea={useTextArea}
+        logger={logger}
       />
     }
     </div>

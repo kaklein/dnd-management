@@ -32,7 +32,7 @@ function CreateCharacterForm ({handleChange, handleSubmit, formData, initialEdit
   const [showAbilityScores, setShowAbilityScores] = useState(false);
   const editor = buildEditor(initialEditorContent, (value: string) => {
     handleChange({ target: { name: 'description', value: value }}, setFormData);
-  });
+  }, logger);
 
   const [imageUploadElement, setImageUploadElement] = useState(document.getElementById("uploadFile") as HTMLInputElement);
   const generatedPcId = uuidv4();
