@@ -12,16 +12,19 @@ export const buildEditor = (content: string, handleChange: (value: string) => vo
       StarterKit
     ],
     content,
+    enableContentCheck: true,
     onUpdate({editor}) {
-      const updatedContent = editor.getHTML();
       try {
+        const updatedContent = editor.getHTML();
         handleChange(updatedContent);
       } catch (error) {
         logger.logError('Error updating text editor content: ' + JSON.stringify(error) + ' with content: ' + updatedContent);
+        alert('text editor error during update!!');
       }
     },
     onContentError({error}) {
       logger.logError('Text editor content error: ' + JSON.stringify(error));
+      alert('text onContent error!!');
     },
     editorProps: {
       attributes: {
