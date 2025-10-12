@@ -78,8 +78,7 @@ function SummonableActionModal ({ action, summonable, queryClient, setDisableBac
           }
         } else {
           throw Error ('Unknown action in summon modal: ' + action);
-        }
-        
+        }        
       }}>
       <div className="modal-dialog">
         <div className="modal-content">
