@@ -3,21 +3,20 @@ import { Summonable } from "@models/playerCharacter/Summonable";
 import { updateById } from "@services/firestore/crud/update";
 import { CollectionName } from "@services/firestore/enum/CollectionName";
 import { QueryClient } from "@tanstack/react-query";
-import { triggerSuccessAlert } from "@pages/utils";
+import { toggleSummonableDrawer } from "@pages/utils";
 import { SentryLogger } from "@services/sentry/logger";
 
 interface Props {
   action: string;  
-  summonable: Summonable;
-  setShowSuccessAlert: (show: boolean) => void;
+  summonable: Summonable; // currently selected summonable
   queryClient: QueryClient;
-  searchParams: URLSearchParams;
   setDisableBackdrop: (newValue: boolean) => void;
   pcId: string;
   logger: SentryLogger;
+  setSelectedSummonable: (summonable: Summonable) => void;
 }
 
-function SummonableActionModal ({ action, summonable, setShowSuccessAlert, queryClient, searchParams, setDisableBackdrop, pcId, logger }: Props) { 
+function SummonableActionModal ({ action, summonable, queryClient, setDisableBackdrop, pcId, logger, setSelectedSummonable }: Props) { 
   const itemDisplayName = summonable.data.name ?? summonable.data.type;
   const title = action == 'takeDamage' ? itemDisplayName + " Damage Amount:" :
     action == 'gainHP' ? itemDisplayName + " Gained HP Amount:" : 
@@ -43,14 +42,21 @@ function SummonableActionModal ({ action, summonable, setShowSuccessAlert, query
  
   return (
     <div className={className} id="summonableActionModal" autoFocus={false} tabIndex={-1} aria-labelledby="summonableActionModalLabel" aria-hidden="true">
-      <form onSubmit={async (event) => {   
+      <form onSubmit={async (event) => {
         event.preventDefault();
 
         if (['takeDamage', 'gainHP', 'refillHP'].includes(action)) {
           try {
+            const newHitPointsCurrent = action === 'refillHP' ? summonable.data.hitPoints.max : submitData.newHPAmount;
+            
             await updateById(CollectionName.SUMMONABLES, summonable.id, {
-              'hitPoints.current': action === 'refillHP' ? summonable.data.hitPoints.max : submitData.newHPAmount
-            } );
+              'hitPoints.current': newHitPointsCurrent
+            });
+
+            setModalFormData(emptyModalData);
+            await queryClient.refetchQueries({ queryKey: ['pcData', pcId]});
+            summonable.data.hitPoints.current = newHitPointsCurrent;
+            setSelectedSummonable(summonable);
           } catch (e: any) {
             logger.logError(e);
             alert('We encountered an error saving your changes. Please refresh the page and try again.');
@@ -58,11 +64,13 @@ function SummonableActionModal ({ action, summonable, setShowSuccessAlert, query
           }
         } else if (['summon'].includes(action)) {
           try {
-            await updateById(CollectionName.SUMMONABLES, summonable.id, {
-              summoned: true
-            });
-            searchParams.set("showSummonable", "true");
+            await updateById(CollectionName.SUMMONABLES, summonable.id, { summoned: true });
+            
+            setModalFormData(emptyModalData);
+            await queryClient.refetchQueries({ queryKey: ['pcData', pcId]});
+            setSelectedSummonable(summonable);
             setDisableBackdrop(true);
+            toggleSummonableDrawer();
           } catch (e: any) {
             logger.logError(e);
             alert('We encountered an error saving your changes. Please refresh the page and try again.');
@@ -70,10 +78,7 @@ function SummonableActionModal ({ action, summonable, setShowSuccessAlert, query
           }
         } else {
           throw Error ('Unknown action in summon modal: ' + action);
-        }
-        setModalFormData(emptyModalData);
-        queryClient.refetchQueries({ queryKey: ['pcData', pcId]});
-        triggerSuccessAlert(setShowSuccessAlert);       
+        }        
       }}>
       <div className="modal-dialog">
         <div className="modal-content">

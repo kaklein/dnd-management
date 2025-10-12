@@ -23,12 +23,13 @@ import { emptyRichTextContent, formatWeaponDisplayTitle, handleSubmitEdit, pcHas
 import SuccessAlert from "@components/alerts/SuccessAlert";
 import EditItemButton from "@components/EditItemButton";
 import EditModal from "@components/modals/EditModal";
-import { buildEmptyShowSectionData, emptyEditModalData, emptyShowConfirmDeleteData, emptyShowSectionData } from "@data/emptyFormData";
+import { buildDefaultFeatureTags, buildDefaultSpellTags, buildEmptyShowSectionData, emptyEditModalData, emptyShowConfirmDeleteData, emptyShowSectionData } from "@data/emptyFormData";
 import { UserRole } from "@services/firestore/enum/UserRole";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import FormHeader from "@components/updateForms/FormHeader";
 import AboutFooter from "@components/AboutFooter";
 import { DamageType } from "@models/enum/DamageType";
+import TagDisplay from "@components/TagDisplay";
 import SummonableDisplay from "@components/SummonableDisplay";
 import { SentryLogger } from "@services/sentry/logger";
 
@@ -114,6 +115,7 @@ function Details({pcData, pcList, selectedPc, queryClient, userRole, logger}: Pr
                                         hasSaveDC: spell.hasSaveDC ?? false,
                                         damage: spell.damage ?? '',
                                         damageType: spell.damageType ?? '',
+                                        tags: spell.tags ?? buildDefaultSpellTags(),
                                         sourceUrl: spell.sourceUrl ?? '',
                                         level: spell.level,
                                         spellCastingAbility: spell.spellCastingAbility
@@ -158,6 +160,11 @@ function Details({pcData, pcList, selectedPc, queryClient, userRole, logger}: Pr
                         {spell.sourceUrl &&
                             <p><b>Source URL: </b><a href={spell.sourceUrl} target="_blank">{spell.sourceUrl}</a></p>
                         }
+
+                        {
+                            (spell.tags && spell.tags.filter(t => t.value === true).length > 0) &&
+                            <TagDisplay tags={spell.tags.filter(t => t.value === true)}/>
+                        }                        
                     </div>
                 </Card>
             ))
@@ -351,6 +358,7 @@ function Details({pcData, pcList, selectedPc, queryClient, userRole, logger}: Pr
                                                     refresh: feature.data.refresh ?? '',
                                                     saveDC: feature.data.saveDC ? String(feature.data.saveDC) : '',
                                                     displayAsPool: feature.data.displayAsPool ?? false,
+                                                    tags: feature.data.tags ?? buildDefaultFeatureTags(),
                                                 });
                                                 setInitialEditorContent(feature.data.description);
                                             }}
@@ -374,6 +382,11 @@ function Details({pcData, pcList, selectedPc, queryClient, userRole, logger}: Pr
                                     { feature.data.damage && <p><b>Damage: </b>{feature.data.damage} {feature.data.damageType}</p>}
                                     { feature.data.saveDC && <p><b>Spell Save DC: </b>{feature.data.saveDC}</p>}
                                     { feature.data.sourceUrl && <p><b>Source URL: </b><a href={feature.data.sourceUrl} target="_blank">{feature.data.sourceUrl}</a></p>}
+                                    { (feature.data.tags && feature.data.tags.filter(t => t.value === true).length > 0) &&
+                                        <TagDisplay
+                                            tags={feature.data.tags.filter(t => t.value === true)}
+                                        />
+                                    }
                                 </div>                            
                             </Card>
                         ))

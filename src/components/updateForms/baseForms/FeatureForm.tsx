@@ -1,5 +1,5 @@
 import FormSelect from "@components/FormSelect";
-import { defaultFeatureFormData } from "@data/emptyFormData";
+import { getDefaultFeatureFormData } from "@data/emptyFormData";
 import { DamageType } from "@models/enum/DamageType";
 import { RestType } from "@models/enum/RestType";
 import { useEffect, useState } from "react";
@@ -7,6 +7,7 @@ import Button, { ButtonType } from "@components/Button";
 import { validateRequiredFields } from "../utils";
 import TextEditor, { buildEditor } from "@components/TextEditor";
 import Popover from "@components/modals/Popover";
+import CheckboxMultiSelect from "@components/CheckboxMultiSelect";
 
 interface Props {
   handleChange: (event: any, setFunction: (prevFormData: any) => void) => void;
@@ -82,7 +83,7 @@ function FeatureForm ({handleChange, handleSubmit, formData, setFormData, initia
           alert(errorMessage);
           return;
         } else {
-          await handleSubmit(event, formData, setFormData, defaultFeatureFormData);
+          await handleSubmit(event, formData, setFormData, getDefaultFeatureFormData());
           editor.commands.clearContent();
         }
     }}>     
@@ -289,6 +290,15 @@ function FeatureForm ({handleChange, handleSubmit, formData, setFormData, initia
           name="sourceUrl"
           onChange={(event) => {handleChange(event, setFormData)}}
           value={formData.sourceUrl}
+        />
+      </div>
+
+      <div>
+        <label className="update-form-label">Add Tags (Optional)</label>
+        <CheckboxMultiSelect
+          formData={formData}
+          setFormData={setFormData}
+          formDataFieldName="tags"
         />
       </div>
 

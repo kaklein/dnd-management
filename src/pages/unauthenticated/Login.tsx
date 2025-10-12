@@ -1,3 +1,4 @@
+import AboutFooter from "@components/AboutFooter";
 import Button, { ButtonType } from "@components/Button";
 import Card from "@components/cards/Card";
 import PageHeaderBar from "@components/headerBars/PageHeaderBar";
@@ -63,16 +64,16 @@ function Login ({logger}: Props) {
             buttonType={ButtonType.SECONDARY}
             onClick={() => {navigate('/signup')}}
           />
-          <br/><br/>
-          <p>Forgot password?</p>
+          <p className="top-margin">Forgot password?</p>
           <Button
             text="Reset Password"
             buttonType={ButtonType.SECONDARY}
             onClick={() => {navigate('/password-reset')}}
           />
         </div>
-
       </Card>
+
+      <AboutFooter loggedIn={false}/>
     </>
   )
 }

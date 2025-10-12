@@ -17,7 +17,7 @@ import ItemUseToggle from "@components/ItemUseToggle";
 import { BaseDetails, PlayerCharacter } from "@models/playerCharacter/PlayerCharacter";
 import { QueryClient } from "@tanstack/react-query";
 import { CollectionName } from "@services/firestore/enum/CollectionName";
-import { determineAttackBonus, emptyRichTextContent, formatBonus, formatWeaponDisplayTitle, getDefaultFormData, getLimitedUseFeatures, getSummonableIconName, getSummonedItem, SAVE_CHANGES_ERROR, triggerSuccessAlert } from "../utils";
+import { determineAttackBonus, emptyRichTextContent, emptySummonable, formatBonus, formatWeaponDisplayTitle, getDefaultFormData, getLimitedUseFeatures, getSelectedSummonedItem, getSummonableIconName, getSummonedItems, SAVE_CHANGES_ERROR, toggleSummonableDrawer, triggerSuccessAlert } from "../utils";
 import PageHeaderBarPC from "@components/headerBars/PageHeaderBarPC";
 import QuickNav from "@components/QuickNav";
 import SuccessAlert from "@components/alerts/SuccessAlert";
@@ -30,7 +30,6 @@ import AboutFooter from "@components/AboutFooter";
 import SpellsTrackerComponent from "@components/SpellsTrackerComponent";
 import { RestType } from "@models/enum/RestType";
 import ConfirmDismissSummonModal from "@components/modals/ConfirmDismissSummonModal";
-import { useSearchParams } from "react-router-dom";
 import SummonableActionModal from "@components/modals/SummonableActionModal";
 import SummonableDrawer from "@components/modals/SummonableDrawer";
 import { Weapon } from "@models/playerCharacter/Weapon";
@@ -42,6 +41,7 @@ import PoolDisplay from "@components/PoolDisplay";
 import HPDisplay from "@components/HPDisplay";
 import ResourceUseModal from "@components/modals/ResourceUseModal";
 import { SentryLogger } from "@services/sentry/logger";
+import TagDisplay from "@components/TagDisplay";
 
 interface Props {
     pcData: PlayerCharacter;
@@ -56,8 +56,6 @@ function Tracker({pcData, queryClient, pcList, selectedPc, userRole, logger}: Pr
     const conModifier = pcData.abilityScores.data.constitution.modifier;
    
     const [showSuccessAlert, setShowSuccessAlert] = useState(false);
-
-    const [searchParams] = useSearchParams();
 
     const [disableBackdrop, setDisableBackdrop] = useState(false);
 
@@ -83,9 +81,11 @@ function Tracker({pcData, queryClient, pcList, selectedPc, userRole, logger}: Pr
             }
         }
     });
-    const [summonedItem, setSummonedItem] = useState(getSummonedItem(pcData));
+    const [summonedItems, setSummonedItems] = useState(getSummonedItems(pcData));
+    const [selectedSummonable, setSelectedSummonable] = useState(getSelectedSummonedItem(summonedItems));
+    const [clickedSummonable, setClickedSummonable] = useState(emptySummonable);
     const [selectedSpellSlotLevel, setSelectedSpellSlotLevel] = useState(SpellLevel.L1);
-
+    const [showDrawerHandle, setShowDrawerHandle] = useState(summonedItems[0]?.data?.summoned && !disableBackdrop);
     const [descriptionModalData, setDescriptionModalData] = useState({
         title: '',
         content: emptyRichTextContent
@@ -94,8 +94,16 @@ function Tracker({pcData, queryClient, pcList, selectedPc, userRole, logger}: Pr
     useEffect(() => {
         setLimitedUseFeatures(getLimitedUseFeatures(pcData));
         setFormData(getDefaultFormData(pcData));
-        setSummonedItem(getSummonedItem(pcData));
+        setSummonedItems(getSummonedItems(pcData));
+        setShowDrawerHandle(getSummonedItems(pcData).length > 0 && getSummonedItems(pcData)[0].data.summoned);
     }, [pcData]);
+
+    useEffect(() => {
+        // If new PC is selected, refresh selected summonable to ensure state variable doesn't carry over to different PC
+        const newSummonedItems = getSummonedItems(pcData);
+        setSelectedSummonable(getSelectedSummonedItem(newSummonedItems));
+    }, [selectedPc.pcId]);
+
 
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = event.target;
@@ -159,21 +167,22 @@ function Tracker({pcData, queryClient, pcList, selectedPc, userRole, logger}: Pr
     return (
         <div className={`tracker-body${disableBackdrop ? '-disable-scroll' : ''}`}>
         {
-            (summonedItem.data.summoned && disableBackdrop) &&
+            (summonedItems && summonedItems.length > 0 && disableBackdrop) &&
             <div className="overlay-backdrop"/>
         }
 
         <div className="main-body">
             {
-                summonedItem.data.summoned &&
+                (summonedItems && summonedItems.length > 0) &&
                 <SummonableDrawer
                     pcData={pcData}
                     setFormData={setFormData}
-                    summonable={summonedItem}
-                    searchParams={searchParams}
+                    summonables={summonedItems}
                     setSummonableAction={setSummonableAction}
                     setDisableBackdrop={setDisableBackdrop}
                     disableBackdrop={disableBackdrop}
+                    selectedSummonable={selectedSummonable}
+                    setSelectedSummonable={setSelectedSummonable}
                 />
             }
             
@@ -201,27 +210,43 @@ function Tracker({pcData, queryClient, pcList, selectedPc, userRole, logger}: Pr
                 action={goldModalAction}
                 currentGold={pcData.baseDetails.usableResources.gold}
             />
+            
             <ConfirmDismissSummonModal
-                summonable={summonedItem}
-                handleDismiss={() => {
-                    setDisableBackdrop(false);
-                    updateById(CollectionName.SUMMONABLES, summonedItem.id, {summoned: false});
+                summonable={selectedSummonable}
+                handleDismiss={ async () => {
+                    // set current summonable to summoned: false
+                    await updateById(CollectionName.SUMMONABLES, selectedSummonable.id, { summoned: false });
+                    
+                    // if any others are summoned, set the first one as the selected one
+                    let newSelectedSummonable;
+                    if (summonedItems.length > 1) {
+                        newSelectedSummonable = summonedItems.find(i => i.id !== selectedSummonable.id);
+                        if (newSelectedSummonable) {
+                            setSelectedSummonable(newSelectedSummonable);
+                        }
+                    };
+                    // close drawer if there are no more summoned items
+                    if (!newSelectedSummonable) {
+                        setDisableBackdrop(false);
+                        toggleSummonableDrawer();
+                        setShowDrawerHandle(false);
+                    }
                     queryClient.refetchQueries({ queryKey: ['pcData', pcData.baseDetails.pcId]});
                     setFormData(getDefaultFormData(pcData));
-                    setSummonedItem(getSummonedItem(pcData));
+                    setSummonedItems(getSummonedItems(pcData));
                     triggerSuccessAlert(setShowSuccessAlert);
                 }}
             />
             <SummonableActionModal
                 action={summonableAction}
-                summonable={summonedItem}
-                setShowSuccessAlert={setShowSuccessAlert}
+                summonable={summonableAction === 'summon' ? clickedSummonable : selectedSummonable}
                 queryClient={queryClient}
-                searchParams={searchParams}
                 setDisableBackdrop={setDisableBackdrop}
                 pcId={pcData.baseDetails.pcId}
                 logger={logger}
+                setSelectedSummonable={setSelectedSummonable}
             />
+                         
             <GenericModal
                 modalName="description"
                 title={descriptionModalData.title}
@@ -505,7 +530,7 @@ function Tracker({pcData, queryClient, pcList, selectedPc, userRole, logger}: Pr
                                                 </div>
                                             </div>                                            
                                         </div>
-
+                                        <div className="feature-display">
                                         {
                                             feature.data.displayAsPool &&
                                             <PoolDisplay
@@ -524,7 +549,13 @@ function Tracker({pcData, queryClient, pcList, selectedPc, userRole, logger}: Pr
                                                 handleSubmit={handleSubmit}
                                             />   
                                         }
-                                                                          
+                                        {
+                                            (feature.data.tags && feature.data.tags.filter(t => t.value === true).length > 0) &&
+                                            <div className="row tracker-tag-row">
+                                                <TagDisplay tags={feature.data.tags.filter(t => t.value === true)}/>
+                                            </div>
+                                        }
+                                        </div>                                                                          
                                     </Card>
                                 ))
                             }
@@ -566,26 +597,22 @@ function Tracker({pcData, queryClient, pcList, selectedPc, userRole, logger}: Pr
                                             (s.data.source.type == 'feature' && pcData.features.filter(f => f.data.name === s.data.source.name)[0].data.maxUses) &&
                                             <p className="center">Must use the {s.data.source.name} feature under the Abilities section in order to summon.</p>
                                         }
-                                        <button
-                                            className={`btn btn-${(summonedItem.id == s.id && summonedItem.data.summoned) ? 'success' : 'info'}`}
+                                        <button                                        
+                                            className={`btn btn-${(summonedItems.map(i => i.id).includes(s.id) && summonedItems.find(i => i.id == s.id)?.data.summoned) ? 'success' : 'info'}`}
                                             type="button"
                                             data-bs-toggle="modal"
                                             data-bs-target="#summonableActionModal"
-                                            onClick={() => {                                                
-                                                setSummonedItem(s);
+                                            onClick={() => {
+                                                setClickedSummonable(s);
                                                 setSummonableAction('summon');
                                             }}
-                                            disabled={s.data.summoned === true || summonedItem.data.summoned === true}
+                                            disabled={s.data.summoned === true}
                                         >
                                             {
                                             s.data.summoned === true ? "Summoned" :
                                             "Summon"
                                             }
-                                        </button>
-                                        {
-                                            (summonedItem.id !== s.id && summonedItem.data.summoned === true) &&
-                                            <p className="center update-form-description">Cannot summon until the currently summoned item is dismissed</p>
-                                        }
+                                        </button>                                        
                                     </Card>
                                 ))
                             }
@@ -801,23 +828,32 @@ function Tracker({pcData, queryClient, pcList, selectedPc, userRole, logger}: Pr
                 </div>                          
             </form>
 
+            {/* SUMMONABLE DRAWER HANDLE */}
             {
-                (summonedItem.data.summoned && !disableBackdrop) &&
-                <div className="col-auto drawer-handle">
-                    <button className="btn drawer-handle-btn" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample"
-                    onClick={() => {
-                        setDisableBackdrop(!disableBackdrop);
-                    }}>
-                        <a href="#top">
+                showDrawerHandle &&
+                <>
+                <div className="col-auto summonable-drawer-handle show">
+                    <button className="btn drawer-handle-btn" type="button"
+                        onClick={() => {
+                            setDisableBackdrop(!disableBackdrop);
+                            toggleSummonableDrawer();
+                        }}
+                    >
+                        <a href="#">
                             { !disableBackdrop && 
                             <img
                                 alt="open summoned item"
-                                src={`/images/icons/${getSummonableIconName(summonedItem)}.png`}
+                                src={`/images/icons/${getSummonableIconName(selectedSummonable)}.png`}
                                 width="40px"/>
                             }
                         </a>
                     </button>
-                </div>                
+                </div>
+                {
+                    (summonedItems.length > 1 && !disableBackdrop) &&
+                    <div className="summonable-drawer-handle show" id="drawer-handle-layer"></div>
+                }
+                </>
             }
 
             <AboutFooter/>

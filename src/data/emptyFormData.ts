@@ -3,8 +3,9 @@ import { CreateCharacterFormData } from "@models/CreateCharacterFormData";
 import { EditModalFormData } from "@models/EditModalFormData";
 import { UpdateType } from "@models/enum/service/UpdateType";
 import { AbilityScores } from "@models/playerCharacter/AbilityScores";
+import { AllowedFeatureTags, FeatureTag } from "@models/playerCharacter/Feature";
 import { PlayerCharacter } from "@models/playerCharacter/PlayerCharacter";
-import { Spell } from "@models/playerCharacter/Spell";
+import { AllowedSpellTags, Spell } from "@models/playerCharacter/Spell";
 import { SpellSlot } from "@models/playerCharacter/usableResources/SpellSlot";
 import { ShowConfirmDeleteData } from "@models/ShowConfirmDeleteData";
 
@@ -33,9 +34,18 @@ export const getDefaultSpellFormData = (pcData: PlayerCharacter) => {
     damageType: '',
     damage: '',
     sourceUrl: '',
-    prepared: "true"
+    prepared: "true",
+    tags: buildDefaultSpellTags()
   }
 };
+
+export const buildDefaultSpellTags = (): FeatureTag[] => {
+  return AllowedSpellTags.map(tag => ({
+    fieldName: tag.fieldName,
+    displayName: tag.displayName,
+    value: false
+  }));
+}
 
 export const defaultSpellSlotFormData = {
   updateType: UpdateType.SPELL_SLOTS,
@@ -43,18 +53,29 @@ export const defaultSpellSlotFormData = {
   max: ''
 };
 
-export const defaultFeatureFormData = {
-  updateType: UpdateType.FEATURES,
-  name: '',
-  description: '',
-  source: '',
-  maxUses: '',
-  displayAsPool: false,
-  refresh: '',
-  damage: '',
-  damageType: '',
-  saveDC: '',
-  sourceUrl: ''
+export const buildDefaultFeatureTags = () => {
+  return AllowedFeatureTags.map(tag => ({
+    fieldName: tag.fieldName,
+    displayName: tag.displayName,
+    value: false
+  }));
+}
+
+export const getDefaultFeatureFormData = () => { 
+  return {
+    updateType: UpdateType.FEATURES,
+    name: '',
+    description: '',
+    source: '',
+    maxUses: '',
+    displayAsPool: false,
+    refresh: '',
+    damage: '',
+    damageType: '',
+    saveDC: '',
+    sourceUrl: '',
+    tags: buildDefaultFeatureTags()
+  }
 };
 
 export const defaultSummonableFormData = {
@@ -204,6 +225,7 @@ export const emptyEditModalData: EditModalFormData = {
   maxUses: '', // features, summonables
   refresh: '', // features, summonables
   armorClass: '', // character, summonables
+  tags: [], // spells, features
 
   // equipment
   equipmentId: '',

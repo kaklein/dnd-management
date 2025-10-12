@@ -16,6 +16,31 @@ export interface Feature {
         damageType?: DamageType;
         saveDC?: number;
         sourceUrl?: string;
+        tags?: FeatureTag[];
     }
-   
 }
+
+export interface FeatureTag {
+    fieldName: string;
+    displayName: string;
+    value: boolean;
+}
+
+export const AllowedFeatureTags: {fieldName: string, displayName: string}[] = [
+    {
+        fieldName: 'action',
+        displayName: 'Action',
+    },
+    {
+        fieldName: 'bonusAction',
+        displayName: 'Bonus Action',
+    },    
+    {
+        fieldName: 'reaction',
+        displayName: 'Reaction'
+    },
+    {
+        fieldName: 'concentration',
+        displayName: 'Concentration',
+    },
+]

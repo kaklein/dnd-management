@@ -13,6 +13,7 @@ import useFirebaseAuthentication from '@services/firebaseAuth/utils';
 import AddItems from '@pages/authenticated/AddItems';
 import PasswordReset from '@pages/unauthenticated/PasswordReset';
 import Home from '@pages/authenticated/Home';
+import About from '@pages/unauthenticated/About';
 import { useLocalStorage } from '@services/localStorage/useLocalStorage';
 import CreateCharacter from '@pages/authenticated/CreateCharacter';
 import Loading from '@pages/Loading';
@@ -20,7 +21,6 @@ import Error from '@pages/Error';
 import { getUserRole } from '@services/firestore/getUserRole';
 import { getAuth } from '@firebase/auth';
 import VerifyEmail from '@pages/authenticated/VerifyEmail';
-import About from '@pages/authenticated/About';
 import PrepareSpells from '@pages/authenticated/PrepareSpells';
 import { SentryLogger } from "@services/sentry/logger";
 import { useEffect, useState } from "react";
@@ -108,6 +108,7 @@ function MainApp() {
                     <Route path="/login" element={<Login logger={sentryLogger}/>}/>
                     <Route path="/signup" element={<SignUp logger={sentryLogger}/>}/>
                     <Route path="/password-reset" element={<PasswordReset logger={sentryLogger}/>}/>
+                    <Route path ="/about" element={<About userRole={roleQuery.data}/>}/>
                 </Routes>
             </BrowserRouter>
         )

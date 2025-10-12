@@ -13,6 +13,7 @@ import { buildDefaultSpellSlotFormData, getMatchingSpellSlots } from "@data/empt
 import SpellSlotEditModal from "./modals/SpellSlotEditModal";
 import GenericModal from "./modals/GenericModal";
 import { useNavigate } from "react-router-dom";
+import TagDisplay from "./TagDisplay";
 
 interface Props {
   pcData: PlayerCharacter;
@@ -192,67 +193,78 @@ function SpellsTrackerComponent ({pcData, spellSlotLevel, handleSubmit}: Props) 
                     return 1;
                   }).map((s, i) => (
                     <div className="container-fluid left-justify spell-display-custom-padding" key={i}>
-                      <div className="row display-item-row">
-                        <div className="col-4">
-                          <button
-                            type="button"
-                            className="text-link invisible-btn spell-display-name"
-                            data-bs-toggle="modal"
-                            data-bs-target="#spellDescriptionModal"
-                            disabled={!s.description || s.description == emptyRichTextContent}
-                            onClick={() => {
-                              setSpellDescriptionModalContent({
-                                title: `${s.name} - ${s.level}${s.level !== SpellLevel.CANTRIP ? " Spell" : ""}`,
-                                content: s.description
-                              });
-                            }}
-                          >
-                            <b>{s.name}</b>
-                          </button>
-                        </div>                          
-                        <div className="col">
-                            {
-                              s.hasAttack &&
-                              <Popover
-                                  popoverBody={<PopoverContentSpell pcData={pcData} spell={s} displayType="attack bonus"/>}
-                                  customClass="spell-display-item"
-                                >
-                                  <span>ATK: <b>+{pcData.abilityScores.data[s.spellCastingAbility].modifier + pcData.baseDetails.proficiencyBonus}</b></span>
-                              </Popover>
-                            }
-                            {
-                              s.damage &&
-                                <div className="popover-main-content spell-display-item"><span>{s.damageType == DamageType.HEALING ? 'EFFECT:' : 'DMG:'} {s.damage} {s.damageType}</span></div>
-                            }   
-                            {
-                              s.hasSaveDC &&
-                              <Popover
-                                popoverBody={<PopoverContentSpell pcData={pcData} spell={s} displayType="save DC"/>}
-                                customClass="spell-display-item"
-                              >
-                              <span>Save DC: <b>{getSpellSaveDC(pcData, s)}</b></span>
-                              </Popover>
-                            }
-                        </div>
-                        <div className="col-auto cast-button-col">
-                        {
-                          s.level !== SpellLevel.CANTRIP &&
+                      <div className="display-item-row spell-display-row">
+                        <div className="row">
+                          <div className="col-4 spell-display-name">
                             <button
                               type="button"
-                              className="btn btn-info cast-button"
+                              className="text-link invisible-btn spell-display-name"
                               data-bs-toggle="modal"
-                              data-bs-target="#spellUseModal"
-                              disabled={!canCastSpell(s, spellSlots)}
+                              data-bs-target="#spellDescriptionModal"
+                              disabled={!s.description || s.description == emptyRichTextContent}
                               onClick={() => {
-                                spellSlotLevel.setSelected(getMatchingSpellSlots(s, spellSlots)[0].data.level);
-                                setSpellToCast(s);
-                                setSpellSlotFormData(buildDefaultSpellSlotFormData(s, spellSlots));
+                                setSpellDescriptionModalContent({
+                                  title: `${s.name} - ${s.level}${s.level !== SpellLevel.CANTRIP ? " Spell" : ""}`,
+                                  content: s.description
+                                });
                               }}
                             >
-                              CAST
-                            </button>                              
-                        }
-                        </div>                         
+                              <b>{s.name}</b>
+                            </button>
+                          </div>                          
+                          <div className="col">
+                              {
+                                s.hasAttack &&
+                                <Popover
+                                    popoverBody={<PopoverContentSpell pcData={pcData} spell={s} displayType="attack bonus"/>}
+                                    customClass="spell-display-item"
+                                  >
+                                    <span>ATK: <b>+{pcData.abilityScores.data[s.spellCastingAbility].modifier + pcData.baseDetails.proficiencyBonus}</b></span>
+                                </Popover>
+                              }
+                              {
+                                s.damage &&
+                                  <div className="popover-main-content spell-display-item"><span>{s.damageType == DamageType.HEALING ? 'EFFECT:' : 'DMG:'} {s.damage} {s.damageType}</span></div>
+                              }   
+                              {
+                                s.hasSaveDC &&
+                                <Popover
+                                  popoverBody={<PopoverContentSpell pcData={pcData} spell={s} displayType="save DC"/>}
+                                  customClass="spell-display-item"
+                                >
+                                <span>Save DC: <b>{getSpellSaveDC(pcData, s)}</b></span>
+                                </Popover>
+                              }
+                          </div>
+                          <div className="col-auto cast-button-col">
+                          {
+                            s.level !== SpellLevel.CANTRIP &&
+                              <button
+                                type="button"
+                                className="btn btn-info cast-button"
+                                data-bs-toggle="modal"
+                                data-bs-target="#spellUseModal"
+                                disabled={!canCastSpell(s, spellSlots)}
+                                onClick={() => {
+                                  spellSlotLevel.setSelected(getMatchingSpellSlots(s, spellSlots)[0].data.level);
+                                  setSpellToCast(s);
+                                  setSpellSlotFormData(buildDefaultSpellSlotFormData(s, spellSlots));
+                                }}
+                              >
+                                CAST
+                              </button>                              
+                          }
+                        </div>
+                      </div>
+                      {
+                        // TAGS DISPLAY
+                        (s.tags && s.tags.filter(t => t.value === true).length > 0) &&
+                        <div className="row tracker-tag-row">
+                          {
+                            <TagDisplay tags={s.tags.filter(t => t.value === true)}/>
+                          }
+                        </div>
+                      }
                       </div>
                     </div>
                   ))
