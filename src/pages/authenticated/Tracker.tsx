@@ -54,8 +54,7 @@ import {
   sortableKeyboardCoordinates,
 } from '@dnd-kit/sortable';
 import { reorderArray } from "@components/updateForms/utils";
-import { SortableContainer } from "@components/sortables/SortableContainer";
-import { SortableHeader } from "@components/sortables/SortableHeader";
+import { SortableGroup } from "@components/sortables/SortableGroup";
 
 
 interface Props {
@@ -80,7 +79,8 @@ function Tracker({pcData, queryClient, pcList, selectedPc, userRole, logger}: Pr
         useSensor(TouchSensor)
     );
 
-    const handleDragEnd = (event: any) => {
+    // TODO: make this reusable for different kinds of items? Maybe all sortables?
+    const onFeatureSortUpdate = (event: any) => {
         const {active, over} = event;
             
         if (active.id !== over.id) {
@@ -99,7 +99,7 @@ function Tracker({pcData, queryClient, pcList, selectedPc, userRole, logger}: Pr
                 update: i.data
             }));
             // batchUpdate(updates).then();
-            console.log((updates.map(u => ({name: u.update.name, arrayIndex: u.update.arrayIndex}))));
+            console.log((updates.map(u => ({name: u.update.name, displayIndex: u.update.displayIndex}))));
         }
     }
     // end sortable testing stuff
@@ -130,7 +130,7 @@ function Tracker({pcData, queryClient, pcList, selectedPc, userRole, logger}: Pr
                 description: '',
                 source: '',
                 name: '',
-                arrayIndex: -1
+                displayIndex: -1
             }
         }
     });
@@ -149,6 +149,8 @@ function Tracker({pcData, queryClient, pcList, selectedPc, userRole, logger}: Pr
         setFormData(getDefaultFormData(pcData));
         setSummonedItems(getSummonedItems(pcData));
         setShowDrawerHandle(getSummonedItems(pcData).length > 0 && getSummonedItems(pcData)[0].data.summoned);
+        // sortables
+        setSortFeatureIds(pcData.features.map(f => f.id));
     }, [pcData]);
 
     useEffect(() => {
@@ -557,17 +559,14 @@ function Tracker({pcData, queryClient, pcList, selectedPc, userRole, logger}: Pr
                     {
                         (limitedUseFeatures && limitedUseFeatures.length > 0) &&
                         <Card>
-                            <SortableHeader
-                                text="Abilities"
+                            <SortableGroup
+                                headerText="Abilities"
                                 sortingEnabled={featureSortingEnabled}
                                 setSortingEnabled={setFeatureSortingEnabled}
-                            />
-                            <SortableContainer
                                 sensors={sensors}
-                                handleDragEnd={handleDragEnd}
+                                onUpdate={onFeatureSortUpdate}
                                 sortableIds={sortFeatureIds}
                                 sortableIdPrefix="feature"
-                                sortingEnabled={featureSortingEnabled}
                             >
                             {
                                 limitedUseFeatures.map(feature => (
@@ -580,7 +579,7 @@ function Tracker({pcData, queryClient, pcList, selectedPc, userRole, logger}: Pr
                                                         className="text-link invisible-btn spell-display-name"
                                                         data-bs-toggle="modal"
                                                         data-bs-target="#descriptionModal"
-                                                        disabled={!feature.data.description || feature.data.description == emptyRichTextContent}
+                                                        disabled={!feature.data.description || feature.data.description == emptyRichTextContent || featureSortingEnabled}
                                                         onClick={() => {
                                                                 setDescriptionModalData({
                                                                 title: feature.data.name,
@@ -602,6 +601,7 @@ function Tracker({pcData, queryClient, pcList, selectedPc, userRole, logger}: Pr
                                             <PoolDisplay
                                                 feature={feature}
                                                 setResourceUseModalData={setResourceUseModalData}
+                                                disabled={featureSortingEnabled}
                                             />
                                         }
                                         {
@@ -613,6 +613,7 @@ function Tracker({pcData, queryClient, pcList, selectedPc, userRole, logger}: Pr
                                                 currentUses={formData[buildFeatureCurrentUsesKey(feature)]}
                                                 formData={formData}
                                                 handleSubmit={handleSubmit}
+                                                disabled={featureSortingEnabled}
                                             />   
                                         }
                                         {
@@ -625,7 +626,7 @@ function Tracker({pcData, queryClient, pcList, selectedPc, userRole, logger}: Pr
                                     </Card>
                                 ))
                             }
-                        </SortableContainer>                          
+                            </SortableGroup>                      
                         </Card>
                     }
 

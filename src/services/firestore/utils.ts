@@ -176,7 +176,7 @@ export const transformFormDataForUpdate = (pcData: PlayerCharacter, data: {updat
           description: String(updates.description),
           source: String(updates.source),
           displayAsPool: getBool(String(updates.displayAsPool)),
-          arrayIndex: -1, // TODO: update to fill in correct index
+          displayIndex: -1, // TODO: update to fill in correct index
           tags: updates.tags as FeatureTag[],
           ...(updates.maxUses && {maxUses: Number(updates.maxUses)}),
           ...(updates.maxUses && {currentUses: Number(updates.maxUses)}),

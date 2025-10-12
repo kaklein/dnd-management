@@ -97,7 +97,7 @@ export const handleSubmitEdit = async (
             sourceUrl: formData.sourceUrl,
             displayAsPool: formData.displayAsPool,
             tags: formData.tags,
-            arrayIndex: formData.arrayIndex, // TODO: update as needed
+            displayIndex: formData.displayIndex, // todo: update as needed
         }
     }
     await updateById(CollectionName.FEATURES, formData.featureId, updatedFeature.data);

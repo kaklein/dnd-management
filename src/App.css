@@ -71,6 +71,10 @@ img {
     outline: 1px solid var(--near-black);
 }
 
+.form-check-input:hover {
+    cursor: pointer;
+}
+
 .icon {
     width: 40px;
     border-radius: 8px;
@@ -1879,4 +1883,44 @@ td {
 
 .sortable-item-disabled {
     cursor: auto !important;
+}
+
+.sortable-item-disabled {
+    transition: margin 200ms;
+    -webkit-transition: margin 200ms;
+    -moz-transition: margin 200ms;
+    -o-transition: margin 200ms;
+    -ms-transition: margin 200ms;
+}
+
+.sortable-item-disabled .card {
+    transition: border 200ms ease;
+    -webkit-transition: border 200ms ease;
+    -moz-transition: border 200ms ease;
+    -o-transition: border 200ms ease;
+    -ms-transition: border 200ms ease;
+}
+
+.sortable-item-enabled {
+    margin: 5px 0px;
+    cursor: move !important;
+    transition: margin 200ms;
+    -webkit-transition: margin 200ms;
+    -moz-transition: margin 200ms;
+    -o-transition: margin 200ms;
+    -ms-transition: margin 200ms;
+}
+
+.sortable-item-enabled .card {
+    box-shadow: 2px 2px 2px 2px lightgray;
+    border: 1px solid var(--dark-purple);
+    transition: border 200ms ease;
+    -webkit-transition: border 200ms ease;
+    -moz-transition: border 200ms ease;
+    -o-transition: border 200ms ease;
+    -ms-transition: border 200ms ease;
+}
+
+.sortable-item-enabled .button, .sortable-item-enabled .toggle-check, .sortable-item-enabled .resource-use {
+    opacity: 50%;
 }

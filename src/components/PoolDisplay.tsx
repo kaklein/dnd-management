@@ -4,11 +4,12 @@ import { getAsPercentage } from "@pages/utils";
 interface Props {
     feature: Feature;
     setResourceUseModalData: (data: any) => void;
+    disabled?: boolean;
 }
 
-function PoolDisplay ({ feature, setResourceUseModalData }: Props) {
-    const currentUses = feature.data.currentUses ?? 0;
-    const maxUses = feature.data.maxUses ?? 0;
+function PoolDisplay ({ ...props }: Props) {
+    const currentUses = props.feature.data.currentUses ?? 0;
+    const maxUses = props.feature.data.maxUses ?? 0;
     
     return <>
     <div className="resource-use container-fluid">
@@ -28,13 +29,13 @@ function PoolDisplay ({ feature, setResourceUseModalData }: Props) {
                     data-bs-toggle="modal"
                     data-bs-target="#resourceUseModal"
                     onClick={() => {
-                        setResourceUseModalData({
-                            title: `Use ${feature.data.name}`,
+                        props.setResourceUseModalData({
+                            title: `Use ${props.feature.data.name}`,
                             action: 'use',
-                            feature
+                            feature: props.feature
                         });
                     }}
-                    disabled={feature.data.currentUses == 0}
+                    disabled={props.feature.data.currentUses == 0 || props.disabled}
                 >
                     Use
                 </button>
@@ -44,13 +45,13 @@ function PoolDisplay ({ feature, setResourceUseModalData }: Props) {
                     data-bs-toggle="modal"
                     data-bs-target="#resourceUseModal"
                     onClick={() => { 
-                        setResourceUseModalData({
-                            title: `Gain Resources: ${feature.data.name}`,
+                        props.setResourceUseModalData({
+                            title: `Gain Resources: ${props.feature.data.name}`,
                             action: 'gain',
-                            feature
+                            feature: props.feature
                         });
                     }}
-                    disabled={feature.data.currentUses! >= feature.data.maxUses!}
+                    disabled={props.feature.data.currentUses! >= props.feature.data.maxUses! || props.disabled}
                 >
                     Gain
                 </button>
@@ -60,13 +61,13 @@ function PoolDisplay ({ feature, setResourceUseModalData }: Props) {
                     data-bs-toggle="modal"
                     data-bs-target="#resourceUseModal"
                     onClick={() => { 
-                        setResourceUseModalData({
-                            title: `Refill ${feature.data.name}?`,
+                        props.setResourceUseModalData({
+                            title: `Refill ${props.feature.data.name}?`,
                             action: 'refill',
-                            feature
+                            feature: props.feature
                         });
                     }}
-                    disabled={feature.data.currentUses == feature.data.maxUses}
+                    disabled={props.feature.data.currentUses == props.feature.data.maxUses || props.disabled}
                 >
                     Refill
                 </button>

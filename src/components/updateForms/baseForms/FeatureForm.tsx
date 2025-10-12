@@ -23,7 +23,7 @@ interface Props {
   modalDismiss?: boolean;
 }
 
-// TODO: pull in pcData and auto assign arrayIndex based on last index of existing features
+// TODO: pull in pcData and auto assign displayIndex based on last index of existing features
 function FeatureForm ({handleChange, handleSubmit, formData, setFormData, initialEditorContent, modalDismiss=false}: Props) {
   const [showLimitedUseFields, setShowLimitedUseFields] = useState(formData.maxUses ? true : false);
   useEffect(() => {

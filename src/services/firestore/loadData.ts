@@ -22,23 +22,23 @@ const loadPcData = async (pcId: string): Promise<PlayerCharacter> => {
   // Get features
   const features = (await readData(CollectionName.FEATURES, { pcId })) as Feature[];
   features.sort((a, b) => {
-    if (a.data.arrayIndex !== undefined && b.data.arrayIndex !== undefined) {
-      return a.data.arrayIndex - b.data.arrayIndex;
-    } else if (a.data.arrayIndex !== undefined) {
+    if (a.data.displayIndex !== undefined && b.data.displayIndex !== undefined) {
+      return a.data.displayIndex - b.data.displayIndex;
+    } else if (a.data.displayIndex !== undefined) {
       return -1; // a comes before b
-    } else if (b.data.arrayIndex !== undefined) {
+    } else if (b.data.displayIndex !== undefined) {
       return 1; // b comes before a
     } else {
-      // If neither has arrayIndex, sort by name
+      // If neither has displayIndex, sort by name
       if (a.data.name < b.data.name) return -1;
       if (a.data.name > b.data.name) return 1;
       return 0;
     }
   });
-  if (features.some(f => f.data.arrayIndex === undefined)) {
+  if (features.some(f => f.data.displayIndex === undefined)) {
     for (let f of features) {
-      // reassign all indices so they have sequential arrayIndex
-      f.data.arrayIndex = features.indexOf(f);
+      // reassign all indices so they have sequential displayIndex
+      f.data.displayIndex = features.indexOf(f);
     }
   }  
 
