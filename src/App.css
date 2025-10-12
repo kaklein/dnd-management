@@ -1871,3 +1871,12 @@ td {
 .sentry-test-error button:hover {
     background-color: yellow;
 }
+
+
+.sortable-item {
+    touch-action: 'manipulation';
+}
+
+.sortable-item-disabled {
+    cursor: auto !important;
+}

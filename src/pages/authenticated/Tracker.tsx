@@ -42,6 +42,21 @@ import HPDisplay from "@components/HPDisplay";
 import ResourceUseModal from "@components/modals/ResourceUseModal";
 import { SentryLogger } from "@services/sentry/logger";
 import TagDisplay from "@components/TagDisplay";
+import {
+  KeyboardSensor,
+  PointerSensor,
+  TouchSensor,
+  useSensor,
+  useSensors,
+} from '@dnd-kit/core';
+import {
+  arrayMove,
+  sortableKeyboardCoordinates,
+} from '@dnd-kit/sortable';
+import { reorderArray } from "@components/updateForms/utils";
+import { SortableContainer } from "@components/sortables/SortableContainer";
+import { SortableHeader } from "@components/sortables/SortableHeader";
+
 
 interface Props {
     pcData: PlayerCharacter;
@@ -53,6 +68,43 @@ interface Props {
 }
 
 function Tracker({pcData, queryClient, pcList, selectedPc, userRole, logger}: Props) {   
+    // sortable testing stuff
+    const [sortFeatureIds, setSortFeatureIds] = useState(pcData.features.map(f => f.id));
+    const [featureSortingEnabled, setFeatureSortingEnabled] = useState(false);
+    
+    const sensors = useSensors(
+        useSensor(PointerSensor),
+        useSensor(KeyboardSensor, {
+            coordinateGetter: sortableKeyboardCoordinates,
+        }),
+        useSensor(TouchSensor)
+    );
+
+    const handleDragEnd = (event: any) => {
+        const {active, over} = event;
+            
+        if (active.id !== over.id) {
+            // Reorder items client-side
+            setSortFeatureIds((sortables) => {
+                const oldIndex = sortables.indexOf(active.id);
+                const newIndex = sortables.indexOf(over.id);
+                
+                return arrayMove(sortables, oldIndex, newIndex);
+            });
+            // Save new order of items in DB
+            const reorderedArr = reorderArray(pcData.features, pcData.features.find(f => f.id == active.id)!, sortFeatureIds.indexOf(over.id));
+            const updates = reorderedArr.map((i) => ({
+                collectionName: CollectionName.FEATURES,
+                docId: i.id,
+                update: i.data
+            }));
+            // batchUpdate(updates).then();
+            console.log((updates.map(u => ({name: u.update.name, arrayIndex: u.update.arrayIndex}))));
+        }
+    }
+    // end sortable testing stuff
+    
+    
     const conModifier = pcData.abilityScores.data.constitution.modifier;
    
     const [showSuccessAlert, setShowSuccessAlert] = useState(false);
@@ -77,7 +129,8 @@ function Tracker({pcData, queryClient, pcList, selectedPc, userRole, logger}: Pr
                 pcId: pcData.baseDetails.pcId,
                 description: '',
                 source: '',
-                name: ''
+                name: '',
+                arrayIndex: -1
             }
         }
     });
@@ -499,13 +552,26 @@ function Tracker({pcData, queryClient, pcList, selectedPc, userRole, logger}: Pr
                         </Card>
                     }
 
+                    
+                    {/* TODO: Disable feature buttons/update styling when sorting is enabled */}
                     {
                         (limitedUseFeatures && limitedUseFeatures.length > 0) &&
                         <Card>
-                            <h3 className="section-header">Abilities</h3>
+                            <SortableHeader
+                                text="Abilities"
+                                sortingEnabled={featureSortingEnabled}
+                                setSortingEnabled={setFeatureSortingEnabled}
+                            />
+                            <SortableContainer
+                                sensors={sensors}
+                                handleDragEnd={handleDragEnd}
+                                sortableIds={sortFeatureIds}
+                                sortableIdPrefix="feature"
+                                sortingEnabled={featureSortingEnabled}
+                            >
                             {
                                 limitedUseFeatures.map(feature => (
-                                    <Card key={feature.id} customClass="small-padding">
+                                    <Card key={`feature-${feature.id}`} id={`feature-${feature.id}`} customClass="small-padding">
                                         <div className="container-fluid light-gray-bg small-padding no-margin">
                                             <div className="row">
                                                 <div className="col left-justify">
@@ -559,6 +625,7 @@ function Tracker({pcData, queryClient, pcList, selectedPc, userRole, logger}: Pr
                                     </Card>
                                 ))
                             }
+                        </SortableContainer>                          
                         </Card>
                     }
 

@@ -72,8 +72,10 @@ export const getFileSizeDisplay = (fileSizeBytes: number): string => {
 
 interface T {
   id: string;
-  arrayIndex: number;
-  [key: string]: any;
+  data: {
+    arrayIndex: number;
+    [key: string]: any;
+  }
 }
 
 // TODO: Move this to a better suited location?
@@ -81,13 +83,13 @@ interface T {
 export const reorderArray = (arr: T[], itemToMove: T, newIndex: number): T[] => {
   // ensure items are sorted by designated arrayIndex before reordering
   arr.sort((a, b) => {
-    return a.arrayIndex - b.arrayIndex;
+    return a.data.arrayIndex - b.data.arrayIndex;
   });
   const oldIndex = arr.map(i => i.id).indexOf(itemToMove.id);
   arr.splice(newIndex, 0, arr.splice(oldIndex, 1)[0]);
   // update arrayIndex to reflect new order
   arr.forEach((item, index) => {
-    item.arrayIndex = index;
+    item.data.arrayIndex = index;
   });
   return arr;
 };
