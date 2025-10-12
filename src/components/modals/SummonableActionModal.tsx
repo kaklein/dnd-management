@@ -58,7 +58,6 @@ function SummonableActionModal ({ action, summonable, queryClient, setDisableBac
             summonable.data.hitPoints.current = newHitPointsCurrent;
             setSelectedSummonable(summonable);
           } catch (e: any) {
-            console.error(e); // todo delete
             logger.logError(e);
             alert('We encountered an error saving your changes. Please refresh the page and try again.');
             return;
