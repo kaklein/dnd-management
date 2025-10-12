@@ -330,10 +330,7 @@ export const pcHasDetailsPageItems = (pcData: PlayerCharacter): boolean => {
 }
 
 export const getLimitedUseFeatures = (pcData: PlayerCharacter) => {
-  return pcData.features.filter(feature => feature.data.maxUses).sort((a,b) => {
-      if (a.data.name < b.data.name) return -1;
-      return 1;
-  });
+  return pcData.features.filter(feature => feature.data.maxUses);
 }
 
 export const getDefaultSummoned = (pcData: PlayerCharacter): {[key: string]: any} => {

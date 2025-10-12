@@ -21,10 +21,26 @@ const loadPcData = async (pcId: string): Promise<PlayerCharacter> => {
 
   // Get features
   const features = (await readData(CollectionName.FEATURES, { pcId })) as Feature[];
-  features.sort((a, b) =>  { 
-    if (a.id < b.id) return -1;
-    return 1;
+  features.sort((a, b) => {
+    if (a.data.arrayIndex !== undefined && b.data.arrayIndex !== undefined) {
+      return a.data.arrayIndex - b.data.arrayIndex;
+    } else if (a.data.arrayIndex !== undefined) {
+      return -1; // a comes before b
+    } else if (b.data.arrayIndex !== undefined) {
+      return 1; // b comes before a
+    } else {
+      // If neither has arrayIndex, sort by name
+      if (a.data.name < b.data.name) return -1;
+      if (a.data.name > b.data.name) return 1;
+      return 0;
+    }
   });
+  if (features.some(f => f.data.arrayIndex === undefined)) {
+    for (let f of features) {
+      // reassign all indices so they have sequential arrayIndex
+      f.data.arrayIndex = features.indexOf(f);
+    }
+  }  
 
   // Get summonables
   const summonables = (await readData(CollectionName.SUMMONABLES, { pcId })) as Summonable[];

@@ -17,6 +17,7 @@ export interface Feature {
         saveDC?: number;
         sourceUrl?: string;
         tags?: FeatureTag[];
+        arrayIndex?: number; // index of feature among other features with the same pcId, for display sorting purposes
     }
 }
 
