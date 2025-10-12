@@ -1020,10 +1020,10 @@ td {
 .display-item-row {
     background-color: var(--near-white);
     border-radius: 5px;
-    margin-top: 10px;
-    margin-bottom: 10px;
-    margin-left: 0px;
-    margin-right: 0px;
+    margin-top: 10px !important;
+    margin-bottom: 10px !important;
+    margin-left: 0px !important;
+    margin-right: 0px !important;
     padding: 0px;
     padding-top: 5px;
     padding-bottom: 5px;
@@ -1875,7 +1875,6 @@ td {
 .sentry-test-error button:hover {
     background-color: yellow;
 }
-
 
 .sortable-item {
     touch-action: 'manipulation';
