@@ -3,6 +3,7 @@ import Card from "@components/cards/Card";
 import Refresh from "@components/Refresh";
 import { 
     buildFeatureCurrentUsesKey, 
+    buildFeatureDisplayIndexKey, 
     buildSpellSlotsCurrentKey, 
     formatBaseDetailsUpdates, 
     formatFeaturesUpdates, 
@@ -55,6 +56,7 @@ import {
 } from '@dnd-kit/sortable';
 import { reorderArray } from "@components/updateForms/utils";
 import { SortableGroup } from "@components/sortables/SortableGroup";
+import { Feature } from "@models/playerCharacter/Feature";
 
 
 interface Props {
@@ -91,15 +93,14 @@ function Tracker({pcData, queryClient, pcList, selectedPc, userRole, logger}: Pr
                 
                 return arrayMove(sortables, oldIndex, newIndex);
             });
-            // Save new order of items in DB
-            const reorderedArr = reorderArray(pcData.features, pcData.features.find(f => f.id == active.id)!, sortFeatureIds.indexOf(over.id));
-            const updates = reorderedArr.map((i) => ({
-                collectionName: CollectionName.FEATURES,
-                docId: i.id,
-                update: i.data
-            }));
-            // batchUpdate(updates).then();
-            console.log((updates.map(u => ({name: u.update.name, displayIndex: u.update.displayIndex}))));
+            // Update form data with newly ordered items
+            const reorderedArr = reorderArray(pcData.features, pcData.features.find(f => f.id == active.id)!, sortFeatureIds.indexOf(over.id));            
+            let updates: {[key: string]: string} = {};
+            reorderedArr.map(f => {
+                const key = buildFeatureDisplayIndexKey(f as Feature);
+                updates[key] = String(f.data.displayIndex);
+            });
+            setFormData({...formData, ...updates});
         }
     }
     // end sortable testing stuff
@@ -567,6 +568,9 @@ function Tracker({pcData, queryClient, pcList, selectedPc, userRole, logger}: Pr
                                 onUpdate={onFeatureSortUpdate}
                                 sortableIds={sortFeatureIds}
                                 sortableIdPrefix="feature"
+                                onSave={handleSubmit}
+                                formData={formData}
+                                logger={logger}
                             >
                             {
                                 limitedUseFeatures.map(feature => (

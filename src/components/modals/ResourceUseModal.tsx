@@ -26,10 +26,10 @@ function ResourceUseModal ({ handleSubmit, formData, modalData }: Props) {
     const [updatedCurrentUses, setUpdatedCurrentUses] = useState(currentResources);
 
     const useResources = (amountSpent: number): number => {
-    return Math.max(currentResources - amountSpent);
+      return Math.max(currentResources - amountSpent);
     }
     const gainResources = (amountGained: number): number => {
-    return currentResources + amountGained;
+      return currentResources + amountGained;
     }
     
     return (

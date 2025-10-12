@@ -69,6 +69,7 @@ export const getDefaultFeatureFormData = () => {
     source: '',
     maxUses: '',
     displayAsPool: false,
+    displayIndex: -1, // TODO - update as needed
     refresh: '',
     damage: '',
     damageType: '',

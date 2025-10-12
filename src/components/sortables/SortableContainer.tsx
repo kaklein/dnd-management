@@ -17,6 +17,7 @@ interface Props {
     sortableIds: string[];
     sortableIdPrefix: 'feature' | 'spell' | 'note' | 'summonable' | 'weapon';
     sortingEnabled: boolean;
+    setOrderChanged: (changed: boolean) => void;
     children: ReactNode;
 }
 
@@ -35,7 +36,10 @@ export function SortableContainer ({...props}: Props) {
         <DndContext
             sensors={props.sensors}
             collisionDetection={closestCenter}
-            onDragEnd={props.handleDragEnd}
+            onDragEnd={(event) => {
+                props.handleDragEnd(event);
+                props.setOrderChanged(true);
+            }}
             >
             <SortableContext 
                 items={props.sortableIds}

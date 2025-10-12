@@ -1921,6 +1921,6 @@ td {
     -ms-transition: border 200ms ease;
 }
 
-.sortable-item-enabled .button, .sortable-item-enabled .toggle-check, .sortable-item-enabled .resource-use {
+.sortable-item-enabled .button, .sortable-item-enabled .toggle-check, .sortable-item-enabled .resource-use, .sortable-item-enabled .tag-display {
     opacity: 50%;
 }

@@ -58,11 +58,21 @@ export const buildFeatureCurrentUsesKey = (feature: Feature) => {
     return `feature_${feature.id}_currentUses`;
 }
 
+export const buildFeatureDisplayIndexKey = (feature: Feature) => {
+    return `feature_${feature.id}_displayIndex`;
+}
+
 export const getFeatureFormData = (features: Feature[]) => {
-    const array = features.map(f => (
+    const currentUsesArr = features.map(f => (
         [buildFeatureCurrentUsesKey(f), f.data.currentUses]
     ));
-    return Object.fromEntries(array);
+    const displayIndexArr = features.map(f => (
+        [buildFeatureDisplayIndexKey(f), f.data.displayIndex]
+    ));
+    return {
+        ...Object.fromEntries(currentUsesArr),
+        ...Object.fromEntries(displayIndexArr)
+    };
 };
 
 export const buildSummonableSummonedKey = (summonable: Summonable) => {
@@ -91,19 +101,46 @@ export const isSpellSlotKey = (k: string) => {
     return k.substring(0,9) === 'spellSlot'; // full keys e.g. spellSlot_1234567_current
 };
 
-export const formatFeaturesUpdates = (formData: any): {docId: string, updates: { currentUses: number }}[] => {
+export const formatFeaturesUpdates = (formData: any): {docId: string, updates: { currentUses?: number, displayIndex?: number }}[] => {
+    // TODO: Also need to ensure we update displayIndex initially, if it doesn't already exist.....
     const keys = Object.keys(formData);
     const featureKeys = keys.filter(k => k.substring(0,7) === 'feature'); // full keys e.g. feature_1234567_currentUses
-    let updates = [];
+       
+    let splitKey: string[];
+    let docId: string;
+    let currentUses: string | undefined;
+    let displayIndex: string | undefined;
+
+    let uniqueUpdates: {docId: string, updates: {currentUses?: number, displayIndex?: number}}[] = [];
     for (const key of featureKeys) {
-        updates.push({
-            docId: key.split('_')[1],
-            updates: {
-                currentUses: Number(formData[key])
+        splitKey = key.split('_');
+        docId = splitKey[1];
+        if (splitKey[2] === 'currentUses') {
+            currentUses = formData[key];
+            displayIndex = undefined;
+        } else if (splitKey[2] === 'displayIndex') {
+            displayIndex = formData[key];
+            currentUses = undefined;
+        }
+        
+        if (!uniqueUpdates.find(u => u.docId === docId)) {                           
+            uniqueUpdates.push({
+                docId,
+                updates: {
+                    ...currentUses && {currentUses: Number(currentUses)},
+                    ...displayIndex && {displayIndex: Number(displayIndex)}
+                }
+            });
+        } else {
+            const i = uniqueUpdates.map(u => u.docId).indexOf(docId);
+            if (currentUses) {
+                uniqueUpdates[i].updates.currentUses = Number(currentUses);
+            } else if (displayIndex) {
+                uniqueUpdates[i].updates.displayIndex = Number(displayIndex);
             }
-        })
+        }
     }
-    return updates;
+    return uniqueUpdates;
 }
 
 export const formatSummonablesUpdates = (formData: any): {docId: string, updates: {currentUses: number}}[] => {
