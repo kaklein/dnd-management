@@ -47,17 +47,30 @@ function SummonableActionModal ({ action, summonable, queryClient, setDisableBac
 
         if (['takeDamage', 'gainHP', 'refillHP'].includes(action)) {
           try {
+            const newHitPointsCurrent = action === 'refillHP' ? summonable.data.hitPoints.max : submitData.newHPAmount;
+            
             await updateById(CollectionName.SUMMONABLES, summonable.id, {
-              'hitPoints.current': action === 'refillHP' ? summonable.data.hitPoints.max : submitData.newHPAmount
-            } );
+              'hitPoints.current': newHitPointsCurrent
+            });
+
+            setModalFormData(emptyModalData);
+            await queryClient.refetchQueries({ queryKey: ['pcData', pcId]});
+            summonable.data.hitPoints.current = newHitPointsCurrent;
+            setSelectedSummonable(summonable);
           } catch (e: any) {
             logger.logError(e);
             alert('We encountered an error saving your changes. Please refresh the page and try again.');
             return;
           }
         } else if (['summon'].includes(action)) {
-          try {                     
+          try {
             await updateById(CollectionName.SUMMONABLES, summonable.id, { summoned: true });
+            
+            setModalFormData(emptyModalData);
+            await queryClient.refetchQueries({ queryKey: ['pcData', pcId]});
+            setSelectedSummonable(summonable);
+            setDisableBackdrop(true);
+            toggleSummonableDrawer();
           } catch (e: any) {
             logger.logError(e);
             alert('We encountered an error saving your changes. Please refresh the page and try again.');
@@ -65,12 +78,7 @@ function SummonableActionModal ({ action, summonable, queryClient, setDisableBac
           }
         } else {
           throw Error ('Unknown action in summon modal: ' + action);
-        }
-        setModalFormData(emptyModalData);
-        await queryClient.refetchQueries({ queryKey: ['pcData', pcId]});
-        setSelectedSummonable(summonable);
-        setDisableBackdrop(true);
-        toggleSummonableDrawer();
+        }        
       }}>
       <div className="modal-dialog">
         <div className="modal-content">
