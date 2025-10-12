@@ -292,7 +292,7 @@ function Tracker({pcData, queryClient, pcList, selectedPc, userRole, logger}: Pr
             />
             <SummonableActionModal
                 action={summonableAction}
-                summonable={clickedSummonable}
+                summonable={summonableAction === 'summon' ? clickedSummonable : selectedSummonable}
                 queryClient={queryClient}
                 setDisableBackdrop={setDisableBackdrop}
                 pcId={pcData.baseDetails.pcId}
@@ -906,7 +906,7 @@ function Tracker({pcData, queryClient, pcList, selectedPc, userRole, logger}: Pr
                             toggleSummonableDrawer();
                         }}
                     >
-                        <a href="#summonable-drawer-container">
+                        <a href="#">
                             { !disableBackdrop && 
                             <img
                                 alt="open summoned item"
