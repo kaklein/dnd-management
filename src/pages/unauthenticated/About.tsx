@@ -64,7 +64,17 @@ function About ({selectedPc, userRole}: Props) {
                 <div className="col-2 small-text"><b>Release Date</b></div>
                 <div className="col-8 small-text"><b>Release Notes</b></div>
               </div>
-              <ReleaseNote version="1.8.1" releaseDate="2025=05=04"
+              <ReleaseNote version="1.9.0" releaseDate="2025-10-12"
+                releaseNotes={
+                  <>
+                  <p>New option for Spells and Features to tag with keywords.</p>
+                  <p>Added capability for more than one Summonable to be summoned at once. Easily switch between active Summonables within the popup drawer.</p>
+                  <p>About page is accessible to non-logged in users.</p>
+                  <p>Minor bug fixes.</p>
+                  </>
+                }
+              />
+              <ReleaseNote version="1.8.1" releaseDate="2025-05-04"
                 releaseNotes={<p>Fixed bug that occurred when editing Summonable items.</p>}
               />
               <ReleaseNote version="1.8.0" releaseDate="2025-05-01"
