@@ -19,7 +19,7 @@ import ConfirmDelete from "@components/modals/ConfirmDelete";
 import { TitleButtonRow } from "@components/TitleButtonRow";
 import DeleteItemButton from "@components/DeleteItemButton";
 import QuickNav from "@components/QuickNav";
-import { emptyRichTextContent, formatWeaponDisplayTitle, handleSubmitEdit, pcHasDetailsPageItems, triggerSuccessAlert } from "@pages/utils";
+import { cloneObjArray, emptyRichTextContent, formatWeaponDisplayTitle, handleSubmitEdit, pcHasDetailsPageItems, triggerSuccessAlert } from "@pages/utils";
 import SuccessAlert from "@components/alerts/SuccessAlert";
 import EditItemButton from "@components/EditItemButton";
 import EditModal from "@components/modals/EditModal";
@@ -32,6 +32,7 @@ import { DamageType } from "@models/enum/DamageType";
 import TagDisplay from "@components/TagDisplay";
 import SummonableDisplay from "@components/SummonableDisplay";
 import { SentryLogger } from "@services/sentry/logger";
+import { Feature } from "@models/playerCharacter/Feature";
 
 interface Props {
     pcData: PlayerCharacter;
@@ -43,6 +44,12 @@ interface Props {
 }
 
 function Details({pcData, pcList, selectedPc, queryClient, userRole, logger}: Props) {
+    const sortedFeatures = cloneObjArray(pcData.features) as Feature[];
+    sortedFeatures.sort((a,b) => {
+        if (a.data.name < b.data.name) return -1;
+        return 1;
+    });
+    
     const hasItems = pcHasDetailsPageItems(pcData);
     const navigate = useNavigate();
     const [searchParams, setSearchParams] = useSearchParams();
@@ -330,10 +337,8 @@ function Details({pcData, pcList, selectedPc, queryClient, userRole, logger}: Pr
                     />
                     {
                         showSection.features &&
-                        pcData.features.sort((a,b) => {
-                            if (a.data.name < b.data.name) return -1;
-                            return 1;
-                        }).map(feature => (
+                        // TODO: sort by displayIndex by default? And add A-Z / Z-A sorting options?
+                        sortedFeatures.map(feature => (
                             <Card key={feature.id}>
                                 <a id={removeWhiteSpaceAndConvertToLowerCase(feature.data.name)}></a>
                                 <TitleButtonRow

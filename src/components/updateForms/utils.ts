@@ -69,27 +69,3 @@ export const getFileSizeDisplay = (fileSizeBytes: number): string => {
     return `${(fileSizeBytes / 1000).toFixed(2)}KB`;
   }
 }
-
-interface T {
-  id: string;
-  data: {
-    displayIndex: number;
-    [key: string]: any;
-  }
-}
-
-// TODO: Move this to a better suited location?
-/* Moves specified item to new position in array, and reassigns displayIndex for each item according to new positions */
-export const reorderArray = (arr: T[], itemToMove: T, newIndex: number): T[] => {
-  // ensure items are sorted by designated displayIndex before reordering
-  arr.sort((a, b) => {
-    return a.data.displayIndex - b.data.displayIndex;
-  });
-  const oldIndex = arr.map(i => i.id).indexOf(itemToMove.id);
-  arr.splice(newIndex, 0, arr.splice(oldIndex, 1)[0]);
-  // update displayIndex to reflect new order
-  arr.forEach((item, index) => {
-    item.data.displayIndex = index;
-  });
-  return arr;
-};

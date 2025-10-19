@@ -54,7 +54,7 @@ import {
   arrayMove,
   sortableKeyboardCoordinates,
 } from '@dnd-kit/sortable';
-import { reorderArray } from "@components/updateForms/utils";
+import { reorderArray } from "../utils";
 import { SortableGroup } from "@components/sortables/SortableGroup";
 import { Feature } from "@models/playerCharacter/Feature";
 

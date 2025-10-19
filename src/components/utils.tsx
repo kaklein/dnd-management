@@ -102,7 +102,6 @@ export const isSpellSlotKey = (k: string) => {
 };
 
 export const formatFeaturesUpdates = (formData: any): {docId: string, updates: { currentUses?: number, displayIndex?: number }}[] => {
-    // TODO: Also need to ensure we update displayIndex initially, if it doesn't already exist.....
     const keys = Object.keys(formData);
     const featureKeys = keys.filter(k => k.substring(0,7) === 'feature'); // full keys e.g. feature_1234567_currentUses
        

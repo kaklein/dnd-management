@@ -51,7 +51,7 @@ function AddItems ({pcData, queryClient, pcList, selectedPc, userRole, logger}: 
   const [weaponFormData, setWeaponFormData] = useState(defaultWeaponFormData);
   const [spellFormData, setSpellFormData] = useState(getDefaultSpellFormData(pcData));
   const [spellSlotFormData, setSpellSlotFormData] = useState(defaultSpellSlotFormData);
-  const [featureFormData, setFeatureFormData] = useState(getDefaultFeatureFormData());
+  const [featureFormData, setFeatureFormData] = useState(getDefaultFeatureFormData(pcData.features));
   const [equipmentFormData, setEquipmentFormData] = useState(defaultEquipmentFormData);
   const [proficiencyFormData, setProficiencyFormData] = useState(defaultProficiencyFormData);
   const [languageFormData, setLanguageFormData] = useState(defaultLanguageFormData);
@@ -69,7 +69,7 @@ function AddItems ({pcData, queryClient, pcList, selectedPc, userRole, logger}: 
   };
 
   const handleSubmit = async (
-    event: React.ChangeEvent<HTMLInputElement>, 
+    event: React.ChangeEvent<HTMLInputElement>,
     data: {updateType: UpdateType, [key: string]: any},
     clearForm: (data: any) => void,
     clearedFormData: any
