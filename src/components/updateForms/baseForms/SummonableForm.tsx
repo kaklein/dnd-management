@@ -1,7 +1,7 @@
 import Button, { ButtonType } from "@components/Button";
 import FormSelect from "@components/FormSelect";
 import TextEditor, { buildEditor } from "@components/TextEditor";
-import { defaultSummonableFormData } from "@data/emptyFormData";
+import { getDefaultSummonableFormData } from "@data/emptyFormData";
 import { PlayerCharacter } from "@models/playerCharacter/PlayerCharacter";
 import { validateRequiredFields } from "../utils";
 import SummonableAttackForm from "./SummonableAttackForm";
@@ -82,10 +82,10 @@ function SummonableForm ({handleChange, handleSubmit, formData, setFormData, ini
           alert(errorMessage);
           return;
         } else {
-          await handleSubmit(event, formData, setFormData, defaultSummonableFormData);
+          await handleSubmit(event, formData, setFormData, getDefaultSummonableFormData(pcData.summonables));
           summonableDescriptionEditor.commands.clearContent();
           setAttacks(emptyAttacks);
-          setFormData(defaultSummonableFormData);
+          setFormData(getDefaultSummonableFormData(pcData.summonables));
         }
     }}>
       <div className="update-form-field">

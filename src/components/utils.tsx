@@ -58,16 +58,12 @@ export const buildFeatureCurrentUsesKey = (feature: Feature) => {
     return `feature_${feature.id}_currentUses`;
 }
 
-export const buildFeatureDisplayIndexKey = (feature: Feature) => {
-    return `feature_${feature.id}_displayIndex`;
-}
-
 export const getFeatureFormData = (features: Feature[]) => {
     const currentUsesArr = features.map(f => (
         [buildFeatureCurrentUsesKey(f), f.data.currentUses]
     ));
     const displayIndexArr = features.map(f => (
-        [buildFeatureDisplayIndexKey(f), f.data.displayIndex]
+        [buildDisplayIndexKey('feature', f.id), f.data.displayIndex]
     ));
     return {
         ...Object.fromEntries(currentUsesArr),
@@ -75,15 +71,25 @@ export const getFeatureFormData = (features: Feature[]) => {
     };
 };
 
-export const buildSummonableSummonedKey = (summonable: Summonable) => {
-    return `summonable_${summonable.id}_summoned`;
+export const buildDisplayIndexKey = (itemPrefix: string, itemId: string) => {
+    return `${itemPrefix}_${itemId}_displayIndex`;
 };
 
-export const getSummonablesSummoned = (summonables: Summonable[]) => {
-    const array = summonables.map(s => (
+export const getSummonableFormData = (summonables: Summonable[]) => {
+    const summonedArr = summonables.map(s => (
         [buildSummonableSummonedKey(s), s.data.summoned]
     ));
-    return Object.fromEntries(array);
+    const displayIndexArr = summonables.map(s => (
+        [buildDisplayIndexKey('summonable', s.id), s.data.displayIndex]
+    ));
+    return {
+        ...Object.fromEntries(summonedArr),
+        ...Object.fromEntries(displayIndexArr)
+    };
+}
+
+export const buildSummonableSummonedKey = (summonable: Summonable) => {
+    return `summonable_${summonable.id}_summoned`;
 };
 
 export const buildSpellSlotsCurrentKey = (spellSlot: SpellSlot) => {
@@ -101,61 +107,56 @@ export const isSpellSlotKey = (k: string) => {
     return k.substring(0,9) === 'spellSlot'; // full keys e.g. spellSlot_1234567_current
 };
 
-export const formatFeaturesUpdates = (formData: any): {docId: string, updates: { currentUses?: number, displayIndex?: number }}[] => {
+/* Formats updates for items that are stored as individual documents in their own collection */
+export const formatItemUpdatesSeparateColl = (formData: any, itemType: string, fieldTypes: { fieldName: string, dataType: 'number' | 'string' | 'boolean' }[]): 
+ { docId: string, updates: { currentUses?: number, displayIndex?: number } }[] => {
     const keys = Object.keys(formData);
-    const featureKeys = keys.filter(k => k.substring(0,7) === 'feature'); // full keys e.g. feature_1234567_currentUses
-       
+
+    // get all full keys, e.g. feature_1234567_currentUses, for the specified item type, e.g. 'feature'
+    const itemKeys = keys.filter(k => k.substring(0, itemType.length) === itemType);
+
+    // initialize variables for use in loop
     let splitKey: string[];
     let docId: string;
-    let currentUses: string | undefined;
-    let displayIndex: string | undefined;
+    let keyFieldName: string;
+    let fieldTypeMatch: {fieldName: string, dataType: 'number' | 'string' | 'boolean'};
+    let uniqueUpdates: { docId: string, updates: {[key: string]: any} }[] = [];
 
-    let uniqueUpdates: {docId: string, updates: {currentUses?: number, displayIndex?: number}}[] = [];
-    for (const key of featureKeys) {
+    const convertType = (value: any, dataType: 'number' | 'string' | 'boolean') => {
+        switch (dataType) {
+            case 'number':
+                return Number(value);
+            case 'boolean':
+                return (value === "true" || value === "TRUE" || value === true) ? true : false;
+            case 'string':
+            default:
+                return String(value);
+        }
+    }
+
+    for (const key of itemKeys) {
         splitKey = key.split('_');
         docId = splitKey[1];
-        if (splitKey[2] === 'currentUses') {
-            currentUses = formData[key];
-            displayIndex = undefined;
-        } else if (splitKey[2] === 'displayIndex') {
-            displayIndex = formData[key];
-            currentUses = undefined;
-        }
+        keyFieldName = splitKey[2];
+        fieldTypeMatch = fieldTypes.find(t => t.fieldName === keyFieldName) ?? { fieldName: 'default', dataType: 'string' };
         
-        if (!uniqueUpdates.find(u => u.docId === docId)) {                           
+        if (!uniqueUpdates.find(u => u.docId === docId)) {       
             uniqueUpdates.push({
                 docId,
                 updates: {
-                    ...currentUses && {currentUses: Number(currentUses)},
-                    ...displayIndex && {displayIndex: Number(displayIndex)}
+                    [keyFieldName]: convertType(formData[key], fieldTypeMatch.dataType) 
                 }
             });
         } else {
             const i = uniqueUpdates.map(u => u.docId).indexOf(docId);
-            if (currentUses) {
-                uniqueUpdates[i].updates.currentUses = Number(currentUses);
-            } else if (displayIndex) {
-                uniqueUpdates[i].updates.displayIndex = Number(displayIndex);
+            uniqueUpdates[i].updates = {
+                ...uniqueUpdates[i].updates,
+                [keyFieldName]: convertType(formData[key], fieldTypeMatch.dataType)                
             }
         }
     }
     return uniqueUpdates;
-}
-
-export const formatSummonablesUpdates = (formData: any): {docId: string, updates: {currentUses: number}}[] => {
-    const keys = Object.keys(formData);
-    const currentUsesKeys = keys.filter(k => (k.substring(0, 10) === 'summonable' && k.substring(k.length - 11) === 'currentUses'));
-    let updates = [];
-    for (const key of currentUsesKeys) {
-        updates.push({
-            docId: key.split('_')[1],
-            updates: {
-                currentUses: Number(formData[key])
-            }
-        })
-    }
-    return updates;
-}
+};
 
 export const formatSpellSlotsUpdates = (formData: any): {docId: string, updates: { current: number }}[] => {
     const keys = Object.keys(formData);

@@ -27,7 +27,7 @@ const getChildEl = (children: ReactNode, id: string, idPrefix: string): ReactNod
         if (isValidElement(child) && child.props.id === `${idPrefix}-${id}`) {
             foundChild = child;
         }
-    });    
+    });
     return foundChild;
 }
 

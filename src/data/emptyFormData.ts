@@ -6,6 +6,7 @@ import { AbilityScores } from "@models/playerCharacter/AbilityScores";
 import { AllowedFeatureTags, Feature, FeatureTag } from "@models/playerCharacter/Feature";
 import { PlayerCharacter } from "@models/playerCharacter/PlayerCharacter";
 import { AllowedSpellTags, Spell } from "@models/playerCharacter/Spell";
+import { Summonable } from "@models/playerCharacter/Summonable";
 import { SpellSlot } from "@models/playerCharacter/usableResources/SpellSlot";
 import { ShowConfirmDeleteData } from "@models/ShowConfirmDeleteData";
 
@@ -84,22 +85,25 @@ export const getDefaultFeatureFormData = (existingFeatures?: Feature[]) => {
   }
 };
 
-export const defaultSummonableFormData = {
-  updateType: UpdateType.SUMMONABLES,
-  type: '',
-  name: '',
-  description: '',
-  sourceType: '',
-  sourceName: '',
-  hitPointMaximum: '',
-  hitPointsCurrent: '',
-  maxUses: '',
-  currentUses: '',
-  refresh: '',
-  armorClass: '',
-  summoned: '',
-  attacks: [],
-  useAbilityScores: 'false'
+export const getDefaultSummonableFormData = (existingSummonables?: Summonable[]) => {
+  return {
+    updateType: UpdateType.SUMMONABLES,
+    type: '',
+    name: '',
+    description: '',
+    sourceType: '',
+    sourceName: '',
+    hitPointMaximum: '',
+    hitPointsCurrent: '',
+    maxUses: '',
+    currentUses: '',
+    refresh: '',
+    armorClass: '',
+    summoned: '',
+    attacks: [],
+    useAbilityScores: 'false',
+    displayIndex: getNextDisplayIndex(existingSummonables ? existingSummonables?.map(s => s.data.displayIndex) : undefined),
+  }
 }
 
 export const defaultEquipmentFormData = {

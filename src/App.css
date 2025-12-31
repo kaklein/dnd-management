@@ -830,6 +830,10 @@ td {
     border-radius: 5px;
 }
 
+.refresh-icon-disabled {
+    opacity: 0.4;
+}
+
 .section-header {
     background-color: var(--dark-purple);
     border-top-left-radius: 5px;
@@ -1920,6 +1924,6 @@ td {
     -ms-transition: border 200ms ease;
 }
 
-.sortable-item-enabled .button, .sortable-item-enabled .toggle-check, .sortable-item-enabled .resource-use, .sortable-item-enabled .tag-display {
+.sortable-item-enabled .button, .sortable-item-enabled .toggle-check, .sortable-item-enabled .resource-use, .sortable-item-enabled .tag-display, .sortable-item-enabled p {
     opacity: 50%;
 }

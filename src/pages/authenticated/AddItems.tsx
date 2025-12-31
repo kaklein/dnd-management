@@ -15,10 +15,10 @@ import {
   defaultProficiencyFormData,
   getDefaultSpellFormData,
   defaultSpellSlotFormData,
-  defaultSummonableFormData,
   defaultWeaponFormData,
   emptyShowSectionData,
-  getDefaultFeatureFormData
+  getDefaultFeatureFormData,
+  getDefaultSummonableFormData
 } from "@data/emptyFormData";
 import { UpdateType } from "@models/enum/service/UpdateType";
 import { transformAndUpdate } from "@services/firestore/updateData";
@@ -56,7 +56,7 @@ function AddItems ({pcData, queryClient, pcList, selectedPc, userRole, logger}: 
   const [proficiencyFormData, setProficiencyFormData] = useState(defaultProficiencyFormData);
   const [languageFormData, setLanguageFormData] = useState(defaultLanguageFormData);
   const [noteFormData, setNoteFormData] = useState(defaultNoteFormData);
-  const [summonableFormData, setSummonableFormData] = useState(defaultSummonableFormData);
+  const [summonableFormData, setSummonableFormData] = useState(getDefaultSummonableFormData(pcData.summonables));
 
   const initialEditorContent = emptyRichTextContent;
 

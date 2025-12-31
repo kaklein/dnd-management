@@ -1,10 +1,10 @@
-import { getFeatureFormData, getSpellSlotFormData, getSummonablesSummoned } from "@components/utils";
+import { getFeatureFormData, getSpellSlotFormData, getSummonableFormData } from "@components/utils";
 import { Ability } from "@models/enum/Ability";
 import { WeaponModifierProperty } from "@models/enum/WeaponModifierProperty";
 import { FeatureBaseData } from "@models/playerCharacter/Feature";
 import { PlayerCharacter } from "@models/playerCharacter/PlayerCharacter";
 import { Spell, SpellLevel } from "@models/playerCharacter/Spell";
-import { Summonable } from "@models/playerCharacter/Summonable";
+import { Summonable, SummonableBaseData } from "@models/playerCharacter/Summonable";
 import { SummonableAttack } from "@models/playerCharacter/SummonableAttack";
 import { Weapon } from "@models/playerCharacter/Weapon";
 import { updateArrayObjectItem, updateById, updateDataByPcId, updateStringArrayItem } from "@services/firestore/crud/update";
@@ -123,34 +123,31 @@ export const handleSubmitEdit = async (
       };
     }
 
-    const updatedSummonable: Summonable = {
-        id: '',
-        data: {
-            pcId: pcData.baseDetails.pcId,
-            type: formData.type,
-            name: formData.name,
-            description: formData.description,
-            source: {
-              type: formData.sourceType,
-              name: formData.sourceName
-            },
-            hitPoints: {
-              max: formData.hitPointMaximum,
-              current: hitPointsCurrent
-            },
-            armorClass: Number(formData.armorClass),
-            summoned: existingSummonable.data.summoned,
-            attacks: (attacks && attacks.length > 0) ? attacks.map(a => ({
-              id: a.id,
-              name: a.name,
-              description: a.description,
-              ...(a.damage && { damage: a.damage }),
-              ...(a.damageType && { damageType: a.damageType }),
-            })) : [],
-            abilityScores
-        }
+    const updatedSummonable: SummonableBaseData = {
+        pcId: pcData.baseDetails.pcId,
+        type: formData.type,
+        name: formData.name,
+        description: formData.description,
+        source: {
+          type: formData.sourceType,
+          name: formData.sourceName
+        },
+        hitPoints: {
+          max: formData.hitPointMaximum,
+          current: hitPointsCurrent
+        },
+        armorClass: Number(formData.armorClass),
+        summoned: existingSummonable.data.summoned,
+        attacks: (attacks && attacks.length > 0) ? attacks.map(a => ({
+          id: a.id,
+          name: a.name,
+          description: a.description,
+          ...(a.damage && { damage: a.damage }),
+          ...(a.damageType && { damageType: a.damageType }),
+        })) : [],
+        abilityScores        
     }
-    await updateById(CollectionName.SUMMONABLES, formData.summonableId, updatedSummonable.data);
+    await updateById(CollectionName.SUMMONABLES, formData.summonableId, updatedSummonable);
   } else if (['spell', 'weapon', 'equipment'].includes(formData.formType)) {     
     let updatedItem;
     let fieldName;
@@ -359,7 +356,7 @@ export const getDefaultFormData = (pcData: PlayerCharacter) => {
       armorClass: pcData.baseDetails.armorClass,
       ...getSpellSlotFormData(pcData.spellSlots ?? []),
       ...getFeatureFormData(getLimitedUseFeatures(pcData)),
-      ...getSummonablesSummoned(pcData.summonables ?? []),
+      ...getSummonableFormData(pcData.summonables ?? []),
   }
 };
 
@@ -386,7 +383,8 @@ export const emptySummonable: Summonable = {
       current: 0
     },
     armorClass: 0,
-    summoned: false
+    summoned: false,
+    displayIndex: -1,
   }
 };
 
