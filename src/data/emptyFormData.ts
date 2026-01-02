@@ -3,9 +3,10 @@ import { CreateCharacterFormData } from "@models/CreateCharacterFormData";
 import { EditModalFormData } from "@models/EditModalFormData";
 import { UpdateType } from "@models/enum/service/UpdateType";
 import { AbilityScores } from "@models/playerCharacter/AbilityScores";
-import { AllowedFeatureTags, FeatureTag } from "@models/playerCharacter/Feature";
+import { AllowedFeatureTags, Feature, FeatureTag } from "@models/playerCharacter/Feature";
 import { PlayerCharacter } from "@models/playerCharacter/PlayerCharacter";
 import { AllowedSpellTags, Spell } from "@models/playerCharacter/Spell";
+import { Summonable } from "@models/playerCharacter/Summonable";
 import { SpellSlot } from "@models/playerCharacter/usableResources/SpellSlot";
 import { ShowConfirmDeleteData } from "@models/ShowConfirmDeleteData";
 
@@ -61,7 +62,12 @@ export const buildDefaultFeatureTags = () => {
   }));
 }
 
-export const getDefaultFeatureFormData = () => { 
+const getNextDisplayIndex = (existingIndices?: number[]): number => {
+  if (!existingIndices || existingIndices.length < 1) return 0;
+  return Math.max(...existingIndices) + 1;
+}
+
+export const getDefaultFeatureFormData = (existingFeatures?: Feature[]) => { 
   return {
     updateType: UpdateType.FEATURES,
     name: '',
@@ -69,6 +75,7 @@ export const getDefaultFeatureFormData = () => {
     source: '',
     maxUses: '',
     displayAsPool: false,
+    displayIndex: getNextDisplayIndex(existingFeatures?.map(f => f.data.displayIndex)),
     refresh: '',
     damage: '',
     damageType: '',
@@ -78,22 +85,25 @@ export const getDefaultFeatureFormData = () => {
   }
 };
 
-export const defaultSummonableFormData = {
-  updateType: UpdateType.SUMMONABLES,
-  type: '',
-  name: '',
-  description: '',
-  sourceType: '',
-  sourceName: '',
-  hitPointMaximum: '',
-  hitPointsCurrent: '',
-  maxUses: '',
-  currentUses: '',
-  refresh: '',
-  armorClass: '',
-  summoned: '',
-  attacks: [],
-  useAbilityScores: 'false'
+export const getDefaultSummonableFormData = (existingSummonables?: Summonable[]) => {
+  return {
+    updateType: UpdateType.SUMMONABLES,
+    type: '',
+    name: '',
+    description: '',
+    sourceType: '',
+    sourceName: '',
+    hitPointMaximum: '',
+    hitPointsCurrent: '',
+    maxUses: '',
+    currentUses: '',
+    refresh: '',
+    armorClass: '',
+    summoned: '',
+    attacks: [],
+    useAbilityScores: 'false',
+    displayIndex: getNextDisplayIndex(existingSummonables ? existingSummonables?.map(s => s.data.displayIndex) : undefined),
+  }
 }
 
 export const defaultEquipmentFormData = {

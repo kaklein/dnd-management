@@ -1,3 +1,4 @@
+/// <reference types="vitest/config" />
 import { sentryVitePlugin } from "@sentry/vite-plugin";
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
@@ -34,4 +35,8 @@ export default defineConfig({
   define: {
     'import.meta.env.PACKAGE_VERSION': JSON.stringify(packageJson.version),
   },
+  test: {
+    include: ['test/**/*.spec.ts', 'test/**/*.test.ts', 'src/**/*.spec.ts', 'src/**/*.test.ts'],
+    reporters: ['default']    
+  }
 });

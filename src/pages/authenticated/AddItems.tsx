@@ -15,10 +15,10 @@ import {
   defaultProficiencyFormData,
   getDefaultSpellFormData,
   defaultSpellSlotFormData,
-  defaultSummonableFormData,
   defaultWeaponFormData,
   emptyShowSectionData,
-  getDefaultFeatureFormData
+  getDefaultFeatureFormData,
+  getDefaultSummonableFormData
 } from "@data/emptyFormData";
 import { UpdateType } from "@models/enum/service/UpdateType";
 import { transformAndUpdate } from "@services/firestore/updateData";
@@ -51,12 +51,12 @@ function AddItems ({pcData, queryClient, pcList, selectedPc, userRole, logger}: 
   const [weaponFormData, setWeaponFormData] = useState(defaultWeaponFormData);
   const [spellFormData, setSpellFormData] = useState(getDefaultSpellFormData(pcData));
   const [spellSlotFormData, setSpellSlotFormData] = useState(defaultSpellSlotFormData);
-  const [featureFormData, setFeatureFormData] = useState(getDefaultFeatureFormData());
+  const [featureFormData, setFeatureFormData] = useState(getDefaultFeatureFormData(pcData.features));
   const [equipmentFormData, setEquipmentFormData] = useState(defaultEquipmentFormData);
   const [proficiencyFormData, setProficiencyFormData] = useState(defaultProficiencyFormData);
   const [languageFormData, setLanguageFormData] = useState(defaultLanguageFormData);
   const [noteFormData, setNoteFormData] = useState(defaultNoteFormData);
-  const [summonableFormData, setSummonableFormData] = useState(defaultSummonableFormData);
+  const [summonableFormData, setSummonableFormData] = useState(getDefaultSummonableFormData(pcData.summonables));
 
   const initialEditorContent = emptyRichTextContent;
 
@@ -69,7 +69,7 @@ function AddItems ({pcData, queryClient, pcList, selectedPc, userRole, logger}: 
   };
 
   const handleSubmit = async (
-    event: React.ChangeEvent<HTMLInputElement>, 
+    event: React.ChangeEvent<HTMLInputElement>,
     data: {updateType: UpdateType, [key: string]: any},
     clearForm: (data: any) => void,
     clearedFormData: any

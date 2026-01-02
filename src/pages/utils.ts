@@ -1,10 +1,10 @@
-import { getFeatureFormData, getSpellSlotFormData, getSummonablesSummoned } from "@components/utils";
+import { getFeatureFormData, getSpellSlotFormData, getSummonableFormData } from "@components/utils";
 import { Ability } from "@models/enum/Ability";
 import { WeaponModifierProperty } from "@models/enum/WeaponModifierProperty";
-import { Feature } from "@models/playerCharacter/Feature";
+import { FeatureBaseData } from "@models/playerCharacter/Feature";
 import { PlayerCharacter } from "@models/playerCharacter/PlayerCharacter";
 import { Spell, SpellLevel } from "@models/playerCharacter/Spell";
-import { Summonable } from "@models/playerCharacter/Summonable";
+import { Summonable, SummonableBaseData } from "@models/playerCharacter/Summonable";
 import { SummonableAttack } from "@models/playerCharacter/SummonableAttack";
 import { Weapon } from "@models/playerCharacter/Weapon";
 import { updateArrayObjectItem, updateById, updateDataByPcId, updateStringArrayItem } from "@services/firestore/crud/update";
@@ -81,25 +81,23 @@ export const handleSubmitEdit = async (
       }
     }
     
-    const updatedFeature: Feature = {
-        id: '',
-        data: {
-            pcId: pcData.baseDetails.pcId,
-            name: formData.name,
-            description: formData.description,
-            source: formData.source,
-            maxUses: formData.maxUses ? Number(formData.maxUses) : 0,
-            currentUses: currentUses,
-            refresh: formData.refresh,
-            damage: formData.damage,
-            damageType: formData.damageType,
-            saveDC: formData.saveDC,
-            sourceUrl: formData.sourceUrl,
-            displayAsPool: formData.displayAsPool,
-            tags: formData.tags,
-        }
+    const updatedFeature: FeatureBaseData = {
+      pcId: pcData.baseDetails.pcId,
+      name: formData.name,
+      description: formData.description,
+      source: formData.source,
+      maxUses: formData.maxUses ? Number(formData.maxUses) : 0,
+      currentUses: currentUses,
+      refresh: formData.refresh,
+      damage: formData.damage,
+      damageType: formData.damageType,
+      saveDC: formData.saveDC,
+      sourceUrl: formData.sourceUrl,
+      displayAsPool: formData.displayAsPool,
+      tags: formData.tags,
+      // purposefully omitting displayIndex as we never want to update just a single displayIndex
     }
-    await updateById(CollectionName.FEATURES, formData.featureId, updatedFeature.data);
+    await updateById(CollectionName.FEATURES, formData.featureId, updatedFeature);
   } else if (formData.formType === 'summonable') {
     if (!pcData.summonables || pcData.summonables.length < 1) return;
     const existingSummonable = pcData.summonables?.filter(x => x.id === formData.summonableId)[0];
@@ -125,34 +123,31 @@ export const handleSubmitEdit = async (
       };
     }
 
-    const updatedSummonable: Summonable = {
-        id: '',
-        data: {
-            pcId: pcData.baseDetails.pcId,
-            type: formData.type,
-            name: formData.name,
-            description: formData.description,
-            source: {
-              type: formData.sourceType,
-              name: formData.sourceName
-            },
-            hitPoints: {
-              max: formData.hitPointMaximum,
-              current: hitPointsCurrent
-            },
-            armorClass: Number(formData.armorClass),
-            summoned: existingSummonable.data.summoned,
-            attacks: (attacks && attacks.length > 0) ? attacks.map(a => ({
-              id: a.id,
-              name: a.name,
-              description: a.description,
-              ...(a.damage && { damage: a.damage }),
-              ...(a.damageType && { damageType: a.damageType }),
-            })) : [],
-            abilityScores
-        }
+    const updatedSummonable: SummonableBaseData = {
+        pcId: pcData.baseDetails.pcId,
+        type: formData.type,
+        name: formData.name,
+        description: formData.description,
+        source: {
+          type: formData.sourceType,
+          name: formData.sourceName
+        },
+        hitPoints: {
+          max: formData.hitPointMaximum,
+          current: hitPointsCurrent
+        },
+        armorClass: Number(formData.armorClass),
+        summoned: existingSummonable.data.summoned,
+        attacks: (attacks && attacks.length > 0) ? attacks.map(a => ({
+          id: a.id,
+          name: a.name,
+          description: a.description,
+          ...(a.damage && { damage: a.damage }),
+          ...(a.damageType && { damageType: a.damageType }),
+        })) : [],
+        abilityScores        
     }
-    await updateById(CollectionName.SUMMONABLES, formData.summonableId, updatedSummonable.data);
+    await updateById(CollectionName.SUMMONABLES, formData.summonableId, updatedSummonable);
   } else if (['spell', 'weapon', 'equipment'].includes(formData.formType)) {     
     let updatedItem;
     let fieldName;
@@ -330,10 +325,7 @@ export const pcHasDetailsPageItems = (pcData: PlayerCharacter): boolean => {
 }
 
 export const getLimitedUseFeatures = (pcData: PlayerCharacter) => {
-  return pcData.features.filter(feature => feature.data.maxUses).sort((a,b) => {
-      if (a.data.name < b.data.name) return -1;
-      return 1;
-  });
+  return pcData.features.filter(feature => feature.data.maxUses);
 }
 
 export const getDefaultSummoned = (pcData: PlayerCharacter): {[key: string]: any} => {
@@ -364,7 +356,7 @@ export const getDefaultFormData = (pcData: PlayerCharacter) => {
       armorClass: pcData.baseDetails.armorClass,
       ...getSpellSlotFormData(pcData.spellSlots ?? []),
       ...getFeatureFormData(getLimitedUseFeatures(pcData)),
-      ...getSummonablesSummoned(pcData.summonables ?? []),
+      ...getSummonableFormData(pcData.summonables ?? []),
   }
 };
 
@@ -391,7 +383,8 @@ export const emptySummonable: Summonable = {
       current: 0
     },
     armorClass: 0,
-    summoned: false
+    summoned: false,
+    displayIndex: -1,
   }
 };
 
@@ -459,4 +452,33 @@ export const toggleSummonableDrawer = () => {
     el.classList.toggle('show');
     el.classList.toggle('hide');
   }
+}
+
+interface T {
+  id: string;
+  data: {
+    displayIndex: number;
+    [key: string]: any;
+  }
+}
+
+/* Moves specified item to new position in array, and reassigns displayIndex for each item according to new positions */
+export const reorderArray = (arr: T[], itemToMove: T, newIndex: number): T[] => {
+  // ensure items are sorted by designated displayIndex before reordering
+  arr.sort((a, b) => {
+    return a.data.displayIndex - b.data.displayIndex;
+  });
+  const oldIndex = arr.map(i => i.id).indexOf(itemToMove.id);
+  arr.splice(newIndex, 0, arr.splice(oldIndex, 1)[0]);
+  // update displayIndex to reflect new order
+  arr.forEach((item, index) => {
+    item.data.displayIndex = index;
+  });
+  return arr;
+};
+
+export const cloneObjArray = (cloneable: {[key: string]: any}[]): {[key:string]: any}[] => {
+  const cloned: any[] = [];
+  cloneable.forEach(i => cloned.push(Object.assign({}, i)));
+  return cloned;
 }

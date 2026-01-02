@@ -59,21 +59,37 @@ export const buildFeatureCurrentUsesKey = (feature: Feature) => {
 }
 
 export const getFeatureFormData = (features: Feature[]) => {
-    const array = features.map(f => (
+    const currentUsesArr = features.map(f => (
         [buildFeatureCurrentUsesKey(f), f.data.currentUses]
     ));
-    return Object.fromEntries(array);
+    const displayIndexArr = features.map(f => (
+        [buildDisplayIndexKey('feature', f.id), f.data.displayIndex]
+    ));
+    return {
+        ...Object.fromEntries(currentUsesArr),
+        ...Object.fromEntries(displayIndexArr)
+    };
 };
+
+export const buildDisplayIndexKey = (itemPrefix: string, itemId: string) => {
+    return `${itemPrefix}_${itemId}_displayIndex`;
+};
+
+export const getSummonableFormData = (summonables: Summonable[]) => {
+    const summonedArr = summonables.map(s => (
+        [buildSummonableSummonedKey(s), s.data.summoned]
+    ));
+    const displayIndexArr = summonables.map(s => (
+        [buildDisplayIndexKey('summonable', s.id), s.data.displayIndex]
+    ));
+    return {
+        ...Object.fromEntries(summonedArr),
+        ...Object.fromEntries(displayIndexArr)
+    };
+}
 
 export const buildSummonableSummonedKey = (summonable: Summonable) => {
     return `summonable_${summonable.id}_summoned`;
-};
-
-export const getSummonablesSummoned = (summonables: Summonable[]) => {
-    const array = summonables.map(s => (
-        [buildSummonableSummonedKey(s), s.data.summoned]
-    ));
-    return Object.fromEntries(array);
 };
 
 export const buildSpellSlotsCurrentKey = (spellSlot: SpellSlot) => {
@@ -91,35 +107,56 @@ export const isSpellSlotKey = (k: string) => {
     return k.substring(0,9) === 'spellSlot'; // full keys e.g. spellSlot_1234567_current
 };
 
-export const formatFeaturesUpdates = (formData: any): {docId: string, updates: { currentUses: number }}[] => {
+/* Formats updates for items that are stored as individual documents in their own collection */
+export const formatItemUpdatesSeparateColl = (formData: any, itemType: string, fieldTypes: { fieldName: string, dataType: 'number' | 'string' | 'boolean' }[]): 
+ { docId: string, updates: { currentUses?: number, displayIndex?: number } }[] => {
     const keys = Object.keys(formData);
-    const featureKeys = keys.filter(k => k.substring(0,7) === 'feature'); // full keys e.g. feature_1234567_currentUses
-    let updates = [];
-    for (const key of featureKeys) {
-        updates.push({
-            docId: key.split('_')[1],
-            updates: {
-                currentUses: Number(formData[key])
-            }
-        })
-    }
-    return updates;
-}
 
-export const formatSummonablesUpdates = (formData: any): {docId: string, updates: {currentUses: number}}[] => {
-    const keys = Object.keys(formData);
-    const currentUsesKeys = keys.filter(k => (k.substring(0, 10) === 'summonable' && k.substring(k.length - 11) === 'currentUses'));
-    let updates = [];
-    for (const key of currentUsesKeys) {
-        updates.push({
-            docId: key.split('_')[1],
-            updates: {
-                currentUses: Number(formData[key])
-            }
-        })
+    // get all full keys, e.g. feature_1234567_currentUses, for the specified item type, e.g. 'feature'
+    const itemKeys = keys.filter(k => k.substring(0, itemType.length) === itemType);
+
+    // initialize variables for use in loop
+    let splitKey: string[];
+    let docId: string;
+    let keyFieldName: string;
+    let fieldTypeMatch: {fieldName: string, dataType: 'number' | 'string' | 'boolean'};
+    let uniqueUpdates: { docId: string, updates: {[key: string]: any} }[] = [];
+
+    const convertType = (value: any, dataType: 'number' | 'string' | 'boolean') => {
+        switch (dataType) {
+            case 'number':
+                return Number(value);
+            case 'boolean':
+                return (value === "true" || value === "TRUE" || value === true) ? true : false;
+            case 'string':
+            default:
+                return String(value);
+        }
     }
-    return updates;
-}
+
+    for (const key of itemKeys) {
+        splitKey = key.split('_');
+        docId = splitKey[1];
+        keyFieldName = splitKey[2];
+        fieldTypeMatch = fieldTypes.find(t => t.fieldName === keyFieldName) ?? { fieldName: 'default', dataType: 'string' };
+        
+        if (!uniqueUpdates.find(u => u.docId === docId)) {       
+            uniqueUpdates.push({
+                docId,
+                updates: {
+                    [keyFieldName]: convertType(formData[key], fieldTypeMatch.dataType) 
+                }
+            });
+        } else {
+            const i = uniqueUpdates.map(u => u.docId).indexOf(docId);
+            uniqueUpdates[i].updates = {
+                ...uniqueUpdates[i].updates,
+                [keyFieldName]: convertType(formData[key], fieldTypeMatch.dataType)                
+            }
+        }
+    }
+    return uniqueUpdates;
+};
 
 export const formatSpellSlotsUpdates = (formData: any): {docId: string, updates: { current: number }}[] => {
     const keys = Object.keys(formData);

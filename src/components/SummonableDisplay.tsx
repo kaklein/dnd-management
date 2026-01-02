@@ -5,6 +5,7 @@ import EditItemButton from "./EditItemButton";
 import DeleteItemButton from "./DeleteItemButton";
 import { capitalize } from "./utils";
 import { getModifierFormatted } from "@services/firestore/utils";
+import { cloneObjArray } from "@pages/utils";
 
 interface Props {
     summonables?: Summonable[];
@@ -18,13 +19,16 @@ interface Props {
 function SummonableDisplay ({ summonables, setEditModalFormData, emptyEditModalData, setShowConfirmDelete, emptyShowConfirmDeleteData, setInitialEditorContent }: Props) {
     if (!summonables || summonables?.length < 1) return undefined;
 
+    const sortedSummonables = cloneObjArray(summonables) as Summonable[];
+    sortedSummonables.sort((a,b) => {
+        const aComparable = a.data.name ?? a.data.type;
+        const bComparable = b.data.name ?? b.data.type;
+        if (aComparable < bComparable) return -1;
+        return 1;
+    });
+
     return (
-        summonables?.sort((a,b) => {
-            const aComparable = a.data.name ?? a.data.type;
-            const bComparable = b.data.name ?? b.data.type;
-            if (aComparable < bComparable) return -1;
-            return 1;
-        }).map(s => (
+        sortedSummonables.map(s => (
             <Card key={s.id}>
                 <a id={s.id}></a>
                 <TitleButtonRow

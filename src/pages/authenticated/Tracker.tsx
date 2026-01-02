@@ -2,12 +2,12 @@ import Navbar from "@components/Navbar";
 import Card from "@components/cards/Card";
 import Refresh from "@components/Refresh";
 import { 
+    buildDisplayIndexKey,
     buildFeatureCurrentUsesKey, 
     buildSpellSlotsCurrentKey, 
     formatBaseDetailsUpdates, 
-    formatFeaturesUpdates, 
+    formatItemUpdatesSeparateColl, 
     formatSpellSlotsUpdates,
-    formatSummonablesUpdates,
     getDefaultSpellSaveDC,
     removeWhiteSpaceAndConvertToLowerCase, 
 } from "@components/utils";
@@ -42,6 +42,19 @@ import HPDisplay from "@components/HPDisplay";
 import ResourceUseModal from "@components/modals/ResourceUseModal";
 import { SentryLogger } from "@services/sentry/logger";
 import TagDisplay from "@components/TagDisplay";
+import {
+  KeyboardSensor,
+  PointerSensor,
+  TouchSensor,
+  useSensor,
+  useSensors,
+} from '@dnd-kit/core';
+import {
+  arrayMove,
+  sortableKeyboardCoordinates,
+} from '@dnd-kit/sortable';
+import { reorderArray } from "../utils";
+import { SortableGroup } from "@components/sortables/SortableGroup";
 
 interface Props {
     pcData: PlayerCharacter;
@@ -53,6 +66,53 @@ interface Props {
 }
 
 function Tracker({pcData, queryClient, pcList, selectedPc, userRole, logger}: Props) {   
+    // SORTABLES SETUP
+    const [sortFeatureIds, setSortFeatureIds] = useState(pcData.features.map(f => f.id));
+    const [featureSortingEnabled, setFeatureSortingEnabled] = useState(false);
+    const [fSortableOrderChanged, setFSortableOrderChanged] = useState(false);
+
+    const [sortSummonableIds, setSortSummonableIds] = useState(pcData.summonables?.map(s => s.id));
+    const [summonableSortingEnabled, setSummonableSortingEnabled] = useState(false);
+    const [sSortableOrderChanged, setSSortableOrderChanged] = useState(false);
+    
+    const sensors = useSensors(
+        useSensor(PointerSensor),
+        useSensor(KeyboardSensor, {
+            coordinateGetter: sortableKeyboardCoordinates,
+        }),
+        useSensor(TouchSensor)
+    );
+
+    const onSortUpdate = (
+        event: any,
+        setItemIds: any,
+        pcDataSortables: any[],
+        sortableIds: string[],
+        sortablePrefix: string,
+        buildIndexKey: (sortablePrefix: string, sortableId: string) => string
+    ) => {
+        const {active, over} = event;
+        if (active.id !== over.id) {
+            // Reorder items client-side
+            setItemIds((sortables: any) => {
+                const oldIndex = sortables.indexOf(active.id);
+                const newIndex = sortables.indexOf(over.id);
+
+                return arrayMove(sortables, oldIndex, newIndex);
+            });
+
+            // Update form data with newly ordered items
+            const reorderedArr = reorderArray(pcDataSortables, pcDataSortables.find(s => s.id == active.id)!, sortableIds.indexOf(over.id));            
+            let updates: {[key: string]: string} = {};
+            reorderedArr.map(sortable => {
+                const key = buildIndexKey(sortablePrefix, sortable.id);
+                updates[key] = String(sortable.data.displayIndex);
+            });
+            setFormData({...formData, ...updates});
+        }
+    }
+    // END SORTABLES SETUP
+    
     const conModifier = pcData.abilityScores.data.constitution.modifier;
    
     const [showSuccessAlert, setShowSuccessAlert] = useState(false);
@@ -77,7 +137,8 @@ function Tracker({pcData, queryClient, pcList, selectedPc, userRole, logger}: Pr
                 pcId: pcData.baseDetails.pcId,
                 description: '',
                 source: '',
-                name: ''
+                name: '',
+                displayIndex: -1
             }
         }
     });
@@ -96,6 +157,8 @@ function Tracker({pcData, queryClient, pcList, selectedPc, userRole, logger}: Pr
         setFormData(getDefaultFormData(pcData));
         setSummonedItems(getSummonedItems(pcData));
         setShowDrawerHandle(getSummonedItems(pcData).length > 0 && getSummonedItems(pcData)[0].data.summoned);
+        // sortables
+        setSortFeatureIds(pcData.features.map(f => f.id));
     }, [pcData]);
 
     useEffect(() => {
@@ -142,11 +205,24 @@ function Tracker({pcData, queryClient, pcList, selectedPc, userRole, logger}: Pr
 
     const handleSubmit = async (event: any, explicitFormData?: any) => {
         event.preventDefault();
+
+        // prepare updates based on form data
         const baseDetailsUpdates = formatBaseDetailsUpdates(explicitFormData ?? formData);
-        const featuresUpdates = formatFeaturesUpdates(explicitFormData ?? formData);
-        const summonablesUpdates = formatSummonablesUpdates(explicitFormData ?? formData);
+        const featuresUpdates = formatItemUpdatesSeparateColl(explicitFormData ?? formData, 'feature', 
+            [
+                {fieldName: 'currentUses', dataType: 'number'},
+                {fieldName: 'displayIndex', dataType: 'number'}
+            ]
+        );
+        const summonablesUpdates = formatItemUpdatesSeparateColl(explicitFormData ?? formData, 'summonable', 
+            [
+                {fieldName: 'summoned', dataType: 'boolean'},
+                {fieldName: 'displayIndex', dataType: 'number'}
+            ]
+        );
         const spellSlotsUpdate = formatSpellSlotsUpdates(explicitFormData ?? formData);
 
+        // make db updates
         try {
             await Promise.all([
                 updateDataByPcId(CollectionName.PC_BASE_DETAILS, pcData.baseDetails.pcId, baseDetailsUpdates),
@@ -159,8 +235,16 @@ function Tracker({pcData, queryClient, pcList, selectedPc, userRole, logger}: Pr
             alert(SAVE_CHANGES_ERROR);
             return;
         }
+
+        // reload data and reset form
         queryClient.refetchQueries({ queryKey: ['pcData', pcData.baseDetails.pcId]});
         setFormData(getDefaultFormData(pcData));
+
+        // reset sortable order changed states
+        setFSortableOrderChanged(false);
+        setSSortableOrderChanged(false);
+
+        // show success alert
         triggerSuccessAlert(setShowSuccessAlert);
     }
 
@@ -502,10 +586,30 @@ function Tracker({pcData, queryClient, pcList, selectedPc, userRole, logger}: Pr
                     {
                         (limitedUseFeatures && limitedUseFeatures.length > 0) &&
                         <Card>
-                            <h3 className="section-header">Abilities</h3>
+                            <SortableGroup
+                                headerText="Abilities"
+                                sortingEnabled={featureSortingEnabled}
+                                setSortingEnabled={setFeatureSortingEnabled}
+                                sensors={sensors}
+                                onUpdate={(event) => onSortUpdate(
+                                    event,
+                                    setSortFeatureIds,
+                                    pcData.features,
+                                    sortFeatureIds,
+                                    "feature",
+                                    buildDisplayIndexKey,                            
+                                )}
+                                sortableIds={sortFeatureIds}
+                                sortableIdPrefix="feature"
+                                onSave={handleSubmit}
+                                formData={formData}
+                                logger={logger}
+                                orderChanged={fSortableOrderChanged}
+                                setOrderChanged={setFSortableOrderChanged}
+                            >
                             {
                                 limitedUseFeatures.map(feature => (
-                                    <Card key={feature.id} customClass="small-padding">
+                                    <Card key={`feature-${feature.id}`} id={`feature-${feature.id}`} customClass="small-padding">
                                         <div className="container-fluid light-gray-bg small-padding no-margin">
                                             <div className="row">
                                                 <div className="col left-justify">
@@ -514,7 +618,7 @@ function Tracker({pcData, queryClient, pcList, selectedPc, userRole, logger}: Pr
                                                         className="text-link invisible-btn spell-display-name"
                                                         data-bs-toggle="modal"
                                                         data-bs-target="#descriptionModal"
-                                                        disabled={!feature.data.description || feature.data.description == emptyRichTextContent}
+                                                        disabled={!feature.data.description || feature.data.description == emptyRichTextContent || featureSortingEnabled}
                                                         onClick={() => {
                                                                 setDescriptionModalData({
                                                                 title: feature.data.name,
@@ -522,11 +626,11 @@ function Tracker({pcData, queryClient, pcList, selectedPc, userRole, logger}: Pr
                                                             });
                                                         }}
                                                     >
-                                                        <h4>{feature.data.name}</h4>
+                                                        <h4>{feature.data.name} {feature.data.displayIndex}</h4>
                                                     </button>
                                                 </div>
                                                 <div className="col-auto">
-                                                    <Refresh refreshRestType={feature.data.refresh!}/>
+                                                    <Refresh refreshRestType={feature.data.refresh!} disabled={featureSortingEnabled}/>
                                                 </div>
                                             </div>                                            
                                         </div>
@@ -536,6 +640,7 @@ function Tracker({pcData, queryClient, pcList, selectedPc, userRole, logger}: Pr
                                             <PoolDisplay
                                                 feature={feature}
                                                 setResourceUseModalData={setResourceUseModalData}
+                                                disabled={featureSortingEnabled}
                                             />
                                         }
                                         {
@@ -547,6 +652,7 @@ function Tracker({pcData, queryClient, pcList, selectedPc, userRole, logger}: Pr
                                                 currentUses={formData[buildFeatureCurrentUsesKey(feature)]}
                                                 formData={formData}
                                                 handleSubmit={handleSubmit}
+                                                disabled={featureSortingEnabled}
                                             />   
                                         }
                                         {
@@ -559,27 +665,44 @@ function Tracker({pcData, queryClient, pcList, selectedPc, userRole, logger}: Pr
                                     </Card>
                                 ))
                             }
+                            </SortableGroup>                      
                         </Card>
                     }
 
                     {
                         (pcData.summonables && pcData.summonables.length > 0) &&
                         <Card>
-                            <h3 className="section-header">Summonables</h3>
+                        <SortableGroup
+                            headerText="Summonables"
+                            sortingEnabled={summonableSortingEnabled}
+                            setSortingEnabled={setSummonableSortingEnabled}
+                            sensors={sensors}
+                            onUpdate={(event) => onSortUpdate(
+                                    event,
+                                    setSortSummonableIds,
+                                    pcData.summonables!,
+                                    sortSummonableIds!,
+                                    "summonable",
+                                    buildDisplayIndexKey
+                                )
+                            }
+                            sortableIds={sortSummonableIds!}
+                            sortableIdPrefix="summonable"
+                            onSave={handleSubmit}
+                            formData={formData}
+                            logger={logger}
+                            orderChanged={sSortableOrderChanged}
+                            setOrderChanged={setSSortableOrderChanged}
+                        >
                             {
-                                pcData.summonables.sort((a,b) => {
-                                    const aComparable = a.data.name ?? a.data.type;
-                                    const bComparable = b.data.name ?? b.data.type;
-                                    if (aComparable < bComparable) return -1;
-                                    return 1;
-                                }).map(s => (
-                                    <Card key={s.id}>
+                                pcData.summonables.map(s => (
+                                    <Card key={`summonable-${s.id}`} id={`summonable-${s.id}`} customClass="small-padding">
                                         <button
                                             type="button"
                                             className="text-link invisible-btn spell-display-name"
                                             data-bs-toggle="modal"
                                             data-bs-target="#descriptionModal"
-                                            disabled={!s.data.description || s.data.description == emptyRichTextContent}
+                                            disabled={!s.data.description || s.data.description == emptyRichTextContent || summonableSortingEnabled}
                                             onClick={() => {
                                                     setDescriptionModalData({
                                                     title: s.data.name ? `${s.data.name} (${s.data.type})` : s.data.type,
@@ -606,7 +729,7 @@ function Tracker({pcData, queryClient, pcList, selectedPc, userRole, logger}: Pr
                                                 setClickedSummonable(s);
                                                 setSummonableAction('summon');
                                             }}
-                                            disabled={s.data.summoned === true}
+                                            disabled={s.data.summoned === true || summonableSortingEnabled}
                                         >
                                             {
                                             s.data.summoned === true ? "Summoned" :
@@ -616,6 +739,7 @@ function Tracker({pcData, queryClient, pcList, selectedPc, userRole, logger}: Pr
                                     </Card>
                                 ))
                             }
+                        </SortableGroup>
                         </Card>
                     }
                     
