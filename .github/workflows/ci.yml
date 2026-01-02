@@ -9,8 +9,12 @@ permissions:
   contents: read
 
 jobs:
+  test:
+    uses: ./.github/workflows/test.yml
+
   deploy:
     uses: ./.github/workflows/firebase-hosting-merge.yml
+    needs: test
     secrets: inherit
 
   create_release:
