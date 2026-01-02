@@ -18,6 +18,7 @@ jobs:
     needs: test
     steps:
       - uses: actions/checkout@v4
+      - run: npm ci && npm run build
       - name: Deploy to Firebase Hosting Preview Channel
         uses: FirebaseExtended/action-hosting-deploy@v0
         with:
