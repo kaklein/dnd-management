@@ -8,7 +8,7 @@ on:
 permissions:
   contents: read
 
-jobs:
+jobs:  
   test:
     uses: ./.github/workflows/test.yml
 
