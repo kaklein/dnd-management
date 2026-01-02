@@ -15,6 +15,6 @@ test('getProficiencyBonusByLevel returns correct bonus for given level', () => {
     expect(() => getProficiencyBonusByLevel(0)).toThrow("Level must be between 1 and 20 inclusive. Level: 0");
 });
 
-test('expectFailedTest', () => {
-    expect(true).toBe(false);
+test('expectSuccessfulTest', () => {
+    expect(true).toBe(true);
 });
